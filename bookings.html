@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>NC Studios Bookings</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#0f1115">
+
+<style>
+:root{
+  --bg1:#0f1115;
+  --bg2:#171a20;
+  --panel:rgba(255,255,255,0.07);
+  --panel2:rgba(255,255,255,0.10);
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f7fb;
+  --muted:#a7afbe;
+  --accent:#b91c1c;
+  --accent2:#ef4444;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --blue:#60a5fa;
+  --purple:#c084fc;
+  --shadow:0 20px 50px rgba(0,0,0,0.35);
+  --radius:26px;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(185,28,28,0.28), transparent 32%),
+    linear-gradient(145deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1f2937,#111827);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  font-weight:800;
+  letter-spacing:-1px;
+}
+
+.brand h1{
+  margin:0;
+  font-size:20px;
+  letter-spacing:-0.4px;
+}
+
+.brand p{
+  margin:2px 0 0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.home{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  text-decoration:none;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.hero{
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+
+.heroTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+.hero h2{
+  margin:6px 0 6px;
+  font-size:32px;
+  line-height:1;
+  letter-spacing:-1px;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+button,
+.button{
+  border:0;
+  color:var(--text);
+  background:var(--accent);
+  padding:12px 14px;
+  border-radius:16px;
+  font-weight:800;
+  font-size:13px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+button.secondary,
+.button.secondary{
+  background:var(--panel2);
+  border:1px solid var(--line);
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:24px;
+  letter-spacing:-0.7px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cardHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.cardHead h3{
+  margin:0;
+  font-size:17px;
+  letter-spacing:-0.3px;
+}
+
+.cardHead p{
+  margin:3px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cardBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+
+textarea{
+  min-height:96px;
+  resize:vertical;
+}
+
+select option{
+  color:#111827;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.booking{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.bookingTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.booking h4{
+  margin:0;
+  font-size:16px;
+  letter-spacing:-0.3px;
+}
+
+.booking small{
+  color:var(--muted);
+  display:block;
+  margin-top:4px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+
+.badge.enquiry{
+  background:rgba(96,165,250,0.18);
+  color:#bfdbfe;
+}
+
+.badge.consultation{
+  background:rgba(192,132,252,0.18);
+  color:#e9d5ff;
+}
+
+.badge.confirmed{
+  background:rgba(34,197,94,0.16);
+  color:#bbf7d0;
+}
+
+.badge.completed{
+  background:rgba(245,158,11,0.16);
+  color:#fde68a;
+}
+
+.meta{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.metaLine{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:8px;
+}
+
+.metaLine strong{
+  color:var(--text);
+  text-align:right;
+}
+
+.bookingActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.bookingActions button{
+  padding:9px 11px;
+  border-radius:13px;
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 16px;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin-top:16px;
+}
+
+.nav a{
+  text-decoration:none;
+  color:var(--muted);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:11px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+}
+
+.nav a.active{
+  color:var(--text);
+  background:rgba(185,28,28,0.30);
+  border-color:rgba(239,68,68,0.40);
+}
+
+.hidden{
+  display:none;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+}
+
+@media(max-width:520px){
+  .app{
+    padding:14px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+  }
+
+  .brand h1{
+    font-size:18px;
+  }
+
+  .hero h2{
+    font-size:27px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .home{
+    padding:10px 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">NC</div>
+      <div>
+        <h1>NC Studios</h1>
+        <p>Bookings</p>
+      </div>
+    </div>
+
+    <a class="home" href="dashboard.html">Dashboard</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="kicker">Client pipeline</div>
+          <h2>Bookings</h2>
+          <p>Track enquiries, consultations, confirmed weddings and completed bookings in one place.</p>
+        </div>
+
+        <div class="actions">
+          <button type="button" onclick="exportBookings()">Export</button>
+          <button type="button" class="secondary" onclick="openImport()">Import</button>
+          <button type="button" class="secondary" onclick="resetForm()">New booking</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span>Enquiries</span>
+          <strong id="statEnquiry">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>Consultations</span>
+          <strong id="statConsultation">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>Confirmed</span>
+          <strong id="statConfirmed">0</strong>
+        </div>
+
+        <div class="stat">
+          <span>Total value</span>
+          <strong id="statValue">£0</strong>
+        </div>
+      </div>
+    </section>
+
+    <nav class="nav">
+      <a href="dashboard.html">Home</a>
+      <a class="active" href="bookings.html">Bookings</a>
+      <a href="clients.html">Clients</a>
+      <a href="finance.html">Finance</a>
+      <a href="shot-lists.html">Shots</a>
+      <a href="lists.html">Lists</a>
+      <a href="delivery.html">Delivery</a>
+      <a href="templates.html">Templates</a>
+    </nav>
+
+    <section class="grid" style="margin-top:16px;">
+      <aside class="card">
+        <div class="cardHead">
+          <div>
+            <h3>Add or edit booking</h3>
+            <p>Use this for every enquiry or confirmed client.</p>
+          </div>
+        </div>
+
+        <div class="cardBody">
+          <form class="form" id="bookingForm">
+            <input type="hidden" id="bookingId">
+
+            <label>
+              Client name
+              <input id="clientName" type="text" placeholder="Marvin and Blessing" required>
+            </label>
+
+            <label>
+              Event name
+              <input id="eventName" type="text" placeholder="Wedding, engagement, birthday">
+            </label>
+
+            <div class="row">
+              <label>
+                Event date
+                <input id="eventDate" type="date">
+              </label>
+
+              <label>
+                Status
+                <select id="status">
+                  <option value="enquiry">Enquiry</option>
+                  <option value="consultation">Consultation</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                Package price
+                <input id="packagePrice" type="number" min="0" step="0.01" placeholder="850">
+              </label>
+
+              <label>
+                Deposit paid
+                <input id="depositPaid" type="number" min="0" step="0.01" placeholder="255">
+              </label>
+            </div>
+
+            <label>
+              Location
+              <input id="location" type="text" placeholder="Wolverhampton">
+            </label>
+
+            <label>
+              Next action
+              <input id="nextAction" type="text" placeholder="Send planning form, confirm payment, check timeline">
+            </label>
+
+            <label>
+              Notes
+              <textarea id="notes" placeholder="Add client notes, restrictions, reminders or anything important."></textarea>
+            </label>
+
+            <button type="submit">Save booking</button>
+            <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+          </form>
+        </div>
+      </aside>
+
+      <section class="card">
+        <div class="cardHead">
+          <div>
+            <h3>Booking list</h3>
+            <p>Your saved NC Studios bookings.</p>
+          </div>
+
+          <select id="filterStatus" onchange="renderBookings()">
+            <option value="all">All</option>
+            <option value="enquiry">Enquiries</option>
+            <option value="consultation">Consultations</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="cardBody">
+          <div id="bookingList" class="list"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<input class="hidden" id="importFile" type="file" accept="application/json" onchange="importBookings(event)">
+
+<script>
+const STORAGE_KEY = "ncstudios_bookings_v1";
+
+let bookings = loadBookings();
+
+const form = document.getElementById("bookingForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("bookingId").value || crypto.randomUUID();
+
+  const booking = {
+    id,
+    clientName: document.getElementById("clientName").value.trim(),
+    eventName: document.getElementById("eventName").value.trim(),
+    eventDate: document.getElementById("eventDate").value,
+    status: document.getElementById("status").value,
+    packagePrice: Number(document.getElementById("packagePrice").value || 0),
+    depositPaid: Number(document.getElementById("depositPaid").value || 0),
+    location: document.getElementById("location").value.trim(),
+    nextAction: document.getElementById("nextAction").value.trim(),
+    notes: document.getElementById("notes").value.trim(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if(!booking.clientName){
+    alert("Add the client name first.");
+    return;
+  }
+
+  const existingIndex = bookings.findIndex(item => item.id === id);
+
+  if(existingIndex >= 0){
+    bookings[existingIndex] = booking;
+  } else {
+    bookings.unshift(booking);
+  }
+
+  saveBookings();
+  resetForm();
+  renderBookings();
+});
+
+function loadBookings(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveBookings(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+}
+
+function renderBookings(){
+  const list = document.getElementById("bookingList");
+  const filter = document.getElementById("filterStatus").value;
+
+  const visibleBookings = bookings
+    .filter(booking => filter === "all" || booking.status === filter)
+    .sort((a,b) => {
+      if(!a.eventDate && !b.eventDate) return 0;
+      if(!a.eventDate) return 1;
+      if(!b.eventDate) return -1;
+      return new Date(a.eventDate) - new Date(b.eventDate);
+    });
+
+  updateStats();
+
+  if(visibleBookings.length === 0){
+    list.innerHTML = `
+      <div class="empty">
+        No bookings here yet.
+        <br><br>
+        Add your first enquiry using the form.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visibleBookings.map(booking => {
+    const balance = Math.max((booking.packagePrice || 0) - (booking.depositPaid || 0), 0);
+
+    return `
+      <article class="booking">
+        <div class="bookingTop">
+          <div>
+            <h4>${escapeHTML(booking.clientName)}</h4>
+            <small>${escapeHTML(booking.eventName || "No event name added")}</small>
+          </div>
+
+          <span class="badge ${booking.status}">${statusLabel(booking.status)}</span>
+        </div>
+
+        <div class="meta">
+          <div class="metaLine">
+            <span>Date</span>
+            <strong>${formatDate(booking.eventDate)}</strong>
+          </div>
+
+          <div class="metaLine">
+            <span>Location</span>
+            <strong>${escapeHTML(booking.location || "Not added")}</strong>
+          </div>
+
+          <div class="metaLine">
+            <span>Package</span>
+            <strong>${money(booking.packagePrice)}</strong>
+          </div>
+
+          <div class="metaLine">
+            <span>Deposit</span>
+            <strong>${money(booking.depositPaid)}</strong>
+          </div>
+
+          <div class="metaLine">
+            <span>Balance</span>
+            <strong>${money(balance)}</strong>
+          </div>
+
+          <div class="metaLine">
+            <span>Next action</span>
+            <strong>${escapeHTML(booking.nextAction || "Nothing set")}</strong>
+          </div>
+        </div>
+
+        ${booking.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(booking.notes)}</p>` : ""}
+
+        <div class="bookingActions">
+          <button type="button" class="secondary" onclick="editBooking('${booking.id}')">Edit</button>
+          <button type="button" class="ghost" onclick="duplicateBooking('${booking.id}')">Duplicate</button>
+          <button type="button" class="ghost" onclick="deleteBooking('${booking.id}')">Delete</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function updateStats(){
+  const enquiry = bookings.filter(item => item.status === "enquiry").length;
+  const consultation = bookings.filter(item => item.status === "consultation").length;
+  const confirmed = bookings.filter(item => item.status === "confirmed").length;
+  const totalValue = bookings.reduce((sum,item) => sum + Number(item.packagePrice || 0), 0);
+
+  document.getElementById("statEnquiry").textContent = enquiry;
+  document.getElementById("statConsultation").textContent = consultation;
+  document.getElementById("statConfirmed").textContent = confirmed;
+  document.getElementById("statValue").textContent = money(totalValue);
+}
+
+function editBooking(id){
+  const booking = bookings.find(item => item.id === id);
+  if(!booking) return;
+
+  document.getElementById("bookingId").value = booking.id;
+  document.getElementById("clientName").value = booking.clientName || "";
+  document.getElementById("eventName").value = booking.eventName || "";
+  document.getElementById("eventDate").value = booking.eventDate || "";
+  document.getElementById("status").value = booking.status || "enquiry";
+  document.getElementById("packagePrice").value = booking.packagePrice || "";
+  document.getElementById("depositPaid").value = booking.depositPaid || "";
+  document.getElementById("location").value = booking.location || "";
+  document.getElementById("nextAction").value = booking.nextAction || "";
+  document.getElementById("notes").value = booking.notes || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function duplicateBooking(id){
+  const booking = bookings.find(item => item.id === id);
+  if(!booking) return;
+
+  const copy = {
+    ...booking,
+    id: crypto.randomUUID(),
+    clientName: `${booking.clientName} copy`,
+    updatedAt: new Date().toISOString()
+  };
+
+  bookings.unshift(copy);
+  saveBookings();
+  renderBookings();
+}
+
+function deleteBooking(id){
+  const booking = bookings.find(item => item.id === id);
+  if(!booking) return;
+
+  const confirmed = confirm(`Delete ${booking.clientName}?`);
+
+  if(!confirmed) return;
+
+  bookings = bookings.filter(item => item.id !== id);
+  saveBookings();
+  renderBookings();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("bookingId").value = "";
+  document.getElementById("status").value = "enquiry";
+}
+
+function exportBookings(){
+  const data = {
+    app:"NC Studios",
+    type:"bookings",
+    exportedAt:new Date().toISOString(),
+    bookings
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-bookings.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function openImport(){
+  document.getElementById("importFile").click();
+}
+
+function importBookings(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(){
+    try{
+      const data = JSON.parse(reader.result);
+      const imported = Array.isArray(data) ? data : data.bookings;
+
+      if(!Array.isArray(imported)){
+        alert("This file does not contain bookings.");
+        return;
+      }
+
+      const cleaned = imported
+        .filter(item => item.clientName)
+        .map(item => ({
+          id:item.id || crypto.randomUUID(),
+          clientName:item.clientName || "",
+          eventName:item.eventName || "",
+          eventDate:item.eventDate || "",
+          status:item.status || "enquiry",
+          packagePrice:Number(item.packagePrice || 0),
+          depositPaid:Number(item.depositPaid || 0),
+          location:item.location || "",
+          nextAction:item.nextAction || "",
+          notes:item.notes || "",
+          updatedAt:item.updatedAt || new Date().toISOString()
+        }));
+
+      bookings = [...cleaned, ...bookings];
+      saveBookings();
+      renderBookings();
+
+      alert("Bookings imported.");
+    }catch(error){
+      alert("Could not import that file.");
+    }
+
+    event.target.value = "";
+  };
+
+  reader.readAsText(file);
+}
+
+function statusLabel(status){
+  const labels = {
+    enquiry:"Enquiry",
+    consultation:"Consultation",
+    confirmed:"Confirmed",
+    completed:"Completed"
+  };
+
+  return labels[status] || "Enquiry";
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function formatDate(value){
+  if(!value) return "Not set";
+
+  return new Intl.DateTimeFormat("en-GB", {
+    day:"2-digit",
+    month:"short",
+    year:"numeric"
+  }).format(new Date(value));
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderBookings();
+</script>
+</body>
+</html>
