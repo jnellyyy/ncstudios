@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Dashboard</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#0f1115">
+
+<style>
+:root{
+  --bg1:#0f1115;
+  --bg2:#171a20;
+  --panel:rgba(255,255,255,0.07);
+  --panel2:rgba(255,255,255,0.10);
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f7fb;
+  --muted:#a7afbe;
+  --accent:#b91c1c;
+  --accent2:#ef4444;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --blue:#60a5fa;
+  --purple:#c084fc;
+  --shadow:0 20px 50px rgba(0,0,0,0.35);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(185,28,28,0.28), transparent 32%),
+    linear-gradient(145deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1f2937,#111827);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  font-weight:900;
+}
+
+h1,h2,h3,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:20px;
+  letter-spacing:-0.4px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.home{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  text-decoration:none;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.hero{
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+
+.heroTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+.hero h2{
+  margin:6px 0;
+  font-size:32px;
+  line-height:1;
+  letter-spacing:-1px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+button,
+.button{
+  border:0;
+  color:var(--text);
+  background:var(--accent);
+  padding:12px 14px;
+  border-radius:16px;
+  font-weight:900;
+  font-size:13px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+button.secondary,
+.button.secondary{
+  background:var(--panel2);
+  border:1px solid var(--line);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:24px;
+  letter-spacing:-0.7px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+
+.nav a{
+  text-decoration:none;
+  color:var(--muted);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:11px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+}
+
+.nav a.active{
+  color:var(--text);
+  background:rgba(185,28,28,0.30);
+  border-color:rgba(239,68,68,0.40);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.3fr 0.7fr;
+  gap:16px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+
+.card h3{
+  font-size:17px;
+  margin-bottom:6px;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.card a{
+  display:inline-block;
+  margin-top:14px;
+  color:var(--text);
+  background:var(--panel2);
+  border:1px solid var(--line);
+  text-decoration:none;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.panelHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+}
+
+.panelHead h3{
+  font-size:17px;
+}
+
+.panelHead p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.panelBody{
+  padding:16px;
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:13px;
+}
+
+.item strong{
+  display:block;
+  font-size:14px;
+}
+
+.item span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  border:1px dashed var(--line);
+  border-radius:20px;
+  padding:20px;
+  font-size:13px;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:540px){
+  .app{
+    padding:14px;
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+
+  .hero h2{
+    font-size:27px;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">NC</div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Dashboard</p>
+    </div>
+  </div>
+
+  <a class="home" href="index.html">Entry</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">Business overview</div>
+        <h2>Studio dashboard</h2>
+        <p>Your main place for bookings, clients, payments, shot lists and delivery.</p>
+      </div>
+
+      <div class="actions">
+        <a class="button" href="bookings.html">New booking</a>
+        <button class="secondary" onclick="exportAll()">Export all</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Bookings</span>
+        <strong id="bookingsTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Clients</span>
+        <strong id="clientsTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Income logged</span>
+        <strong id="incomeTotal">£0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Delivery jobs</span>
+        <strong id="deliveryTotal">0</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a class="active" href="dashboard.html">Home</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a href="shot-lists.html">Shots</a>
+    <a href="lists.html">Lists</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="grid">
+    <div class="cards">
+      <article class="card">
+        <h3>Bookings</h3>
+        <p>Track enquiries, consultations, confirmed weddings and completed bookings.</p>
+        <a href="bookings.html">Open bookings</a>
+      </article>
+
+      <article class="card">
+        <h3>Clients</h3>
+        <p>Keep client details, wedding notes, contacts, locations and key reminders.</p>
+        <a href="clients.html">Open clients</a>
+      </article>
+
+      <article class="card">
+        <h3>Finance</h3>
+        <p>Log deposits, balances, expenses, profit and business payments.</p>
+        <a href="finance.html">Open finance</a>
+      </article>
+
+      <article class="card">
+        <h3>Shot lists</h3>
+        <p>Build clean wedding shot lists by section, moment, lens and priority.</p>
+        <a href="shot-lists.html">Open shots</a>
+      </article>
+
+      <article class="card">
+        <h3>Lists</h3>
+        <p>Keep business lists separate from your personal Pace lists.</p>
+        <a href="lists.html">Open lists</a>
+      </article>
+
+      <article class="card">
+        <h3>Delivery</h3>
+        <p>Track editing, review, exports, client delivery and final handover.</p>
+        <a href="delivery.html">Open delivery</a>
+      </article>
+    </div>
+
+    <aside class="panel">
+      <div class="panelHead">
+        <h3>Next actions</h3>
+        <p>Quick view from bookings and delivery.</p>
+      </div>
+
+      <div class="panelBody" id="nextActions"></div>
+    </aside>
+  </section>
+</main>
+
+</div>
+
+<script>
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+const bookings = readData("ncstudios_bookings_v1");
+const clients = readData("ncstudios_clients_v1");
+const finance = readData("ncstudios_finance_v1");
+const delivery = readData("ncstudios_delivery_v1");
+
+document.getElementById("bookingsTotal").textContent = bookings.length;
+document.getElementById("clientsTotal").textContent = clients.length;
+document.getElementById("deliveryTotal").textContent = delivery.length;
+
+const income = finance
+  .filter(item => item.type === "income")
+  .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+document.getElementById("incomeTotal").textContent = money(income);
+
+function renderNextActions(){
+  const box = document.getElementById("nextActions");
+
+  const bookingActions = bookings
+    .filter(item => item.nextAction)
+    .slice(0,4)
+    .map(item => ({
+      title:item.clientName || "Booking",
+      detail:item.nextAction
+    }));
+
+  const deliveryActions = delivery
+    .filter(item => item.nextAction)
+    .slice(0,4)
+    .map(item => ({
+      title:item.projectName || "Delivery",
+      detail:item.nextAction
+    }));
+
+  const actions = [...bookingActions, ...deliveryActions].slice(0,6);
+
+  if(actions.length === 0){
+    box.innerHTML = `<div class="empty">No next actions yet. Add them in bookings or delivery.</div>`;
+    return;
+  }
+
+  box.innerHTML = actions.map(item => `
+    <div class="item">
+      <strong>${escapeHTML(item.title)}</strong>
+      <span>${escapeHTML(item.detail)}</span>
+    </div>
+  `).join("");
+}
+
+function exportAll(){
+  const data = {
+    app:"NC Studios",
+    exportedAt:new Date().toISOString(),
+    bookings:readData("ncstudios_bookings_v1"),
+    clients:readData("ncstudios_clients_v1"),
+    finance:readData("ncstudios_finance_v1"),
+    shots:readData("ncstudios_shots_v1"),
+    lists:readData("ncstudios_lists_v1"),
+    delivery:readData("ncstudios_delivery_v1"),
+    templates:readData("ncstudios_templates_v1")
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-full-backup.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderNextActions();
+</script>
+</body>
+</html>
