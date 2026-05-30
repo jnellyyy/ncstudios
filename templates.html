@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Templates</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050507">
+
+<style>
+:root{
+  --bg:#050507;
+  --bg2:#101114;
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f5f7;
+  --muted:#9ca3af;
+  --red:#ff3b30;
+  --green:#34c759;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,59,48,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(127,16,16,0.24), transparent 34%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:16px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,59,48,0.45), transparent 38%),
+    linear-gradient(145deg,#202227,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.topPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  padding:10px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-100px;
+  background:radial-gradient(circle, rgba(255,59,48,0.28), transparent 70%);
+}
+
+.heroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.hero h2{
+  margin:7px 0;
+  font-size:34px;
+  line-height:0.95;
+  letter-spacing:-1.5px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  max-width:520px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+button,.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(145deg,#ff3b30,#9f1717);
+  padding:12px 14px;
+  border-radius:17px;
+  font-weight:900;
+  font-size:12px;
+  text-decoration:none;
+  box-shadow:0 12px 28px rgba(255,59,48,0.22);
+  cursor:pointer;
+}
+
+button.secondary,.btn.secondary{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  min-height:92px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+
+.stat strong{
+  display:block;
+  margin-top:10px;
+  font-size:25px;
+  letter-spacing:-0.8px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.055);
+  border-radius:20px;
+  padding:12px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:850;
+}
+
+.nav a.active{
+  color:white;
+  background:linear-gradient(145deg,rgba(255,59,48,0.32),rgba(255,255,255,0.06));
+  border-color:rgba(255,59,48,0.40);
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:14px;
+  align-items:start;
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,0.13);
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
+  border-radius:30px;
+  box-shadow:0 16px 45px rgba(0,0,0,0.28);
+  overflow:hidden;
+}
+
+.panelHead{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.panelHead h3{
+  font-size:17px;
+}
+
+.panelHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.panelBody{
+  padding:14px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.075);
+  color:var(--text);
+  border-radius:18px;
+  padding:13px;
+  font:inherit;
+  outline:none;
+}
+
+select option{
+  color:#111827;
+}
+
+textarea{
+  min-height:170px;
+  resize:vertical;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  border:1px solid rgba(255,255,255,0.11);
+  background:rgba(255,255,255,0.065);
+  border-radius:24px;
+  padding:14px;
+}
+
+.itemTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.item h4{
+  font-size:16px;
+}
+
+.item small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.templateText{
+  white-space:pre-wrap;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  margin-top:12px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:12px;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:14px;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  border:1px dashed rgba(255,255,255,0.14);
+  border-radius:22px;
+  padding:24px;
+  font-size:13px;
+}
+
+@media(max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    padding:14px;
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+
+  .actions{
+    justify-content:flex-start;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">NC</div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Templates</p>
+    </div>
+  </div>
+
+  <a class="topPill" href="dashboard.html">Home</a>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="heroTop">
+    <div>
+      <div class="kicker">Client messages</div>
+      <h2>Templates</h2>
+      <p>Save WhatsApp messages, email replies, invoice notes and delivery updates.</p>
+    </div>
+
+    <div class="actions">
+      <button onclick="exportTemplates()">Export</button>
+      <button class="secondary" onclick="resetForm()">New template</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <span>Total</span>
+      <strong id="totalStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>WhatsApp</span>
+      <strong id="whatsappStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Email</span>
+      <strong id="emailStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Delivery</span>
+      <strong id="deliveryStat">0</strong>
+    </div>
+  </div>
+</section>
+
+<nav class="nav">
+  <a href="dashboard.html">Home</a>
+  <a href="bookings.html">Bookings</a>
+  <a href="clients.html">Clients</a>
+  <a href="finance.html">Finance</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="lists.html">Lists</a>
+  <a href="delivery.html">Delivery</a>
+  <a class="active" href="templates.html">Templates</a>
+</nav>
+
+<section class="layout">
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Add template</h3>
+        <p>Save anything you reuse often.</p>
+      </div>
+    </div>
+
+    <div class="panelBody">
+      <form class="form" id="templateForm">
+        <input type="hidden" id="templateId">
+
+        <label>
+          Template title
+          <input id="title" type="text" placeholder="Booking confirmation message" required>
+        </label>
+
+        <label>
+          Category
+          <select id="category">
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+            <option value="invoice">Invoice</option>
+            <option value="client care">Client care</option>
+            <option value="delivery">Delivery</option>
+            <option value="follow up">Follow up</option>
+          </select>
+        </label>
+
+        <label>
+          Message
+          <textarea id="body" placeholder="Write your reusable message here." required></textarea>
+        </label>
+
+        <button type="submit">Save template</button>
+        <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Saved templates</h3>
+        <p>Tap copy when you need one.</p>
+      </div>
+
+      <select id="filter" onchange="renderTemplates()">
+        <option value="all">All</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="email">Email</option>
+        <option value="invoice">Invoice</option>
+        <option value="client care">Client care</option>
+        <option value="delivery">Delivery</option>
+        <option value="follow up">Follow up</option>
+      </select>
+    </div>
+
+    <div class="panelBody">
+      <div id="templateList" class="list"></div>
+    </div>
+  </section>
+
+</section>
+
+</main>
+</div>
+
+<script>
+const STORAGE_KEY = "ncstudios_templates_v1";
+let templates = loadTemplates();
+const form = document.getElementById("templateForm");
+
+seedTemplates();
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("templateId").value || crypto.randomUUID();
+
+  const template = {
+    id,
+    title:document.getElementById("title").value.trim(),
+    category:document.getElementById("category").value,
+    body:document.getElementById("body").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!template.title || !template.body){
+    alert("Add a title and message first.");
+    return;
+  }
+
+  const index = templates.findIndex(item => item.id === id);
+
+  if(index >= 0){
+    templates[index] = template;
+  }else{
+    templates.unshift(template);
+  }
+
+  saveTemplates();
+  resetForm();
+  renderTemplates();
+});
+
+function loadTemplates(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveTemplates(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
+}
+
+function seedTemplates(){
+  if(templates.length > 0) return;
+
+  templates = [
+    {
+      id:crypto.randomUUID(),
+      title:"Booking confirmation",
+      category:"whatsapp",
+      body:"Hi lovely, thank you again for booking NC Studios. I’m so excited to capture your day. Your date is now noted on my side. Please send over any key details, timings or links when you have them, and I’ll keep everything organised from here.",
+      updatedAt:new Date().toISOString()
+    },
+    {
+      id:crypto.randomUUID(),
+      title:"Planning form reminder",
+      category:"follow up",
+      body:"Hi lovely, just a gentle reminder to complete the planning form when you get a chance. It helps me prepare properly for your day and make sure I don’t miss any important moments.",
+      updatedAt:new Date().toISOString()
+    },
+    {
+      id:crypto.randomUUID(),
+      title:"Delivery update",
+      category:"delivery",
+      body:"Hi lovely, just updating you that your film is currently in progress. I’m taking care with the edit so it feels polished and true to the day. I’ll update you again once it moves into final review.",
+      updatedAt:new Date().toISOString()
+    }
+  ];
+
+  saveTemplates();
+}
+
+function renderTemplates(){
+  const list = document.getElementById("templateList");
+  const filter = document.getElementById("filter").value;
+
+  const visible = templates.filter(item => filter === "all" || item.category === filter);
+
+  updateStats();
+
+  if(visible.length === 0){
+    list.innerHTML = `<div class="empty">No templates here yet.<br><br>Add your first reusable message.</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="item">
+      <div class="itemTop">
+        <div>
+          <h4>${escapeHTML(item.title)}</h4>
+          <small>${escapeHTML(item.category)}</small>
+        </div>
+      </div>
+
+      <div class="templateText">${escapeHTML(item.body)}</div>
+
+      <div class="itemActions">
+        <button class="secondary" onclick="copyTemplate('${item.id}')">Copy</button>
+        <button class="ghost" onclick="editTemplate('${item.id}')">Edit</button>
+        <button class="ghost" onclick="deleteTemplate('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  document.getElementById("totalStat").textContent = templates.length;
+  document.getElementById("whatsappStat").textContent = templates.filter(item => item.category === "whatsapp").length;
+  document.getElementById("emailStat").textContent = templates.filter(item => item.category === "email").length;
+  document.getElementById("deliveryStat").textContent = templates.filter(item => item.category === "delivery").length;
+}
+
+function editTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  document.getElementById("templateId").value = template.id;
+  document.getElementById("title").value = template.title || "";
+  document.getElementById("category").value = template.category || "whatsapp";
+  document.getElementById("body").value = template.body || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function copyTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  navigator.clipboard.writeText(template.body).then(function(){
+    alert("Template copied.");
+  }).catch(function(){
+    alert("Copy did not work. Open the template and copy it manually.");
+  });
+}
+
+function deleteTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  if(!confirm(`Delete ${template.title}?`)) return;
+
+  templates = templates.filter(item => item.id !== id);
+  saveTemplates();
+  renderTemplates();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("templateId").value = "";
+  document.getElementById("category").value = "whatsapp";
+}
+
+function exportTemplates(){
+  const data = {
+    app:"NC Studios",
+    type:"templates",
+    exportedAt:new Date().toISOString(),
+    templates
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-templates.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderTemplates();
+</script>
+
+</body>
+</html>
