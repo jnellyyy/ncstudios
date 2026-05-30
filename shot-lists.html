@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Shot Lists</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#0f1115">
+
+<style>
+:root{
+  --bg1:#0f1115;
+  --bg2:#171a20;
+  --panel:rgba(255,255,255,0.07);
+  --panel2:rgba(255,255,255,0.10);
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f7fb;
+  --muted:#a7afbe;
+  --accent:#b91c1c;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --blue:#60a5fa;
+  --purple:#c084fc;
+  --shadow:0 20px 50px rgba(0,0,0,0.35);
+  --radius:26px;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(185,28,28,0.28), transparent 32%),
+    linear-gradient(145deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1f2937,#111827);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  font-weight:900;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:20px;
+  letter-spacing:-0.4px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.home{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  text-decoration:none;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.hero{
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+
+.heroTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+.hero h2{
+  margin:6px 0;
+  font-size:32px;
+  line-height:1;
+  letter-spacing:-1px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+button{
+  border:0;
+  color:var(--text);
+  background:var(--accent);
+  padding:12px 14px;
+  border-radius:16px;
+  font-weight:900;
+  font-size:13px;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:var(--panel2);
+  border:1px solid var(--line);
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:24px;
+  letter-spacing:-0.7px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+
+.nav a{
+  text-decoration:none;
+  color:var(--muted);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:11px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+}
+
+.nav a.active{
+  color:var(--text);
+  background:rgba(185,28,28,0.30);
+  border-color:rgba(239,68,68,0.40);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cardHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.cardHead h3{
+  font-size:17px;
+}
+
+.cardHead p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cardBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+
+textarea{
+  min-height:95px;
+  resize:vertical;
+}
+
+select option{
+  color:#111827;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.shot{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.shotTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.shot h4{
+  font-size:16px;
+  letter-spacing:-0.3px;
+}
+
+.shot small{
+  color:var(--muted);
+  display:block;
+  margin-top:4px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+
+.badge.a{
+  background:rgba(239,68,68,0.18);
+  color:#fecaca;
+}
+
+.badge.b{
+  background:rgba(245,158,11,0.16);
+  color:#fde68a;
+}
+
+.badge.c{
+  background:rgba(96,165,250,0.18);
+  color:#bfdbfe;
+}
+
+.meta{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.metaLine{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:8px;
+}
+
+.metaLine strong{
+  color:var(--text);
+  text-align:right;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:13px;
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 16px;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+}
+
+@media(max-width:520px){
+  .app{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:27px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">NC</div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Shot lists</p>
+    </div>
+  </div>
+
+  <a class="home" href="dashboard.html">Dashboard</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">Production planning</div>
+        <h2>Shot lists</h2>
+        <p>Build wedding shot lists with section, lens, FPS, movement and priority.</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="exportShots()">Export</button>
+        <button type="button" class="secondary" onclick="resetForm()">New shot</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Total shots</span>
+        <strong id="statTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Priority A</span>
+        <strong id="statA">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>25fps</span>
+        <strong id="stat25">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>50fps</span>
+        <strong id="stat50">0</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a href="dashboard.html">Home</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a class="active" href="shot-lists.html">Shots</a>
+    <a href="lists.html">Lists</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="grid">
+    <aside class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Add or edit shot</h3>
+          <p>Use this for shoot day planning.</p>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <form class="form" id="shotForm">
+          <input type="hidden" id="shotId">
+
+          <label>
+            Project
+            <input id="project" type="text" placeholder="Marvin and Blessing" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Section
+              <select id="section">
+                <option value="prep">Prep</option>
+                <option value="ceremony">Ceremony</option>
+                <option value="portraits">Portraits</option>
+                <option value="reception">Reception</option>
+                <option value="speeches">Speeches</option>
+                <option value="dancing">Dancing</option>
+                <option value="details">Details</option>
+              </select>
+            </label>
+
+            <label>
+              Priority
+              <select id="priority">
+                <option value="a">A</option>
+                <option value="b">B</option>
+                <option value="c">C</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Location
+            <input id="location" type="text" placeholder="The Mount Hotel, church, park, reception">
+          </label>
+
+          <label>
+            Shot
+            <input id="shotText" type="text" placeholder="Bride reveal, rings, ceremony side angle" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Lens
+              <input id="lens" type="text" placeholder="24mm, 35mm, 70 to 200mm">
+            </label>
+
+            <label>
+              FPS
+              <select id="fps">
+                <option value="25fps">25fps</option>
+                <option value="50fps">50fps</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Movement
+            <input id="movement" type="text" placeholder="Static, slow push, drift, handheld, gimbal">
+          </label>
+
+          <label>
+            Notes
+            <textarea id="notes" placeholder="Framing, emotion, audio, timing or creative example."></textarea>
+          </label>
+
+          <button type="submit">Save shot</button>
+          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+        </form>
+      </div>
+    </aside>
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Shot list</h3>
+          <p>Your saved production shots.</p>
+        </div>
+
+        <select id="filterSection" onchange="renderShots()">
+          <option value="all">All</option>
+          <option value="prep">Prep</option>
+          <option value="ceremony">Ceremony</option>
+          <option value="portraits">Portraits</option>
+          <option value="reception">Reception</option>
+          <option value="speeches">Speeches</option>
+          <option value="dancing">Dancing</option>
+          <option value="details">Details</option>
+        </select>
+      </div>
+
+      <div class="cardBody">
+        <div id="shotList" class="list"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+</div>
+
+<script>
+const STORAGE_KEY = "ncstudios_shots_v1";
+let shots = loadShots();
+
+const form = document.getElementById("shotForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("shotId").value || crypto.randomUUID();
+
+  const shot = {
+    id,
+    project:document.getElementById("project").value.trim(),
+    section:document.getElementById("section").value,
+    priority:document.getElementById("priority").value,
+    location:document.getElementById("location").value.trim(),
+    shotText:document.getElementById("shotText").value.trim(),
+    lens:document.getElementById("lens").value.trim(),
+    fps:document.getElementById("fps").value,
+    movement:document.getElementById("movement").value.trim(),
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!shot.project || !shot.shotText){
+    alert("Add the project and shot first.");
+    return;
+  }
+
+  const existingIndex = shots.findIndex(item => item.id === id);
+
+  if(existingIndex >= 0){
+    shots[existingIndex] = shot;
+  } else {
+    shots.unshift(shot);
+  }
+
+  saveShots();
+  resetForm();
+  renderShots();
+});
+
+function loadShots(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveShots(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(shots));
+}
+
+function renderShots(){
+  const list = document.getElementById("shotList");
+  const filter = document.getElementById("filterSection").value;
+
+  const visible = shots.filter(item => filter === "all" || item.section === filter);
+
+  updateStats();
+
+  if(visible.length === 0){
+    list.innerHTML = `
+      <div class="empty">
+        No shots here yet.
+        <br><br>
+        Add your first shot using the form.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="shot">
+      <div class="shotTop">
+        <div>
+          <h4>${escapeHTML(item.shotText)}</h4>
+          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)}</small>
+        </div>
+
+        <span class="badge ${item.priority}">Priority ${item.priority.toUpperCase()}</span>
+      </div>
+
+      <div class="meta">
+        <div class="metaLine">
+          <span>Location</span>
+          <strong>${escapeHTML(item.location || "Not added")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Lens</span>
+          <strong>${escapeHTML(item.lens || "Not set")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>FPS</span>
+          <strong>${escapeHTML(item.fps || "Not set")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Movement</span>
+          <strong>${escapeHTML(item.movement || "Not set")}</strong>
+        </div>
+      </div>
+
+      ${item.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(item.notes)}</p>` : ""}
+
+      <div class="itemActions">
+        <button type="button" class="secondary" onclick="editShot('${item.id}')">Edit</button>
+        <button type="button" class="ghost" onclick="duplicateShot('${item.id}')">Duplicate</button>
+        <button type="button" class="ghost" onclick="deleteShot('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  document.getElementById("statTotal").textContent = shots.length;
+  document.getElementById("statA").textContent = shots.filter(item => item.priority === "a").length;
+  document.getElementById("stat25").textContent = shots.filter(item => item.fps === "25fps").length;
+  document.getElementById("stat50").textContent = shots.filter(item => item.fps === "50fps").length;
+}
+
+function editShot(id){
+  const shot = shots.find(item => item.id === id);
+  if(!shot) return;
+
+  document.getElementById("shotId").value = shot.id;
+  document.getElementById("project").value = shot.project || "";
+  document.getElementById("section").value = shot.section || "prep";
+  document.getElementById("priority").value = shot.priority || "a";
+  document.getElementById("location").value = shot.location || "";
+  document.getElementById("shotText").value = shot.shotText || "";
+  document.getElementById("lens").value = shot.lens || "";
+  document.getElementById("fps").value = shot.fps || "25fps";
+  document.getElementById("movement").value = shot.movement || "";
+  document.getElementById("notes").value = shot.notes || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function duplicateShot(id){
+  const shot = shots.find(item => item.id === id);
+  if(!shot) return;
+
+  const copy = {
+    ...shot,
+    id:crypto.randomUUID(),
+    shotText:`${shot.shotText} copy`,
+    updatedAt:new Date().toISOString()
+  };
+
+  shots.unshift(copy);
+  saveShots();
+  renderShots();
+}
+
+function deleteShot(id){
+  const shot = shots.find(item => item.id === id);
+  if(!shot) return;
+
+  const confirmed = confirm(`Delete ${shot.shotText}?`);
+  if(!confirmed) return;
+
+  shots = shots.filter(item => item.id !== id);
+  saveShots();
+  renderShots();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("shotId").value = "";
+  document.getElementById("section").value = "prep";
+  document.getElementById("priority").value = "a";
+  document.getElementById("fps").value = "25fps";
+}
+
+function exportShots(){
+  const data = {
+    app:"NC Studios",
+    type:"shots",
+    exportedAt:new Date().toISOString(),
+    shots
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-shot-lists.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function sectionLabel(value){
+  const labels = {
+    prep:"Prep",
+    ceremony:"Ceremony",
+    portraits:"Portraits",
+    reception:"Reception",
+    speeches:"Speeches",
+    dancing:"Dancing",
+    details:"Details"
+  };
+
+  return labels[value] || "Prep";
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderShots();
+</script>
+</body>
+</html>
