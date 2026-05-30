@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>NC Studios Dashboard</title>
+<title>NC Studios</title>
 
 <link rel="manifest" href="site.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,20 +15,15 @@
 :root{
   --bg:#050507;
   --bg2:#101114;
-  --card:rgba(255,255,255,0.075);
-  --card2:rgba(255,255,255,0.11);
-  --glass:rgba(255,255,255,0.08);
-  --line:rgba(255,255,255,0.12);
+  --glass:rgba(255,255,255,0.075);
+  --glass2:rgba(255,255,255,0.105);
+  --line:rgba(255,255,255,0.13);
   --text:#f5f5f7;
-  --muted:#9ca3af;
+  --muted:#a5adbb;
   --red:#ff3b30;
-  --deepRed:#7f1010;
+  --red2:#991b1b;
   --green:#34c759;
-  --blue:#60a5fa;
-  --yellow:#fbbf24;
-  --purple:#c084fc;
-  --shadow:0 24px 70px rgba(0,0,0,0.45);
-  --radius:28px;
+  --shadow:0 22px 60px rgba(0,0,0,0.42);
 }
 
 *{
@@ -36,13 +31,20 @@
   -webkit-tap-highlight-color:transparent;
 }
 
+html,
 body{
   margin:0;
-  min-height:100vh;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+body{
+  min-height:100svh;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
   background:
     radial-gradient(circle at top left, rgba(255,59,48,0.28), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(127,16,16,0.24), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(127,16,16,0.28), transparent 35%),
     linear-gradient(145deg,var(--bg),var(--bg2));
   color:var(--text);
 }
@@ -52,17 +54,24 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size:44px 44px;
+    linear-gradient(rgba(255,255,255,0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.024) 1px, transparent 1px);
+  background-size:42px 42px;
   pointer-events:none;
-  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  opacity:0.8;
 }
 
 .app{
-  width:min(1180px,100%);
+  height:100svh;
+  width:min(940px,100%);
   margin:0 auto;
-  padding:16px;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    14px
+    max(14px, env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-rows:auto auto auto 1fr auto;
+  gap:10px;
   position:relative;
   z-index:1;
 }
@@ -71,58 +80,52 @@ body::before{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px;
+  gap:10px;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
   min-width:0;
 }
 
 .logo{
-  width:48px;
-  height:48px;
-  border-radius:17px;
+  width:44px;
+  height:44px;
+  border-radius:16px;
   display:grid;
   place-items:center;
   background:
-    radial-gradient(circle at 25% 20%, rgba(255,59,48,0.45), transparent 38%),
-    linear-gradient(145deg,#202227,#0d0e12);
+    radial-gradient(circle at 25% 18%, rgba(255,59,48,0.46), transparent 38%),
+    linear-gradient(145deg,#22242a,#0d0e12);
   border:1px solid rgba(255,255,255,0.16);
   box-shadow:var(--shadow);
   font-weight:950;
   letter-spacing:-1px;
 }
 
-.brandText{
-  min-width:0;
-}
-
-.brandText h1{
+.brand h1{
   margin:0;
   font-size:18px;
   letter-spacing:-0.4px;
-  white-space:nowrap;
 }
 
-.brandText p{
-  margin:2px 0 0;
+.brand p{
+  margin:1px 0 0;
   color:var(--muted);
   font-size:12px;
 }
 
-.topPill{
+.statusPill{
   color:var(--text);
   text-decoration:none;
   border:1px solid var(--line);
-  background:rgba(255,255,255,0.07);
-  padding:10px 13px;
+  background:rgba(255,255,255,0.075);
+  padding:9px 12px;
   border-radius:999px;
   font-size:12px;
-  font-weight:800;
+  font-weight:850;
   backdrop-filter:blur(18px);
 }
 
@@ -130,9 +133,9 @@ body::before{
   border:1px solid rgba(255,255,255,0.14);
   background:
     linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
-  border-radius:34px;
+  border-radius:30px;
+  padding:16px;
   box-shadow:var(--shadow);
-  padding:18px;
   overflow:hidden;
   position:relative;
 }
@@ -140,313 +143,330 @@ body::before{
 .hero::after{
   content:"";
   position:absolute;
-  width:220px;
-  height:220px;
-  right:-80px;
-  top:-100px;
-  background:radial-gradient(circle, rgba(255,59,48,0.28), transparent 70%);
-  pointer-events:none;
-}
-
-.heroTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  position:relative;
-  z-index:1;
+  width:190px;
+  height:190px;
+  right:-70px;
+  top:-85px;
+  background:radial-gradient(circle, rgba(255,59,48,0.30), transparent 68%);
 }
 
 .kicker{
   color:var(--muted);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:0.12em;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:0.14em;
   text-transform:uppercase;
+  position:relative;
+  z-index:1;
 }
 
 .hero h2{
-  margin:7px 0 7px;
-  font-size:34px;
-  line-height:0.95;
-  letter-spacing:-1.5px;
+  margin:5px 0 6px;
+  font-size:28px;
+  line-height:0.96;
+  letter-spacing:-1.3px;
+  position:relative;
+  z-index:1;
 }
 
 .hero p{
   margin:0;
   color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-  max-width:520px;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.btn{
-  border:0;
-  color:white;
-  background:linear-gradient(145deg,#ff3b30,#9f1717);
-  padding:12px 14px;
-  border-radius:17px;
-  font-weight:900;
   font-size:12px;
-  text-decoration:none;
-  box-shadow:0 12px 28px rgba(255,59,48,0.22);
+  line-height:1.34;
+  max-width:560px;
+  position:relative;
+  z-index:1;
 }
 
-.btn.secondary{
-  background:rgba(255,255,255,0.08);
-  border:1px solid var(--line);
-  box-shadow:none;
+.quick{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.quick a{
+  min-height:46px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:white;
+  font-size:13px;
+  font-weight:950;
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.quick a:first-child{
+  background:linear-gradient(145deg,#ff3b30,#991b1b);
+  box-shadow:0 14px 28px rgba(255,59,48,0.20);
+}
+
+.quick a:last-child{
+  background:rgba(255,255,255,0.075);
+  backdrop-filter:blur(18px);
 }
 
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:16px;
-  position:relative;
-  z-index:1;
+  gap:8px;
 }
 
 .stat{
-  min-height:92px;
+  min-height:70px;
   border:1px solid rgba(255,255,255,0.13);
-  background:rgba(255,255,255,0.07);
-  border-radius:26px;
-  padding:14px;
-  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.075);
+  border-radius:22px;
+  padding:11px;
+  backdrop-filter:blur(18px);
 }
 
 .stat span{
+  display:block;
   color:var(--muted);
-  font-size:11px;
+  font-size:10px;
   font-weight:850;
+  white-space:nowrap;
 }
 
 .stat strong{
   display:block;
-  margin-top:10px;
-  font-size:25px;
-  letter-spacing:-0.8px;
+  margin-top:7px;
+  font-size:22px;
+  line-height:1;
+  letter-spacing:-0.7px;
 }
 
-.nav{
+.tiles{
+  min-height:0;
   display:grid;
-  grid-template-columns:repeat(8,1fr);
-  gap:8px;
-  margin:14px 0;
+  grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:1fr;
+  gap:9px;
 }
 
-.nav a{
-  color:var(--muted);
-  text-decoration:none;
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.055);
-  border-radius:20px;
-  padding:12px 8px;
-  text-align:center;
-  font-size:12px;
-  font-weight:850;
-  backdrop-filter:blur(18px);
-}
-
-.nav a.active{
-  color:white;
-  background:linear-gradient(145deg,rgba(255,59,48,0.32),rgba(255,255,255,0.06));
-  border-color:rgba(255,59,48,0.40);
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:1.25fr 0.75fr;
-  gap:14px;
-}
-
-.widgetGrid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.widget{
-  min-height:156px;
+.tile{
+  min-height:0;
   border:1px solid rgba(255,255,255,0.13);
   background:
     linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
-  border-radius:30px;
-  padding:16px;
-  box-shadow:0 16px 45px rgba(0,0,0,0.28);
-  text-decoration:none;
+  border-radius:26px;
+  padding:12px;
   color:var(--text);
+  text-decoration:none;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  position:relative;
   overflow:hidden;
+  box-shadow:0 15px 35px rgba(0,0,0,0.26);
+  position:relative;
 }
 
-.widget::after{
+.tile::after{
   content:"";
   position:absolute;
-  right:-40px;
-  top:-50px;
-  width:130px;
-  height:130px;
+  right:-32px;
+  top:-35px;
+  width:95px;
+  height:95px;
   border-radius:50%;
-  background:rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.055);
 }
 
-.iconBubble{
-  width:46px;
-  height:46px;
-  border-radius:18px;
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:15px;
   display:grid;
   place-items:center;
   background:rgba(255,255,255,0.10);
-  border:1px solid var(--line);
-  font-size:20px;
+  border:1px solid rgba(255,255,255,0.12);
+  font-size:17px;
 }
 
-.widget h3{
-  margin:14px 0 5px;
-  font-size:18px;
-  letter-spacing:-0.45px;
+.tile h3{
+  margin:8px 0 3px;
+  font-size:15px;
+  letter-spacing:-0.35px;
+  position:relative;
+  z-index:1;
 }
 
-.widget p{
+.tile p{
   margin:0;
   color:var(--muted);
-  font-size:12px;
-  line-height:1.4;
+  font-size:10.8px;
+  line-height:1.22;
+  position:relative;
+  z-index:1;
 }
 
-.widgetFooter{
-  margin-top:14px;
+.tileFooter{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  color:rgba(255,255,255,0.86);
-  font-size:12px;
-  font-weight:850;
+  margin-top:8px;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;
+  font-weight:900;
+  position:relative;
+  z-index:1;
 }
 
-.sidePanel{
-  border:1px solid rgba(255,255,255,0.13);
-  background:
-    linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
-  border-radius:30px;
-  box-shadow:0 16px 45px rgba(0,0,0,0.28);
-  overflow:hidden;
-}
-
-.panelHead{
-  padding:16px;
-  border-bottom:1px solid rgba(255,255,255,0.10);
-}
-
-.panelHead h3{
-  margin:0;
-  font-size:17px;
-  letter-spacing:-0.4px;
-}
-
-.panelHead p{
-  margin:4px 0 0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.panelBody{
-  padding:14px;
+.bottomRow{
   display:grid;
-  gap:10px;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
 }
 
-.actionItem{
-  border:1px solid rgba(255,255,255,0.10);
-  background:rgba(255,255,255,0.06);
-  border-radius:22px;
-  padding:13px;
-}
-
-.actionItem strong{
-  display:block;
-  font-size:13px;
-  letter-spacing:-0.2px;
-}
-
-.actionItem span{
-  display:block;
+.bottomRow a{
+  min-height:42px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
   color:var(--muted);
   font-size:12px;
-  line-height:1.35;
-  margin-top:5px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.055);
+  backdrop-filter:blur(18px);
 }
 
-.empty{
-  color:var(--muted);
-  text-align:center;
-  border:1px dashed rgba(255,255,255,0.14);
-  border-radius:22px;
-  padding:22px;
-  font-size:13px;
-}
-
-@media(max-width:900px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .nav{
-    grid-template-columns:repeat(4,1fr);
-  }
-}
-
-@media(max-width:560px){
+@media(max-width:650px){
   .app{
+    padding:
+      max(10px, env(safe-area-inset-top))
+      12px
+      max(12px, env(safe-area-inset-bottom));
+    gap:8px;
+  }
+
+  .logo{
+    width:42px;
+    height:42px;
+  }
+
+  .brand h1{
+    font-size:17px;
+  }
+
+  .hero{
     padding:14px;
-  }
-
-  .topbar{
-    align-items:flex-start;
-  }
-
-  .heroTop{
-    flex-direction:column;
-  }
-
-  .actions{
-    justify-content:flex-start;
+    border-radius:28px;
   }
 
   .hero h2{
-    font-size:30px;
+    font-size:24px;
+  }
+
+  .hero p{
+    font-size:11.5px;
   }
 
   .stats{
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:repeat(4,1fr);
   }
 
   .stat{
-    min-height:82px;
+    min-height:62px;
+    padding:10px;
+    border-radius:20px;
+  }
+
+  .stat span{
+    font-size:9.5px;
+  }
+
+  .stat strong{
+    font-size:19px;
+  }
+
+  .tiles{
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+  }
+
+  .tile{
     border-radius:23px;
+    padding:11px;
   }
 
-  .widgetGrid{
-    grid-template-columns:1fr;
+  .icon{
+    width:32px;
+    height:32px;
+    border-radius:13px;
+    font-size:15px;
   }
 
-  .nav{
+  .tile h3{
+    font-size:14px;
+    margin-top:7px;
+  }
+
+  .tile p{
+    font-size:10.2px;
+  }
+
+  .tileFooter{
+    font-size:10.5px;
+    margin-top:6px;
+  }
+
+  .bottomRow a{
+    min-height:38px;
+    font-size:11px;
+  }
+}
+
+@media(max-height:760px){
+  .hero p{
+    display:none;
+  }
+
+  .hero h2{
+    font-size:23px;
+    margin-bottom:0;
+  }
+
+  .quick a{
+    min-height:40px;
+  }
+
+  .stat{
+    min-height:56px;
+  }
+
+  .stat strong{
+    font-size:18px;
+  }
+
+  .tile p{
+    display:none;
+  }
+
+  .tile h3{
+    margin-bottom:0;
+  }
+}
+
+@media(max-height:690px){
+  .topbar{
+    display:none;
+  }
+
+  .hero{
+    padding:13px;
+  }
+
+  .stats{
+    display:none;
+  }
+
+  .tiles{
     grid-template-columns:repeat(2,1fr);
   }
 }
@@ -459,167 +479,104 @@ body::before{
 <header class="topbar">
   <div class="brand">
     <div class="logo">NC</div>
-    <div class="brandText">
+    <div>
       <h1>NC Studios</h1>
       <p>Business dashboard</p>
     </div>
   </div>
 
-  <a class="topPill" href="index.html">Entry</a>
+  <a class="statusPill" href="index.html">Entry</a>
 </header>
 
-<main>
-
 <section class="hero">
-  <div class="heroTop">
-    <div>
-      <div class="kicker">Studio control</div>
-      <h2>Run the business cleanly.</h2>
-      <p>Bookings, clients, money, shot lists, business tasks and delivery all in one place.</p>
-    </div>
+  <div class="kicker">Studio control</div>
+  <h2>NC Studios</h2>
+  <p>Bookings, clients, money, shot lists, tasks and delivery in one clean place.</p>
+</section>
 
-    <div class="actions">
-      <a class="btn" href="bookings.html">New booking</a>
-      <a class="btn secondary" href="finance.html">Add money</a>
-    </div>
+<section class="quick">
+  <a href="bookings.html">New booking</a>
+  <a href="finance.html">Add money</a>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <span>Bookings</span>
+    <strong id="bookingsTotal">0</strong>
   </div>
 
-  <div class="stats">
-    <div class="stat">
-      <span>Bookings</span>
-      <strong id="bookingsTotal">0</strong>
-    </div>
+  <div class="stat">
+    <span>Clients</span>
+    <strong id="clientsTotal">0</strong>
+  </div>
 
-    <div class="stat">
-      <span>Clients</span>
-      <strong id="clientsTotal">0</strong>
-    </div>
+  <div class="stat">
+    <span>Income</span>
+    <strong id="incomeTotal">£0</strong>
+  </div>
 
-    <div class="stat">
-      <span>Income</span>
-      <strong id="incomeTotal">£0</strong>
-    </div>
-
-    <div class="stat">
-      <span>Delivery</span>
-      <strong id="deliveryTotal">0</strong>
-    </div>
+  <div class="stat">
+    <span>Delivery</span>
+    <strong id="deliveryTotal">0</strong>
   </div>
 </section>
 
-<nav class="nav">
-  <a class="active" href="dashboard.html">Home</a>
-  <a href="bookings.html">Bookings</a>
-  <a href="clients.html">Clients</a>
-  <a href="finance.html">Finance</a>
+<main class="tiles">
+  <a class="tile" href="bookings.html">
+    <div>
+      <div class="icon">📅</div>
+      <h3>Bookings</h3>
+      <p>Enquiries, consultations and confirmed jobs.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+
+  <a class="tile" href="clients.html">
+    <div>
+      <div class="icon">🤍</div>
+      <h3>Clients</h3>
+      <p>Client records, notes, dates and links.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+
+  <a class="tile" href="finance.html">
+    <div>
+      <div class="icon">£</div>
+      <h3>Finance</h3>
+      <p>Payments, balances, expenses and profit.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+
+  <a class="tile" href="delivery.html">
+    <div>
+      <div class="icon">📦</div>
+      <h3>Delivery</h3>
+      <p>Editing, review, export and handover.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+</main>
+
+<nav class="bottomRow">
   <a href="shot-lists.html">Shots</a>
   <a href="lists.html">Lists</a>
-  <a href="delivery.html">Delivery</a>
   <a href="templates.html">Templates</a>
 </nav>
 
-<section class="layout">
-
-  <section class="widgetGrid">
-
-    <a class="widget" href="bookings.html">
-      <div>
-        <div class="iconBubble">📅</div>
-        <h3>Bookings</h3>
-        <p>Enquiries, consultations, confirmed weddings and next actions.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open bookings</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="clients.html">
-      <div>
-        <div class="iconBubble">🤍</div>
-        <h3>Clients</h3>
-        <p>Client contact details, wedding notes, links and important reminders.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open clients</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="finance.html">
-      <div>
-        <div class="iconBubble">£</div>
-        <h3>Finance</h3>
-        <p>Deposits, balances, expenses, income and business profit.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open finance</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="shot-lists.html">
-      <div>
-        <div class="iconBubble">🎥</div>
-        <h3>Shot lists</h3>
-        <p>Build shot plans by section, lens, FPS, movement and priority.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open shots</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="lists.html">
-      <div>
-        <div class="iconBubble">✓</div>
-        <h3>Lists</h3>
-        <p>Business tasks, admin, gear, editing, finance and shoot day prep.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open lists</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="delivery.html">
-      <div>
-        <div class="iconBubble">📦</div>
-        <h3>Delivery</h3>
-        <p>Editing progress, reviews, exports, links and handover tracking.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open delivery</span>
-        <span>›</span>
-      </div>
-    </a>
-
-    <a class="widget" href="templates.html">
-      <div>
-        <div class="iconBubble">💬</div>
-        <h3>Templates</h3>
-        <p>WhatsApp messages, email replies, invoice notes and delivery updates.</p>
-      </div>
-      <div class="widgetFooter">
-        <span>Open templates</span>
-        <span>›</span>
-      </div>
-    </a>
-
-  </section>
-
-  <aside class="sidePanel">
-    <div class="panelHead">
-      <h3>Quick actions</h3>
-      <p>Things to handle next.</p>
-    </div>
-
-    <div class="panelBody" id="nextActions"></div>
-  </aside>
-
-</section>
-
-</main>
 </div>
 
 <script>
@@ -640,15 +597,6 @@ function money(value){
   }).format(Number(value || 0));
 }
 
-function escapeHTML(value){
-  return String(value || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
 const bookings = readData("ncstudios_bookings_v1");
 const clients = readData("ncstudios_clients_v1");
 const finance = readData("ncstudios_finance_v1");
@@ -663,48 +611,6 @@ const income = finance
   .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
 document.getElementById("incomeTotal").textContent = money(income);
-
-function renderNextActions(){
-  const box = document.getElementById("nextActions");
-
-  const bookingActions = bookings
-    .filter(item => item.nextAction)
-    .slice(0,4)
-    .map(item => ({
-      title:item.clientName || "Booking",
-      detail:item.nextAction
-    }));
-
-  const deliveryActions = delivery
-    .filter(item => item.nextAction)
-    .slice(0,4)
-    .map(item => ({
-      title:item.projectName || "Delivery",
-      detail:item.nextAction
-    }));
-
-  const actions = [...bookingActions, ...deliveryActions].slice(0,6);
-
-  if(actions.length === 0){
-    box.innerHTML = `
-      <div class="empty">
-        No next actions yet.
-        <br><br>
-        Add one in Bookings or Delivery.
-      </div>
-    `;
-    return;
-  }
-
-  box.innerHTML = actions.map(item => `
-    <div class="actionItem">
-      <strong>${escapeHTML(item.title)}</strong>
-      <span>${escapeHTML(item.detail)}</span>
-    </div>
-  `).join("");
-}
-
-renderNextActions();
 </script>
 
 </body>
