@@ -167,6 +167,22 @@ button.ghost{
   border:1px solid var(--line);
 }
 
+button:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+}
+
+.syncStatus{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.syncStatus strong{
+  color:var(--text);
+}
+
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -375,6 +391,11 @@ select option{
 .metaLine strong{
   color:var(--text);
   text-align:right;
+  word-break:break-word;
+}
+
+.metaLine a{
+  color:var(--text);
 }
 
 .clientActions{
@@ -458,10 +479,12 @@ select option{
         <div class="kicker">Client records</div>
         <h2>Clients</h2>
         <p>Keep client contact details, event notes, wedding links and important reminders together.</p>
+        <p class="syncStatus" id="syncStatus">Database checking...</p>
       </div>
 
       <div class="actions">
         <button type="button" onclick="exportClients()">Export</button>
+        <button type="button" class="secondary" onclick="syncLocalToSupabase()">Sync local backup</button>
         <button type="button" class="secondary" onclick="resetForm()">New client</button>
       </div>
     </div>
@@ -561,7 +584,7 @@ select option{
             <textarea id="notes" placeholder="Timings, family details, restrictions, couple preferences, coordinator details."></textarea>
           </label>
 
-          <button type="submit">Save client</button>
+          <button type="submit" id="saveButton">Save client</button>
           <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
         </form>
       </div>
@@ -591,13 +614,22 @@ select option{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
 <script>
 const STORAGE_KEY = "ncstudios_clients_v1";
-let clients = loadClients();
+
+let clients = [];
+let databaseReady = false;
 
 const form = document.getElementById("clientForm");
+const saveButton = document.getElementById("saveButton");
+const syncStatus = document.getElementById("syncStatus");
 
-form.addEventListener("submit", function(event){
+document.addEventListener("DOMContentLoaded", initClientsPage);
+
+form.addEventListener("submit", async function(event){
   event.preventDefault();
 
   const id = document.getElementById("clientId").value || crypto.randomUUID();
@@ -620,20 +652,68 @@ form.addEventListener("submit", function(event){
     return;
   }
 
-  const existingIndex = clients.findIndex(item => item.id === id);
+  setSaving(true);
 
-  if(existingIndex >= 0){
-    clients[existingIndex] = client;
-  } else {
-    clients.unshift(client);
+  try{
+    const existingIndex = clients.findIndex(item => item.id === id);
+
+    if(existingIndex >= 0){
+      clients[existingIndex] = client;
+    } else {
+      clients.unshift(client);
+    }
+
+    saveClientsLocal();
+
+    if(databaseReady){
+      await saveClientToSupabase(client);
+      setStatus("Saved to Supabase and local backup.");
+    } else {
+      setStatus("Saved locally. Supabase is not connected yet.");
+    }
+
+    resetForm();
+    renderClients();
+  }catch(error){
+    console.error(error);
+    alert("The client was saved locally, but Supabase had an issue. Check the console or your Supabase setup.");
+    saveClientsLocal();
+    renderClients();
+  }finally{
+    setSaving(false);
   }
-
-  saveClients();
-  resetForm();
-  renderClients();
 });
 
-function loadClients(){
+async function initClientsPage(){
+  clients = loadClientsLocal();
+  renderClients();
+
+  databaseReady = checkSupabaseConnection();
+
+  if(!databaseReady){
+    setStatus("Local backup mode. Supabase is not connected.");
+    return;
+  }
+
+  setStatus("Loading clients from Supabase...");
+
+  try{
+    await loadClientsFromSupabase();
+    setStatus("Connected to Supabase. Client records are syncing.");
+  }catch(error){
+    console.error(error);
+    databaseReady = false;
+    setStatus("Supabase could not load. Using local backup.");
+  }
+
+  renderClients();
+}
+
+function checkSupabaseConnection(){
+  return Boolean(window.ncSupabase);
+}
+
+function loadClientsLocal(){
   try{
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   }catch(error){
@@ -641,8 +721,81 @@ function loadClients(){
   }
 }
 
-function saveClients(){
+function saveClientsLocal(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+}
+
+async function loadClientsFromSupabase(){
+  const response = await window.ncSupabase
+    .from("clients")
+    .select("*")
+    .order("created_at", { ascending:false });
+
+  if(response.error){
+    throw response.error;
+  }
+
+  const supabaseClients = response.data.map(rowToClient);
+
+  if(supabaseClients.length > 0){
+    clients = supabaseClients;
+    saveClientsLocal();
+  }
+}
+
+async function saveClientToSupabase(client){
+  const response = await window.ncSupabase
+    .from("clients")
+    .upsert(clientToRow(client), { onConflict:"id" })
+    .select()
+    .single();
+
+  if(response.error){
+    throw response.error;
+  }
+
+  return response.data;
+}
+
+async function deleteClientFromSupabase(id){
+  const response = await window.ncSupabase
+    .from("clients")
+    .delete()
+    .eq("id", id);
+
+  if(response.error){
+    throw response.error;
+  }
+}
+
+function clientToRow(client){
+  return {
+    id:client.id,
+    full_name:client.clientName,
+    email:client.email || null,
+    phone:client.phone || null,
+    event_date:client.eventDate || null,
+    status:client.status || "lead",
+    main_location:client.location || null,
+    key_link:client.link || null,
+    notes:client.notes || null,
+    updated_at:new Date().toISOString()
+  };
+}
+
+function rowToClient(row){
+  return {
+    id:row.id,
+    clientName:row.full_name || "",
+    phone:row.phone || "",
+    email:row.email || "",
+    eventDate:row.event_date || "",
+    status:row.status || "lead",
+    location:row.main_location || "",
+    link:row.key_link || "",
+    notes:row.notes || "",
+    updatedAt:row.updated_at || row.created_at || ""
+  };
 }
 
 function renderClients(){
@@ -672,7 +825,7 @@ function renderClients(){
           <small>${formatDate(client.eventDate)}</small>
         </div>
 
-        <span class="badge ${client.status}">${statusLabel(client.status)}</span>
+        <span class="badge ${escapeHTML(client.status)}">${statusLabel(client.status)}</span>
       </div>
 
       <div class="meta">
@@ -693,15 +846,15 @@ function renderClients(){
 
         <div class="metaLine">
           <span>Link</span>
-          <strong>${client.link ? `<a style="color:var(--text);" href="${escapeHTML(client.link)}" target="_blank">Open</a>` : "Not added"}</strong>
+          <strong>${client.link ? `<a href="${escapeAttribute(client.link)}" target="_blank" rel="noopener">Open</a>` : "Not added"}</strong>
         </div>
       </div>
 
       ${client.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(client.notes)}</p>` : ""}
 
       <div class="clientActions">
-        <button type="button" class="secondary" onclick="editClient('${client.id}')">Edit</button>
-        <button type="button" class="ghost" onclick="deleteClient('${client.id}')">Delete</button>
+        <button type="button" class="secondary" onclick="editClient('${escapeAttribute(client.id)}')">Edit</button>
+        <button type="button" class="ghost" onclick="deleteClient('${escapeAttribute(client.id)}')">Delete</button>
       </div>
     </article>
   `).join("");
@@ -731,7 +884,7 @@ function editClient(id){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function deleteClient(id){
+async function deleteClient(id){
   const client = clients.find(item => item.id === id);
   if(!client) return;
 
@@ -739,8 +892,20 @@ function deleteClient(id){
   if(!confirmed) return;
 
   clients = clients.filter(item => item.id !== id);
-  saveClients();
+  saveClientsLocal();
   renderClients();
+
+  if(databaseReady){
+    try{
+      await deleteClientFromSupabase(id);
+      setStatus("Client deleted from Supabase and local backup.");
+    }catch(error){
+      console.error(error);
+      setStatus("Client deleted locally. Supabase delete failed.");
+    }
+  }else{
+    setStatus("Client deleted locally.");
+  }
 }
 
 function resetForm(){
@@ -768,6 +933,43 @@ function exportClients(){
   URL.revokeObjectURL(url);
 }
 
+async function syncLocalToSupabase(){
+  if(!databaseReady){
+    alert("Supabase is not connected yet.");
+    return;
+  }
+
+  if(clients.length === 0){
+    alert("There are no local clients to sync.");
+    return;
+  }
+
+  const confirmed = confirm("Sync all current local clients to Supabase?");
+  if(!confirmed) return;
+
+  setStatus("Syncing local clients to Supabase...");
+
+  try{
+    const rows = clients.map(clientToRow);
+
+    const response = await window.ncSupabase
+      .from("clients")
+      .upsert(rows, { onConflict:"id" });
+
+    if(response.error){
+      throw response.error;
+    }
+
+    await loadClientsFromSupabase();
+    renderClients();
+    setStatus("Local clients synced to Supabase.");
+  }catch(error){
+    console.error(error);
+    alert("Sync failed. Check Supabase policies and table columns.");
+    setStatus("Sync failed. Local backup is still safe.");
+  }
+}
+
 function statusLabel(status){
   const labels = {
     lead:"Lead",
@@ -781,11 +983,21 @@ function statusLabel(status){
 function formatDate(value){
   if(!value) return "No date added";
 
-  return new Intl.DateTimeFormat("en-GB", {
-    day:"2-digit",
-    month:"short",
-    year:"numeric"
-  }).format(new Date(value));
+  const parts = String(value).split("-");
+  if(parts.length === 3){
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+
+  return value;
+}
+
+function setStatus(message){
+  syncStatus.innerHTML = `<strong>Status:</strong> ${escapeHTML(message)}`;
+}
+
+function setSaving(isSaving){
+  saveButton.disabled = isSaving;
+  saveButton.textContent = isSaving ? "Saving..." : "Save client";
 }
 
 function escapeHTML(value){
@@ -797,7 +1009,9 @@ function escapeHTML(value){
     .replaceAll("'","&#039;");
 }
 
-renderClients();
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
 </script>
 </body>
 </html>
