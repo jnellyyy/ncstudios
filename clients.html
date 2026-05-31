@@ -140,6 +140,36 @@ h1,h2,h3,h4,p{
   line-height:1.45;
 }
 
+.syncStatus{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.syncStatus strong{
+  color:var(--text);
+}
+
+.syncStatus.good{
+  border-color:rgba(34,197,94,0.35);
+  background:rgba(34,197,94,0.10);
+}
+
+.syncStatus.warn{
+  border-color:rgba(245,158,11,0.35);
+  background:rgba(245,158,11,0.10);
+}
+
+.syncStatus.bad{
+  border-color:rgba(239,68,68,0.40);
+  background:rgba(239,68,68,0.10);
+}
+
 .actions{
   display:flex;
   flex-wrap:wrap;
@@ -170,17 +200,6 @@ button.ghost{
 button:disabled{
   opacity:0.55;
   cursor:not-allowed;
-}
-
-.syncStatus{
-  margin-top:12px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.45;
-}
-
-.syncStatus strong{
-  color:var(--text);
 }
 
 .stats{
@@ -479,12 +498,16 @@ select option{
         <div class="kicker">Client records</div>
         <h2>Clients</h2>
         <p>Keep client contact details, event notes, wedding links and important reminders together.</p>
-        <p class="syncStatus" id="syncStatus">Database checking...</p>
+
+        <p class="syncStatus warn" id="syncStatus">
+          <strong>Status:</strong> Checking Supabase connection...
+        </p>
       </div>
 
       <div class="actions">
         <button type="button" onclick="exportClients()">Export</button>
         <button type="button" class="secondary" onclick="syncLocalToSupabase()">Sync local backup</button>
+        <button type="button" class="secondary" onclick="reloadFromSupabase()">Reload database</button>
         <button type="button" class="secondary" onclick="resetForm()">New client</button>
       </div>
     </div>
@@ -615,13 +638,14 @@ select option{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+<script src="supabase-config.js?v=ncclients3"></script>
 
 <script>
 const STORAGE_KEY = "ncstudios_clients_v1";
 
 let clients = [];
 let databaseReady = false;
+let lastDatabaseError = "";
 
 const form = document.getElementById("clientForm");
 const saveButton = document.getElementById("saveButton");
@@ -632,10 +656,10 @@ document.addEventListener("DOMContentLoaded", initClientsPage);
 form.addEventListener("submit", async function(event){
   event.preventDefault();
 
-  const id = document.getElementById("clientId").value || crypto.randomUUID();
+  const id = document.getElementById("clientId").value || makeId();
 
   const client = {
-    id,
+    id:id,
     clientName:document.getElementById("clientName").value.trim(),
     phone:document.getElementById("phone").value.trim(),
     email:document.getElementById("email").value.trim(),
@@ -655,30 +679,23 @@ form.addEventListener("submit", async function(event){
   setSaving(true);
 
   try{
-    const existingIndex = clients.findIndex(item => item.id === id);
-
-    if(existingIndex >= 0){
-      clients[existingIndex] = client;
-    } else {
-      clients.unshift(client);
-    }
-
-    saveClientsLocal();
+    saveClientLocal(client);
 
     if(databaseReady){
       await saveClientToSupabase(client);
-      setStatus("Saved to Supabase and local backup.");
-    } else {
-      setStatus("Saved locally. Supabase is not connected yet.");
+      setStatus("Saved to Supabase. This should now show on laptop and phone.", "good");
+    }else{
+      setStatus("Saved locally only. Supabase is not connected. " + lastDatabaseError, "bad");
     }
 
     resetForm();
     renderClients();
   }catch(error){
     console.error(error);
-    alert("The client was saved locally, but Supabase had an issue. Check the console or your Supabase setup.");
-    saveClientsLocal();
-    renderClients();
+    lastDatabaseError = getErrorMessage(error);
+    saveClientLocal(client);
+    setStatus("Saved locally, but Supabase failed. " + lastDatabaseError, "bad");
+    alert("Saved locally, but Supabase did not save. Check the status message.");
   }finally{
     setSaving(false);
   }
@@ -688,34 +705,36 @@ async function initClientsPage(){
   clients = loadClientsLocal();
   renderClients();
 
-  databaseReady = checkSupabaseConnection();
-
-  if(!databaseReady){
-    setStatus("Local backup mode. Supabase is not connected.");
+  if(!window.supabase){
+    setStatus("Supabase library did not load. Check internet connection or CDN access.", "bad");
     return;
   }
 
-  setStatus("Loading clients from Supabase...");
+  if(!window.ncSupabase){
+    setStatus("supabase-config.js loaded incorrectly. window.ncSupabase was not created.", "bad");
+    return;
+  }
+
+  databaseReady = true;
+  setStatus("Supabase config loaded. Reading clients table...", "warn");
 
   try{
     await loadClientsFromSupabase();
-    setStatus("Connected to Supabase. Client records are syncing.");
+    setStatus("Connected to Supabase. Laptop and phone should now match.", "good");
   }catch(error){
     console.error(error);
     databaseReady = false;
-    setStatus("Supabase could not load. Using local backup.");
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Supabase file loaded, but database read failed. " + lastDatabaseError, "bad");
   }
 
   renderClients();
 }
 
-function checkSupabaseConnection(){
-  return Boolean(window.ncSupabase);
-}
-
 function loadClientsLocal(){
   try{
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(saved) ? saved : [];
   }catch(error){
     return [];
   }
@@ -723,6 +742,18 @@ function loadClientsLocal(){
 
 function saveClientsLocal(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+}
+
+function saveClientLocal(client){
+  const existingIndex = clients.findIndex(item => item.id === client.id);
+
+  if(existingIndex >= 0){
+    clients[existingIndex] = client;
+  }else{
+    clients.unshift(client);
+  }
+
+  saveClientsLocal();
 }
 
 async function loadClientsFromSupabase(){
@@ -735,11 +766,30 @@ async function loadClientsFromSupabase(){
     throw response.error;
   }
 
-  const supabaseClients = response.data.map(rowToClient);
+  const databaseClients = response.data.map(rowToClient);
 
-  if(supabaseClients.length > 0){
-    clients = supabaseClients;
-    saveClientsLocal();
+  clients = databaseClients;
+  saveClientsLocal();
+}
+
+async function reloadFromSupabase(){
+  if(!window.ncSupabase){
+    setStatus("Cannot reload. Supabase config is not loaded.", "bad");
+    return;
+  }
+
+  databaseReady = true;
+  setStatus("Reloading from Supabase...", "warn");
+
+  try{
+    await loadClientsFromSupabase();
+    renderClients();
+    setStatus("Reloaded from Supabase.", "good");
+  }catch(error){
+    console.error(error);
+    databaseReady = false;
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Reload failed. " + lastDatabaseError, "bad");
   }
 }
 
@@ -771,9 +821,9 @@ async function deleteClientFromSupabase(id){
 function clientToRow(client){
   return {
     id:client.id,
-    full_name:client.clientName,
-    email:client.email || null,
+    full_name:client.clientName || "",
     phone:client.phone || null,
+    email:client.email || null,
     event_date:client.eventDate || null,
     status:client.status || "lead",
     main_location:client.location || null,
@@ -898,13 +948,14 @@ async function deleteClient(id){
   if(databaseReady){
     try{
       await deleteClientFromSupabase(id);
-      setStatus("Client deleted from Supabase and local backup.");
+      setStatus("Deleted from Supabase and local backup.", "good");
     }catch(error){
       console.error(error);
-      setStatus("Client deleted locally. Supabase delete failed.");
+      lastDatabaseError = getErrorMessage(error);
+      setStatus("Deleted locally, but Supabase delete failed. " + lastDatabaseError, "bad");
     }
   }else{
-    setStatus("Client deleted locally.");
+    setStatus("Deleted locally only. Supabase is not connected.", "warn");
   }
 }
 
@@ -919,7 +970,7 @@ function exportClients(){
     app:"NC Studios",
     type:"clients",
     exportedAt:new Date().toISOString(),
-    clients
+    clients:clients
   };
 
   const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
@@ -934,23 +985,27 @@ function exportClients(){
 }
 
 async function syncLocalToSupabase(){
-  if(!databaseReady){
+  if(!window.ncSupabase){
     alert("Supabase is not connected yet.");
+    setStatus("Cannot sync because supabase-config.js is not loaded.", "bad");
     return;
   }
 
-  if(clients.length === 0){
+  const localClients = loadClientsLocal();
+
+  if(localClients.length === 0){
     alert("There are no local clients to sync.");
     return;
   }
 
-  const confirmed = confirm("Sync all current local clients to Supabase?");
+  const confirmed = confirm("Sync all local clients to Supabase?");
   if(!confirmed) return;
 
-  setStatus("Syncing local clients to Supabase...");
+  databaseReady = true;
+  setStatus("Syncing local clients to Supabase...", "warn");
 
   try{
-    const rows = clients.map(clientToRow);
+    const rows = localClients.map(clientToRow);
 
     const response = await window.ncSupabase
       .from("clients")
@@ -962,11 +1017,12 @@ async function syncLocalToSupabase(){
 
     await loadClientsFromSupabase();
     renderClients();
-    setStatus("Local clients synced to Supabase.");
+    setStatus("Local clients synced to Supabase. Check your phone now.", "good");
   }catch(error){
     console.error(error);
-    alert("Sync failed. Check Supabase policies and table columns.");
-    setStatus("Sync failed. Local backup is still safe.");
+    databaseReady = false;
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Sync failed. " + lastDatabaseError, "bad");
   }
 }
 
@@ -984,6 +1040,7 @@ function formatDate(value){
   if(!value) return "No date added";
 
   const parts = String(value).split("-");
+
   if(parts.length === 3){
     return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
@@ -991,13 +1048,36 @@ function formatDate(value){
   return value;
 }
 
-function setStatus(message){
+function setStatus(message,type){
+  syncStatus.classList.remove("good","warn","bad");
+  syncStatus.classList.add(type || "warn");
   syncStatus.innerHTML = `<strong>Status:</strong> ${escapeHTML(message)}`;
 }
 
 function setSaving(isSaving){
   saveButton.disabled = isSaving;
   saveButton.textContent = isSaving ? "Saving..." : "Save client";
+}
+
+function getErrorMessage(error){
+  if(!error) return "Unknown error.";
+  if(error.message) return error.message;
+  if(error.details) return error.details;
+  if(error.hint) return error.hint;
+
+  try{
+    return JSON.stringify(error);
+  }catch(innerError){
+    return "Unknown error.";
+  }
+}
+
+function makeId(){
+  if(window.crypto && typeof window.crypto.randomUUID === "function"){
+    return window.crypto.randomUUID();
+  }
+
+  return "client_" + Date.now() + "_" + Math.random().toString(16).slice(2);
 }
 
 function escapeHTML(value){
