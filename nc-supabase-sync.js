@@ -1,16 +1,35 @@
 (function(){
-  const SUPABASE_WAIT_LIMIT = 40;
-  const SUPABASE_WAIT_DELAY = 150;
+  const SYNC_KEYS = [
+    "ncstudios_bookings_v1",
+    "ncstudios_clients_v1",
+    "ncstudios_finance_v1",
+    "ncstudios_delivery_v1",
+    "ncstudios_lists_v1",
+    "ncstudios_shots_v1",
+    "ncstudios_templates_v1",
+    "ncStudiosAdminTrackerV1"
+  ];
+
+  const STORAGE_TABLE = "app_storage";
+  const RELOAD_FLAG_PREFIX = "nc_sync_reloaded_";
+  const SYNC_DELAY = 600;
+
+  let saveTimer = null;
+  const originalSetItem = localStorage.setItem.bind(localStorage);
+
+  function wait(ms){
+    return new Promise(function(resolve){
+      setTimeout(resolve, ms);
+    });
+  }
 
   async function waitForSupabase(){
-    for(let attempt = 0; attempt < SUPABASE_WAIT_LIMIT; attempt++){
+    for(let i = 0; i < 50; i++){
       if(window.ncSupabase){
         return true;
       }
 
-      await new Promise(function(resolve){
-        setTimeout(resolve, SUPABASE_WAIT_DELAY);
-      });
+      await wait(150);
     }
 
     return false;
@@ -25,57 +44,26 @@
     }
   }
 
-  function saveLocal(key, data){
-    localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+  function writeLocal(key, data){
+    originalSetItem(key, JSON.stringify(Array.isArray(data) ? data : []));
   }
 
-  async function loadFromSupabase(key){
+  async function saveKeyToSupabase(key){
     const ready = await waitForSupabase();
 
     if(!ready){
-      console.warn("Supabase is not ready. Using local data for:", key);
-      return readLocal(key);
+      console.warn("NC Sync: Supabase not ready for", key);
+      return false;
     }
+
+    const data = readLocal(key);
 
     const response = await window.ncSupabase
-      .from("app_storage")
-      .select("data")
-      .eq("app_key", key)
-      .maybeSingle();
-
-    if(response.error){
-      console.warn("Could not load Supabase data for:", key, response.error);
-      return readLocal(key);
-    }
-
-    if(!response.data || !Array.isArray(response.data.data)){
-      return readLocal(key);
-    }
-
-    saveLocal(key, response.data.data);
-    return response.data.data;
-  }
-
-  async function saveToSupabase(key, data){
-    saveLocal(key, data);
-
-    const ready = await waitForSupabase();
-
-    if(!ready){
-      console.warn("Supabase is not ready. Saved locally only for:", key);
-      return {
-        ok:false,
-        mode:"local",
-        error:"Supabase is not ready"
-      };
-    }
-
-    const response = await window.ncSupabase
-      .from("app_storage")
+      .from(STORAGE_TABLE)
       .upsert(
         {
           app_key:key,
-          data:Array.isArray(data) ? data : [],
+          data:data,
           updated_at:new Date().toISOString()
         },
         {
@@ -84,44 +72,107 @@
       );
 
     if(response.error){
-      console.warn("Could not save Supabase data for:", key, response.error);
-      return {
-        ok:false,
-        mode:"local",
-        error:response.error.message || "Supabase save failed"
-      };
+      console.warn("NC Sync: save failed for " + key, response.error);
+      return false;
     }
 
-    return {
-      ok:true,
-      mode:"supabase"
+    console.log("NC Sync: saved", key);
+    return true;
+  }
+
+  async function loadKeyFromSupabase(key){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      console.warn("NC Sync: Supabase not ready while loading", key);
+      return false;
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .select("data, updated_at")
+      .eq("app_key", key)
+      .maybeSingle();
+
+    if(response.error){
+      console.warn("NC Sync: load failed for " + key, response.error);
+      return false;
+    }
+
+    if(!response.data || !Array.isArray(response.data.data)){
+      return false;
+    }
+
+    const remoteData = response.data.data;
+    const localData = readLocal(key);
+
+    if(remoteData.length === 0 && localData.length > 0){
+      await saveKeyToSupabase(key);
+      return false;
+    }
+
+    const remoteString = JSON.stringify(remoteData);
+    const localString = JSON.stringify(localData);
+
+    if(remoteString !== localString){
+      writeLocal(key, remoteData);
+      return true;
+    }
+
+    return false;
+  }
+
+  function patchLocalStorage(){
+    localStorage.setItem = function(key, value){
+      originalSetItem(key, value);
+
+      if(SYNC_KEYS.includes(key)){
+        clearTimeout(saveTimer);
+
+        saveTimer = setTimeout(function(){
+          saveKeyToSupabase(key);
+        }, SYNC_DELAY);
+      }
     };
   }
 
-  async function syncLocalToSupabase(key){
-    const localData = readLocal(key);
-    return saveToSupabase(key, localData);
-  }
+  async function pullAllFromSupabase(){
+    let changed = false;
 
-  async function refreshLocalFromSupabase(key){
-    return loadFromSupabase(key);
-  }
+    for(const key of SYNC_KEYS){
+      const didChange = await loadKeyFromSupabase(key);
 
-  function makeId(prefix){
-    if(window.crypto && typeof window.crypto.randomUUID === "function"){
-      return window.crypto.randomUUID();
+      if(didChange){
+        changed = true;
+      }
     }
 
-    return String(prefix || "item") + "_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    const pageKey = RELOAD_FLAG_PREFIX + location.pathname;
+
+    if(changed && !sessionStorage.getItem(pageKey)){
+      sessionStorage.setItem(pageKey, "yes");
+      location.reload();
+    }
+  }
+
+  async function pushAllLocalToSupabase(){
+    for(const key of SYNC_KEYS){
+      await saveKeyToSupabase(key);
+    }
   }
 
   window.NCSync = {
     readLocal:readLocal,
-    saveLocal:saveLocal,
-    loadFromSupabase:loadFromSupabase,
-    saveToSupabase:saveToSupabase,
-    syncLocalToSupabase:syncLocalToSupabase,
-    refreshLocalFromSupabase:refreshLocalFromSupabase,
-    makeId:makeId
+    writeLocal:writeLocal,
+    saveKeyToSupabase:saveKeyToSupabase,
+    loadKeyFromSupabase:loadKeyFromSupabase,
+    pullAllFromSupabase:pullAllFromSupabase,
+    pushAllLocalToSupabase:pushAllLocalToSupabase
   };
+
+  patchLocalStorage();
+
+  window.addEventListener("load", function(){
+    pullAllFromSupabase();
+  });
 })();
