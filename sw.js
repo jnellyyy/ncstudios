@@ -1,10 +1,11 @@
-const CACHE_NAME = "ncstudios-v1";
+const CACHE_NAME = "ncstudios-v2";
 const APP_FILES = [
   "./",
   "./index.html",
   "./dashboard.html",
   "./bookings.html",
   "./clients.html",
+  "./admin.html",
   "./finance.html",
   "./shot-lists.html",
   "./lists.html",

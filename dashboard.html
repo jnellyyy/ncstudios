@@ -35,8 +35,7 @@ html,
 body{
   margin:0;
   width:100%;
-  height:100%;
-  overflow:hidden;
+  min-height:100%;
 }
 
 body{
@@ -62,7 +61,7 @@ body::before{
 }
 
 .app{
-  height:100svh;
+  min-height:100svh;
   width:min(940px,100%);
   margin:0 auto;
   padding:
@@ -70,7 +69,7 @@ body::before{
     14px
     max(14px, env(safe-area-inset-bottom));
   display:grid;
-  grid-template-rows:auto auto auto 1fr auto;
+  grid-template-rows:auto auto auto auto auto;
   gap:10px;
   position:relative;
   z-index:1;
@@ -317,7 +316,7 @@ body::before{
 
 .bottomRow{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
 }
 
@@ -454,16 +453,8 @@ body::before{
 }
 
 @media(max-height:690px){
-  .topbar{
-    display:none;
-  }
-
   .hero{
     padding:13px;
-  }
-
-  .stats{
-    display:none;
   }
 
   .tiles{
@@ -575,6 +566,7 @@ body::before{
   <a href="shot-lists.html">Shots</a>
   <a href="lists.html">Lists</a>
   <a href="templates.html">Templates</a>
+  <a href="admin.html">Admin</a>
 </nav>
 
 </div>
