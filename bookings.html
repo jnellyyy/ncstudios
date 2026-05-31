@@ -341,6 +341,11 @@ select option{
   color:#fde68a;
 }
 
+.badge.postponed{
+  background:rgba(255,255,255,0.12);
+  color:#e5e7eb;
+}
+
 .meta{
   display:grid;
   gap:8px;
@@ -410,6 +415,24 @@ select option{
 
 .hidden{
   display:none;
+}
+
+.pasteBox{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pasteBox h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.pasteBox p{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
 }
 
 @media(max-width:900px){
@@ -564,9 +587,10 @@ select option{
                 Status
                 <select id="status">
                   <option value="enquiry">Enquiry</option>
-                  <option value="consultation">Consultation</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="completed">Completed</option>
+	                  <option value="consultation">Consultation</option>
+	                  <option value="confirmed">Confirmed</option>
+	                  <option value="postponed">Postponed</option>
+	                  <option value="completed">Completed</option>
                 </select>
               </label>
             </div>
@@ -598,11 +622,18 @@ select option{
               <textarea id="notes" placeholder="Add client notes, restrictions, reminders or anything important."></textarea>
             </label>
 
-            <button type="submit">Save booking</button>
-            <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
-          </form>
-        </div>
-      </aside>
+	            <button type="submit">Save booking</button>
+	            <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+	          </form>
+
+	          <div class="pasteBox">
+	            <h3>Paste bookings</h3>
+	            <p>One booking per line: client | event | date | status | price | deposit | location | next action | notes</p>
+	            <textarea id="bookingPaste" placeholder="Marvin and Blessing | Wedding | 2026-08-22 | confirmed | 1200 | 300 | London | Send planning form | Golden hour portraits"></textarea>
+	            <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedBookings()">Import pasted bookings</button>
+	          </div>
+	        </div>
+	      </aside>
 
       <section class="card">
         <div class="cardHead">
@@ -614,9 +645,10 @@ select option{
           <select id="filterStatus" onchange="renderBookings()">
             <option value="all">All</option>
             <option value="enquiry">Enquiries</option>
-            <option value="consultation">Consultations</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="completed">Completed</option>
+	            <option value="consultation">Consultations</option>
+	            <option value="confirmed">Confirmed</option>
+	            <option value="postponed">Postponed</option>
+	            <option value="completed">Completed</option>
           </select>
         </div>
 
@@ -765,11 +797,12 @@ function renderBookings(){
 
         ${booking.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(booking.notes)}</p>` : ""}
 
-        <div class="bookingActions">
-          <button type="button" class="secondary" onclick="editBooking('${booking.id}')">Edit</button>
-          <button type="button" class="ghost" onclick="duplicateBooking('${booking.id}')">Duplicate</button>
-          <button type="button" class="ghost" onclick="deleteBooking('${booking.id}')">Delete</button>
-        </div>
+	        <div class="bookingActions">
+	          <button type="button" class="secondary" onclick="editBooking('${booking.id}')">Edit</button>
+	          <button type="button" class="ghost" onclick="postponeBooking('${booking.id}')">Postpone</button>
+	          <button type="button" class="ghost" onclick="duplicateBooking('${booking.id}')">Duplicate</button>
+	          <button type="button" class="ghost" onclick="deleteBooking('${booking.id}')">Delete</button>
+	        </div>
       </article>
     `;
   }).join("");
@@ -817,6 +850,21 @@ function duplicateBooking(id){
   };
 
   bookings.unshift(copy);
+  saveBookings();
+  renderBookings();
+}
+
+function postponeBooking(id){
+  bookings = bookings.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      status:"postponed",
+      nextAction:item.nextAction || "Agree new date",
+      updatedAt:new Date().toISOString()
+    };
+  });
+
   saveBookings();
   renderBookings();
 }
@@ -910,11 +958,85 @@ function importBookings(event){
   reader.readAsText(file);
 }
 
+function importPastedBookings(){
+  const textarea = document.getElementById("bookingPaste");
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste at least one booking first.");
+    return;
+  }
+
+  const imported = parseBookingRows(raw);
+
+  if(imported.length === 0){
+    alert("No bookings found. Try one booking per line.");
+    return;
+  }
+
+  bookings = [...imported, ...bookings];
+  saveBookings();
+  textarea.value = "";
+  renderBookings();
+  alert(`${imported.length} booking${imported.length === 1 ? "" : "s"} imported.`);
+}
+
+function parseBookingRows(text){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const parts = splitImportLine(line);
+      const clientName = parts[0] || "";
+      if(!clientName) return null;
+
+      return {
+        id:crypto.randomUUID(),
+        clientName,
+        eventName:parts[1] || "Wedding",
+        eventDate:normaliseDate(parts[2] || ""),
+        status:normaliseBookingStatus(parts[3] || "enquiry"),
+        packagePrice:Number(parts[4] || 0),
+        depositPaid:Number(parts[5] || 0),
+        location:parts[6] || "",
+        nextAction:parts[7] || "",
+        notes:parts.slice(8).join(" | "),
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function splitImportLine(line){
+  if(line.includes("|")) return line.split("|").map(part => part.trim());
+  if(line.includes("\t")) return line.split("\t").map(part => part.trim());
+  return line.split(",").map(part => part.trim());
+}
+
+function normaliseDate(value){
+  const text = String(value || "").trim();
+  if(!text) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0,10);
+}
+
+function normaliseBookingStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("post")) return "postponed";
+  if(text.includes("complete")) return "completed";
+  if(text.includes("confirm")) return "confirmed";
+  if(text.includes("consult")) return "consultation";
+  return "enquiry";
+}
+
 function statusLabel(status){
   const labels = {
     enquiry:"Enquiry",
     consultation:"Consultation",
     confirmed:"Confirmed",
+    postponed:"Postponed",
     completed:"Completed"
   };
 

@@ -316,6 +316,11 @@ input,select,textarea{
   outline:none;
 }
 
+input[type="range"]{
+  accent-color:var(--red);
+  padding:0;
+}
+
 select option{
   color:#111827;
 }
@@ -404,6 +409,20 @@ textarea{
 .fill{
   height:100%;
   background:linear-gradient(145deg,#ff3b30,#9f1717);
+}
+
+.progressControl{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+}
+
+.progressValue{
+  min-width:46px;
+  color:var(--text);
+  font-weight:950;
+  text-align:right;
 }
 
 .meta{
@@ -579,15 +598,26 @@ textarea{
           <input id="client" type="text" placeholder="Marvin and Blessing">
         </label>
 
+        <label>
+          Package
+          <select id="packageType">
+            <option value="Wedding Film">Wedding Film</option>
+            <option value="Photography">Photography</option>
+            <option value="Photography and Videography">Photography and Videography</option>
+            <option value="Social Content">Social Content</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
         <div class="row">
           <label>
             Due date
             <input id="dueDate" type="date">
           </label>
 
-          <label>
-            Stage
-            <select id="stage">
+            <label>
+              Stage
+            <select id="stage" onchange="syncProgressFromStage()">
               <option value="not-started">Not started</option>
               <option value="editing">Editing</option>
               <option value="review">Review</option>
@@ -598,7 +628,10 @@ textarea{
 
         <label>
           Progress
-          <input id="progress" type="number" min="0" max="100" step="5" placeholder="50">
+          <div class="progressControl">
+            <input id="progress" type="range" min="0" max="100" step="5" value="0" oninput="updateProgressLabel()">
+            <span class="progressValue" id="progressValue">0%</span>
+          </div>
         </label>
 
         <label>
@@ -666,6 +699,7 @@ form.addEventListener("submit", function(event){
     id,
     projectName:document.getElementById("projectName").value.trim(),
     client:document.getElementById("client").value.trim(),
+    packageType:document.getElementById("packageType").value,
     dueDate:document.getElementById("dueDate").value,
     stage:document.getElementById("stage").value,
     progress,
@@ -734,6 +768,11 @@ function renderDelivery(){
 
       <div class="meta">
         <div class="metaLine">
+          <span>Package</span>
+          <strong>${escapeHTML(item.packageType || "Not set")}</strong>
+        </div>
+
+        <div class="metaLine">
           <span>Progress</span>
           <strong>${Number(item.progress || 0)}%</strong>
         </div>
@@ -753,7 +792,9 @@ function renderDelivery(){
 
       <div class="itemActions">
         <button class="secondary" onclick="editDelivery('${item.id}')">Edit</button>
-        <button class="ghost" onclick="markDelivered('${item.id}')">Delivered</button>
+        <button class="ghost" onclick="moveDelivery('${item.id}','editing',40)">Editing</button>
+        <button class="ghost" onclick="moveDelivery('${item.id}','review',80)">Review</button>
+        <button class="ghost" onclick="moveDelivery('${item.id}','delivered',100)">Delivered</button>
         <button class="ghost" onclick="deleteDelivery('${item.id}')">Delete</button>
       </div>
     </article>
@@ -774,9 +815,11 @@ function editDelivery(id){
   document.getElementById("deliveryId").value = item.id;
   document.getElementById("projectName").value = item.projectName || "";
   document.getElementById("client").value = item.client || "";
+  document.getElementById("packageType").value = item.packageType || "Wedding Film";
   document.getElementById("dueDate").value = item.dueDate || "";
   document.getElementById("stage").value = item.stage || "not-started";
-  document.getElementById("progress").value = item.progress || "";
+  document.getElementById("progress").value = Number(item.progress || 0);
+  updateProgressLabel();
   document.getElementById("nextAction").value = item.nextAction || "";
   document.getElementById("notes").value = item.notes || "";
 
@@ -784,12 +827,16 @@ function editDelivery(id){
 }
 
 function markDelivered(id){
+  moveDelivery(id,"delivered",100);
+}
+
+function moveDelivery(id,stage,progress){
   delivery = delivery.map(item => {
     if(item.id !== id) return item;
     return {
       ...item,
-      stage:"delivered",
-      progress:100,
+      stage,
+      progress,
       updatedAt:new Date().toISOString()
     };
   });
@@ -812,7 +859,26 @@ function deleteDelivery(id){
 function resetForm(){
   form.reset();
   document.getElementById("deliveryId").value = "";
+  document.getElementById("packageType").value = "Wedding Film";
   document.getElementById("stage").value = "not-started";
+  document.getElementById("progress").value = 0;
+  updateProgressLabel();
+}
+
+function syncProgressFromStage(){
+  const stage = document.getElementById("stage").value;
+  const progressMap = {
+    "not-started":0,
+    editing:40,
+    review:80,
+    delivered:100
+  };
+  document.getElementById("progress").value = progressMap[stage] ?? 0;
+  updateProgressLabel();
+}
+
+function updateProgressLabel(){
+  document.getElementById("progressValue").textContent = `${document.getElementById("progress").value || 0}%`;
 }
 
 function exportDelivery(){

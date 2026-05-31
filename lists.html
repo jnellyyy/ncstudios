@@ -432,6 +432,24 @@ textarea{
   font-size:13px;
 }
 
+.pasteBox{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pasteBox h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.pasteBox p{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
 @media(max-width:900px){
   .layout{
     grid-template-columns:1fr;
@@ -605,6 +623,13 @@ textarea{
         <button type="submit">Save item</button>
         <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
       </form>
+
+      <div class="pasteBox">
+        <h3>Paste list items</h3>
+        <p>One item per line, or use: title | category | priority | due date | status | notes</p>
+        <textarea id="taskPaste" placeholder="Charge batteries | gear | high | 2026-08-22 | open | Pack both chargers"></textarea>
+        <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedTasks()">Import pasted list</button>
+      </div>
     </div>
   </section>
 
@@ -780,6 +805,84 @@ function deleteTask(id){
   tasks = tasks.filter(item => item.id !== id);
   saveTasks();
   renderTasks();
+}
+
+function importPastedTasks(){
+  const textarea = document.getElementById("taskPaste");
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste at least one list item first.");
+    return;
+  }
+
+  const imported = parseTaskRows(raw);
+
+  if(imported.length === 0){
+    alert("No list items found. Try one item per line.");
+    return;
+  }
+
+  tasks = [...imported, ...tasks];
+  saveTasks();
+  textarea.value = "";
+  renderTasks();
+  alert(`${imported.length} item${imported.length === 1 ? "" : "s"} imported.`);
+}
+
+function parseTaskRows(text){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const parts = splitImportLine(line);
+      const title = parts[0] || "";
+      if(!title) return null;
+
+      return {
+        id:crypto.randomUUID(),
+        title,
+        category:normaliseCategory(parts[1] || "admin"),
+        priority:normalisePriority(parts[2] || "high"),
+        dueDate:normaliseDate(parts[3] || ""),
+        status:normaliseStatus(parts[4] || "open"),
+        notes:parts.slice(5).join(" | "),
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function splitImportLine(line){
+  if(line.includes("|")) return line.split("|").map(part => part.trim());
+  if(line.includes("\t")) return line.split("\t").map(part => part.trim());
+  return [line.trim()];
+}
+
+function normaliseCategory(value){
+  const text = String(value || "").toLowerCase().trim();
+  const allowed = ["admin","client","gear","shoot day","editing","finance","content"];
+  return allowed.includes(text) ? text : "admin";
+}
+
+function normalisePriority(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("low")) return "low";
+  if(text.includes("medium") || text === "med") return "medium";
+  return "high";
+}
+
+function normaliseStatus(value){
+  return String(value || "").toLowerCase().includes("done") ? "done" : "open";
+}
+
+function normaliseDate(value){
+  const text = String(value || "").trim();
+  if(!text) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0,10);
 }
 
 function resetForm(){

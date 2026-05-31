@@ -331,6 +331,11 @@ select option{
   padding:14px;
 }
 
+.shot.captured{
+  border-color:rgba(34,197,94,0.42);
+  background:rgba(34,197,94,0.10);
+}
+
 .shotTop{
   display:flex;
   justify-content:space-between;
@@ -424,6 +429,24 @@ select option{
   font-size:12px;
 }
 
+.captureToggle{
+  min-width:112px;
+}
+
+.captureToggle.done{
+  background:rgba(34,197,94,0.18);
+  border:1px solid rgba(34,197,94,0.34);
+  color:#bbf7d0;
+  box-shadow:none;
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  min-width:260px;
+}
+
 .empty{
   text-align:center;
   color:var(--muted);
@@ -512,12 +535,12 @@ select option{
       </div>
 
       <div class="stat">
-        <span>25fps</span>
+        <span>Captured</span>
         <strong id="stat25">0</strong>
       </div>
 
       <div class="stat">
-        <span>50fps</span>
+        <span>Left</span>
         <strong id="stat50">0</strong>
       </div>
     </div>
@@ -639,6 +662,9 @@ select option{
           <button type="button" style="margin-top:10px;width:100%;" onclick="importShots()">
             Import pasted shots
           </button>
+          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="preloadBaseShotList()">
+            Load base wedding shot list
+          </button>
         </div>
       </div>
     </aside>
@@ -650,16 +676,22 @@ select option{
           <p>Your saved production shots.</p>
         </div>
 
-        <select id="filterSection" onchange="renderShots()">
-          <option value="all">All</option>
-          <option value="prep">Prep</option>
-          <option value="ceremony">Ceremony</option>
-          <option value="portraits">Portraits</option>
-          <option value="reception">Reception</option>
-          <option value="speeches">Speeches</option>
-          <option value="dancing">Dancing</option>
-          <option value="details">Details</option>
-        </select>
+        <div class="filters">
+          <select id="filterProject" onchange="renderShots()">
+            <option value="all">All couples</option>
+          </select>
+
+          <select id="filterSection" onchange="renderShots()">
+            <option value="all">All sections</option>
+            <option value="prep">Prep</option>
+            <option value="ceremony">Ceremony</option>
+            <option value="portraits">Portraits</option>
+            <option value="reception">Reception</option>
+            <option value="speeches">Speeches</option>
+            <option value="dancing">Dancing</option>
+            <option value="details">Details</option>
+          </select>
+        </div>
       </div>
 
       <div class="cardBody">
@@ -686,6 +718,7 @@ form.addEventListener("submit", function(event){
   event.preventDefault();
 
   const id = document.getElementById("shotId").value || crypto.randomUUID();
+  const existingShot = shots.find(item => item.id === id);
   const lens = document.getElementById("lens").value.trim();
   const fps = document.getElementById("fps").value;
 
@@ -703,6 +736,7 @@ form.addEventListener("submit", function(event){
     framing:document.getElementById("framing").value.trim(),
     creativeExample:document.getElementById("creativeExample").value.trim(),
     notes:document.getElementById("notes").value.trim(),
+    captured:existingShot ? Boolean(existingShot.captured) : false,
     updatedAt:new Date().toISOString()
   };
 
@@ -738,9 +772,15 @@ function saveShots(){
 
 function renderShots(){
   const list = document.getElementById("shotList");
+  updateProjectFilter();
+  const projectFilter = document.getElementById("filterProject").value;
   const filter = document.getElementById("filterSection").value;
 
-  const visible = shots.filter(item => filter === "all" || item.section === filter);
+  const visible = shots.filter(item => {
+    const sectionMatch = filter === "all" || item.section === filter;
+    const projectMatch = projectFilter === "all" || item.project === projectFilter;
+    return sectionMatch && projectMatch;
+  });
 
   updateStats();
 
@@ -756,11 +796,11 @@ function renderShots(){
   }
 
   list.innerHTML = visible.map(item => `
-    <article class="shot">
+    <article class="shot ${item.captured ? "captured" : ""}">
       <div class="shotTop">
         <div>
           <h4>${escapeHTML(item.shotText)}</h4>
-          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)} • ${escapeHTML(item.location || "No location")}</small>
+          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)} • ${escapeHTML(item.location || "No location")} • ${item.captured ? "Captured" : "Needed"}</small>
         </div>
 
         <span class="badge ${normalisePriority(item.priority)}">${priorityLabel(item.priority)}</span>
@@ -791,6 +831,7 @@ function renderShots(){
       ${item.notes ? `<p class="notesText">${escapeHTML(item.notes)}</p>` : ""}
 
       <div class="itemActions">
+        <button type="button" class="captureToggle ${item.captured ? "done" : ""}" onclick="toggleCaptured('${item.id}')">${item.captured ? "Captured" : "Tick shot"}</button>
         <button type="button" class="secondary" onclick="editShot('${item.id}')">Edit</button>
         <button type="button" class="ghost" onclick="duplicateShot('${item.id}')">Duplicate</button>
         <button type="button" class="ghost" onclick="deleteShot('${item.id}')">Delete</button>
@@ -802,8 +843,23 @@ function renderShots(){
 function updateStats(){
   document.getElementById("statTotal").textContent = shots.length;
   document.getElementById("statA").textContent = shots.filter(item => normalisePriority(item.priority) === "essential").length;
-  document.getElementById("stat25").textContent = shots.filter(item => String(item.fps || item.lensFps || "").toLowerCase().includes("25fps")).length;
-  document.getElementById("stat50").textContent = shots.filter(item => String(item.fps || item.lensFps || "").toLowerCase().includes("50fps")).length;
+  document.getElementById("stat25").textContent = shots.filter(item => item.captured).length;
+  document.getElementById("stat50").textContent = shots.filter(item => !item.captured).length;
+}
+
+function updateProjectFilter(){
+  const select = document.getElementById("filterProject");
+  if(!select) return;
+
+  const current = select.value || "all";
+  const projects = [...new Set(shots.map(item => item.project).filter(Boolean))].sort();
+  const options = [
+    `<option value="all">All couples</option>`,
+    ...projects.map(project => `<option value="${escapeAttribute(project)}">${escapeHTML(project)}</option>`)
+  ].join("");
+
+  select.innerHTML = options;
+  select.value = projects.includes(current) ? current : "all";
 }
 
 function editShot(id){
@@ -834,10 +890,25 @@ function duplicateShot(id){
     ...shot,
     id:crypto.randomUUID(),
     shotText:`${shot.shotText} copy`,
+    captured:false,
     updatedAt:new Date().toISOString()
   };
 
   shots.unshift(copy);
+  saveShots();
+  renderShots();
+}
+
+function toggleCaptured(id){
+  shots = shots.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      captured:!item.captured,
+      updatedAt:new Date().toISOString()
+    };
+  });
+
   saveShots();
   renderShots();
 }
@@ -864,11 +935,17 @@ function resetForm(){
 
 function importShots(){
   const textarea = document.getElementById("bulkImport");
-  const project = document.getElementById("project").value.trim() || "Marvin and Blessing";
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
   const raw = textarea.value.trim();
 
   if(!raw){
     alert("Paste your shot list first.");
+    return;
+  }
+
+  if(!project){
+    alert("Add the couple/project name first.");
     return;
   }
 
@@ -914,9 +991,45 @@ function parseShotRows(text, project){
         framing:parts[5],
         creativeExample:parts.slice(6).join(" | "),
         notes:"",
+        captured:false,
         updatedAt:new Date().toISOString()
       };
     });
+}
+
+function preloadBaseShotList(){
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!project){
+    alert("Add the couple/project name first, then load the base list.");
+    return;
+  }
+
+  const baseRows = [
+    "prep | venue exterior and arrival details | 24 to 70mm + 25fps | slow handheld | high | wide and medium | establishing shots",
+    "prep | dress, suit, shoes, rings and perfume | 24 to 70mm + 50fps | slow handheld | essential | details and close ups | flatlays and room texture",
+    "prep | bride prep natural moments | 35mm + 50fps | handheld | essential | medium and close | makeup, hair, laughter",
+    "prep | groom prep natural moments | 35mm + 50fps | handheld | high | medium and close | cufflinks, tie, group reactions",
+    "ceremony | guests arriving and room atmosphere | 24 to 70mm + 25fps | handheld | high | wide and medium | smiles, hugs, decor",
+    "ceremony | groom waiting at front | 70 to 200mm + 25fps | tripod | essential | close | emotion and reactions",
+    "ceremony | bride entrance | 24 to 70mm + 50fps | handheld | essential | wide to medium | aisle walk",
+    "ceremony | vows and ring exchange | 70 to 200mm + 25fps | tripod | essential | close | hands, faces, reactions",
+    "ceremony | first kiss | 70 to 200mm + 50fps | tripod | essential | medium close | hold steady",
+    "ceremony | couple exit | 24 to 70mm + 50fps | gimbal backwards | essential | wide and medium | confetti if available",
+    "portraits | couple walking together | 24 to 70mm + 50fps | slow backwards | essential | wide | movement and connection",
+    "portraits | couple close portraits | 70 to 200mm + 50fps | handheld | high | close | hands, faces, veil, bouquet",
+    "reception | room reveal and table details | 24 to 70mm + 25fps | slow handheld | high | wide and details | cake, tables, signage",
+    "speeches | speaker and couple reactions | 70 to 200mm + 25fps | tripod | essential | close | reactions and laughter",
+    "dancing | first dance wide and close | 24 to 70mm + 50fps | handheld | essential | wide and close | movement, guests around",
+    "dancing | party dancing and guest moments | 24 to 70mm + 50fps | handheld | medium | medium and close | energy, hugs, dance floor"
+  ];
+
+  const imported = parseShotRows(baseRows.join("\n"), project);
+  shots = [...imported, ...shots];
+  saveShots();
+  renderShots();
+  alert(`${imported.length} base shots loaded for ${project}.`);
 }
 
 function inferSection(value){
@@ -1016,6 +1129,10 @@ function escapeHTML(value){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value);
 }
 
 renderShots();

@@ -264,6 +264,10 @@ body::before{
   position:relative;
 }
 
+.tile:active{
+  transform:scale(0.985);
+}
+
 .tile::after{
   content:"";
   position:absolute;
@@ -290,6 +294,18 @@ body::before{
   margin:8px 0 3px;
   font-size:15px;
   letter-spacing:-0.35px;
+  position:relative;
+  z-index:1;
+}
+
+.tileMetric{
+  display:block;
+  margin-top:6px;
+  color:var(--text);
+  font-size:20px;
+  font-weight:950;
+  line-height:1;
+  letter-spacing:-0.6px;
   position:relative;
   z-index:1;
 }
@@ -429,6 +445,11 @@ body::before{
     margin:6px 0 2px;
   }
 
+  .tileMetric{
+    font-size:18px;
+    margin-top:4px;
+  }
+
   .tile p{
     font-size:9.5px;
     line-height:1.15;
@@ -536,6 +557,7 @@ body::before{
     <div>
       <div class="icon">B</div>
       <h3>Bookings</h3>
+      <span class="tileMetric" id="bookingWidget">0</span>
       <p>Enquiries, consultations and confirmed jobs.</p>
     </div>
     <div class="tileFooter">
@@ -548,6 +570,7 @@ body::before{
     <div>
       <div class="icon">C</div>
       <h3>Clients</h3>
+      <span class="tileMetric" id="clientWidget">0</span>
       <p>Client records, notes, dates and links.</p>
     </div>
     <div class="tileFooter">
@@ -560,6 +583,7 @@ body::before{
     <div>
       <div class="icon">£</div>
       <h3>Finance</h3>
+      <span class="tileMetric" id="financeWidget">£0</span>
       <p>Payments, balances, expenses and profit.</p>
     </div>
     <div class="tileFooter">
@@ -572,6 +596,7 @@ body::before{
     <div>
       <div class="icon">D</div>
       <h3>Delivery</h3>
+      <span class="tileMetric" id="deliveryWidget">0</span>
       <p>Editing, review, export and handover.</p>
     </div>
     <div class="tileFooter">
@@ -584,6 +609,7 @@ body::before{
     <div>
       <div class="icon">S</div>
       <h3>Shots</h3>
+      <span class="tileMetric" id="shotsWidget">0</span>
       <p>Shot plans, lenses, movement and priorities.</p>
     </div>
     <div class="tileFooter">
@@ -596,6 +622,7 @@ body::before{
     <div>
       <div class="icon">L</div>
       <h3>Lists</h3>
+      <span class="tileMetric" id="listsWidget">0</span>
       <p>Tasks, prep, gear and business checklists.</p>
     </div>
     <div class="tileFooter">
@@ -608,6 +635,7 @@ body::before{
     <div>
       <div class="icon">T</div>
       <h3>Templates</h3>
+      <span class="tileMetric" id="templatesWidget">0</span>
       <p>Saved replies, updates and client messages.</p>
     </div>
     <div class="tileFooter">
@@ -620,6 +648,7 @@ body::before{
     <div>
       <div class="icon">A</div>
       <h3>Admin</h3>
+      <span class="tileMetric" id="adminWidget">0</span>
       <p>Client admin, checklists and follow-through.</p>
     </div>
     <div class="tileFooter">
@@ -665,7 +694,11 @@ function updateDashboardFromLocal(){
   const bookings = readData("ncstudios_bookings_v1");
   const clients = readData("ncstudios_clients_v1");
   const finance = readData("ncstudios_finance_v1");
+  const shots = readData("ncstudios_shots_v1");
+  const lists = readData("ncstudios_lists_v1");
   const delivery = readData("ncstudios_delivery_v1");
+  const templates = readData("ncstudios_templates_v1");
+  const adminClients = readData("ncStudiosAdminTrackerV1");
 
   document.getElementById("bookingsTotal").textContent = bookings.length;
   document.getElementById("clientsTotal").textContent = clients.length;
@@ -676,6 +709,14 @@ function updateDashboardFromLocal(){
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
   document.getElementById("incomeTotal").textContent = money(income);
+  document.getElementById("bookingWidget").textContent = bookings.length;
+  document.getElementById("clientWidget").textContent = clients.length;
+  document.getElementById("financeWidget").textContent = money(income);
+  document.getElementById("deliveryWidget").textContent = delivery.length;
+  document.getElementById("shotsWidget").textContent = shots.length;
+  document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
+  document.getElementById("templatesWidget").textContent = templates.length;
+  document.getElementById("adminWidget").textContent = adminClients.length;
 }
 
 async function updateDashboardFromSupabase(){
@@ -693,7 +734,10 @@ async function updateDashboardFromSupabase(){
         "ncstudios_bookings_v1",
         "ncstudios_finance_v1",
         "ncstudios_delivery_v1",
-        "ncstudios_clients_v1"
+        "ncstudios_clients_v1",
+        "ncstudios_shots_v1",
+        "ncstudios_lists_v1",
+        "ncstudios_templates_v1"
       ]);
 
     if(!storageResponse.error && Array.isArray(storageResponse.data)){
@@ -706,6 +750,9 @@ async function updateDashboardFromSupabase(){
       const finance = map.ncstudios_finance_v1 || readData("ncstudios_finance_v1");
       const delivery = map.ncstudios_delivery_v1 || readData("ncstudios_delivery_v1");
       const appStorageClients = map.ncstudios_clients_v1 || readData("ncstudios_clients_v1");
+      const shots = map.ncstudios_shots_v1 || readData("ncstudios_shots_v1");
+      const lists = map.ncstudios_lists_v1 || readData("ncstudios_lists_v1");
+      const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
 
       document.getElementById("bookingsTotal").textContent = bookings.length;
       document.getElementById("deliveryTotal").textContent = delivery.length;
@@ -716,6 +763,13 @@ async function updateDashboardFromSupabase(){
 
       document.getElementById("incomeTotal").textContent = money(income);
       document.getElementById("clientsTotal").textContent = appStorageClients.length;
+      document.getElementById("bookingWidget").textContent = bookings.length;
+      document.getElementById("financeWidget").textContent = money(income);
+      document.getElementById("deliveryWidget").textContent = delivery.length;
+      document.getElementById("shotsWidget").textContent = shots.length;
+      document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
+      document.getElementById("templatesWidget").textContent = templates.length;
+      document.getElementById("clientWidget").textContent = appStorageClients.length;
     }
 
     const clientsResponse = await window.ncSupabase
@@ -724,6 +778,7 @@ async function updateDashboardFromSupabase(){
 
     if(!clientsResponse.error && typeof clientsResponse.count === "number"){
       document.getElementById("clientsTotal").textContent = clientsResponse.count;
+      document.getElementById("clientWidget").textContent = clientsResponse.count;
     }
   }catch(error){
     console.warn("Dashboard Supabase totals failed. Local totals shown instead.", error);

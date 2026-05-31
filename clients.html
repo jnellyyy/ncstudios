@@ -438,6 +438,24 @@ select option{
   border-radius:22px;
 }
 
+.pasteBox{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pasteBox h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.pasteBox p{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
 @media(max-width:900px){
   .grid{
     grid-template-columns:1fr;
@@ -607,11 +625,18 @@ select option{
             <textarea id="notes" placeholder="Timings, family details, restrictions, couple preferences, coordinator details."></textarea>
           </label>
 
-          <button type="submit" id="saveButton">Save client</button>
-          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
-        </form>
-      </div>
-    </aside>
+	          <button type="submit" id="saveButton">Save client</button>
+	          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+	        </form>
+
+	        <div class="pasteBox">
+	          <h3>Paste clients</h3>
+	          <p>One client per line: name | phone | email | date | status | location | link | notes</p>
+	          <textarea id="clientPaste" placeholder="Marvin and Blessing | 07... | couple@email.com | 2026-08-22 | active | London | https://... | Needs final timeline"></textarea>
+	          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedClients()">Import pasted clients</button>
+	        </div>
+	      </div>
+	    </aside>
 
     <section class="card">
       <div class="cardHead">
@@ -957,6 +982,87 @@ async function deleteClient(id){
   }else{
     setStatus("Deleted locally only. Supabase is not connected.", "warn");
   }
+}
+
+async function importPastedClients(){
+  const textarea = document.getElementById("clientPaste");
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste at least one client first.");
+    return;
+  }
+
+  const imported = parseClientRows(raw);
+
+  if(imported.length === 0){
+    alert("No clients found. Try one client per line.");
+    return;
+  }
+
+  imported.forEach(saveClientLocal);
+  renderClients();
+  textarea.value = "";
+
+  if(databaseReady){
+    try{
+      await Promise.all(imported.map(saveClientToSupabase));
+      setStatus(`${imported.length} pasted client${imported.length === 1 ? "" : "s"} saved to Supabase.`, "good");
+    }catch(error){
+      console.error(error);
+      lastDatabaseError = getErrorMessage(error);
+      setStatus("Pasted clients saved locally, but Supabase failed. " + lastDatabaseError, "bad");
+    }
+  }else{
+    setStatus(`${imported.length} pasted client${imported.length === 1 ? "" : "s"} saved locally. Supabase is not connected.`, "warn");
+  }
+}
+
+function parseClientRows(text){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const parts = splitImportLine(line);
+      const clientName = parts[0] || "";
+      if(!clientName) return null;
+
+      return {
+        id:makeId(),
+        clientName,
+        phone:parts[1] || "",
+        email:parts[2] || "",
+        eventDate:normaliseDate(parts[3] || ""),
+        status:normaliseClientStatus(parts[4] || "lead"),
+        location:parts[5] || "",
+        link:parts[6] || "",
+        notes:parts.slice(7).join(" | "),
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function splitImportLine(line){
+  if(line.includes("|")) return line.split("|").map(part => part.trim());
+  if(line.includes("\t")) return line.split("\t").map(part => part.trim());
+  return line.split(",").map(part => part.trim());
+}
+
+function normaliseDate(value){
+  const text = String(value || "").trim();
+  if(!text) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0,10);
+}
+
+function normaliseClientStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("complete")) return "complete";
+  if(text.includes("active") || text.includes("book")) return "active";
+  return "lead";
 }
 
 function resetForm(){

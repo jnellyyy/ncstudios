@@ -511,7 +511,7 @@ textarea{
     </div>
 
     <div class="stat">
-      <span>Unpaid</span>
+      <span>Waiting</span>
       <strong id="unpaidStat">£0</strong>
     </div>
   </div>
@@ -560,6 +560,8 @@ textarea{
             Status
             <select id="status">
               <option value="paid">Paid</option>
+              <option value="waiting">Waiting payment</option>
+              <option value="hold">Hold</option>
               <option value="unpaid">Unpaid</option>
             </select>
           </label>
@@ -581,9 +583,11 @@ textarea{
           Category
           <select id="category">
             <option value="deposit">Deposit</option>
+            <option value="hold">Date hold</option>
             <option value="balance">Balance</option>
             <option value="booking payment">Booking payment</option>
             <option value="gear rental">Gear rental</option>
+            <option value="second shooter">Second shooter</option>
             <option value="travel">Travel</option>
             <option value="software">Software</option>
             <option value="storage">Storage</option>
@@ -618,7 +622,10 @@ textarea{
         <option value="all">All</option>
         <option value="income">Income</option>
         <option value="expense">Expenses</option>
-        <option value="unpaid">Unpaid</option>
+        <option value="deposit">Deposits</option>
+        <option value="hold">Holds</option>
+        <option value="waiting">Waiting payments</option>
+        <option value="rentals">Rentals</option>
       </select>
     </div>
 
@@ -696,7 +703,10 @@ function renderFinance(){
 
   const visible = finance.filter(item => {
     if(filter === "all") return true;
-    if(filter === "unpaid") return item.status === "unpaid";
+    if(filter === "waiting") return ["waiting","unpaid"].includes(item.status);
+    if(filter === "deposit") return item.category === "deposit";
+    if(filter === "hold") return item.status === "hold" || item.category === "hold";
+    if(filter === "rentals") return item.category === "gear rental";
     return item.type === filter;
   });
 
@@ -726,7 +736,7 @@ function renderFinance(){
 
         <div class="metaLine">
           <span>Status</span>
-          <strong>${item.status === "paid" ? "Paid" : "Unpaid"}</strong>
+          <strong>${statusLabel(item.status)}</strong>
         </div>
 
         <div class="metaLine">
@@ -744,6 +754,8 @@ function renderFinance(){
 
       <div class="itemActions">
         <button class="secondary" onclick="editEntry('${item.id}')">Edit</button>
+        <button class="ghost" onclick="updatePaymentStatus('${item.id}','paid')">Mark paid</button>
+        <button class="ghost" onclick="updatePaymentStatus('${item.id}','waiting')">Waiting</button>
         <button class="ghost" onclick="deleteEntry('${item.id}')">Delete</button>
       </div>
     </article>
@@ -753,12 +765,25 @@ function renderFinance(){
 function updateStats(){
   const income = finance.filter(item => item.type === "income" && item.status === "paid").reduce((sum,item) => sum + Number(item.amount || 0), 0);
   const expenses = finance.filter(item => item.type === "expense" && item.status === "paid").reduce((sum,item) => sum + Number(item.amount || 0), 0);
-  const unpaid = finance.filter(item => item.type === "income" && item.status === "unpaid").reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const unpaid = finance
+    .filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
   document.getElementById("incomeStat").textContent = money(income);
   document.getElementById("expenseStat").textContent = money(expenses);
   document.getElementById("profitStat").textContent = money(income - expenses);
   document.getElementById("unpaidStat").textContent = money(unpaid);
+}
+
+function statusLabel(value){
+  const labels = {
+    paid:"Paid",
+    waiting:"Waiting payment",
+    hold:"Hold",
+    unpaid:"Unpaid"
+  };
+
+  return labels[value] || "Waiting payment";
 }
 
 function editEntry(id){
@@ -785,6 +810,20 @@ function deleteEntry(id){
   if(!confirm(`Delete ${entry.title}?`)) return;
 
   finance = finance.filter(item => item.id !== id);
+  saveFinance();
+  renderFinance();
+}
+
+function updatePaymentStatus(id,status){
+  finance = finance.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      status,
+      updatedAt:new Date().toISOString()
+    };
+  });
+
   saveFinance();
   renderFinance();
 }
