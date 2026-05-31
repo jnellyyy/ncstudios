@@ -295,6 +295,30 @@ select option{
   gap:10px;
 }
 
+.importBox{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+
+.importBox textarea{
+  min-height:190px;
+  font-size:12px;
+  line-height:1.45;
+}
+
+.importBox h3{
+  font-size:16px;
+  margin-bottom:6px;
+}
+
+.importHelp{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin:8px 0 12px;
+}
+
 .list{
   display:grid;
   gap:10px;
@@ -338,19 +362,24 @@ select option{
   white-space:nowrap;
 }
 
-.badge.a{
-  background:rgba(239,68,68,0.18);
+.badge.essential{
+  background:rgba(239,68,68,0.22);
   color:#fecaca;
 }
 
-.badge.b{
-  background:rgba(245,158,11,0.16);
+.badge.high{
+  background:rgba(245,158,11,0.18);
   color:#fde68a;
 }
 
-.badge.c{
+.badge.medium{
   background:rgba(96,165,250,0.18);
   color:#bfdbfe;
+}
+
+.badge.low{
+  background:rgba(192,132,252,0.16);
+  color:#e9d5ff;
 }
 
 .meta{
@@ -372,6 +401,14 @@ select option{
 .metaLine strong{
   color:var(--text);
   text-align:right;
+}
+
+.notesText{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  margin:12px 0 0;
+  white-space:pre-line;
 }
 
 .itemActions{
@@ -454,7 +491,7 @@ select option{
       <div>
         <div class="kicker">Production planning</div>
         <h2>Shot lists</h2>
-        <p>Build wedding shot lists with section, lens, FPS, movement and priority.</p>
+        <p>Paste full wedding shot lists using location, shot, lens and FPS, movement, priority, framing and creative example.</p>
       </div>
 
       <div class="actions">
@@ -470,7 +507,7 @@ select option{
       </div>
 
       <div class="stat">
-        <span>Priority A</span>
+        <span>Essential</span>
         <strong id="statA">0</strong>
       </div>
 
@@ -501,7 +538,7 @@ select option{
     <aside class="card">
       <div class="cardHead">
         <div>
-          <h3>Add or edit shot</h3>
+          <h3>Add, edit or import</h3>
           <p>Use this for shoot day planning.</p>
         </div>
       </div>
@@ -532,27 +569,28 @@ select option{
             <label>
               Priority
               <select id="priority">
-                <option value="a">A</option>
-                <option value="b">B</option>
-                <option value="c">C</option>
+                <option value="essential">Essential</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
               </select>
             </label>
           </div>
 
           <label>
             Location
-            <input id="location" type="text" placeholder="The Mount Hotel, church, park, reception">
+            <input id="location" type="text" placeholder="groom prep, ceremony c1, park, speeches">
           </label>
 
           <label>
             Shot
-            <input id="shotText" type="text" placeholder="Bride reveal, rings, ceremony side angle" required>
+            <input id="shotText" type="text" placeholder="Bride entrance, rings, couple exit" required>
           </label>
 
           <div class="row">
             <label>
               Lens
-              <input id="lens" type="text" placeholder="24mm, 35mm, 70 to 200mm">
+              <input id="lens" type="text" placeholder="24 to 70mm, 70 to 200mm, 24mm">
             </label>
 
             <label>
@@ -566,17 +604,42 @@ select option{
 
           <label>
             Movement
-            <input id="movement" type="text" placeholder="Static, slow push, drift, handheld, gimbal">
+            <input id="movement" type="text" placeholder="slow handheld, locked tripod, gimbal backwards">
+          </label>
+
+          <label>
+            Framing
+            <input id="framing" type="text" placeholder="24mm, 35mm, 100mm to 135mm">
+          </label>
+
+          <label>
+            Creative example
+            <textarea id="creativeExample" placeholder="hotel room, suits, shoes, perfume, rings, cufflinks"></textarea>
           </label>
 
           <label>
             Notes
-            <textarea id="notes" placeholder="Framing, emotion, audio, timing or creative example."></textarea>
+            <textarea id="notes" placeholder="Extra timing, audio or reminder notes."></textarea>
           </label>
 
           <button type="submit">Save shot</button>
           <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
         </form>
+
+        <div class="importBox">
+          <h3>Import shot list</h3>
+
+          <p class="importHelp">
+            Paste rows in this format:<br>
+            location | shot | lens + fps | movement | priority | framing | creative example
+          </p>
+
+          <textarea id="bulkImport" placeholder="groom prep | room atmosphere and details | 24 to 70mm + 50fps | slow handheld | high | 24mm and 35mm | hotel room, suits, shoes, perfume, rings, cufflinks"></textarea>
+
+          <button type="button" style="margin-top:10px;width:100%;" onclick="importShots()">
+            Import pasted shots
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -618,17 +681,22 @@ form.addEventListener("submit", function(event){
   event.preventDefault();
 
   const id = document.getElementById("shotId").value || crypto.randomUUID();
+  const lens = document.getElementById("lens").value.trim();
+  const fps = document.getElementById("fps").value;
 
   const shot = {
     id,
     project:document.getElementById("project").value.trim(),
     section:document.getElementById("section").value,
-    priority:document.getElementById("priority").value,
+    priority:normalisePriority(document.getElementById("priority").value),
     location:document.getElementById("location").value.trim(),
     shotText:document.getElementById("shotText").value.trim(),
-    lens:document.getElementById("lens").value.trim(),
-    fps:document.getElementById("fps").value,
+    lens,
+    fps,
+    lensFps:buildLensFps(lens, fps),
     movement:document.getElementById("movement").value.trim(),
+    framing:document.getElementById("framing").value.trim(),
+    creativeExample:document.getElementById("creativeExample").value.trim(),
     notes:document.getElementById("notes").value.trim(),
     updatedAt:new Date().toISOString()
   };
@@ -676,7 +744,7 @@ function renderShots(){
       <div class="empty">
         No shots here yet.
         <br><br>
-        Add your first shot using the form.
+        Add your first shot using the form or paste a full shot list.
       </div>
     `;
     return;
@@ -687,35 +755,35 @@ function renderShots(){
       <div class="shotTop">
         <div>
           <h4>${escapeHTML(item.shotText)}</h4>
-          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)}</small>
+          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)} • ${escapeHTML(item.location || "No location")}</small>
         </div>
 
-        <span class="badge ${item.priority}">Priority ${item.priority.toUpperCase()}</span>
+        <span class="badge ${normalisePriority(item.priority)}">${priorityLabel(item.priority)}</span>
       </div>
 
       <div class="meta">
         <div class="metaLine">
-          <span>Location</span>
-          <strong>${escapeHTML(item.location || "Not added")}</strong>
-        </div>
-
-        <div class="metaLine">
-          <span>Lens</span>
-          <strong>${escapeHTML(item.lens || "Not set")}</strong>
-        </div>
-
-        <div class="metaLine">
-          <span>FPS</span>
-          <strong>${escapeHTML(item.fps || "Not set")}</strong>
+          <span>Lens + FPS</span>
+          <strong>${escapeHTML(combinedLensFps(item) || "Not set")}</strong>
         </div>
 
         <div class="metaLine">
           <span>Movement</span>
           <strong>${escapeHTML(item.movement || "Not set")}</strong>
         </div>
+
+        <div class="metaLine">
+          <span>Framing</span>
+          <strong>${escapeHTML(item.framing || "Not added")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Creative example</span>
+          <strong>${escapeHTML(item.creativeExample || "Not added")}</strong>
+        </div>
       </div>
 
-      ${item.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(item.notes)}</p>` : ""}
+      ${item.notes ? `<p class="notesText">${escapeHTML(item.notes)}</p>` : ""}
 
       <div class="itemActions">
         <button type="button" class="secondary" onclick="editShot('${item.id}')">Edit</button>
@@ -728,9 +796,9 @@ function renderShots(){
 
 function updateStats(){
   document.getElementById("statTotal").textContent = shots.length;
-  document.getElementById("statA").textContent = shots.filter(item => item.priority === "a").length;
-  document.getElementById("stat25").textContent = shots.filter(item => item.fps === "25fps").length;
-  document.getElementById("stat50").textContent = shots.filter(item => item.fps === "50fps").length;
+  document.getElementById("statA").textContent = shots.filter(item => normalisePriority(item.priority) === "essential").length;
+  document.getElementById("stat25").textContent = shots.filter(item => String(item.fps || item.lensFps || "").toLowerCase().includes("25fps")).length;
+  document.getElementById("stat50").textContent = shots.filter(item => String(item.fps || item.lensFps || "").toLowerCase().includes("50fps")).length;
 }
 
 function editShot(id){
@@ -740,12 +808,14 @@ function editShot(id){
   document.getElementById("shotId").value = shot.id;
   document.getElementById("project").value = shot.project || "";
   document.getElementById("section").value = shot.section || "prep";
-  document.getElementById("priority").value = shot.priority || "a";
+  document.getElementById("priority").value = normalisePriority(shot.priority);
   document.getElementById("location").value = shot.location || "";
   document.getElementById("shotText").value = shot.shotText || "";
-  document.getElementById("lens").value = shot.lens || "";
-  document.getElementById("fps").value = shot.fps || "25fps";
+  document.getElementById("lens").value = shot.lens || extractLens(shot.lensFps) || "";
+  document.getElementById("fps").value = shot.fps || extractFps(shot.lensFps) || "25fps";
   document.getElementById("movement").value = shot.movement || "";
+  document.getElementById("framing").value = shot.framing || "";
+  document.getElementById("creativeExample").value = shot.creativeExample || "";
   document.getElementById("notes").value = shot.notes || "";
 
   window.scrollTo({top:0,behavior:"smooth"});
@@ -783,8 +853,122 @@ function resetForm(){
   form.reset();
   document.getElementById("shotId").value = "";
   document.getElementById("section").value = "prep";
-  document.getElementById("priority").value = "a";
+  document.getElementById("priority").value = "essential";
   document.getElementById("fps").value = "25fps";
+}
+
+function importShots(){
+  const textarea = document.getElementById("bulkImport");
+  const project = document.getElementById("project").value.trim() || "Marvin and Blessing";
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste your shot list first.");
+    return;
+  }
+
+  const imported = parseShotRows(raw, project);
+
+  if(imported.length === 0){
+    alert("No valid rows found. Use this format: location | shot | lens + fps | movement | priority | framing | creative example");
+    return;
+  }
+
+  shots = [...imported, ...shots];
+  saveShots();
+  textarea.value = "";
+  renderShots();
+
+  alert(`${imported.length} shots imported.`);
+}
+
+function parseShotRows(text, project){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line && line.includes("|"))
+    .map(line => line.split("|").map(part => part.trim()))
+    .filter(parts => parts.length >= 7)
+    .map(parts => {
+      const location = parts[0];
+      const lensFps = parts[2];
+      const lens = extractLens(lensFps);
+      const fps = extractFps(lensFps);
+
+      return {
+        id:crypto.randomUUID(),
+        project,
+        section:inferSection(location),
+        priority:normalisePriority(parts[4]),
+        location,
+        shotText:parts[1],
+        lens,
+        fps,
+        lensFps,
+        movement:parts[3],
+        framing:parts[5],
+        creativeExample:parts.slice(6).join(" | "),
+        notes:"",
+        updatedAt:new Date().toISOString()
+      };
+    });
+}
+
+function inferSection(value){
+  const text = String(value || "").toLowerCase();
+
+  if(text.includes("groom") || text.includes("bride") || text.includes("prep")) return "prep";
+  if(text.includes("ceremony")) return "ceremony";
+  if(text.includes("park") || text.includes("portrait")) return "portraits";
+  if(text.includes("reception")) return "reception";
+  if(text.includes("speech")) return "speeches";
+  if(text.includes("dance") || text.includes("dancing")) return "dancing";
+
+  return "details";
+}
+
+function extractLens(value){
+  return String(value || "").split("+")[0].trim();
+}
+
+function extractFps(value){
+  const match = String(value || "").match(/\d+\s*fps/i);
+  return match ? match[0].replace(/\s+/g,"").toLowerCase() : "25fps";
+}
+
+function buildLensFps(lens, fps){
+  if(lens && fps) return `${lens} + ${fps}`;
+  return lens || fps || "";
+}
+
+function combinedLensFps(item){
+  if(item.lensFps) return item.lensFps;
+  if(item.lens && item.fps) return `${item.lens} + ${item.fps}`;
+  return item.lens || item.fps || "";
+}
+
+function normalisePriority(value){
+  const text = String(value || "").toLowerCase().trim();
+
+  if(text === "a" || text === "essential" || text === "must" || text === "must have") return "essential";
+  if(text === "b" || text === "high") return "high";
+  if(text === "c" || text === "medium") return "medium";
+  if(text === "low") return "low";
+
+  return "medium";
+}
+
+function priorityLabel(value){
+  const priority = normalisePriority(value);
+
+  const labels = {
+    essential:"Essential",
+    high:"High",
+    medium:"Medium",
+    low:"Low"
+  };
+
+  return labels[priority] || "Medium";
 }
 
 function exportShots(){
