@@ -1,4 +1,4 @@
-const CACHE_NAME = "ncstudios-v2";
+const CACHE_NAME = "ncstudios-v3";
 const APP_FILES = [
   "./",
   "./index.html",
