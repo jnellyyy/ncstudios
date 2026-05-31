@@ -639,8 +639,9 @@ body::before{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js?v=nc1"></script>
-<script src="nc-supabase-sync.js?v=nc1"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
 
 <script>
 function readData(key){
@@ -660,20 +661,76 @@ function money(value){
   }).format(Number(value || 0));
 }
 
-const bookings = readData("ncstudios_bookings_v1");
-const clients = readData("ncstudios_clients_v1");
-const finance = readData("ncstudios_finance_v1");
-const delivery = readData("ncstudios_delivery_v1");
+function updateDashboardFromLocal(){
+  const bookings = readData("ncstudios_bookings_v1");
+  const clients = readData("ncstudios_clients_v1");
+  const finance = readData("ncstudios_finance_v1");
+  const delivery = readData("ncstudios_delivery_v1");
 
-document.getElementById("bookingsTotal").textContent = bookings.length;
-document.getElementById("clientsTotal").textContent = clients.length;
-document.getElementById("deliveryTotal").textContent = delivery.length;
+  document.getElementById("bookingsTotal").textContent = bookings.length;
+  document.getElementById("clientsTotal").textContent = clients.length;
+  document.getElementById("deliveryTotal").textContent = delivery.length;
 
-const income = finance
-  .filter(item => item.type === "income" && item.status !== "unpaid")
-  .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const income = finance
+    .filter(item => item.type === "income" && item.status !== "unpaid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
-document.getElementById("incomeTotal").textContent = money(income);
+  document.getElementById("incomeTotal").textContent = money(income);
+}
+
+async function updateDashboardFromSupabase(){
+  updateDashboardFromLocal();
+
+  if(!window.ncSupabase){
+    return;
+  }
+
+  try{
+    const storageResponse = await window.ncSupabase
+      .from("app_storage")
+      .select("app_key,data")
+      .in("app_key", [
+        "ncstudios_bookings_v1",
+        "ncstudios_finance_v1",
+        "ncstudios_delivery_v1",
+        "ncstudios_clients_v1"
+      ]);
+
+    if(!storageResponse.error && Array.isArray(storageResponse.data)){
+      const map = {};
+      storageResponse.data.forEach(row => {
+        map[row.app_key] = Array.isArray(row.data) ? row.data : [];
+      });
+
+      const bookings = map.ncstudios_bookings_v1 || readData("ncstudios_bookings_v1");
+      const finance = map.ncstudios_finance_v1 || readData("ncstudios_finance_v1");
+      const delivery = map.ncstudios_delivery_v1 || readData("ncstudios_delivery_v1");
+      const appStorageClients = map.ncstudios_clients_v1 || readData("ncstudios_clients_v1");
+
+      document.getElementById("bookingsTotal").textContent = bookings.length;
+      document.getElementById("deliveryTotal").textContent = delivery.length;
+
+      const income = finance
+        .filter(item => item.type === "income" && item.status !== "unpaid")
+        .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+      document.getElementById("incomeTotal").textContent = money(income);
+      document.getElementById("clientsTotal").textContent = appStorageClients.length;
+    }
+
+    const clientsResponse = await window.ncSupabase
+      .from("clients")
+      .select("id", { count:"exact", head:true });
+
+    if(!clientsResponse.error && typeof clientsResponse.count === "number"){
+      document.getElementById("clientsTotal").textContent = clientsResponse.count;
+    }
+  }catch(error){
+    console.warn("Dashboard Supabase totals failed. Local totals shown instead.", error);
+  }
+}
+
+updateDashboardFromSupabase();
 </script>
 
 </body>

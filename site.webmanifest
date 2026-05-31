@@ -1,14 +1,20 @@
 {
   "name": "NC Studios",
   "short_name": "NC Studios",
-  "description": "Manage bookings, clients, shoots and money in one clean place.",
-  "start_url": "./index.html",
+  "description": "NC Studios business dashboard for bookings, clients, finance, shot lists and delivery.",
+  "start_url": "./dashboard.html?v=sync-fixed-1",
   "scope": "./",
   "display": "standalone",
+  "background_color": "#050507",
+  "theme_color": "#050507",
   "orientation": "portrait",
-  "background_color": "#0f1115",
-  "theme_color": "#0f1115",
   "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "icon-192.png",
       "sizes": "192x192",

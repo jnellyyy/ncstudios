@@ -12,10 +12,14 @@
 
   const STORAGE_TABLE = "app_storage";
   const RELOAD_FLAG_PREFIX = "nc_sync_reloaded_";
-  const SYNC_DELAY = 600;
+  const SAVE_DELAY = 250;
 
+  const originalSetItem = Storage.prototype.setItem;
+  const originalRemoveItem = Storage.prototype.removeItem;
+  const pendingSaves = new Set();
+
+  let initialPullFinished = false;
   let saveTimer = null;
-  const originalSetItem = localStorage.setItem.bind(localStorage);
 
   function wait(ms){
     return new Promise(function(resolve){
@@ -24,7 +28,7 @@
   }
 
   async function waitForSupabase(){
-    for(let i = 0; i < 50; i++){
+    for(let attempt = 0; attempt < 60; attempt++){
       if(window.ncSupabase){
         return true;
       }
@@ -33,6 +37,10 @@
     }
 
     return false;
+  }
+
+  function isSyncKey(key){
+    return SYNC_KEYS.includes(String(key));
   }
 
   function readLocal(key){
@@ -45,14 +53,27 @@
   }
 
   function writeLocal(key, data){
-    originalSetItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+    originalSetItem.call(localStorage, key, JSON.stringify(Array.isArray(data) ? data : []));
+  }
+
+  function queueSave(key){
+    if(!isSyncKey(key)) return;
+
+    pendingSaves.add(String(key));
+
+    if(!initialPullFinished){
+      return;
+    }
+
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(flushPendingSaves, SAVE_DELAY);
   }
 
   async function saveKeyToSupabase(key){
     const ready = await waitForSupabase();
 
     if(!ready){
-      console.warn("NC Sync: Supabase not ready for", key);
+      console.warn("NC Sync: Supabase not ready. Saved locally only:", key);
       return false;
     }
 
@@ -80,6 +101,17 @@
     return true;
   }
 
+  async function flushPendingSaves(){
+    if(pendingSaves.size === 0) return;
+
+    const keys = Array.from(pendingSaves);
+    pendingSaves.clear();
+
+    for(const key of keys){
+      await saveKeyToSupabase(key);
+    }
+  }
+
   async function loadKeyFromSupabase(key){
     const ready = await waitForSupabase();
 
@@ -99,22 +131,18 @@
       return false;
     }
 
+    const localData = readLocal(key);
+
     if(!response.data || !Array.isArray(response.data.data)){
+      if(localData.length > 0){
+        await saveKeyToSupabase(key);
+      }
       return false;
     }
 
     const remoteData = response.data.data;
-    const localData = readLocal(key);
 
-    if(remoteData.length === 0 && localData.length > 0){
-      await saveKeyToSupabase(key);
-      return false;
-    }
-
-    const remoteString = JSON.stringify(remoteData);
-    const localString = JSON.stringify(localData);
-
-    if(remoteString !== localString){
+    if(JSON.stringify(remoteData) !== JSON.stringify(localData)){
       writeLocal(key, remoteData);
       return true;
     }
@@ -122,16 +150,23 @@
     return false;
   }
 
-  function patchLocalStorage(){
-    localStorage.setItem = function(key, value){
-      originalSetItem(key, value);
+  function patchStorage(){
+    if(window.__ncStoragePatched) return;
+    window.__ncStoragePatched = true;
 
-      if(SYNC_KEYS.includes(key)){
-        clearTimeout(saveTimer);
+    Storage.prototype.setItem = function(key, value){
+      originalSetItem.call(this, key, value);
 
-        saveTimer = setTimeout(function(){
-          saveKeyToSupabase(key);
-        }, SYNC_DELAY);
+      if(this === localStorage && isSyncKey(key)){
+        queueSave(key);
+      }
+    };
+
+    Storage.prototype.removeItem = function(key){
+      originalRemoveItem.call(this, key);
+
+      if(this === localStorage && isSyncKey(key)){
+        queueSave(key);
       }
     };
   }
@@ -141,11 +176,13 @@
 
     for(const key of SYNC_KEYS){
       const didChange = await loadKeyFromSupabase(key);
-
       if(didChange){
         changed = true;
       }
     }
+
+    initialPullFinished = true;
+    pendingSaves.clear();
 
     const pageKey = RELOAD_FLAG_PREFIX + location.pathname;
 
@@ -156,23 +193,37 @@
   }
 
   async function pushAllLocalToSupabase(){
+    initialPullFinished = true;
+
     for(const key of SYNC_KEYS){
       await saveKeyToSupabase(key);
     }
   }
 
   window.NCSync = {
+    keys:SYNC_KEYS,
     readLocal:readLocal,
     writeLocal:writeLocal,
     saveKeyToSupabase:saveKeyToSupabase,
     loadKeyFromSupabase:loadKeyFromSupabase,
     pullAllFromSupabase:pullAllFromSupabase,
-    pushAllLocalToSupabase:pushAllLocalToSupabase
+    pushAllLocalToSupabase:pushAllLocalToSupabase,
+    flushPendingSaves:flushPendingSaves
   };
 
-  patchLocalStorage();
+  patchStorage();
 
   window.addEventListener("load", function(){
     pullAllFromSupabase();
+  });
+
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "hidden"){
+      flushPendingSaves();
+    }
+  });
+
+  window.addEventListener("pagehide", function(){
+    flushPendingSaves();
   });
 })();
