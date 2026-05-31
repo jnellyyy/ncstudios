@@ -329,6 +329,7 @@ select option{
   border:1px solid var(--line);
   border-radius:22px;
   padding:14px;
+  position:relative;
 }
 
 .shot.captured{
@@ -341,6 +342,36 @@ select option{
   justify-content:space-between;
   gap:12px;
   margin-bottom:10px;
+}
+
+.shotChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:9px;
+}
+
+.chip{
+  min-height:26px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 9px;
+  color:var(--text);
+  background:rgba(255,255,255,0.075);
+  font-size:11px;
+  font-weight:900;
+}
+
+.chip.camera-b{
+  color:#fde68a;
+  border-color:rgba(245,158,11,0.32);
+  background:rgba(245,158,11,0.13);
+}
+
+.chip.camera-a{
+  color:#bfdbfe;
+  border-color:rgba(96,165,250,0.32);
+  background:rgba(96,165,250,0.13);
 }
 
 .shot h4{
@@ -430,7 +461,7 @@ select option{
 }
 
 .captureToggle{
-  min-width:112px;
+  min-width:126px;
 }
 
 .captureToggle.done{
@@ -447,6 +478,41 @@ select option{
   min-width:260px;
 }
 
+.liveTools{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.cameraBrief{
+  display:none;
+  border:1px solid rgba(245,158,11,0.24);
+  background:rgba(245,158,11,0.10);
+  border-radius:20px;
+  padding:13px;
+  margin-bottom:12px;
+}
+
+.cameraBrief.active{
+  display:block;
+}
+
+.cameraBrief h4{
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.cameraBrief p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.cameraBrief strong{
+  color:var(--text);
+}
+
 .empty{
   text-align:center;
   color:var(--muted);
@@ -458,6 +524,14 @@ select option{
 @media(max-width:900px){
   .grid{
     grid-template-columns:1fr;
+  }
+
+  .grid > aside{
+    order:2;
+  }
+
+  .grid > section{
+    order:1;
   }
 
   .stats{
@@ -567,17 +641,17 @@ select option{
       </div>
 
       <div class="cardBody">
-        <form class="form" id="shotForm">
-          <input type="hidden" id="shotId">
+	        <form class="form" id="shotForm">
+	          <input type="hidden" id="shotId">
 
           <label>
             Project
             <input id="project" type="text" placeholder="Marvin and Blessing" required>
           </label>
 
-          <div class="row">
-            <label>
-              Section
+	          <div class="row">
+	            <label>
+	              Section
               <select id="section">
                 <option value="prep">Prep</option>
                 <option value="ceremony">Ceremony</option>
@@ -587,10 +661,34 @@ select option{
                 <option value="dancing">Dancing</option>
                 <option value="details">Details</option>
               </select>
-            </label>
+	            </label>
 
-            <label>
-              Priority
+	            <label>
+	              Camera
+	              <select id="camera">
+	                <option value="A Camera">A Camera</option>
+	                <option value="B Camera">B Camera safety</option>
+	              </select>
+	            </label>
+	          </div>
+
+	          <div class="row">
+	            <label>
+	              Shot type
+	              <select id="shotType">
+	                <option value="Hero">Hero</option>
+	                <option value="Safety">Safety</option>
+	                <option value="Reaction">Reaction</option>
+	                <option value="Detail">Detail</option>
+		                <option value="Movement">Movement</option>
+		                <option value="Creative">Creative</option>
+		                <option value="Atmosphere">Atmosphere</option>
+		                <option value="Coverage">Coverage</option>
+		              </select>
+	            </label>
+
+	            <label>
+	              Priority
               <select id="priority">
                 <option value="essential">Essential</option>
                 <option value="high">High</option>
@@ -652,19 +750,22 @@ select option{
         <div class="importBox">
           <h3>Import shot list</h3>
 
-          <p class="importHelp">
-            Paste rows in this format:<br>
-            location | shot | lens + fps | movement | priority | framing | creative example
-          </p>
+	          <p class="importHelp">
+	            Paste rows in this format:<br>
+	            section headings are allowed. Rows can be: location | shot | lens | fps | movement | priority | framing | note
+	          </p>
 
           <textarea id="bulkImport" placeholder="groom prep | room atmosphere and details | 24 to 70mm + 50fps | slow handheld | high | 24mm and 35mm | hotel room, suits, shoes, perfume, rings, cufflinks"></textarea>
 
-          <button type="button" style="margin-top:10px;width:100%;" onclick="importShots()">
-            Import pasted shots
-          </button>
-          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="preloadBaseShotList()">
-            Load base wedding shot list
-          </button>
+	          <button type="button" style="margin-top:10px;width:100%;" onclick="importShots()">
+	            Import pasted shots
+	          </button>
+	          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="loadMarvinBlessingList()">
+	            Load Marvin + Blessing list
+	          </button>
+	          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="preloadBaseShotList()">
+	            Load base wedding shot list
+	          </button>
         </div>
       </div>
     </aside>
@@ -694,14 +795,144 @@ select option{
         </div>
       </div>
 
-      <div class="cardBody">
-        <div id="shotList" class="list"></div>
-      </div>
+	      <div class="cardBody">
+	        <div class="liveTools">
+	          <button type="button" class="secondary" onclick="resetCapturedForProject()">Reset captured</button>
+	          <button type="button" class="ghost" onclick="deleteCurrentProjectList()">Delete this couple's list</button>
+	        </div>
+	        <div class="cameraBrief" id="cameraBrief"></div>
+	        <div id="shotList" class="list"></div>
+	      </div>
     </section>
   </section>
 </main>
 
 </div>
+
+<textarea id="marvinBlessingListText" hidden>
+details
+
+grooms room | suit on hanger | 70mm | 50fps | tiny push | essential | close | hold the jacket clean in frame and push in very slightly so it feels premium and intentional
+grooms room | shoes watch cufflinks fragrance | 70mm | 50fps | tiny drift | essential | tight close | drift across the items in one direction so the edit can open with luxury detail texture
+grooms room | jacket or tie detail | 70mm | 50fps | tiny push | high | close | focus on fabric texture and hand movement so it feels polished rather than just informative
+brides room | dress hanging | 70mm | 50fps | slow push | essential | close | let the dress breathe in frame with soft falloff behind it for a calm elegant opener
+brides room | jewellery shoes perfume bouquet | 70mm | 50fps | tiny drift | essential | tight close | create one clean detail pass across the items so the prep section feels elevated
+brides room | veil or jewellery detail | 70mm | 50fps | minimal move | essential | close | start on the hands then rise slightly to catch texture and light on the face
+ceremony hall | aisle and altar | 24mm | 50fps | slow symmetrical move | essential | wide | one centred master to place the space and set the sacred tone
+ceremony hall | florals or ceremony details | 70mm | 50fps | tiny drift | low | close | use only one or two inserts so the ceremony still feels people led
+reception room | room wide | 24mm | 50fps | gentle glide | high | wide | one premium reveal if access allows so the reception feels intentional and complete
+reception room | cake tables styling | 70mm | 50fps | short inserts | medium | close | gather only enough detail to support the story, not overwhelm it
+reception room | signage or candles | 70mm | 50fps | tiny drift | low | close | quick insert for warmth and atmosphere only if time allows
+
+prep
+
+grooms room | room atmosphere | 24mm | 50fps | slow push in | low | wide | a quick doorway opener that settles into the room softly
+grooms room | tie or jacket going on | 50mm | 50fps | handheld steady | essential | mid | focus on hands and torso so the frame feels clean and masculine
+grooms room | Marvin with groomsmen | 35mm | 50fps | float around them | essential | mid | catch one real laugh or relaxed interaction so the section feels alive
+grooms room | Marvin solo portrait | 70mm | 50fps | hold then tiny push | essential | close | one calm groom hero frame before leaving
+grooms room | prayer or meaningful words | 50mm | 25fps | almost still | essential | mid close | hold still if words matter so the audio can sit naturally in the edit
+grooms room | creative | 70mm | 50fps | hold | high | close | this is the quiet look down then eyes up moment that gives you a strong emotional pause before the day moves on
+
+brides room | room atmosphere | 24mm | 50fps | slow push in | medium | wide | doorway opener that reveals the room gently rather than rushing into coverage
+brides room | final hair or makeup touch | 50mm | 50fps | soft handheld | essential | mid close | catch the hand entering frame to fix hair or lips so prep feels intimate
+brides room | dress going on | 35mm | 50fps | gentle handheld | essential | mid | keep Blessing central and let helpers enter naturally at the frame edge
+brides room | bridesmaid reaction | 70mm | 50fps | hold on faces | essential | close | stay longer so the emotion lands and gives you that reaction led Kayode style pacing
+brides room | Blessing portrait once ready | 70mm | 50fps | hold then tiny push | essential | close | soft light calm expression and stillness for a bridal hero shot
+brides room | bride reveal | 50mm | 25fps | mostly still | essential | mid | let the reveal breathe if there are words prayer or emotion
+brides room | creative | 50mm | 50fps | slight drift | medium | mid | mirror portrait before reveal so you get a polished reflective beat without forcing it
+brides room | creative | 70mm | 50fps | hold | essential | close | a quiet face close up before leaving that can act like an emotional bridge into ceremony
+brides room | creative | 70mm | 50fps | tiny push | high | close | bouquet lift or jewellery fastening used as a premium insert between faces and reactions
+
+corridor | leaving room | 24mm | 50fps | backward follow | medium | wide to mid | movement building anticipation before ceremony
+corridor | dress or bouquet movement | 70mm | 50fps | slight drift | medium | close | isolate the motion in fabric or bouquet for a transition beat
+corridor | creative | 35mm | 50fps | backward glide | medium | mid | bridal group moving toward camera with quiet confidence, more elegant than rushed
+
+ceremony
+
+ceremony hall | exterior | 24mm | 50fps | slow push | medium | wide | short venue opener to place the viewer before people take over the frame
+ceremony hall | guest arrivals | 50mm | 50fps | soft handheld | medium | mid | greetings and arrivals without making the moment feel too busy
+ceremony hall | groom waiting | 70mm | 50fps | slow push | essential | close | anticipation before the procession starts
+ceremony hall | bridal procession | 24mm | 25fps | steady centre aisle | essential | wide | clean aisle line with bridal party entering frame
+ceremony hall | groom reaction | 70mm | 25fps | minimal reframe | essential | close | hold longer than feels natural because the reaction is the emotional anchor
+ceremony hall | bride entrance | 50mm | 25fps | steady | essential | mid | enough room for bouquet and dress without losing intimacy
+ceremony hall | handover and settle | 50mm | 25fps | subtle | essential | mid | hold all three if possible before she settles
+ceremony hall | opening words or prayer | 70mm | 25fps | very minimal | high | mid close | respectful and clean with no unnecessary movement
+ceremony hall | readings or ministration | 70mm | 25fps | tiny reframe only | high | mid | take only the key beats so the edit stays selective and emotional
+ceremony hall | vows | 70mm | 25fps | almost locked | essential | close | speaker first then listener reaction so the scene feels relational not just documentary
+ceremony hall | ring exchange | 70mm | 25fps | tiny dip to hands | essential | close | begin on the ring action and finish on face reaction
+ceremony hall | kneeling or standing | 50mm | 25fps | hold | high | mid | let the whole posture change happen in frame
+ceremony hall | prayer or bowed heads | 70mm | 25fps | still | essential | close | clasped hands or lowered heads for emotional depth
+ceremony hall | kiss | 50mm | 25fps | steady | essential | mid | enough room to catch the smile after
+ceremony hall | recessional | 35mm | 25fps | follow or slight backward move | essential | wide to mid | joy and applause on exit with natural motion
+ceremony hall c2 | safety full ceremony | 100mm | 25fps | locked | essential | wide to mid | couple and officiant held cleanly in one safe angle
+ceremony hall c2 | safety vows rings kiss | 135mm | 25fps | locked | essential | mid | continuous usable protection for the core moments
+ceremony hall | creative | 70mm | 25fps | hold | essential | close | reaction before action, especially Marvin before bride fully arrives
+ceremony hall | creative | 50mm | 25fps | still | high | mid | one sacred quiet beat during prayer or pause so the ceremony can breathe in the edit
+
+portraits
+
+park | couple in environment | 24mm | 50fps | slow drift | medium | wide | one clean environmental frame with space around them
+park | walking hand in hand | 35mm | 50fps | backward follow | essential | mid | relaxed walking with soft laughter for the romantic flow
+park | Marvin looking at Blessing | 70mm | 50fps | hold then tiny push | essential | close | gaze first, smile second so it feels natural and intimate
+park | Blessing laughing | 70mm | 50fps | hold | essential | close | hero emotional shot that gives warmth and softness
+park | gentle pull in or embrace | 50mm | 50fps | small orbit | essential | mid | one elegant arc only so it stays intentional
+park | forehead touch | 50mm | 50fps | sway or hold | high | mid close | short and natural, not overdirected
+park | hands and rings | 70mm | 50fps | tiny drift | high | close | transition shot that can bridge romance and detail
+park | bouquet or dress movement | 70mm | 50fps | tiny drift | high | close | let the subject movement do the work instead of overmoving the camera
+park | bridal party walk | 24mm | 50fps | backward move | essential | wide to mid | let the group energy lead the frame
+park | bridal party laughter around couple | 35mm | 50fps | float with them | essential | mid | youthful warm polished energy
+park | creative | 35mm | 50fps | backward follow | essential | mid | signature couple movement toward camera with the soft confident pacing from the reference
+park | creative | 70mm | 50fps | hold | essential | close | reaction led romance, gaze then smile, used as an emotional punctuation point
+park | creative | 70mm | 50fps | drift | high | close | hands in motion while walking, useful as a luxury transition layer
+park | creative slow mo | 35mm | 50fps | backward follow | essential | mid | this is your one extra slow mo park shot, couple walking naturally while fabric, bouquet, and body language do the storytelling
+park | creative | 50mm | 50fps | one soft arc | high | mid | elegant orbit used once with intention, not repeated
+
+reception
+
+reception room | room wide | 24mm | 50fps | gentle glide | high | wide | one premium reveal if access allows
+reception room | cake tables styling | 70mm | 50fps | short inserts | medium | close | just enough detail to support the story
+reception room | guest atmosphere | 24mm | 50fps | drift | low | wide to mid | room energy without too many eating shots
+reception room | groomsmen entrance | 24mm | 50fps | side or backward move | high | wide | give them room to enter frame
+reception room | bridesmaids entrance | 24mm | 50fps | side or backward move | high | wide | polished and energetic
+reception room | couple entrance | 50mm | 50fps | backward move then quick reaction cut | essential | mid | treat this as a hero moment
+reception room | guest cheering | 70mm | 50fps | hold and reframe | essential | close | claps smiles real joy
+reception room | couple greeting tables | 50mm | 50fps | follow | medium | mid | warm social coverage
+reception room | hugs or older relatives | 70mm | 50fps | hold | essential | close | emotional texture
+reception room | cake cutting | 70mm | 50fps | tiny move | medium | close | elegant insert that keeps the flow polished
+reception room | one live real time beat | 50mm | 25fps | still | low | mid | optional pacing clip if you need a natural time beat
+reception room | creative | 24mm | 50fps | slow reveal move | medium | wide | one premium room reveal if timing allows before the energy takes over
+reception room | creative | 50mm | 50fps | backward move then cut | essential | mid | couple entrance then immediate crowd reaction, strong story movement like the reference
+reception room | creative | 70mm | 50fps | hold | high | close | one deeply human laugh or hug moment that gives the reception heart
+
+speeches
+
+reception room | main speaker | 50mm | 25fps | very minimal | essential | mid | clean documentary coverage
+reception room | Blessing reaction | 70mm | 25fps | hold | essential | close | priority face
+reception room | Marvin reaction | 70mm | 25fps | hold | essential | close | priority face
+reception room | parents or guest reactions | 70mm | 25fps | quick reframes only | high | close | only after speaker is safe
+reception room | singer reveal after I'm impressed | 24mm | 25fps | steady first | essential | wide to mid | catch the reveal cleanly before anything else
+reception room | Blessing reaction to singer | 70mm | 25fps | hold | essential | close | hero reaction
+reception room | room response | 24mm | 25fps | pan only if safe | high | wide | big story turn
+reception room c2 | safety full speeches | 100mm | 25fps | locked | essential | wide to mid | safe full speech coverage throughout
+reception room | creative | 70mm | 25fps | hold | essential | close | emotional speech line then immediate reaction cut, a very Kayode style pacing beat
+reception room | creative | 35mm | 25fps | steady then slight reframe | essential | mid | singer enters then room energy shifts, used to show the surprise opening up
+
+dancing
+
+reception room | first dance opening | 24mm | 25fps | steady or slow move | essential | wide | usable real time opening
+reception room | faces and hands | 50mm | 50fps | slow orbit or push | essential | mid | romantic cutaways
+reception room | family watching | 70mm | 25fps | hold | high | close | emotional support shot
+reception room | anticipation before second entrance | 50mm | 50fps | drift | high | mid | build expectation
+reception room | couple second entrance | 24mm | 50fps | backward move | essential | wide | fresh chapter feel
+reception room | bride dancing | 50mm | 50fps | in crowd handheld | essential | mid close | signature energy shot
+reception room | groom dancing or singing | 50mm | 50fps | in crowd handheld | essential | mid close | signature energy shot
+reception room | couple in crowd | 50mm | 50fps | close handheld | essential | mid | alive and immersive
+reception room | hands up claps room energy | 24mm | 50fps | in the action | high | wide to mid | texture shots that make the room feel alive
+reception room | one or two real time dance floor moments | 24mm | 25fps | small move or hold | low | wide | pacing contrast
+reception room | creative | 50mm | 50fps | slow push | essential | mid close | one romantic face to face hero moment inside the first dance section
+reception room | creative | 35mm | 50fps | move with crowd | essential | mid close | chest height immersive dance floor shot so you feel inside the party, not outside it
+reception room | creative | 70mm | 50fps | hold and reframe | essential | close | one face, one laugh, one strong joy shot to end the section with emotional energy
+</textarea>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
@@ -725,8 +956,10 @@ form.addEventListener("submit", function(event){
   const shot = {
     id,
     project:document.getElementById("project").value.trim(),
-    section:document.getElementById("section").value,
-    priority:normalisePriority(document.getElementById("priority").value),
+	    section:document.getElementById("section").value,
+	    camera:document.getElementById("camera").value,
+	    shotType:document.getElementById("shotType").value,
+	    priority:normalisePriority(document.getElementById("priority").value),
     location:document.getElementById("location").value.trim(),
     shotText:document.getElementById("shotText").value.trim(),
     lens,
@@ -783,6 +1016,7 @@ function renderShots(){
   });
 
   updateStats();
+  updateCameraBrief(projectFilter, filter, visible);
 
   if(visible.length === 0){
     list.innerHTML = `
@@ -800,7 +1034,13 @@ function renderShots(){
       <div class="shotTop">
         <div>
           <h4>${escapeHTML(item.shotText)}</h4>
-          <small>${escapeHTML(item.project)} • ${sectionLabel(item.section)} • ${escapeHTML(item.location || "No location")} • ${item.captured ? "Captured" : "Needed"}</small>
+          <small>${escapeHTML(item.project)} | ${sectionLabel(item.section)} | ${escapeHTML(item.location || "No location")} | ${item.captured ? "Captured" : "Needed"}</small>
+          <div class="shotChips">
+            <span class="chip ${cameraClass(item)}">${escapeHTML(item.camera || inferCamera(item.location))}</span>
+            <span class="chip">${escapeHTML(item.shotType || inferShotType(item))}</span>
+            <span class="chip">${escapeHTML(item.lens || extractLens(item.lensFps) || "Lens?")}</span>
+            <span class="chip">${escapeHTML(item.fps || extractFps(item.lensFps) || "FPS?")}</span>
+          </div>
         </div>
 
         <span class="badge ${normalisePriority(item.priority)}">${priorityLabel(item.priority)}</span>
@@ -831,13 +1071,34 @@ function renderShots(){
       ${item.notes ? `<p class="notesText">${escapeHTML(item.notes)}</p>` : ""}
 
       <div class="itemActions">
-        <button type="button" class="captureToggle ${item.captured ? "done" : ""}" onclick="toggleCaptured('${item.id}')">${item.captured ? "Captured" : "Tick shot"}</button>
+        <button type="button" class="captureToggle ${item.captured ? "done" : ""}" onclick="toggleCaptured('${item.id}')">${item.captured ? "Captured" : "Mark captured"}</button>
         <button type="button" class="secondary" onclick="editShot('${item.id}')">Edit</button>
         <button type="button" class="ghost" onclick="duplicateShot('${item.id}')">Duplicate</button>
         <button type="button" class="ghost" onclick="deleteShot('${item.id}')">Delete</button>
       </div>
     </article>
   `).join("");
+}
+
+function updateCameraBrief(projectFilter, sectionFilter, visible){
+  const brief = document.getElementById("cameraBrief");
+  if(!brief) return;
+
+  const ceremonyVisible = sectionFilter === "ceremony" || visible.some(item => item.section === "ceremony");
+  const bCameraCount = visible.filter(item => (item.camera || inferCamera(item.location)) === "B Camera").length;
+
+  if(!ceremonyVisible){
+    brief.classList.remove("active");
+    brief.innerHTML = "";
+    return;
+  }
+
+  brief.classList.add("active");
+  brief.innerHTML = `
+    <h4>Ceremony camera plan</h4>
+    <p><strong>B Camera:</strong> lock off the safety angle before the procession. Keep it rolling for vows, rings, kiss and recessional. ${bCameraCount ? `${bCameraCount} B-cam safety shot${bCameraCount === 1 ? "" : "s"} are in this list.` : "Add or load B-cam safety rows for this ceremony."}</p>
+    <p><strong>A Camera:</strong> use your main camera for reactions, bride entrance, handover, prayer details and emotional close-ups.</p>
+  `;
 }
 
 function updateStats(){
@@ -869,6 +1130,8 @@ function editShot(id){
   document.getElementById("shotId").value = shot.id;
   document.getElementById("project").value = shot.project || "";
   document.getElementById("section").value = shot.section || "prep";
+  document.getElementById("camera").value = shot.camera || inferCamera(shot.location);
+  document.getElementById("shotType").value = shot.shotType || inferShotType(shot);
   document.getElementById("priority").value = normalisePriority(shot.priority);
   document.getElementById("location").value = shot.location || "";
   document.getElementById("shotText").value = shot.shotText || "";
@@ -913,6 +1176,49 @@ function toggleCaptured(id){
   renderShots();
 }
 
+function resetCapturedForProject(){
+  const project = currentProject();
+
+  if(!project){
+    alert("Choose a couple first.");
+    return;
+  }
+
+  if(!confirm(`Reset captured marks for ${project}?`)) return;
+
+  shots = shots.map(item => item.project === project ? {...item,captured:false,updatedAt:new Date().toISOString()} : item);
+  saveShots();
+  renderShots();
+}
+
+function deleteCurrentProjectList(){
+  const project = currentProject();
+
+  if(!project){
+    alert("Choose a couple first.");
+    return;
+  }
+
+  const count = shots.filter(item => item.project === project).length;
+  if(!count){
+    alert("No shots found for this couple.");
+    return;
+  }
+
+  if(!confirm(`Delete all ${count} shots for ${project}? This cannot be undone.`)) return;
+
+  shots = shots.filter(item => item.project !== project);
+  saveShots();
+  renderShots();
+}
+
+function currentProject(){
+  const selected = document.getElementById("filterProject").value;
+  const typed = document.getElementById("project").value.trim();
+  if(selected && selected !== "all") return selected;
+  return typed || "";
+}
+
 function deleteShot(id){
   const shot = shots.find(item => item.id === id);
   if(!shot) return;
@@ -929,6 +1235,8 @@ function resetForm(){
   form.reset();
   document.getElementById("shotId").value = "";
   document.getElementById("section").value = "prep";
+  document.getElementById("camera").value = "A Camera";
+  document.getElementById("shotType").value = "Hero";
   document.getElementById("priority").value = "essential";
   document.getElementById("fps").value = "25fps";
 }
@@ -965,36 +1273,80 @@ function importShots(){
 }
 
 function parseShotRows(text, project){
-  return text
+  const imported = [];
+  let section = "details";
+
+  text
     .split("\n")
     .map(line => line.trim())
-    .filter(line => line && line.includes("|"))
-    .map(line => line.split("|").map(part => part.trim()))
-    .filter(parts => parts.length >= 7)
-    .map(parts => {
-      const location = parts[0];
-      const lensFps = parts[2];
-      const lens = extractLens(lensFps);
-      const fps = extractFps(lensFps);
+    .filter(Boolean)
+    .forEach(line => {
+      if(!line.includes("|")){
+        section = normaliseSectionHeading(line) || section;
+        return;
+      }
 
-      return {
+      const parts = line.split("|").map(part => part.trim());
+      if(parts.length < 7) return;
+
+      const sectionFromFirstColumn = normaliseSectionHeading(parts[0]);
+      const hasSeparateFps = /\d+\s*fps/i.test(parts[3] || "");
+      const location = sectionFromFirstColumn && !hasSeparateFps ? sectionFromFirstColumn : parts[0];
+      const shotText = parts[1];
+      const lens = parts[2] || "";
+      const fps = hasSeparateFps ? parts[3] : extractFps(parts[2]);
+      const movement = hasSeparateFps ? parts[4] : parts[3];
+      const priority = hasSeparateFps ? parts[5] : parts[4];
+      const framing = hasSeparateFps ? parts[6] : parts[5];
+      const creativeExample = hasSeparateFps ? parts.slice(7).join(" | ") : parts.slice(6).join(" | ");
+      const rowSection = sectionFromFirstColumn && !hasSeparateFps ? sectionFromFirstColumn : section || inferSection(location);
+      const item = {
         id:crypto.randomUUID(),
         project,
-        section:inferSection(location),
-        priority:normalisePriority(parts[4]),
+        section:rowSection,
+        camera:inferCamera(location),
+        shotType:inferShotType({location,shotText,section:rowSection,priority}),
+        priority:normalisePriority(priority),
         location,
-        shotText:parts[1],
+        shotText,
         lens,
         fps,
-        lensFps,
-        movement:parts[3],
-        framing:parts[5],
-        creativeExample:parts.slice(6).join(" | "),
+        lensFps:buildLensFps(lens, fps),
+        movement,
+        framing,
+        creativeExample,
         notes:"",
         captured:false,
         updatedAt:new Date().toISOString()
       };
+
+      imported.push(item);
     });
+
+  return imported;
+}
+
+function loadMarvinBlessingList(){
+  const project = "Marvin + Blessing";
+  const existingCount = shots.filter(item => item.project === project).length;
+
+  if(existingCount && !confirm(`${project} already has ${existingCount} shots. Replace that list?`)){
+    return;
+  }
+
+  const raw = document.getElementById("marvinBlessingListText").textContent.trim();
+  const imported = parseShotRows(raw, project);
+
+  shots = shots.filter(item => item.project !== project);
+  shots = [...imported, ...shots];
+  document.getElementById("project").value = project;
+  saveShots();
+  renderShots();
+
+  const filter = document.getElementById("filterProject");
+  filter.value = project;
+  renderShots();
+  alert(`${imported.length} Marvin + Blessing shots loaded.`);
 }
 
 function preloadBaseShotList(){
@@ -1043,6 +1395,35 @@ function inferSection(value){
   if(text.includes("dance") || text.includes("dancing")) return "dancing";
 
   return "details";
+}
+
+function normaliseSectionHeading(value){
+  const text = String(value || "").toLowerCase().trim();
+  const allowed = ["details","prep","ceremony","portraits","reception","speeches","dancing"];
+  return allowed.includes(text) ? text : "";
+}
+
+function inferCamera(location){
+  const text = String(location || "").toLowerCase();
+  if(text.includes("c2") || text.includes("b cam") || text.includes("b-camera") || text.includes("safety")) return "B Camera";
+  return "A Camera";
+}
+
+function cameraClass(item){
+  return (item.camera || inferCamera(item.location)) === "B Camera" ? "camera-b" : "camera-a";
+}
+
+function inferShotType(item){
+  const text = `${item.location || ""} ${item.shotText || ""} ${item.creativeExample || ""}`.toLowerCase();
+  const section = item.section || inferSection(item.location);
+
+  if((item.camera || inferCamera(item.location)) === "B Camera") return "Safety";
+  if(text.includes("creative")) return "Creative";
+  if(text.includes("reaction") || text.includes("laugh") || text.includes("smile")) return "Reaction";
+  if(section === "details" || text.includes("detail") || text.includes("rings") || text.includes("shoes") || text.includes("bouquet")) return "Detail";
+  if(text.includes("walk") || text.includes("entrance") || text.includes("exit") || text.includes("follow") || text.includes("dance")) return "Movement";
+  if(text.includes("atmosphere") || text.includes("room wide") || text.includes("exterior")) return "Atmosphere";
+  return normalisePriority(item.priority) === "essential" ? "Hero" : "Coverage";
 }
 
 function extractLens(value){
