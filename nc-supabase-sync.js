@@ -6,6 +6,8 @@
     "ncstudios_delivery_v1",
     "ncstudios_lists_v1",
     "ncstudios_shots_v1",
+    "ncstudios_timeline_v1",
+    "ncstudios_gear_v1",
     "ncstudios_templates_v1",
     "ncStudiosAdminTrackerV1"
   ];

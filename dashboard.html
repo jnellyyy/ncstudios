@@ -256,7 +256,6 @@ body::before{
   border-radius:26px;
   padding:14px;
   color:var(--text);
-  text-decoration:none;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -264,10 +263,6 @@ body::before{
   overflow:hidden;
   box-shadow:var(--shadow);
   position:relative;
-}
-
-.livePanel:active{
-  transform:scale(0.985);
 }
 
 .liveLabel{
@@ -342,15 +337,47 @@ body::before{
 }
 
 .liveCTA{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  color:white;
-  font-size:12px;
-  font-weight:950;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
   position:relative;
   z-index:1;
+}
+
+.liveAction{
+  min-height:52px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(0,0,0,0.18);
+  border-radius:17px;
+  padding:9px;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:5px;
+}
+
+.liveAction:active{
+  transform:scale(0.985);
+}
+
+.liveAction span{
+  color:rgba(255,255,255,0.72);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+.liveAction strong{
+  font-size:12px;
+  line-height:1;
+}
+
+.liveAction.primary{
+  background:linear-gradient(145deg,#ff3b30,#991b1b);
+  box-shadow:0 12px 24px rgba(255,59,48,0.20);
 }
 
 .tiles{
@@ -550,7 +577,7 @@ body::before{
   }
 
   .livePanel{
-    min-height:68px;
+    min-height:94px;
     border-radius:20px;
     padding:10px;
     display:grid;
@@ -568,9 +595,31 @@ body::before{
   }
 
   .livePanel p,
-  .liveNext,
-  .liveCTA{
+  .liveNext{
     display:none;
+  }
+
+  .liveCTA{
+    grid-column:1 / -1;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+  }
+
+  .liveAction{
+    min-height:27px;
+    border-radius:11px;
+    padding:6px 7px;
+    flex-direction:row;
+    align-items:center;
+  }
+
+  .liveAction span{
+    font-size:7.5px;
+  }
+
+  .liveAction strong{
+    font-size:10px;
+    white-space:nowrap;
   }
 
   .liveStats{
@@ -670,6 +719,36 @@ body::before{
     padding:11px;
   }
 
+  .livePanel{
+    min-height:74px;
+  }
+
+  .liveStats{
+    display:none;
+  }
+
+  .liveAction strong{
+    display:none;
+  }
+
+  .liveAction{
+    min-height:26px;
+    justify-content:center;
+  }
+
+  .icon{
+    width:27px;
+    height:27px;
+  }
+
+  .tileMetric{
+    font-size:15px;
+  }
+
+  .tileFooter{
+    display:none;
+  }
+
   .tiles{
     grid-template-columns:repeat(2,1fr);
   }
@@ -726,7 +805,7 @@ body::before{
 </section>
 
 <main class="dashboardMain">
-  <a class="livePanel" id="liveShotLink" href="shot-lists.html#liveShots">
+  <section class="livePanel">
     <div>
       <div class="liveLabel">Live shoot</div>
       <h3 id="liveProject">Shot list</h3>
@@ -753,10 +832,22 @@ body::before{
     <div class="liveNext" id="liveNextShot">Load a list or paste one in Shots.</div>
 
     <div class="liveCTA">
-      <span>Open live shot list</span>
-      <span>›</span>
+      <a class="liveAction primary" id="liveShotLink" href="shot-lists.html#liveShots">
+        <span>Shots</span>
+        <strong id="liveShotAction">0 left</strong>
+      </a>
+
+      <a class="liveAction" href="timeline.html">
+        <span>Timeline</span>
+        <strong id="timelineWidget">0 items</strong>
+      </a>
+
+      <a class="liveAction" href="gear.html">
+        <span>Gear</span>
+        <strong id="gearWidget">0 items</strong>
+      </a>
     </div>
-  </a>
+  </section>
 
   <section class="tiles">
   <a class="tile" href="bookings.html">
@@ -928,6 +1019,7 @@ function updateShotPanel(shots){
   setText("liveNeeded", needed.length);
   setText("liveCaptured", captured.length);
   setText("liveTotal", safeShots.length);
+  setText("liveShotAction", `${needed.length} left`);
   setText("liveProject", activeProject || "Set up live shots");
 
   if(nextShot && needed.length){
@@ -953,6 +1045,8 @@ function updateDashboardFromLocal(){
   const lists = readData("ncstudios_lists_v1");
   const delivery = readData("ncstudios_delivery_v1");
   const templates = readData("ncstudios_templates_v1");
+  const timeline = readData("ncstudios_timeline_v1");
+  const gear = readData("ncstudios_gear_v1");
   const adminClients = readData("ncStudiosAdminTrackerV1");
 
   document.getElementById("bookingsTotal").textContent = bookings.length;
@@ -972,6 +1066,8 @@ function updateDashboardFromLocal(){
   document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
   document.getElementById("templatesWidget").textContent = templates.length;
   document.getElementById("adminWidget").textContent = adminClients.length;
+  setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
+  setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
   updateShotPanel(shots);
 }
 
@@ -993,7 +1089,9 @@ async function updateDashboardFromSupabase(){
         "ncstudios_clients_v1",
         "ncstudios_shots_v1",
         "ncstudios_lists_v1",
-        "ncstudios_templates_v1"
+        "ncstudios_templates_v1",
+        "ncstudios_timeline_v1",
+        "ncstudios_gear_v1"
       ]);
 
     if(!storageResponse.error && Array.isArray(storageResponse.data)){
@@ -1009,6 +1107,8 @@ async function updateDashboardFromSupabase(){
       const shots = map.ncstudios_shots_v1 || readData("ncstudios_shots_v1");
       const lists = map.ncstudios_lists_v1 || readData("ncstudios_lists_v1");
       const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
+      const timeline = map.ncstudios_timeline_v1 || readData("ncstudios_timeline_v1");
+      const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
 
       document.getElementById("bookingsTotal").textContent = bookings.length;
       document.getElementById("deliveryTotal").textContent = delivery.length;
@@ -1026,6 +1126,8 @@ async function updateDashboardFromSupabase(){
       document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
       document.getElementById("templatesWidget").textContent = templates.length;
       document.getElementById("clientWidget").textContent = appStorageClients.length;
+      setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
+      setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
       updateShotPanel(shots);
     }
 

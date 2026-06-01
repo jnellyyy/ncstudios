@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Gear</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050507">
+
+<style>
+:root{
+  --bg:#050507;
+  --bg2:#101114;
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f5f7;
+  --muted:#9ca3af;
+  --red:#ff3b30;
+  --green:#34c759;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,59,48,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(127,16,16,0.24), transparent 34%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:16px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,59,48,0.45), transparent 38%),
+    linear-gradient(145deg,#202227,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.topPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  padding:10px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-100px;
+  background:radial-gradient(circle, rgba(255,59,48,0.28), transparent 70%);
+}
+
+.heroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.hero h2{
+  margin:7px 0;
+  font-size:34px;
+  line-height:0.95;
+  letter-spacing:-1.5px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  max-width:570px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+button,.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(145deg,#ff3b30,#9f1717);
+  padding:12px 14px;
+  border-radius:17px;
+  font-weight:900;
+  font-size:12px;
+  text-decoration:none;
+  box-shadow:0 12px 28px rgba(255,59,48,0.22);
+  cursor:pointer;
+}
+
+button.secondary,.btn.secondary{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  min-height:86px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:23px;
+  letter-spacing:-0.7px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(10,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  text-align:center;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.055);
+  padding:10px 7px;
+  border-radius:16px;
+  font-size:12px;
+  font-weight:850;
+}
+
+.nav a.active{
+  color:var(--text);
+  border-color:rgba(255,59,48,0.45);
+  background:rgba(255,59,48,0.18);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.card{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cardHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.cardHead h3{
+  font-size:17px;
+}
+
+.cardHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cardBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+
+select option{
+  color:#111827;
+}
+
+textarea{
+  min-height:92px;
+  resize:vertical;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.importBox{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+
+.importBox h3{
+  font-size:16px;
+}
+
+.importBox p{
+  margin:7px 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  min-width:390px;
+}
+
+.gearList{
+  display:grid;
+  gap:10px;
+}
+
+.gearItem{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);
+  border-radius:22px;
+  padding:14px;
+}
+
+.gearItem.packed,
+.gearItem.checked,
+.gearItem.charged{
+  border-color:rgba(52,199,89,0.40);
+  background:rgba(52,199,89,0.10);
+}
+
+.gearItem.missing,
+.gearItem.return{
+  border-color:rgba(255,59,48,0.42);
+  background:rgba(255,59,48,0.12);
+}
+
+.gearTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.gearTop h4{
+  font-size:16px;
+}
+
+.gearTop small{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+}
+
+.qtyBadge{
+  min-width:44px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(0,0,0,0.20);
+  border-radius:999px;
+  font-size:12px;
+  font-weight:950;
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.chip{
+  min-height:25px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 9px;
+  color:var(--text);
+  background:rgba(255,255,255,0.075);
+  font-size:11px;
+  font-weight:900;
+}
+
+.chip.ready{
+  color:#bbf7d0;
+  border-color:rgba(34,197,94,0.34);
+  background:rgba(34,197,94,0.12);
+}
+
+.chip.warning{
+  color:#fde68a;
+  border-color:rgba(245,158,11,0.34);
+  background:rgba(245,158,11,0.12);
+}
+
+.chip.danger{
+  color:#fecaca;
+  border-color:rgba(248,113,113,0.36);
+  background:rgba(248,113,113,0.12);
+}
+
+.notes{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  white-space:pre-line;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:13px;
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 16px;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+@media(max-width:980px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .grid > aside{
+    order:2;
+  }
+
+  .grid > section{
+    order:1;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .cardHead,
+  .heroTop{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .filters{
+    min-width:0;
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:28px;
+  }
+
+  .row,
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">NC</div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Gear</p>
+    </div>
+  </div>
+
+  <a class="topPill" href="dashboard.html">Dashboard</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">Shoot day pack check</div>
+        <h2>Gear</h2>
+        <p>Track cameras, lenses, audio, batteries, cards, rentals and returns before you leave for a job.</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="exportGear()">Export</button>
+        <button type="button" class="secondary" onclick="resetForm()">New item</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Items</span>
+        <strong id="statTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Ready</span>
+        <strong id="statReady">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Power/media left</span>
+        <strong id="statPower">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Rentals</span>
+        <strong id="statRentals">0</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a href="dashboard.html">Home</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a href="shot-lists.html">Shots</a>
+    <a href="timeline.html">Timeline</a>
+    <a class="active" href="gear.html">Gear</a>
+    <a href="lists.html">Lists</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="grid">
+    <aside class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Add or import</h3>
+          <p>Build a pack list for each couple or shoot.</p>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <form class="form" id="gearForm">
+          <input type="hidden" id="gearId">
+
+          <label>
+            Couple / project
+            <input id="project" type="text" placeholder="Marvin + Blessing" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Category
+              <select id="category">
+                <option value="camera">Camera</option>
+                <option value="lens">Lens</option>
+                <option value="audio">Audio</option>
+                <option value="lighting">Lighting</option>
+                <option value="power">Power</option>
+                <option value="media">Media</option>
+                <option value="support">Support</option>
+                <option value="rental">Rental</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+
+            <label>
+              Quantity
+              <input id="quantity" type="number" min="1" step="1" value="1">
+            </label>
+          </div>
+
+          <label>
+            Item
+            <input id="itemName" type="text" placeholder="A camera, 70-200mm, lav mic, batteries" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Status
+              <select id="status">
+                <option value="needed">Needed</option>
+                <option value="packed">Packed</option>
+                <option value="charged">Charged</option>
+                <option value="checked">Checked</option>
+                <option value="rented">Rented</option>
+                <option value="return">Return</option>
+                <option value="missing">Missing</option>
+              </select>
+            </label>
+
+            <label>
+              Due / return date
+              <input id="dueDate" type="date">
+            </label>
+          </div>
+
+          <label>
+            Notes
+            <textarea id="notes" placeholder="Serials, pickup time, battery count, SD card label, return reminder."></textarea>
+          </label>
+
+          <button type="submit">Save item</button>
+          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+        </form>
+
+        <div class="importBox">
+          <h3>Import gear list</h3>
+          <p>Paste rows like: category | item | quantity | status | note</p>
+          <textarea id="bulkImport" placeholder="power | NP-F batteries | 6 | charged | label and pack in pouch"></textarea>
+          <button type="button" style="margin-top:10px;width:100%;" onclick="importGear()">Import pasted gear</button>
+          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="loadBaseGear()">Load base wedding gear</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Pack list</h3>
+          <p>Fast checks before leaving and before returning rentals.</p>
+        </div>
+
+        <div class="filters">
+          <select id="filterProject" onchange="renderGear()">
+            <option value="all">All projects</option>
+          </select>
+
+          <select id="filterCategory" onchange="renderGear()">
+            <option value="all">All categories</option>
+            <option value="camera">Camera</option>
+            <option value="lens">Lens</option>
+            <option value="audio">Audio</option>
+            <option value="lighting">Lighting</option>
+            <option value="power">Power</option>
+            <option value="media">Media</option>
+            <option value="support">Support</option>
+            <option value="rental">Rental</option>
+            <option value="other">Other</option>
+          </select>
+
+          <select id="filterStatus" onchange="renderGear()">
+            <option value="left">Still left</option>
+            <option value="all">All statuses</option>
+            <option value="needed">Needed</option>
+            <option value="packed">Packed</option>
+            <option value="charged">Charged</option>
+            <option value="checked">Checked</option>
+            <option value="rented">Rented</option>
+            <option value="return">Return</option>
+            <option value="missing">Missing</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div id="gearList" class="gearList"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_gear_v1";
+let gear = loadGear();
+const form = document.getElementById("gearForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("gearId").value || uid();
+  const item = {
+    id,
+    project:document.getElementById("project").value.trim(),
+    category:document.getElementById("category").value,
+    quantity:Number(document.getElementById("quantity").value || 1),
+    itemName:document.getElementById("itemName").value.trim(),
+    status:document.getElementById("status").value,
+    dueDate:document.getElementById("dueDate").value,
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!item.project || !item.itemName){
+    alert("Add the project and gear item first.");
+    return;
+  }
+
+  const index = gear.findIndex(entry => entry.id === id);
+  if(index >= 0){
+    gear[index] = item;
+  } else {
+    gear.push(item);
+  }
+
+  saveGear();
+  resetForm();
+  showProject(item.project);
+});
+
+function uid(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "gear_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function loadGear(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    return Array.isArray(saved) ? saved : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveGear(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(gear));
+}
+
+function renderGear(){
+  updateProjectFilter();
+
+  const list = document.getElementById("gearList");
+  const projectFilter = document.getElementById("filterProject").value;
+  const categoryFilter = document.getElementById("filterCategory").value;
+  const statusFilter = document.getElementById("filterStatus").value;
+
+  const visible = gear
+    .filter(item => {
+      const projectMatch = projectFilter === "all" || item.project === projectFilter;
+      const categoryMatch = categoryFilter === "all" || item.category === categoryFilter;
+      const statusMatch =
+        statusFilter === "all" ||
+        item.status === statusFilter ||
+        (statusFilter === "left" && !isReady(item.status));
+      return projectMatch && categoryMatch && statusMatch;
+    })
+    .sort((a,b) => `${categoryLabel(a.category)} ${a.itemName}`.localeCompare(`${categoryLabel(b.category)} ${b.itemName}`));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `
+      <div class="empty">
+        No gear items in this view.
+        <br><br>
+        Add an item, paste a gear list or load the base wedding gear.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="gearItem ${escapeAttribute(item.status)}">
+      <div class="gearTop">
+        <div>
+          <h4>${escapeHTML(item.itemName)}</h4>
+          <small>${escapeHTML(item.project)} | ${categoryLabel(item.category)}${item.dueDate ? ` | due ${escapeHTML(niceDate(item.dueDate))}` : ""}</small>
+        </div>
+        <div class="qtyBadge">x${escapeHTML(item.quantity || 1)}</div>
+      </div>
+
+      <div class="chips">
+        <span class="chip ${statusClass(item.status)}">${statusLabel(item.status)}</span>
+        <span class="chip">${categoryLabel(item.category)}</span>
+      </div>
+
+      ${item.notes ? `<p class="notes">${escapeHTML(item.notes)}</p>` : ""}
+
+      <div class="itemActions">
+        <button type="button" onclick="setStatus('${item.id}','packed')">Packed</button>
+        <button type="button" class="secondary" onclick="setStatus('${item.id}','checked')">Checked</button>
+        <button type="button" class="ghost" onclick="setStatus('${item.id}','return')">Return</button>
+        <button type="button" class="secondary" onclick="editItem('${item.id}')">Edit</button>
+        <button type="button" class="ghost" onclick="deleteItem('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  const ready = gear.filter(item => isReady(item.status));
+  const powerLeft = gear.filter(item => ["power","media"].includes(item.category) && !isReady(item.status));
+  const rentals = gear.filter(item => item.category === "rental" || ["rented","return"].includes(item.status));
+
+  document.getElementById("statTotal").textContent = gear.length;
+  document.getElementById("statReady").textContent = ready.length;
+  document.getElementById("statPower").textContent = powerLeft.length;
+  document.getElementById("statRentals").textContent = rentals.length;
+}
+
+function updateProjectFilter(){
+  const select = document.getElementById("filterProject");
+  const current = select.value || "all";
+  const projects = [...new Set(gear.map(item => item.project).filter(Boolean))].sort();
+
+  select.innerHTML = [
+    `<option value="all">All projects</option>`,
+    ...projects.map(project => `<option value="${escapeAttribute(project)}">${escapeHTML(project)}</option>`)
+  ].join("");
+
+  select.value = projects.includes(current) ? current : "all";
+}
+
+function showProject(project){
+  updateProjectFilter();
+  const select = document.getElementById("filterProject");
+  if(project && [...select.options].some(option => option.value === project)){
+    select.value = project;
+  }
+  document.getElementById("filterStatus").value = "left";
+  renderGear();
+}
+
+function setStatus(id,status){
+  gear = gear.map(item => item.id === id ? {...item,status,updatedAt:new Date().toISOString()} : item);
+  saveGear();
+  renderGear();
+}
+
+function editItem(id){
+  const item = gear.find(entry => entry.id === id);
+  if(!item) return;
+
+  document.getElementById("gearId").value = item.id;
+  document.getElementById("project").value = item.project || "";
+  document.getElementById("category").value = item.category || "camera";
+  document.getElementById("quantity").value = item.quantity || 1;
+  document.getElementById("itemName").value = item.itemName || "";
+  document.getElementById("status").value = item.status || "needed";
+  document.getElementById("dueDate").value = item.dueDate || "";
+  document.getElementById("notes").value = item.notes || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteItem(id){
+  const item = gear.find(entry => entry.id === id);
+  if(!item) return;
+  if(!confirm(`Delete ${item.itemName}?`)) return;
+
+  gear = gear.filter(entry => entry.id !== id);
+  saveGear();
+  renderGear();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("gearId").value = "";
+  document.getElementById("category").value = "camera";
+  document.getElementById("quantity").value = "1";
+  document.getElementById("status").value = "needed";
+}
+
+function importGear(){
+  const raw = document.getElementById("bulkImport").value.trim();
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!raw){
+    alert("Paste the gear list first.");
+    return;
+  }
+
+  if(!project){
+    alert("Add the couple/project name first.");
+    return;
+  }
+
+  const imported = parseRows(raw, project);
+  if(!imported.length){
+    alert("No valid rows found. Use: category | item | quantity | status | note");
+    return;
+  }
+
+  gear = [...gear, ...imported];
+  saveGear();
+  document.getElementById("bulkImport").value = "";
+  showProject(project);
+  alert(`${imported.length} gear items imported.`);
+}
+
+function parseRows(text, project){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line.includes("|"))
+    .map(line => line.split("|").map(part => part.trim()))
+    .filter(parts => parts.length >= 2)
+    .map(parts => ({
+      id:uid(),
+      project,
+      category:normaliseCategory(parts[0]),
+      itemName:parts[1] || "Gear item",
+      quantity:Number(parts[2] || 1),
+      status:normaliseStatus(parts[3] || "needed"),
+      dueDate:"",
+      notes:parts.slice(4).join(" | "),
+      updatedAt:new Date().toISOString()
+    }))
+    .filter(item => item.itemName);
+}
+
+function loadBaseGear(){
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!project){
+    alert("Add the couple/project name first, then load the base gear.");
+    return;
+  }
+
+  const rows = [
+    "camera | A camera body | 1 | needed | main camera cleaned and formatted",
+    "camera | B camera body | 1 | needed | ceremony safety angle",
+    "lens | 24-70mm lens | 1 | needed | main flexible lens",
+    "lens | 70-200mm lens | 1 | needed | reactions, speeches, ceremony close-ups",
+    "lens | 35mm or 50mm prime | 1 | needed | prep and portraits",
+    "audio | wireless lav set | 2 | needed | groom and officiant if possible",
+    "audio | recorder and backup audio | 1 | needed | speeches and ceremony feed",
+    "power | camera batteries | 8 | charged | charge the night before",
+    "power | audio batteries | 8 | charged | pack spare AA or rechargeables",
+    "media | SD or CFexpress cards | 8 | checked | formatted and labelled",
+    "media | card case | 1 | packed | empty side and full side clear",
+    "support | tripod or monopod | 1 | needed | B camera safety",
+    "support | gimbal | 1 | needed | entrances and portraits if using",
+    "lighting | small LED light | 1 | needed | reception backup",
+    "other | chargers and cables | 1 | needed | cameras, audio, phone",
+    "other | rain cover and cloths | 1 | needed | weather backup"
+  ];
+
+  gear = [...gear, ...parseRows(rows.join("\n"), project)];
+  saveGear();
+  showProject(project);
+  alert(`Base wedding gear loaded for ${project}.`);
+}
+
+function isReady(status){
+  return ["packed","checked","charged"].includes(String(status || "").toLowerCase());
+}
+
+function normaliseCategory(value){
+  const text = String(value || "").toLowerCase().trim();
+  const allowed = ["camera","lens","audio","lighting","power","media","support","rental","other"];
+  return allowed.includes(text) ? text : "other";
+}
+
+function normaliseStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  const allowed = ["needed","packed","charged","checked","rented","return","missing"];
+  return allowed.includes(text) ? text : "needed";
+}
+
+function categoryLabel(value){
+  const labels = {
+    camera:"Camera",
+    lens:"Lens",
+    audio:"Audio",
+    lighting:"Lighting",
+    power:"Power",
+    media:"Media",
+    support:"Support",
+    rental:"Rental",
+    other:"Other"
+  };
+
+  return labels[value] || "Other";
+}
+
+function statusLabel(value){
+  const labels = {
+    needed:"Needed",
+    packed:"Packed",
+    charged:"Charged",
+    checked:"Checked",
+    rented:"Rented",
+    return:"Return",
+    missing:"Missing"
+  };
+
+  return labels[value] || "Needed";
+}
+
+function statusClass(value){
+  if(isReady(value)) return "ready";
+  if(value === "missing" || value === "return") return "danger";
+  if(value === "rented") return "warning";
+  return "";
+}
+
+function niceDate(value){
+  if(!value) return "";
+  const date = new Date(value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function exportGear(){
+  const data = {
+    app:"NC Studios",
+    type:"gear",
+    exportedAt:new Date().toISOString(),
+    gear
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-gear.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value);
+}
+
+renderGear();
+</script>
+</body>
+</html>

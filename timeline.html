@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Timeline</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050507">
+
+<style>
+:root{
+  --bg:#050507;
+  --bg2:#101114;
+  --line:rgba(255,255,255,0.12);
+  --text:#f5f5f7;
+  --muted:#9ca3af;
+  --red:#ff3b30;
+  --green:#34c759;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255,59,48,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(127,16,16,0.24), transparent 34%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:16px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,59,48,0.45), transparent 38%),
+    linear-gradient(145deg,#202227,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.topPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  padding:10px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-100px;
+  background:radial-gradient(circle, rgba(255,59,48,0.28), transparent 70%);
+}
+
+.heroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.hero h2{
+  margin:7px 0;
+  font-size:34px;
+  line-height:0.95;
+  letter-spacing:-1.5px;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  max-width:570px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+button,.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(145deg,#ff3b30,#9f1717);
+  padding:12px 14px;
+  border-radius:17px;
+  font-weight:900;
+  font-size:12px;
+  text-decoration:none;
+  box-shadow:0 12px 28px rgba(255,59,48,0.22);
+  cursor:pointer;
+}
+
+button.secondary,.btn.secondary{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  min-height:86px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:23px;
+  letter-spacing:-0.7px;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(10,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  text-align:center;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.055);
+  padding:10px 7px;
+  border-radius:16px;
+  font-size:12px;
+  font-weight:850;
+}
+
+.nav a.active{
+  color:var(--text);
+  border-color:rgba(255,59,48,0.45);
+  background:rgba(255,59,48,0.18);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:380px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.card{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cardHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.cardHead h3{
+  font-size:17px;
+}
+
+.cardHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cardBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+
+select option{
+  color:#111827;
+}
+
+textarea{
+  min-height:92px;
+  resize:vertical;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.importBox{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+
+.importBox h3{
+  font-size:16px;
+}
+
+.importBox p{
+  margin:7px 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.filters{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  min-width:390px;
+}
+
+.timelineList{
+  display:grid;
+  gap:10px;
+}
+
+.timelineItem{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);
+  border-radius:22px;
+  padding:14px;
+}
+
+.timelineItem.now{
+  border-color:rgba(255,59,48,0.45);
+  background:rgba(255,59,48,0.13);
+}
+
+.timelineItem.done{
+  border-color:rgba(52,199,89,0.40);
+  background:rgba(52,199,89,0.10);
+}
+
+.timelineTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.timelineTop h4{
+  font-size:16px;
+}
+
+.timelineTop small{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+}
+
+.timeBadge{
+  min-width:58px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(0,0,0,0.20);
+  border-radius:999px;
+  font-size:12px;
+  font-weight:950;
+}
+
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.chip{
+  min-height:25px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 9px;
+  color:var(--text);
+  background:rgba(255,255,255,0.075);
+  font-size:11px;
+  font-weight:900;
+}
+
+.chip.changed{
+  color:#fde68a;
+  border-color:rgba(245,158,11,0.34);
+  background:rgba(245,158,11,0.12);
+}
+
+.chip.done{
+  color:#bbf7d0;
+  border-color:rgba(34,197,94,0.34);
+  background:rgba(34,197,94,0.12);
+}
+
+.notes{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  white-space:pre-line;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:13px;
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 16px;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+@media(max-width:980px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .grid > aside{
+    order:2;
+  }
+
+  .grid > section{
+    order:1;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .cardHead,
+  .heroTop{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .filters{
+    min-width:0;
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:28px;
+  }
+
+  .row,
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">NC</div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Timeline</p>
+    </div>
+  </div>
+
+  <a class="topPill" href="dashboard.html">Dashboard</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">Shoot day run sheet</div>
+        <h2>Timeline</h2>
+        <p>Keep the wedding day order, locations, camera responsibility and last-minute changes in one quick working list.</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="exportTimeline()">Export</button>
+        <button type="button" class="secondary" onclick="resetForm()">New item</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Items</span>
+        <strong id="statTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Done</span>
+        <strong id="statDone">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Changed</span>
+        <strong id="statChanged">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Next</span>
+        <strong id="statNext">--</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a href="dashboard.html">Home</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a href="shot-lists.html">Shots</a>
+    <a class="active" href="timeline.html">Timeline</a>
+    <a href="gear.html">Gear</a>
+    <a href="lists.html">Lists</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="grid">
+    <aside class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Add or import</h3>
+          <p>Paste a planner timeline or build your own.</p>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <form class="form" id="timelineForm">
+          <input type="hidden" id="timelineId">
+
+          <label>
+            Couple / project
+            <input id="project" type="text" placeholder="Marvin + Blessing" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Time
+              <input id="time" type="time" required>
+            </label>
+
+            <label>
+              Section
+              <select id="phase">
+                <option value="prep">Prep</option>
+                <option value="ceremony">Ceremony</option>
+                <option value="portraits">Portraits</option>
+                <option value="reception">Reception</option>
+                <option value="speeches">Speeches</option>
+                <option value="dancing">Dancing</option>
+                <option value="travel">Travel</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Timeline item
+            <input id="title" type="text" placeholder="Bride entrance, couple portraits, speeches" required>
+          </label>
+
+          <label>
+            Location
+            <input id="location" type="text" placeholder="Ceremony hall, park, reception room">
+          </label>
+
+          <div class="row">
+            <label>
+              Responsibility
+              <select id="owner">
+                <option value="A Camera">A Camera</option>
+                <option value="B Camera">B Camera</option>
+                <option value="Both cameras">Both cameras</option>
+                <option value="Team">Team</option>
+                <option value="Planner">Planner</option>
+                <option value="Couple">Couple</option>
+              </select>
+            </label>
+
+            <label>
+              Status
+              <select id="status">
+                <option value="upcoming">Upcoming</option>
+                <option value="now">Now</option>
+                <option value="done">Done</option>
+                <option value="changed">Changed</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Notes
+            <textarea id="notes" placeholder="Audio notes, camera position, who to follow, any changes."></textarea>
+          </label>
+
+          <button type="submit">Save item</button>
+          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+        </form>
+
+        <div class="importBox">
+          <h3>Import timeline</h3>
+          <p>Paste rows like: time | section | item | location | responsibility | note</p>
+          <textarea id="bulkImport" placeholder="10:30 | prep | Bride final makeup | bridal suite | A Camera | stay close for reactions"></textarea>
+          <button type="button" style="margin-top:10px;width:100%;" onclick="importTimeline()">Import pasted timeline</button>
+          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="loadBaseTimeline()">Load base wedding timeline</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Run sheet</h3>
+          <p>Use this beside the shot list during the day.</p>
+        </div>
+
+        <div class="filters">
+          <select id="filterProject" onchange="renderTimeline()">
+            <option value="all">All couples</option>
+          </select>
+
+          <select id="filterPhase" onchange="renderTimeline()">
+            <option value="all">All sections</option>
+            <option value="prep">Prep</option>
+            <option value="ceremony">Ceremony</option>
+            <option value="portraits">Portraits</option>
+            <option value="reception">Reception</option>
+            <option value="speeches">Speeches</option>
+            <option value="dancing">Dancing</option>
+            <option value="travel">Travel</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <select id="filterStatus" onchange="renderTimeline()">
+            <option value="active">Active</option>
+            <option value="all">All statuses</option>
+            <option value="now">Now</option>
+            <option value="changed">Changed</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <div id="timelineList" class="timelineList"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_timeline_v1";
+let timeline = loadTimeline();
+const form = document.getElementById("timelineForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("timelineId").value || uid();
+  const item = {
+    id,
+    project:document.getElementById("project").value.trim(),
+    time:document.getElementById("time").value,
+    phase:document.getElementById("phase").value,
+    title:document.getElementById("title").value.trim(),
+    location:document.getElementById("location").value.trim(),
+    owner:document.getElementById("owner").value,
+    status:document.getElementById("status").value,
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!item.project || !item.time || !item.title){
+    alert("Add the couple, time and timeline item first.");
+    return;
+  }
+
+  const index = timeline.findIndex(entry => entry.id === id);
+  if(index >= 0){
+    timeline[index] = item;
+  } else {
+    timeline.push(item);
+  }
+
+  saveTimeline();
+  resetForm();
+  showProject(item.project);
+});
+
+function uid(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "timeline_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function loadTimeline(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    return Array.isArray(saved) ? saved : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveTimeline(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(timeline));
+}
+
+function renderTimeline(){
+  updateProjectFilter();
+
+  const list = document.getElementById("timelineList");
+  const projectFilter = document.getElementById("filterProject").value;
+  const phaseFilter = document.getElementById("filterPhase").value;
+  const statusFilter = document.getElementById("filterStatus").value;
+
+  const visible = timeline
+    .filter(item => {
+      const projectMatch = projectFilter === "all" || item.project === projectFilter;
+      const phaseMatch = phaseFilter === "all" || item.phase === phaseFilter;
+      const statusMatch =
+        statusFilter === "all" ||
+        item.status === statusFilter ||
+        (statusFilter === "active" && item.status !== "done");
+      return projectMatch && phaseMatch && statusMatch;
+    })
+    .sort((a,b) => String(a.time || "").localeCompare(String(b.time || "")));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `
+      <div class="empty">
+        No timeline items in this view.
+        <br><br>
+        Paste a planner timeline, load the base wedding timeline or add the next item.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="timelineItem ${escapeAttribute(item.status)}">
+      <div class="timelineTop">
+        <div>
+          <h4>${escapeHTML(item.title)}</h4>
+          <small>${escapeHTML(item.project)} | ${phaseLabel(item.phase)} | ${escapeHTML(item.location || "No location")}</small>
+        </div>
+        <div class="timeBadge">${escapeHTML(item.time || "--")}</div>
+      </div>
+
+      <div class="chips">
+        <span class="chip ${escapeAttribute(item.status)}">${statusLabel(item.status)}</span>
+        <span class="chip">${escapeHTML(item.owner || "Team")}</span>
+      </div>
+
+      ${item.notes ? `<p class="notes">${escapeHTML(item.notes)}</p>` : ""}
+
+      <div class="itemActions">
+        <button type="button" onclick="setStatus('${item.id}','now')">Now</button>
+        <button type="button" class="secondary" onclick="setStatus('${item.id}','done')">Done</button>
+        <button type="button" class="ghost" onclick="setStatus('${item.id}','changed')">Changed</button>
+        <button type="button" class="secondary" onclick="editItem('${item.id}')">Edit</button>
+        <button type="button" class="ghost" onclick="deleteItem('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  const active = timeline.filter(item => item.status !== "done");
+  const next = active.slice().sort((a,b) => String(a.time || "").localeCompare(String(b.time || "")))[0];
+
+  document.getElementById("statTotal").textContent = timeline.length;
+  document.getElementById("statDone").textContent = timeline.filter(item => item.status === "done").length;
+  document.getElementById("statChanged").textContent = timeline.filter(item => item.status === "changed").length;
+  document.getElementById("statNext").textContent = next ? next.time || "--" : "--";
+}
+
+function updateProjectFilter(){
+  const select = document.getElementById("filterProject");
+  const current = select.value || "all";
+  const projects = [...new Set(timeline.map(item => item.project).filter(Boolean))].sort();
+
+  select.innerHTML = [
+    `<option value="all">All couples</option>`,
+    ...projects.map(project => `<option value="${escapeAttribute(project)}">${escapeHTML(project)}</option>`)
+  ].join("");
+
+  select.value = projects.includes(current) ? current : "all";
+}
+
+function showProject(project){
+  updateProjectFilter();
+  const select = document.getElementById("filterProject");
+  if(project && [...select.options].some(option => option.value === project)){
+    select.value = project;
+  }
+  document.getElementById("filterStatus").value = "active";
+  renderTimeline();
+}
+
+function setStatus(id,status){
+  timeline = timeline.map(item => item.id === id ? {...item,status,updatedAt:new Date().toISOString()} : item);
+  saveTimeline();
+  renderTimeline();
+}
+
+function editItem(id){
+  const item = timeline.find(entry => entry.id === id);
+  if(!item) return;
+
+  document.getElementById("timelineId").value = item.id;
+  document.getElementById("project").value = item.project || "";
+  document.getElementById("time").value = item.time || "";
+  document.getElementById("phase").value = item.phase || "prep";
+  document.getElementById("title").value = item.title || "";
+  document.getElementById("location").value = item.location || "";
+  document.getElementById("owner").value = item.owner || "A Camera";
+  document.getElementById("status").value = item.status || "upcoming";
+  document.getElementById("notes").value = item.notes || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteItem(id){
+  const item = timeline.find(entry => entry.id === id);
+  if(!item) return;
+  if(!confirm(`Delete ${item.title}?`)) return;
+
+  timeline = timeline.filter(entry => entry.id !== id);
+  saveTimeline();
+  renderTimeline();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("timelineId").value = "";
+  document.getElementById("phase").value = "prep";
+  document.getElementById("owner").value = "A Camera";
+  document.getElementById("status").value = "upcoming";
+}
+
+function importTimeline(){
+  const raw = document.getElementById("bulkImport").value.trim();
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!raw){
+    alert("Paste the timeline first.");
+    return;
+  }
+
+  if(!project){
+    alert("Add the couple/project name first.");
+    return;
+  }
+
+  const imported = parseRows(raw, project);
+  if(!imported.length){
+    alert("No valid rows found. Use: time | section | item | location | responsibility | note");
+    return;
+  }
+
+  timeline = [...timeline, ...imported];
+  saveTimeline();
+  document.getElementById("bulkImport").value = "";
+  showProject(project);
+  alert(`${imported.length} timeline items imported.`);
+}
+
+function parseRows(text, project){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line.includes("|"))
+    .map(line => line.split("|").map(part => part.trim()))
+    .filter(parts => parts.length >= 3)
+    .map(parts => ({
+      id:uid(),
+      project,
+      time:normaliseTime(parts[0]),
+      phase:normalisePhase(parts[1]),
+      title:parts[2] || "Timeline item",
+      location:parts[3] || "",
+      owner:parts[4] || "Team",
+      status:normaliseStatus(parts[6] || "upcoming"),
+      notes:parts[5] || "",
+      updatedAt:new Date().toISOString()
+    }))
+    .filter(item => item.time && item.title);
+}
+
+function loadBaseTimeline(){
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!project){
+    alert("Add the couple/project name first, then load the base timeline.");
+    return;
+  }
+
+  const rows = [
+    "08:30 | prep | Detail shots and room atmosphere | prep location | A Camera | dress, suit, shoes, rings, perfume",
+    "09:30 | prep | Groom prep moments | groom room | A Camera | tie, jacket, prayer, group reactions",
+    "10:30 | prep | Bride final prep | bridal room | A Camera | makeup, dress, reveal, reactions",
+    "12:00 | travel | Leave for ceremony | prep location | Team | protect travel time",
+    "12:45 | ceremony | Ceremony room and guest arrivals | ceremony venue | A Camera | establish room before processional",
+    "13:00 | ceremony | Ceremony coverage | ceremony venue | Both cameras | lock B camera before bride entrance",
+    "14:00 | portraits | Family and couple portraits | portrait location | Team | keep list tight and controlled",
+    "15:30 | reception | Reception room reveal | reception room | A Camera | room wide, cake, tables, signage",
+    "17:00 | reception | Couple entrance | reception room | A Camera | entrance then guest reactions",
+    "18:00 | speeches | Speeches | reception room | Both cameras | speaker and couple reactions",
+    "20:00 | dancing | First dance | dance floor | A Camera | wide opening then close faces and hands",
+    "21:00 | dancing | Party energy | dance floor | A Camera | immersive crowd moments"
+  ];
+
+  timeline = [...timeline, ...parseRows(rows.join("\n"), project)];
+  saveTimeline();
+  showProject(project);
+  alert(`Base wedding timeline loaded for ${project}.`);
+}
+
+function normaliseTime(value){
+  const text = String(value || "").trim();
+  const match = text.match(/^(\d{1,2})[:.]?(\d{2})/);
+  if(!match) return "";
+  return `${match[1].padStart(2,"0")}:${match[2]}`;
+}
+
+function normalisePhase(value){
+  const text = String(value || "").toLowerCase().trim();
+  const allowed = ["prep","ceremony","portraits","reception","speeches","dancing","travel","admin"];
+  return allowed.includes(text) ? text : "admin";
+}
+
+function normaliseStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  return ["upcoming","now","done","changed"].includes(text) ? text : "upcoming";
+}
+
+function phaseLabel(value){
+  const labels = {
+    prep:"Prep",
+    ceremony:"Ceremony",
+    portraits:"Portraits",
+    reception:"Reception",
+    speeches:"Speeches",
+    dancing:"Dancing",
+    travel:"Travel",
+    admin:"Admin"
+  };
+
+  return labels[value] || "Admin";
+}
+
+function statusLabel(value){
+  const labels = {
+    upcoming:"Upcoming",
+    now:"Now",
+    done:"Done",
+    changed:"Changed"
+  };
+
+  return labels[value] || "Upcoming";
+}
+
+function exportTimeline(){
+  const data = {
+    app:"NC Studios",
+    type:"timeline",
+    exportedAt:new Date().toISOString(),
+    timeline
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-timeline.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value);
+}
+
+renderTimeline();
+</script>
+</body>
+</html>
