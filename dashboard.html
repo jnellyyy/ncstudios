@@ -63,7 +63,7 @@ body::before{
 
 .app{
   height:100svh;
-  width:min(940px,100%);
+  width:min(1080px,100%);
   margin:0 auto;
   padding:
     max(12px, env(safe-area-inset-top))
@@ -239,12 +239,127 @@ body::before{
   letter-spacing:-0.7px;
 }
 
+.dashboardMain{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(260px,0.78fr) minmax(0,1.45fr);
+  gap:9px;
+  overflow:hidden;
+}
+
+.livePanel{
+  min-height:0;
+  border:1px solid rgba(255,255,255,0.15);
+  background:
+    linear-gradient(145deg,rgba(255,59,48,0.25),rgba(255,255,255,0.055)),
+    rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  color:var(--text);
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+
+.livePanel:active{
+  transform:scale(0.985);
+}
+
+.liveLabel{
+  color:#fecaca;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  position:relative;
+  z-index:1;
+}
+
+.livePanel h3{
+  margin:5px 0 0;
+  font-size:22px;
+  line-height:1;
+  letter-spacing:-0.7px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  position:relative;
+  z-index:1;
+}
+
+.livePanel p{
+  margin:5px 0 0;
+  color:rgba(255,255,255,0.76);
+  font-size:12px;
+  line-height:1.32;
+  position:relative;
+  z-index:1;
+}
+
+.liveStats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  position:relative;
+  z-index:1;
+}
+
+.liveStat{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(0,0,0,0.18);
+  border-radius:18px;
+  padding:9px;
+}
+
+.liveStat span{
+  display:block;
+  color:rgba(255,255,255,0.68);
+  font-size:9px;
+  font-weight:900;
+}
+
+.liveStat strong{
+  display:block;
+  margin-top:5px;
+  font-size:21px;
+  line-height:1;
+  letter-spacing:-0.6px;
+}
+
+.liveNext{
+  color:rgba(255,255,255,0.78);
+  font-size:11px;
+  font-weight:800;
+  line-height:1.3;
+  position:relative;
+  z-index:1;
+}
+
+.liveCTA{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:white;
+  font-size:12px;
+  font-weight:950;
+  position:relative;
+  z-index:1;
+}
+
 .tiles{
   min-height:0;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-auto-rows:1fr;
+  grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(4,minmax(0,1fr));
   gap:9px;
+  overflow:hidden;
 }
 
 .tile{
@@ -428,6 +543,59 @@ body::before{
     gap:7px;
   }
 
+  .dashboardMain{
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:7px;
+  }
+
+  .livePanel{
+    min-height:68px;
+    border-radius:20px;
+    padding:10px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:2px 9px;
+  }
+
+  .liveLabel{
+    font-size:8.5px;
+  }
+
+  .livePanel h3{
+    font-size:15px;
+    margin-top:1px;
+  }
+
+  .livePanel p,
+  .liveNext,
+  .liveCTA{
+    display:none;
+  }
+
+  .liveStats{
+    grid-column:2;
+    grid-row:1 / span 2;
+    grid-template-columns:repeat(3,46px);
+    gap:5px;
+    align-self:center;
+  }
+
+  .liveStat{
+    min-height:42px;
+    border-radius:14px;
+    padding:6px;
+  }
+
+  .liveStat span{
+    font-size:7.5px;
+  }
+
+  .liveStat strong{
+    margin-top:4px;
+    font-size:15px;
+  }
+
   .tile{
     border-radius:20px;
     padding:10px;
@@ -484,6 +652,11 @@ body::before{
   }
 
   .tile p{
+    display:none;
+  }
+
+  .livePanel p,
+  .liveNext{
     display:none;
   }
 
@@ -552,7 +725,40 @@ body::before{
   </div>
 </section>
 
-<main class="tiles">
+<main class="dashboardMain">
+  <a class="livePanel" id="liveShotLink" href="shot-lists.html#liveShots">
+    <div>
+      <div class="liveLabel">Live shoot</div>
+      <h3 id="liveProject">Shot list</h3>
+      <p>Jump straight to the working checklist for the shots still needed.</p>
+    </div>
+
+    <div class="liveStats">
+      <div class="liveStat">
+        <span>Needed</span>
+        <strong id="liveNeeded">0</strong>
+      </div>
+
+      <div class="liveStat">
+        <span>Done</span>
+        <strong id="liveCaptured">0</strong>
+      </div>
+
+      <div class="liveStat">
+        <span>Total</span>
+        <strong id="liveTotal">0</strong>
+      </div>
+    </div>
+
+    <div class="liveNext" id="liveNextShot">Load a list or paste one in Shots.</div>
+
+    <div class="liveCTA">
+      <span>Open live shot list</span>
+      <span>›</span>
+    </div>
+  </a>
+
+  <section class="tiles">
   <a class="tile" href="bookings.html">
     <div>
       <div class="icon">B</div>
@@ -656,6 +862,7 @@ body::before{
       <span>›</span>
     </div>
   </a>
+  </section>
 </main>
 
 <nav class="bottomRow">
@@ -690,6 +897,54 @@ function money(value){
   }).format(Number(value || 0));
 }
 
+function setText(id, value){
+  const element = document.getElementById(id);
+  if(element) element.textContent = value;
+}
+
+function sectionLabel(value){
+  const labels = {
+    prep:"Prep",
+    ceremony:"Ceremony",
+    portraits:"Portraits",
+    reception:"Reception",
+    speeches:"Speeches",
+    dancing:"Dancing",
+    details:"Details"
+  };
+
+  return labels[value] || "Shots";
+}
+
+function updateShotPanel(shots){
+  const safeShots = Array.isArray(shots) ? shots : [];
+  const needed = safeShots.filter(item => !item.captured);
+  const captured = safeShots.filter(item => item.captured);
+  const activePool = needed.length ? needed : safeShots;
+  const activeProject = activePool.find(item => item.project)?.project || "";
+  const nextShot = needed.find(item => item.project === activeProject) || needed[0] || safeShots[0];
+  const link = document.getElementById("liveShotLink");
+
+  setText("liveNeeded", needed.length);
+  setText("liveCaptured", captured.length);
+  setText("liveTotal", safeShots.length);
+  setText("liveProject", activeProject || "Set up live shots");
+
+  if(nextShot && needed.length){
+    setText("liveNextShot", `${sectionLabel(nextShot.section)}: ${nextShot.shotText || "Next shot"}`);
+  } else if(safeShots.length){
+    setText("liveNextShot", "All shots captured. Review or reset in Shots.");
+  } else {
+    setText("liveNextShot", "Load a list or paste one in Shots.");
+  }
+
+  if(link){
+    link.href = activeProject
+      ? `shot-lists.html?project=${encodeURIComponent(activeProject)}#liveShots`
+      : "shot-lists.html#liveShots";
+  }
+}
+
 function updateDashboardFromLocal(){
   const bookings = readData("ncstudios_bookings_v1");
   const clients = readData("ncstudios_clients_v1");
@@ -717,6 +972,7 @@ function updateDashboardFromLocal(){
   document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
   document.getElementById("templatesWidget").textContent = templates.length;
   document.getElementById("adminWidget").textContent = adminClients.length;
+  updateShotPanel(shots);
 }
 
 async function updateDashboardFromSupabase(){
@@ -770,6 +1026,7 @@ async function updateDashboardFromSupabase(){
       document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
       document.getElementById("templatesWidget").textContent = templates.length;
       document.getElementById("clientWidget").textContent = appStorageClients.length;
+      updateShotPanel(shots);
     }
 
     const clientsResponse = await window.ncSupabase

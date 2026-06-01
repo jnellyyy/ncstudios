@@ -473,9 +473,31 @@ select option{
 
 .filters{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1fr 1fr 1fr;
   gap:8px;
-  min-width:260px;
+  min-width:390px;
+}
+
+.liveSummary{
+  border:1px solid rgba(255,255,255,0.12);
+  background:
+    linear-gradient(145deg,rgba(185,28,28,0.18),rgba(255,255,255,0.055));
+  border-radius:20px;
+  padding:13px;
+  margin-bottom:12px;
+}
+
+.liveSummary strong{
+  display:block;
+  font-size:15px;
+  letter-spacing:-0.2px;
+}
+
+.liveSummary p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
 }
 
 .liveTools{
@@ -545,6 +567,15 @@ select option{
   .heroTop{
     flex-direction:column;
   }
+
+  .cardHead{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .filters{
+    min-width:0;
+  }
 }
 
 @media(max-width:520px){
@@ -557,6 +588,10 @@ select option{
   }
 
   .row{
+    grid-template-columns:1fr;
+  }
+
+  .filters{
     grid-template-columns:1fr;
   }
 
@@ -770,11 +805,11 @@ select option{
       </div>
     </aside>
 
-    <section class="card">
+    <section class="card" id="liveShots">
       <div class="cardHead">
         <div>
           <h3>Shot list</h3>
-          <p>Your saved production shots.</p>
+          <p>Fast live checklist for the shots still needed.</p>
         </div>
 
         <div class="filters">
@@ -792,10 +827,17 @@ select option{
             <option value="dancing">Dancing</option>
             <option value="details">Details</option>
           </select>
+
+          <select id="filterCaptured" onchange="renderShots()">
+            <option value="needed">Needed now</option>
+            <option value="all">All shots</option>
+            <option value="captured">Captured</option>
+          </select>
         </div>
       </div>
 
 	      <div class="cardBody">
+	        <div class="liveSummary" id="liveSummary"></div>
 	        <div class="liveTools">
 	          <button type="button" class="secondary" onclick="resetCapturedForProject()">Reset captured</button>
 	          <button type="button" class="ghost" onclick="deleteCurrentProjectList()">Delete this couple's list</button>
@@ -942,6 +984,7 @@ reception room | creative | 70mm | 50fps | hold and reframe | essential | close 
 <script>
 const STORAGE_KEY = "ncstudios_shots_v1";
 let shots = loadShots();
+let initialProjectFilter = new URLSearchParams(window.location.search).get("project") || "";
 
 const form = document.getElementById("shotForm");
 
@@ -1008,22 +1051,33 @@ function renderShots(){
   updateProjectFilter();
   const projectFilter = document.getElementById("filterProject").value;
   const filter = document.getElementById("filterSection").value;
+  const capturedFilter = document.getElementById("filterCaptured").value;
 
   const visible = shots.filter(item => {
     const sectionMatch = filter === "all" || item.section === filter;
     const projectMatch = projectFilter === "all" || item.project === projectFilter;
-    return sectionMatch && projectMatch;
+    const capturedMatch =
+      capturedFilter === "all" ||
+      (capturedFilter === "needed" && !item.captured) ||
+      (capturedFilter === "captured" && item.captured);
+
+    return sectionMatch && projectMatch && capturedMatch;
   });
 
   updateStats();
+  updateLiveSummary(projectFilter, filter, capturedFilter, visible);
   updateCameraBrief(projectFilter, filter, visible);
 
   if(visible.length === 0){
+    const emptyCopy = capturedFilter === "needed"
+      ? "Nothing left in this view."
+      : "No shots here yet.";
+
     list.innerHTML = `
       <div class="empty">
-        No shots here yet.
+        ${emptyCopy}
         <br><br>
-        Add your first shot using the form or paste a full shot list.
+        ${capturedFilter === "needed" ? "Switch to All shots to review the full list, or paste/load another list." : "Add your first shot using the form or paste a full shot list."}
       </div>
     `;
     return;
@@ -1080,6 +1134,32 @@ function renderShots(){
   `).join("");
 }
 
+function updateLiveSummary(projectFilter, sectionFilter, capturedFilter, visible){
+  const summary = document.getElementById("liveSummary");
+  if(!summary) return;
+
+  const neededCount = visible.filter(item => !item.captured).length;
+  const capturedCount = visible.filter(item => item.captured).length;
+  const nextShot = capturedFilter === "captured"
+    ? visible[0]
+    : visible.find(item => !item.captured) || visible[0];
+  const projectText = projectFilter === "all" ? "all couples" : projectFilter;
+  const sectionText = sectionFilter === "all" ? "all sections" : sectionLabel(sectionFilter);
+  const countText = capturedFilter === "captured"
+    ? `${capturedCount} captured shown`
+    : capturedFilter === "all"
+      ? `${neededCount} still needed, ${capturedCount} captured`
+      : `${visible.length} needed now`;
+  const nextText = nextShot
+    ? `${sectionLabel(nextShot.section)}: ${nextShot.shotText || "Next shot"}`
+    : "No next shot in this view.";
+
+  summary.innerHTML = `
+    <strong>${escapeHTML(countText)}</strong>
+    <p>${escapeHTML(projectText)} | ${escapeHTML(sectionText)} | Next: ${escapeHTML(nextText)}</p>
+  `;
+}
+
 function updateCameraBrief(projectFilter, sectionFilter, visible){
   const brief = document.getElementById("cameraBrief");
   if(!brief) return;
@@ -1113,14 +1193,20 @@ function updateProjectFilter(){
   if(!select) return;
 
   const current = select.value || "all";
+  const requested = initialProjectFilter;
   const projects = [...new Set(shots.map(item => item.project).filter(Boolean))].sort();
+  const target = requested && projects.includes(requested) ? requested : current;
   const options = [
     `<option value="all">All couples</option>`,
     ...projects.map(project => `<option value="${escapeAttribute(project)}">${escapeHTML(project)}</option>`)
   ].join("");
 
   select.innerHTML = options;
-  select.value = projects.includes(current) ? current : "all";
+  select.value = projects.includes(target) ? target : "all";
+
+  if(requested){
+    initialProjectFilter = "";
+  }
 }
 
 function editShot(id){
@@ -1219,6 +1305,23 @@ function currentProject(){
   return typed || "";
 }
 
+function showProjectNeeded(project){
+  updateProjectFilter();
+
+  const projectFilter = document.getElementById("filterProject");
+  const capturedFilter = document.getElementById("filterCaptured");
+
+  if(projectFilter && project){
+    projectFilter.value = [...projectFilter.options].some(option => option.value === project) ? project : "all";
+  }
+
+  if(capturedFilter){
+    capturedFilter.value = "needed";
+  }
+
+  renderShots();
+}
+
 function deleteShot(id){
   const shot = shots.find(item => item.id === id);
   if(!shot) return;
@@ -1267,7 +1370,7 @@ function importShots(){
   shots = [...imported, ...shots];
   saveShots();
   textarea.value = "";
-  renderShots();
+  showProjectNeeded(project);
 
   alert(`${imported.length} shots imported.`);
 }
@@ -1341,11 +1444,7 @@ function loadMarvinBlessingList(){
   shots = [...imported, ...shots];
   document.getElementById("project").value = project;
   saveShots();
-  renderShots();
-
-  const filter = document.getElementById("filterProject");
-  filter.value = project;
-  renderShots();
+  showProjectNeeded(project);
   alert(`${imported.length} Marvin + Blessing shots loaded.`);
 }
 
@@ -1380,7 +1479,7 @@ function preloadBaseShotList(){
   const imported = parseShotRows(baseRows.join("\n"), project);
   shots = [...imported, ...shots];
   saveShots();
-  renderShots();
+  showProjectNeeded(project);
   alert(`${imported.length} base shots loaded for ${project}.`);
 }
 
