@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Projects</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#050507">
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <div class="logo-mark">NC</div>
+    <div class="brand-text">
+      <p class="kicker">Couple hub</p>
+      <h2>Projects</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="quick-capture.html">Capture</a>
+    <a class="pill" href="call-sheet.html">Call Sheet</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a class="active" href="projects.html">Projects</a>
+  <a href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a href="delivery.html">Delivery</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">One couple, one view</p>
+      <h1>Project Hub</h1>
+      <p class="subtext">Pull together bookings, client info, payments, shots, timeline, gear, call sheet, delivery and quick notes by couple or project.</p>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn" href="quick-capture.html">Capture note</a>
+      <a class="ghost-btn" href="call-sheet.html">Open call sheet</a>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Projects</span>
+    <strong id="statProjects">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Confirmed</span>
+    <strong id="statConfirmed">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Money waiting</span>
+    <strong id="statWaiting">£0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Open notes</span>
+    <strong id="statCapture">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Find project</h2>
+        <p>Choose a couple to see the whole operation at once.</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="search">Search</label>
+      <input id="search" type="search" placeholder="Couple, client, venue" oninput="renderProjects()">
+    </div>
+
+    <div class="list-stack" id="projectList"></div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2 id="projectTitle">Project overview</h2>
+        <p id="projectSub">Select a project from the list.</p>
+      </div>
+    </div>
+
+    <div id="projectDetail"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios project hub</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const stores = {
+  bookings:readData("ncstudios_bookings_v1"),
+  clients:readData("ncstudios_clients_v1"),
+  finance:readData("ncstudios_finance_v1"),
+  delivery:readData("ncstudios_delivery_v1"),
+  shots:readData("ncstudios_shots_v1"),
+  timeline:readData("ncstudios_timeline_v1"),
+  gear:readData("ncstudios_gear_v1"),
+  callSheets:readData("ncstudios_callsheets_v1"),
+  capture:readData("ncstudios_capture_v1")
+};
+
+let selectedProject = "";
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function buildProjects(){
+  const names = new Set();
+
+  stores.bookings.forEach(item => addName(names, item.clientName || item.eventName));
+  stores.clients.forEach(item => addName(names, item.clientName));
+  stores.finance.forEach(item => addName(names, item.client));
+  stores.delivery.forEach(item => addName(names, item.projectName || item.client));
+  stores.shots.forEach(item => addName(names, item.project));
+  stores.timeline.forEach(item => addName(names, item.project));
+  stores.gear.forEach(item => addName(names, item.project));
+  stores.callSheets.forEach(item => addName(names, item.project));
+  stores.capture.forEach(item => addName(names, item.project));
+
+  return [...names].sort().map(project => getProjectData(project));
+}
+
+function addName(set,value){
+  const name = String(value || "").trim();
+  if(name) set.add(name);
+}
+
+function getProjectData(project){
+  const lower = project.toLowerCase();
+  const match = value => {
+    const text = String(value || "").trim().toLowerCase();
+    return text && (text.includes(lower) || lower.includes(text));
+  };
+
+  const bookings = stores.bookings.filter(item => match(item.clientName) || match(item.eventName));
+  const clients = stores.clients.filter(item => match(item.clientName));
+  const finance = stores.finance.filter(item => match(item.client) || match(item.title));
+  const delivery = stores.delivery.filter(item => match(item.projectName) || match(item.client));
+  const shots = stores.shots.filter(item => match(item.project));
+  const timeline = stores.timeline.filter(item => match(item.project));
+  const gear = stores.gear.filter(item => match(item.project));
+  const callSheets = stores.callSheets.filter(item => match(item.project));
+  const capture = stores.capture.filter(item => match(item.project));
+
+  const income = finance
+    .filter(item => item.type === "income" && item.status !== "unpaid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const waiting = finance
+    .filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const spent = finance
+    .filter(item => item.type === "expense")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+  return {
+    project,
+    bookings,
+    clients,
+    finance,
+    delivery,
+    shots,
+    timeline,
+    gear,
+    callSheets,
+    capture,
+    income,
+    waiting,
+    spent
+  };
+}
+
+function renderProjects(){
+  const search = document.getElementById("search").value.trim().toLowerCase();
+  const projects = buildProjects();
+  const visible = projects.filter(item => !search || JSON.stringify(item).toLowerCase().includes(search));
+
+  updateStats(projects);
+
+  if(!selectedProject && visible.length){
+    selectedProject = visible[0].project;
+  }
+
+  const list = document.getElementById("projectList");
+  list.innerHTML = visible.map(item => `
+    <button type="button" class="${item.project === selectedProject ? "btn" : "ghost-btn"}" onclick='selectProject(${jsString(item.project)})'>
+      ${escapeHTML(item.project)}
+    </button>
+  `).join("") || `<div class="empty-state">No projects found yet.</div>`;
+
+  renderDetail(projects.find(item => item.project === selectedProject) || visible[0]);
+}
+
+function updateStats(projects){
+  const confirmed = stores.bookings.filter(item => item.status === "confirmed").length;
+  const waiting = stores.finance
+    .filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const openCapture = stores.capture.filter(item => item.status !== "processed").length;
+
+  document.getElementById("statProjects").textContent = projects.length;
+  document.getElementById("statConfirmed").textContent = confirmed;
+  document.getElementById("statWaiting").textContent = money(waiting);
+  document.getElementById("statCapture").textContent = openCapture;
+}
+
+function selectProject(project){
+  selectedProject = project;
+  renderProjects();
+}
+
+function renderDetail(data){
+  const detail = document.getElementById("projectDetail");
+  if(!data){
+    document.getElementById("projectTitle").textContent = "Project overview";
+    document.getElementById("projectSub").textContent = "No project data yet.";
+    detail.innerHTML = `<div class="empty-state">Add a booking, client, shot list, timeline, gear item or quick capture to start a project.</div>`;
+    return;
+  }
+
+  const booking = data.bookings[0] || {};
+  const client = data.clients[0] || {};
+  const delivery = data.delivery[0] || {};
+  const callSheet = data.callSheets[0] || {};
+  const neededShots = data.shots.filter(item => !item.captured).length;
+  const gearLeft = data.gear.filter(item => !["packed","checked","charged"].includes(item.status)).length;
+  const openCaptures = data.capture.filter(item => item.status !== "processed").length;
+
+  document.getElementById("projectTitle").textContent = data.project;
+  document.getElementById("projectSub").textContent = [
+    booking.eventDate ? niceDate(booking.eventDate) : client.eventDate ? niceDate(client.eventDate) : "",
+    booking.location || client.location || callSheet.venue || "",
+    booking.status ? statusLabel(booking.status) : ""
+  ].filter(Boolean).join(" | ") || "Project data pulled from the app.";
+
+  detail.innerHTML = `
+    <div class="project-summary">
+      <div><span>Income</span><strong>${money(data.income)}</strong></div>
+      <div><span>Waiting</span><strong>${money(data.waiting)}</strong></div>
+      <div><span>Spent</span><strong>${money(data.spent)}</strong></div>
+      <div><span>Shots left</span><strong>${neededShots}</strong></div>
+    </div>
+
+    <div class="split-actions">
+      <a href="quick-capture.html"><span>Capture</span><strong>Add note</strong></a>
+      <a href="shot-lists.html?project=${encodeURIComponent(data.project)}#liveShots"><span>Shots</span><strong>${neededShots} left</strong></a>
+      <a href="call-sheet.html"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
+      <a href="timeline.html"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
+      <a href="gear.html"><span>Gear</span><strong>${gearLeft} left</strong></a>
+      <a href="delivery.html"><span>Delivery</span><strong>${delivery.stage || "Open"}</strong></a>
+    </div>
+
+    <div class="project-grid" style="margin-top:14px;">
+      <article class="ops-card">
+        <div class="ops-title">Client</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Name</span><b>${escapeHTML(client.clientName || booking.clientName || data.project)}</b></div>
+          <div class="meta-row"><span>Email</span><b>${escapeHTML(client.email || "Not added")}</b></div>
+          <div class="meta-row"><span>Phone</span><b>${escapeHTML(client.phone || "Not added")}</b></div>
+          <div class="meta-row"><span>Location</span><b>${escapeHTML(client.location || booking.location || callSheet.venue || "Not added")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Booking</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Status</span><b>${escapeHTML(statusLabel(booking.status || client.status || "Not set"))}</b></div>
+          <div class="meta-row"><span>Date</span><b>${escapeHTML(niceDate(booking.eventDate || client.eventDate || callSheet.eventDate))}</b></div>
+          <div class="meta-row"><span>Package</span><b>${money(booking.packagePrice || 0)}</b></div>
+          <div class="meta-row"><span>Deposit</span><b>${money(booking.depositPaid || 0)}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Live work</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Timeline active</span><b>${data.timeline.filter(item => item.status !== "done").length}</b></div>
+          <div class="meta-row"><span>Gear left</span><b>${gearLeft}</b></div>
+          <div class="meta-row"><span>Open captures</span><b>${openCaptures}</b></div>
+          <div class="meta-row"><span>Delivery</span><b>${escapeHTML(delivery.stage || "Not started")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Call sheet</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Venue</span><b>${escapeHTML(callSheet.venue || "Not added")}</b></div>
+          <div class="meta-row"><span>Planner</span><b>${escapeHTML(callSheet.plannerName || "Not added")}</b></div>
+          <div class="meta-row"><span>Second shooter</span><b>${escapeHTML(callSheet.secondShooter || "Not added")}</b></div>
+          <div class="meta-row"><span>Emergency</span><b>${escapeHTML(callSheet.emergency || "Not added")}</b></div>
+        </div>
+      </article>
+    </div>
+
+    ${renderRecent(data)}
+  `;
+}
+
+function renderRecent(data){
+  const rows = [
+    ...data.capture.slice(0,3).map(item => ({label:"Capture", title:item.title, meta:item.status || "open"})),
+    ...data.timeline.slice(0,3).map(item => ({label:"Timeline", title:item.title, meta:`${item.time || "--"} ${item.status || ""}`})),
+    ...data.finance.slice(0,3).map(item => ({label:"Finance", title:item.title, meta:money(item.amount || 0)}))
+  ].slice(0,6);
+
+  if(!rows.length) return "";
+
+  return `
+    <div class="ops-card" style="margin-top:14px;">
+      <div class="ops-title">Recent project notes</div>
+      <div class="list-stack">
+        ${rows.map(row => `
+          <div class="small-row">
+            <div><b>${escapeHTML(row.title || "Item")}</b><br><span>${escapeHTML(row.label)}</span></div>
+            <span>${escapeHTML(row.meta || "")}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function statusLabel(value){
+  const labels = {
+    enquiry:"Enquiry",
+    consultation:"Consultation",
+    confirmed:"Confirmed",
+    postponed:"Postponed",
+    completed:"Completed",
+    cancelled:"Cancelled"
+  };
+
+  return labels[value] || value || "Not set";
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+function jsString(value){
+  return JSON.stringify(String(value || "")).replaceAll("<","\\u003c");
+}
+
+renderProjects();
+</script>
+</body>
+</html>

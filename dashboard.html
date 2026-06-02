@@ -832,7 +832,22 @@ body::before{
     <div class="liveNext" id="liveNextShot">Load a list or paste one in Shots.</div>
 
     <div class="liveCTA">
-      <a class="liveAction primary" id="liveShotLink" href="shot-lists.html#liveShots">
+      <a class="liveAction primary" href="quick-capture.html">
+        <span>Capture</span>
+        <strong id="captureWidget">0 open</strong>
+      </a>
+
+      <a class="liveAction" href="projects.html">
+        <span>Projects</span>
+        <strong id="projectWidget">0 live</strong>
+      </a>
+
+      <a class="liveAction" href="call-sheet.html">
+        <span>Call</span>
+        <strong id="callSheetWidget">0 sheets</strong>
+      </a>
+
+      <a class="liveAction" id="liveShotLink" href="shot-lists.html#liveShots">
         <span>Shots</span>
         <strong id="liveShotAction">0 left</strong>
       </a>
@@ -1007,6 +1022,26 @@ function sectionLabel(value){
   return labels[value] || "Shots";
 }
 
+function countProjects(dataSets){
+  const names = new Set();
+
+  (dataSets.bookings || []).forEach(item => addProjectName(names, item.clientName || item.eventName));
+  (dataSets.clients || []).forEach(item => addProjectName(names, item.clientName));
+  (dataSets.delivery || []).forEach(item => addProjectName(names, item.projectName || item.client));
+  (dataSets.shots || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.timeline || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.gear || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.callSheets || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.capture || []).forEach(item => addProjectName(names, item.project));
+
+  return names.size;
+}
+
+function addProjectName(set,value){
+  const name = String(value || "").trim();
+  if(name) set.add(name);
+}
+
 function updateShotPanel(shots){
   const safeShots = Array.isArray(shots) ? shots : [];
   const needed = safeShots.filter(item => !item.captured);
@@ -1047,6 +1082,8 @@ function updateDashboardFromLocal(){
   const templates = readData("ncstudios_templates_v1");
   const timeline = readData("ncstudios_timeline_v1");
   const gear = readData("ncstudios_gear_v1");
+  const capture = readData("ncstudios_capture_v1");
+  const callSheets = readData("ncstudios_callsheets_v1");
   const adminClients = readData("ncStudiosAdminTrackerV1");
 
   document.getElementById("bookingsTotal").textContent = bookings.length;
@@ -1068,6 +1105,9 @@ function updateDashboardFromLocal(){
   document.getElementById("adminWidget").textContent = adminClients.length;
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+  setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
+  setText("callSheetWidget", `${callSheets.length} sheets`);
+  setText("projectWidget", `${countProjects({bookings,clients,delivery,shots,timeline,gear,callSheets,capture})} live`);
   updateShotPanel(shots);
 }
 
@@ -1091,7 +1131,9 @@ async function updateDashboardFromSupabase(){
         "ncstudios_lists_v1",
         "ncstudios_templates_v1",
         "ncstudios_timeline_v1",
-        "ncstudios_gear_v1"
+        "ncstudios_gear_v1",
+        "ncstudios_capture_v1",
+        "ncstudios_callsheets_v1"
       ]);
 
     if(!storageResponse.error && Array.isArray(storageResponse.data)){
@@ -1109,6 +1151,8 @@ async function updateDashboardFromSupabase(){
       const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
       const timeline = map.ncstudios_timeline_v1 || readData("ncstudios_timeline_v1");
       const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
+      const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
+      const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
 
       document.getElementById("bookingsTotal").textContent = bookings.length;
       document.getElementById("deliveryTotal").textContent = delivery.length;
@@ -1128,6 +1172,9 @@ async function updateDashboardFromSupabase(){
       document.getElementById("clientWidget").textContent = appStorageClients.length;
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+      setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
+      setText("callSheetWidget", `${callSheets.length} sheets`);
+      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,delivery,shots,timeline,gear,callSheets,capture})} live`);
       updateShotPanel(shots);
     }
 

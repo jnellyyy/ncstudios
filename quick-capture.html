@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Quick Capture</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#050507">
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <div class="logo-mark">NC</div>
+    <div class="brand-text">
+      <p class="kicker">Operations inbox</p>
+      <h2>Quick Capture</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="projects.html">Projects</a>
+    <a class="pill" href="call-sheet.html">Call Sheet</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a class="active" href="quick-capture.html">Capture</a>
+  <a href="projects.html">Projects</a>
+  <a href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a href="finance.html">Finance</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">On the fly</p>
+      <h1>Capture now, sort later.</h1>
+      <p class="subtext">Drop in leads, notes, expenses, payment reminders, shot ideas, timeline changes and gear reminders before they disappear from your head.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn" type="button" onclick="focusCapture()">Add now</button>
+      <button class="ghost-btn" type="button" onclick="exportCapture()">Export</button>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Inbox</span>
+    <strong id="statInbox">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Processed</span>
+    <strong id="statProcessed">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Money notes</span>
+    <strong id="statMoney">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Today</span>
+    <strong id="statToday">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>New capture</h2>
+        <p>Fast first. You can process it into the proper page after.</p>
+      </div>
+    </div>
+
+    <form id="captureForm">
+      <input type="hidden" id="captureId">
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="captureType">Type</label>
+          <select id="captureType">
+            <option value="lead">Lead</option>
+            <option value="client-note">Client note</option>
+            <option value="payment">Payment note</option>
+            <option value="expense">Expense</option>
+            <option value="shot">Shot idea</option>
+            <option value="timeline">Timeline change</option>
+            <option value="gear">Gear reminder</option>
+            <option value="task">Task</option>
+            <option value="call">Call sheet note</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="captureProject">Project / couple</label>
+          <input id="captureProject" type="text" placeholder="Marvin + Blessing">
+        </div>
+
+        <div class="field">
+          <label for="captureAmount">Amount</label>
+          <input id="captureAmount" type="number" step="0.01" placeholder="0">
+        </div>
+
+        <div class="field wide">
+          <label for="captureTitle">What is it?</label>
+          <input id="captureTitle" type="text" placeholder="Waiting for deposit, extra shot idea, rental receipt" required>
+        </div>
+
+        <div class="field wide">
+          <label for="captureNote">Notes</label>
+          <textarea id="captureNote" placeholder="Paste the message, write the thought, add the context."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save capture</button>
+        <button class="ghost-btn" type="button" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Capture inbox</h2>
+        <p>Process each item into the app page it belongs to.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search captures" oninput="renderCapture()">
+      </div>
+
+      <div class="form-actions">
+        <select id="filterStatus" onchange="renderCapture()">
+          <option value="open">Open</option>
+          <option value="all">All</option>
+          <option value="processed">Processed</option>
+        </select>
+
+        <select id="filterType" onchange="renderCapture()">
+          <option value="all">All types</option>
+          <option value="lead">Lead</option>
+          <option value="client-note">Client note</option>
+          <option value="payment">Payment</option>
+          <option value="expense">Expense</option>
+          <option value="shot">Shot</option>
+          <option value="timeline">Timeline</option>
+          <option value="gear">Gear</option>
+          <option value="task">Task</option>
+          <option value="call">Call sheet</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="captureList" class="ops-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios operations capture</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_capture_v1";
+let captures = readData(STORAGE_KEY);
+const form = document.getElementById("captureForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("captureId").value || makeId();
+  const capture = {
+    id,
+    type:document.getElementById("captureType").value,
+    project:document.getElementById("captureProject").value.trim(),
+    title:document.getElementById("captureTitle").value.trim(),
+    amount:Number(document.getElementById("captureAmount").value || 0),
+    note:document.getElementById("captureNote").value.trim(),
+    status:"open",
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!capture.title){
+    alert("Add what you need to remember first.");
+    return;
+  }
+
+  const index = captures.findIndex(item => item.id === id);
+  if(index >= 0){
+    capture.status = captures[index].status || "open";
+    capture.createdAt = captures[index].createdAt || capture.createdAt;
+    captures[index] = capture;
+  } else {
+    captures.unshift(capture);
+  }
+
+  saveData(STORAGE_KEY, captures);
+  resetForm();
+  renderCapture();
+});
+
+function makeId(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "capture_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveData(key,data){
+  localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+}
+
+function renderCapture(){
+  const list = document.getElementById("captureList");
+  const statusFilter = document.getElementById("filterStatus").value;
+  const typeFilter = document.getElementById("filterType").value;
+  const search = document.getElementById("search").value.trim().toLowerCase();
+
+  const visible = captures.filter(item => {
+    const statusMatch =
+      statusFilter === "all" ||
+      item.status === statusFilter ||
+      (statusFilter === "open" && item.status !== "processed");
+    const typeMatch = typeFilter === "all" || item.type === typeFilter;
+    const searchMatch = !search || `${item.project} ${item.title} ${item.note}`.toLowerCase().includes(search);
+    return statusMatch && typeMatch && searchMatch;
+  });
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `<div class="empty-state">Nothing in this view yet. Capture it first, then process it when you have breathing room.</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="ops-card ${item.status === "processed" ? "processed" : ""}">
+      <div class="ops-card-top">
+        <div>
+          <div class="ops-title">${escapeHTML(item.title)}</div>
+          <div class="ops-sub">${typeLabel(item.type)} | ${escapeHTML(item.project || "No project")} | ${niceDate(item.createdAt)}</div>
+        </div>
+        <span class="badge ${item.status === "processed" ? "green" : "gold"}">${item.status === "processed" ? "Processed" : "Open"}</span>
+      </div>
+
+      ${item.amount ? `<p class="ops-note">Amount: ${money(item.amount)}</p>` : ""}
+      ${item.note ? `<p class="ops-note">${escapeHTML(item.note)}</p>` : ""}
+
+      <div class="ops-actions">
+        <button type="button" class="ghost-btn" onclick="sendToTask('${item.id}')">Task</button>
+        <button type="button" class="ghost-btn" onclick="sendToFinance('${item.id}')">Finance</button>
+        <button type="button" class="ghost-btn" onclick="sendToShot('${item.id}')">Shot</button>
+        <button type="button" class="ghost-btn" onclick="sendToTimeline('${item.id}')">Timeline</button>
+        <button type="button" class="ghost-btn" onclick="sendToGear('${item.id}')">Gear</button>
+        <button type="button" class="btn" onclick="markProcessed('${item.id}')">Done</button>
+        <button type="button" class="danger-btn" onclick="deleteCapture('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById("statInbox").textContent = captures.filter(item => item.status !== "processed").length;
+  document.getElementById("statProcessed").textContent = captures.filter(item => item.status === "processed").length;
+  document.getElementById("statMoney").textContent = captures.filter(item => ["payment","expense"].includes(item.type)).length;
+  document.getElementById("statToday").textContent = captures.filter(item => String(item.createdAt || "").slice(0,10) === today).length;
+}
+
+function captureById(id){
+  return captures.find(item => item.id === id);
+}
+
+function markProcessed(id){
+  captures = captures.map(item => item.id === id ? {...item,status:"processed",updatedAt:new Date().toISOString()} : item);
+  saveData(STORAGE_KEY, captures);
+  renderCapture();
+}
+
+function sendToTask(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const tasks = readData("ncstudios_lists_v1");
+  tasks.unshift({
+    id:makeId(),
+    title:item.title,
+    category:item.type === "gear" ? "gear" : "admin",
+    priority:["payment","expense","lead"].includes(item.type) ? "high" : "medium",
+    dueDate:"",
+    status:"open",
+    notes:buildNote(item),
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_lists_v1", tasks);
+  markProcessed(id);
+}
+
+function sendToFinance(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const finance = readData("ncstudios_finance_v1");
+  const isExpense = item.type === "expense";
+  finance.unshift({
+    id:makeId(),
+    title:item.title,
+    type:isExpense ? "expense" : "income",
+    status:isExpense ? "paid" : "waiting",
+    amount:item.amount || 0,
+    date:new Date().toISOString().slice(0,10),
+    category:isExpense ? "other" : "booking payment",
+    client:item.project || "",
+    notes:buildNote(item),
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_finance_v1", finance);
+  markProcessed(id);
+}
+
+function sendToShot(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const shots = readData("ncstudios_shots_v1");
+  shots.unshift({
+    id:makeId(),
+    project:item.project || "Quick capture",
+    section:"details",
+    camera:"A Camera",
+    shotType:"Creative",
+    priority:"medium",
+    location:"",
+    shotText:item.title,
+    lens:"",
+    fps:"25fps",
+    lensFps:"25fps",
+    movement:"",
+    framing:"",
+    creativeExample:item.note || "",
+    notes:"Added from Quick Capture.",
+    captured:false,
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_shots_v1", shots);
+  markProcessed(id);
+}
+
+function sendToTimeline(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const timeline = readData("ncstudios_timeline_v1");
+  const now = new Date();
+  timeline.push({
+    id:makeId(),
+    project:item.project || "Quick capture",
+    time:`${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`,
+    phase:"admin",
+    title:item.title,
+    location:"",
+    owner:"Team",
+    status:item.type === "timeline" ? "changed" : "upcoming",
+    notes:buildNote(item),
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_timeline_v1", timeline);
+  markProcessed(id);
+}
+
+function sendToGear(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const gear = readData("ncstudios_gear_v1");
+  gear.push({
+    id:makeId(),
+    project:item.project || "Quick capture",
+    category:item.type === "expense" ? "rental" : "other",
+    quantity:1,
+    itemName:item.title,
+    status:"needed",
+    dueDate:"",
+    notes:buildNote(item),
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_gear_v1", gear);
+  markProcessed(id);
+}
+
+function deleteCapture(id){
+  const item = captureById(id);
+  if(!item) return;
+  if(!confirm(`Delete ${item.title}?`)) return;
+
+  captures = captures.filter(capture => capture.id !== id);
+  saveData(STORAGE_KEY, captures);
+  renderCapture();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("captureId").value = "";
+  document.getElementById("captureType").value = "lead";
+}
+
+function focusCapture(){
+  document.getElementById("captureTitle").focus();
+}
+
+function buildNote(item){
+  const parts = [];
+  if(item.project) parts.push(`Project: ${item.project}`);
+  if(item.amount) parts.push(`Amount: ${money(item.amount)}`);
+  if(item.note) parts.push(item.note);
+  return parts.join("\n");
+}
+
+function exportCapture(){
+  const data = {
+    app:"NC Studios",
+    type:"quick-capture",
+    exportedAt:new Date().toISOString(),
+    captures
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-quick-capture.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function typeLabel(value){
+  const labels = {
+    lead:"Lead",
+    "client-note":"Client note",
+    payment:"Payment note",
+    expense:"Expense",
+    shot:"Shot idea",
+    timeline:"Timeline change",
+    gear:"Gear reminder",
+    task:"Task",
+    call:"Call sheet note",
+    other:"Other"
+  };
+
+  return labels[value] || "Other";
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "No date";
+  const date = new Date(value);
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderCapture();
+</script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Call Sheet</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#050507">
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <div class="logo-mark">NC</div>
+    <div class="brand-text">
+      <p class="kicker">Shoot day contacts</p>
+      <h2>Call Sheet</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="quick-capture.html">Capture</a>
+    <a class="pill" href="projects.html">Projects</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a href="projects.html">Projects</a>
+  <a class="active" href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a href="clients.html">Clients</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">Live job info</p>
+      <h1>Call Sheet</h1>
+      <p class="subtext">Venue, planner, couple contacts, key names, restrictions, parking, second shooter notes and emergency details in one place.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn" type="button" onclick="exportCallSheets()">Export</button>
+      <button class="ghost-btn" type="button" onclick="resetForm()">New sheet</button>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Sheets</span>
+    <strong id="statSheets">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>With planner</span>
+    <strong id="statPlanner">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>With venue</span>
+    <strong id="statVenue">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>With emergency</span>
+    <strong id="statEmergency">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Add call sheet</h2>
+        <p>Keep the details you need when you are already on-site.</p>
+      </div>
+    </div>
+
+    <form id="callSheetForm">
+      <input type="hidden" id="sheetId">
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="project">Couple / project</label>
+          <input id="project" type="text" placeholder="Marvin + Blessing" required>
+        </div>
+
+        <div class="field">
+          <label for="eventDate">Date</label>
+          <input id="eventDate" type="date">
+        </div>
+
+        <div class="field">
+          <label for="venue">Venue</label>
+          <input id="venue" type="text" placeholder="Ceremony and reception venue">
+        </div>
+
+        <div class="field wide">
+          <label for="address">Address / maps notes</label>
+          <textarea id="address" placeholder="Full address, parking entrance, where to unload."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="plannerName">Planner / coordinator</label>
+          <input id="plannerName" type="text" placeholder="Name">
+        </div>
+
+        <div class="field">
+          <label for="plannerPhone">Planner phone</label>
+          <input id="plannerPhone" type="tel" placeholder="Number">
+        </div>
+
+        <div class="field">
+          <label for="plannerEmail">Planner email</label>
+          <input id="plannerEmail" type="email" placeholder="Email">
+        </div>
+
+        <div class="field">
+          <label for="bridePhone">Bride phone</label>
+          <input id="bridePhone" type="tel" placeholder="Number">
+        </div>
+
+        <div class="field">
+          <label for="groomPhone">Groom phone</label>
+          <input id="groomPhone" type="tel" placeholder="Number">
+        </div>
+
+        <div class="field">
+          <label for="secondShooter">Second shooter</label>
+          <input id="secondShooter" type="text" placeholder="Name and number">
+        </div>
+
+        <div class="field wide">
+          <label for="keyPeople">Key people / family names</label>
+          <textarea id="keyPeople" placeholder="Parents, siblings, bridal party, people to avoid missing."></textarea>
+        </div>
+
+        <div class="field wide">
+          <label for="restrictions">Restrictions / sensitive notes</label>
+          <textarea id="restrictions" placeholder="Ceremony rules, no-flash rules, family sensitivity, cultural notes."></textarea>
+        </div>
+
+        <div class="field wide">
+          <label for="emergency">Emergency / must know</label>
+          <textarea id="emergency" placeholder="Important safety, access, backup or contact details."></textarea>
+        </div>
+
+        <div class="field wide">
+          <label for="notes">Shoot notes</label>
+          <textarea id="notes" placeholder="Anything you want to remember before arriving."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save call sheet</button>
+        <button class="ghost-btn" type="button" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Saved sheets</h2>
+        <p>Tap a sheet to review live details.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search call sheets" oninput="renderSheets()">
+      </div>
+    </div>
+
+    <div id="sheetList" class="ops-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios call sheet</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_callsheets_v1";
+let sheets = readData(STORAGE_KEY);
+const form = document.getElementById("callSheetForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("sheetId").value || makeId();
+  const sheet = {
+    id,
+    project:document.getElementById("project").value.trim(),
+    eventDate:document.getElementById("eventDate").value,
+    venue:document.getElementById("venue").value.trim(),
+    address:document.getElementById("address").value.trim(),
+    plannerName:document.getElementById("plannerName").value.trim(),
+    plannerPhone:document.getElementById("plannerPhone").value.trim(),
+    plannerEmail:document.getElementById("plannerEmail").value.trim(),
+    bridePhone:document.getElementById("bridePhone").value.trim(),
+    groomPhone:document.getElementById("groomPhone").value.trim(),
+    secondShooter:document.getElementById("secondShooter").value.trim(),
+    keyPeople:document.getElementById("keyPeople").value.trim(),
+    restrictions:document.getElementById("restrictions").value.trim(),
+    emergency:document.getElementById("emergency").value.trim(),
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!sheet.project){
+    alert("Add the couple/project name first.");
+    return;
+  }
+
+  const index = sheets.findIndex(item => item.id === id);
+  if(index >= 0){
+    sheets[index] = sheet;
+  } else {
+    sheets.unshift(sheet);
+  }
+
+  saveSheets();
+  resetForm();
+  renderSheets();
+});
+
+function makeId(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "sheet_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveSheets(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sheets));
+}
+
+function renderSheets(){
+  const list = document.getElementById("sheetList");
+  const search = document.getElementById("search").value.trim().toLowerCase();
+  const visible = sheets.filter(sheet => !search || JSON.stringify(sheet).toLowerCase().includes(search));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `<div class="empty-state">No call sheets yet. Add the first one before a shoot day.</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(sheet => `
+    <article class="ops-card">
+      <div class="ops-card-top">
+        <div>
+          <div class="ops-title">${escapeHTML(sheet.project)}</div>
+          <div class="ops-sub">${escapeHTML(niceDate(sheet.eventDate))} | ${escapeHTML(sheet.venue || "Venue not added")}</div>
+        </div>
+        <span class="badge blue">Call sheet</span>
+      </div>
+
+      <div class="call-grid" style="margin-top:14px;">
+        <div class="call-box">
+          <h3>Contacts</h3>
+          ${callLine("Planner", sheet.plannerName)}
+          ${callLine("Planner phone", phoneLink(sheet.plannerPhone), true)}
+          ${callLine("Planner email", emailLink(sheet.plannerEmail), true)}
+          ${callLine("Bride", phoneLink(sheet.bridePhone), true)}
+          ${callLine("Groom", phoneLink(sheet.groomPhone), true)}
+          ${callLine("Second shooter", sheet.secondShooter)}
+        </div>
+
+        <div class="call-box">
+          <h3>Location</h3>
+          ${callLine("Venue", sheet.venue)}
+          ${callLine("Date", niceDate(sheet.eventDate))}
+          ${callLine("Address", sheet.address)}
+          ${callLine("Emergency", sheet.emergency)}
+        </div>
+      </div>
+
+      ${sheet.keyPeople ? `<p class="ops-note"><b>Key people</b><br>${escapeHTML(sheet.keyPeople)}</p>` : ""}
+      ${sheet.restrictions ? `<p class="ops-note"><b>Restrictions</b><br>${escapeHTML(sheet.restrictions)}</p>` : ""}
+      ${sheet.notes ? `<p class="ops-note"><b>Notes</b><br>${escapeHTML(sheet.notes)}</p>` : ""}
+
+      <div class="ops-actions">
+        <button class="ghost-btn" type="button" onclick="editSheet('${sheet.id}')">Edit</button>
+        <button class="danger-btn" type="button" onclick="deleteSheet('${sheet.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function callLine(label,value,html){
+  const display = value || "Not added";
+  return `<div class="call-line"><span>${escapeHTML(label)}</span><b>${html ? display : escapeHTML(display)}</b></div>`;
+}
+
+function phoneLink(value){
+  const clean = String(value || "").trim();
+  return clean ? `<a href="tel:${escapeAttribute(clean)}">${escapeHTML(clean)}</a>` : "";
+}
+
+function emailLink(value){
+  const clean = String(value || "").trim();
+  return clean ? `<a href="mailto:${escapeAttribute(clean)}">${escapeHTML(clean)}</a>` : "";
+}
+
+function updateStats(){
+  document.getElementById("statSheets").textContent = sheets.length;
+  document.getElementById("statPlanner").textContent = sheets.filter(item => item.plannerName || item.plannerPhone || item.plannerEmail).length;
+  document.getElementById("statVenue").textContent = sheets.filter(item => item.venue || item.address).length;
+  document.getElementById("statEmergency").textContent = sheets.filter(item => item.emergency).length;
+}
+
+function editSheet(id){
+  const sheet = sheets.find(item => item.id === id);
+  if(!sheet) return;
+
+  document.getElementById("sheetId").value = sheet.id;
+  document.getElementById("project").value = sheet.project || "";
+  document.getElementById("eventDate").value = sheet.eventDate || "";
+  document.getElementById("venue").value = sheet.venue || "";
+  document.getElementById("address").value = sheet.address || "";
+  document.getElementById("plannerName").value = sheet.plannerName || "";
+  document.getElementById("plannerPhone").value = sheet.plannerPhone || "";
+  document.getElementById("plannerEmail").value = sheet.plannerEmail || "";
+  document.getElementById("bridePhone").value = sheet.bridePhone || "";
+  document.getElementById("groomPhone").value = sheet.groomPhone || "";
+  document.getElementById("secondShooter").value = sheet.secondShooter || "";
+  document.getElementById("keyPeople").value = sheet.keyPeople || "";
+  document.getElementById("restrictions").value = sheet.restrictions || "";
+  document.getElementById("emergency").value = sheet.emergency || "";
+  document.getElementById("notes").value = sheet.notes || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteSheet(id){
+  const sheet = sheets.find(item => item.id === id);
+  if(!sheet) return;
+  if(!confirm(`Delete call sheet for ${sheet.project}?`)) return;
+
+  sheets = sheets.filter(item => item.id !== id);
+  saveSheets();
+  renderSheets();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("sheetId").value = "";
+}
+
+function exportCallSheets(){
+  const data = {
+    app:"NC Studios",
+    type:"call-sheets",
+    exportedAt:new Date().toISOString(),
+    sheets
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-call-sheets.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value);
+}
+
+renderSheets();
+</script>
+</body>
+</html>
