@@ -1044,8 +1044,21 @@ function countProjects(dataSets){
 }
 
 function addProjectName(set,value){
-  const name = String(value || "").trim();
+  const name = normaliseProjectKey(value);
   if(name) set.add(name);
+}
+
+function normaliseProjectKey(value){
+  const noiseWords = new Set(["and","the","of","for","wedding","shoot","project","couple","client"]);
+
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !noiseWords.has(word))
+    .join(" ");
 }
 
 function updateShotPanel(shots){

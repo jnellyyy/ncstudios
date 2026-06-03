@@ -118,20 +118,40 @@
 <script src="register-sw.js?v=nc-off-1"></script>
 
 <script>
-const stores = {
-  bookings:readData("ncstudios_bookings_v1"),
-  clients:readData("ncstudios_clients_v1"),
-  finance:readData("ncstudios_finance_v1"),
-  delivery:readData("ncstudios_delivery_v1"),
-  shots:readData("ncstudios_shots_v1"),
-  timeline:readData("ncstudios_timeline_v1"),
-  gear:readData("ncstudios_gear_v1"),
-  settings:readData("ncstudios_settings_v1"),
-  callSheets:readData("ncstudios_callsheets_v1"),
-  capture:readData("ncstudios_capture_v1")
+const STORE_KEYS = {
+  bookings:"ncstudios_bookings_v1",
+  clients:"ncstudios_clients_v1",
+  finance:"ncstudios_finance_v1",
+  delivery:"ncstudios_delivery_v1",
+  shots:"ncstudios_shots_v1",
+  timeline:"ncstudios_timeline_v1",
+  gear:"ncstudios_gear_v1",
+  settings:"ncstudios_settings_v1",
+  callSheets:"ncstudios_callsheets_v1",
+  capture:"ncstudios_capture_v1"
 };
 
-let selectedProject = "";
+const PROJECT_FIELDS = {
+  bookings:["clientName","eventName"],
+  clients:["clientName"],
+  finance:["client","project","projectName"],
+  delivery:["projectName","client"],
+  shots:["project"],
+  timeline:["project"],
+  gear:["project"],
+  settings:["project"],
+  callSheets:["project"],
+  capture:["project"]
+};
+
+const PROJECT_NOISE_WORDS = new Set(["and","the","of","for","wedding","shoot","project","couple","client"]);
+
+const stores = {};
+Object.keys(STORE_KEYS).forEach(name => {
+  stores[name] = readData(STORE_KEYS[name]);
+});
+
+let selectedProjectKey = "";
 
 function readData(key){
   try{
@@ -142,45 +162,59 @@ function readData(key){
   }
 }
 
+function writeData(key,data){
+  localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+}
+
 function buildProjects(){
-  const names = new Set();
+  const projects = new Map();
 
-  stores.bookings.forEach(item => addName(names, item.clientName || item.eventName));
-  stores.clients.forEach(item => addName(names, item.clientName));
-  stores.finance.forEach(item => addName(names, item.client));
-  stores.delivery.forEach(item => addName(names, item.projectName || item.client));
-  stores.shots.forEach(item => addName(names, item.project));
-  stores.timeline.forEach(item => addName(names, item.project));
-  stores.gear.forEach(item => addName(names, item.project));
-  stores.settings.forEach(item => addName(names, item.project));
-  stores.callSheets.forEach(item => addName(names, item.project));
-  stores.capture.forEach(item => addName(names, item.project));
+  Object.keys(PROJECT_FIELDS).forEach(storeName => {
+    stores[storeName].forEach(item => {
+      getBuildProjectValues(storeName, item).forEach(value => collectProjectName(projects, value));
+    });
+  });
 
-  return [...names].sort().map(project => getProjectData(project));
+  return [...projects.values()]
+    .map(group => getProjectData(group))
+    .sort((a,b) => a.project.localeCompare(b.project));
 }
 
-function addName(set,value){
-  const name = String(value || "").trim();
-  if(name) set.add(name);
+function collectProjectName(map,value){
+  const name = cleanDisplayName(value);
+  const key = normaliseProjectKey(name);
+
+  if(!key) return;
+
+  if(!map.has(key)){
+    map.set(key, {
+      key,
+      aliases:[]
+    });
+  }
+
+  const group = map.get(key);
+  const exists = group.aliases.some(alias => normaliseDisplay(alias) === normaliseDisplay(name));
+
+  if(!exists){
+    group.aliases.push(name);
+  }
 }
 
-function getProjectData(project){
-  const lower = project.toLowerCase();
-  const match = value => {
-    const text = String(value || "").trim().toLowerCase();
-    return text && (text.includes(lower) || lower.includes(text));
-  };
+function getProjectData(group){
+  const key = group.key;
+  const project = displayProjectName(group.aliases);
 
-  const bookings = stores.bookings.filter(item => match(item.clientName) || match(item.eventName));
-  const clients = stores.clients.filter(item => match(item.clientName));
-  const finance = stores.finance.filter(item => match(item.client) || match(item.title));
-  const delivery = stores.delivery.filter(item => match(item.projectName) || match(item.client));
-  const shots = stores.shots.filter(item => match(item.project));
-  const timeline = stores.timeline.filter(item => match(item.project));
-  const gear = stores.gear.filter(item => match(item.project));
-  const settings = stores.settings.filter(item => match(item.project));
-  const callSheets = stores.callSheets.filter(item => match(item.project));
-  const capture = stores.capture.filter(item => match(item.project));
+  const bookings = filterProjectStore("bookings", key);
+  const clients = filterProjectStore("clients", key);
+  const finance = filterProjectStore("finance", key);
+  const delivery = filterProjectStore("delivery", key);
+  const shots = filterProjectStore("shots", key);
+  const timeline = filterProjectStore("timeline", key);
+  const gear = filterProjectStore("gear", key);
+  const settings = filterProjectStore("settings", key);
+  const callSheets = filterProjectStore("callSheets", key);
+  const capture = filterProjectStore("capture", key);
 
   const income = finance
     .filter(item => item.type === "income" && item.status !== "unpaid")
@@ -193,7 +227,9 @@ function getProjectData(project){
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
   return {
+    key,
     project,
+    aliases:group.aliases,
     bookings,
     clients,
     finance,
@@ -210,25 +246,102 @@ function getProjectData(project){
   };
 }
 
+function filterProjectStore(storeName,key){
+  return stores[storeName].filter(item => itemMatchesProject(storeName, item, key));
+}
+
+function itemMatchesProject(storeName,item,key){
+  const directMatch = getProjectValues(storeName, item).some(value => matchesProject(value, key));
+
+  if(directMatch){
+    return true;
+  }
+
+  if(storeName === "finance"){
+    return titleMentionsProject(item.title, key);
+  }
+
+  return false;
+}
+
+function getProjectValues(storeName,item){
+  return (PROJECT_FIELDS[storeName] || []).map(field => item[field]).filter(Boolean);
+}
+
+function getBuildProjectValues(storeName,item){
+  if(storeName === "bookings") return [item.clientName || item.eventName].filter(Boolean);
+  if(storeName === "delivery") return [item.projectName || item.client].filter(Boolean);
+  return getProjectValues(storeName, item);
+}
+
+function matchesProject(value,key){
+  return normaliseProjectKey(value) === key;
+}
+
+function titleMentionsProject(value,key){
+  const projectWords = key.split(" ").filter(Boolean);
+  const titleWords = new Set(normaliseProjectKey(value).split(" ").filter(Boolean));
+
+  return projectWords.length >= 2 && projectWords.every(word => titleWords.has(word));
+}
+
+function normaliseProjectKey(value){
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !PROJECT_NOISE_WORDS.has(word))
+    .join(" ");
+}
+
+function cleanDisplayName(value){
+  return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function normaliseDisplay(value){
+  return cleanDisplayName(value).toLowerCase();
+}
+
+function displayProjectName(aliases){
+  return aliases
+    .slice()
+    .sort((a,b) => projectNameScore(b) - projectNameScore(a) || a.length - b.length || a.localeCompare(b))[0] || "Project";
+}
+
+function projectNameScore(name){
+  let score = 0;
+  if(/[+&]|\band\b/i.test(name)) score += 5;
+  if(/\bwedding\b/i.test(name)) score -= 3;
+  if(name.length <= 42) score += 2;
+  return score;
+}
+
 function renderProjects(){
   const search = document.getElementById("search").value.trim().toLowerCase();
+  const searchKey = normaliseProjectKey(search);
   const projects = buildProjects();
-  const visible = projects.filter(item => !search || JSON.stringify(item).toLowerCase().includes(search));
+  const visible = projects.filter(item => !search || item.key.includes(searchKey) || JSON.stringify(item).toLowerCase().includes(search));
 
   updateStats(projects);
 
-  if(!selectedProject && visible.length){
-    selectedProject = visible[0].project;
+  if(!selectedProjectKey && visible.length){
+    selectedProjectKey = visible[0].key;
+  }
+
+  if(selectedProjectKey && visible.length && !visible.some(item => item.key === selectedProjectKey)){
+    selectedProjectKey = visible[0].key;
   }
 
   const list = document.getElementById("projectList");
   list.innerHTML = visible.map(item => `
-    <button type="button" class="${item.project === selectedProject ? "btn" : "ghost-btn"}" onclick='selectProject(${jsString(item.project)})'>
+    <button type="button" class="${item.key === selectedProjectKey ? "btn" : "ghost-btn"}" onclick='selectProject(${jsString(item.key)})'>
       ${escapeHTML(item.project)}
     </button>
   `).join("") || `<div class="empty-state">No projects found yet.</div>`;
 
-  renderDetail(projects.find(item => item.project === selectedProject) || visible[0]);
+  renderDetail(projects.find(item => item.key === selectedProjectKey) || visible[0]);
 }
 
 function updateStats(projects){
@@ -244,8 +357,8 @@ function updateStats(projects){
   document.getElementById("statCapture").textContent = openCapture;
 }
 
-function selectProject(project){
-  selectedProject = project;
+function selectProject(projectKey){
+  selectedProjectKey = projectKey;
   renderProjects();
 }
 
@@ -289,6 +402,10 @@ function renderDetail(data){
       <a href="gear.html"><span>Gear</span><strong>${gearLeft} left</strong></a>
       <a href="shoot-settings.html"><span>Settings</span><strong>${data.settings.length} set</strong></a>
       <a href="delivery.html"><span>Delivery</span><strong>${delivery.stage || "Open"}</strong></a>
+    </div>
+
+    <div class="ops-actions">
+      <button class="danger-btn" type="button" onclick='deleteProject(${jsString(data.key)}, ${jsString(data.project)})'>Delete this project</button>
     </div>
 
     <div class="project-grid" style="margin-top:14px;">
@@ -336,6 +453,39 @@ function renderDetail(data){
 
     ${renderRecent(data)}
   `;
+}
+
+function deleteProject(projectKey,projectName){
+  const data = buildProjects().find(item => item.key === projectKey);
+  const displayName = projectName || (data && data.project) || "this project";
+
+  if(!data){
+    alert("This project could not be found.");
+    return;
+  }
+
+  const firstConfirm = confirm(`Delete ${displayName} from Project Hub?\n\nThis removes matching bookings, clients, payments, delivery, shots, timeline, gear, settings, call sheets and capture notes.`);
+  if(!firstConfirm) return;
+
+  const finalConfirm = confirm(`Delete ${displayName} now?\n\nThis cannot be undone inside the app.`);
+  if(!finalConfirm) return;
+
+  const removedTotal = Object.keys(STORE_KEYS).reduce((total,storeName) => {
+    const original = stores[storeName];
+    const filtered = original.filter(item => !itemMatchesProject(storeName, item, projectKey));
+    const removed = original.length - filtered.length;
+
+    if(removed > 0){
+      stores[storeName] = filtered;
+      writeData(STORE_KEYS[storeName], filtered);
+    }
+
+    return total + removed;
+  }, 0);
+
+  selectedProjectKey = "";
+  renderProjects();
+  alert(removedTotal ? `${displayName} deleted. Removed ${removedTotal} connected item${removedTotal === 1 ? "" : "s"}.` : "No connected items were removed.");
 }
 
 function renderRecent(data){
