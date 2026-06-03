@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NC Studios Lists</title>
+<title>NC Studios To Do</title>
 
 <link rel="manifest" href="site.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -390,6 +390,45 @@ textarea{
   color:#bfdbfe;
 }
 
+.badge.waiting{
+  background:rgba(251,191,36,0.16);
+  color:#fde68a;
+}
+
+.item.overdue{
+  border-color:rgba(255,59,48,0.34);
+  background:rgba(255,59,48,0.10);
+}
+
+.item.today{
+  border-color:rgba(251,191,36,0.34);
+  background:rgba(251,191,36,0.09);
+}
+
+.quickTasks{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:14px 0 0;
+}
+
+.quickTasks button{
+  min-height:42px;
+  padding:10px;
+  border-radius:14px;
+  box-shadow:none;
+  background:rgba(255,255,255,0.075);
+  border:1px solid var(--line);
+  text-align:left;
+}
+
+.searchBar{
+  display:grid;
+  grid-template-columns:1fr 160px;
+  gap:8px;
+  min-width:360px;
+}
+
 .meta{
   display:grid;
   gap:8px;
@@ -485,6 +524,12 @@ textarea{
     grid-template-columns:1fr;
   }
 
+  .searchBar,
+  .quickTasks{
+    grid-template-columns:1fr;
+    min-width:0;
+  }
+
   .nav{
     grid-template-columns:repeat(2,1fr);
   }
@@ -500,7 +545,7 @@ textarea{
     <div class="logo">NC</div>
     <div>
       <h1>NC Studios</h1>
-      <p>Lists</p>
+      <p>Business to do</p>
     </div>
   </div>
 
@@ -513,8 +558,8 @@ textarea{
   <div class="heroTop">
     <div>
       <div class="kicker">Business tasks</div>
-      <h2>Lists</h2>
-      <p>Keep NC Studios tasks, gear lists, admin, editing and shoot prep separate from Pace.</p>
+      <h2>Business To Do</h2>
+      <p>Keep NC Studios admin, clients, finance, editing, content and shoot prep separate from Pace.</p>
     </div>
 
     <div class="actions">
@@ -525,8 +570,8 @@ textarea{
 
   <div class="stats">
     <div class="stat">
-      <span>Total</span>
-      <strong id="totalStat">0</strong>
+      <span>Today</span>
+      <strong id="todayStat">0</strong>
     </div>
 
     <div class="stat">
@@ -535,13 +580,13 @@ textarea{
     </div>
 
     <div class="stat">
-      <span>Done</span>
-      <strong id="doneStat">0</strong>
+      <span>Overdue</span>
+      <strong id="overdueStat">0</strong>
     </div>
 
     <div class="stat">
-      <span>High priority</span>
-      <strong id="highStat">0</strong>
+      <span>Done</span>
+      <strong id="doneStat">0</strong>
     </div>
   </div>
 </section>
@@ -552,7 +597,7 @@ textarea{
   <a href="clients.html">Clients</a>
   <a href="finance.html">Finance</a>
   <a href="shot-lists.html">Shots</a>
-  <a class="active" href="lists.html">Lists</a>
+  <a class="active" href="lists.html">To Do</a>
   <a href="delivery.html">Delivery</a>
   <a href="templates.html">Templates</a>
 </nav>
@@ -562,8 +607,8 @@ textarea{
   <section class="panel">
     <div class="panelHead">
       <div>
-        <h3>Add list item</h3>
-        <p>Business only tasks and reminders.</p>
+        <h3>Add to-do</h3>
+        <p>Business-only actions and reminders.</p>
       </div>
     </div>
 
@@ -572,8 +617,8 @@ textarea{
         <input type="hidden" id="taskId">
 
         <label>
-          Item title
-          <input id="title" type="text" placeholder="Order SD cards, send invoice, check timeline" required>
+          To-do
+          <input id="title" type="text" placeholder="Send invoice, chase deposit, prep delivery email" required>
         </label>
 
         <div class="row">
@@ -582,11 +627,14 @@ textarea{
             <select id="category">
               <option value="admin">Admin</option>
               <option value="client">Client</option>
-              <option value="gear">Gear</option>
-              <option value="shoot day">Shoot day</option>
-              <option value="editing">Editing</option>
               <option value="finance">Finance</option>
+              <option value="editing">Editing</option>
               <option value="content">Content</option>
+              <option value="marketing">Marketing</option>
+              <option value="website">Website</option>
+              <option value="shoot prep">Shoot prep</option>
+              <option value="delivery">Delivery</option>
+              <option value="gear">Gear</option>
             </select>
           </label>
 
@@ -610,6 +658,7 @@ textarea{
             Status
             <select id="status">
               <option value="open">Open</option>
+              <option value="waiting">Waiting</option>
               <option value="done">Done</option>
             </select>
           </label>
@@ -624,10 +673,17 @@ textarea{
         <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
       </form>
 
+      <div class="quickTasks">
+        <button type="button" onclick="addPresetTask('Chase outstanding payment','finance','high',0,'Follow up on a balance, deposit or overdue payment.')">Chase payment</button>
+        <button type="button" onclick="addPresetTask('Reply to client message','client','high',0,'Clear inbox and reply with next step.')">Client reply</button>
+        <button type="button" onclick="addPresetTask('Check edit progress','editing','medium',1,'Review current delivery stage and next action.')">Edit check</button>
+        <button type="button" onclick="addPresetTask('Post business content','content','medium',2,'Plan or post NC Studios content.')">Content post</button>
+      </div>
+
       <div class="pasteBox">
-        <h3>Paste list items</h3>
+        <h3>Paste to-dos</h3>
         <p>One item per line, or use: title | category | priority | due date | status | notes</p>
-        <textarea id="taskPaste" placeholder="Charge batteries | gear | high | 2026-08-22 | open | Pack both chargers"></textarea>
+        <textarea id="taskPaste" placeholder="Chase deposit | finance | high | 2026-08-22 | open | Send reminder before holding date"></textarea>
         <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedTasks()">Import pasted list</button>
       </div>
     </div>
@@ -636,16 +692,23 @@ textarea{
   <section class="panel">
     <div class="panelHead">
       <div>
-        <h3>Business list</h3>
-        <p>Saved NC Studios tasks.</p>
+        <h3>Business to-do</h3>
+        <p>Saved NC Studios actions.</p>
       </div>
 
-      <select id="filter" onchange="renderTasks()">
-        <option value="all">All</option>
-        <option value="open">Open</option>
-        <option value="done">Done</option>
-        <option value="high">High</option>
-      </select>
+      <div class="searchBar">
+        <input id="search" type="search" placeholder="Search to-dos" oninput="renderTasks()">
+        <select id="filter" onchange="renderTasks()">
+          <option value="next">Next up</option>
+          <option value="today">Today</option>
+          <option value="overdue">Overdue</option>
+          <option value="open">Open</option>
+          <option value="waiting">Waiting</option>
+          <option value="high">High</option>
+          <option value="done">Done</option>
+          <option value="all">All</option>
+        </select>
+      </div>
     </div>
 
     <div class="panelBody">
@@ -717,32 +780,46 @@ function saveTasks(){
 function renderTasks(){
   const list = document.getElementById("taskList");
   const filter = document.getElementById("filter").value;
+  const search = document.getElementById("search").value.trim().toLowerCase();
 
-  const visible = tasks.filter(item => {
-    if(filter === "all") return true;
-    if(filter === "high") return item.priority === "high";
-    return item.status === filter;
-  });
+  const visible = tasks
+    .filter(item => {
+      const searchMatch = !search || `${item.title} ${item.category} ${item.notes}`.toLowerCase().includes(search);
+
+      if(!searchMatch) return false;
+      if(filter === "all") return true;
+      if(filter === "next") return item.status !== "done";
+      if(filter === "today") return item.status !== "done" && isToday(item.dueDate);
+      if(filter === "overdue") return item.status !== "done" && isOverdue(item.dueDate);
+      if(filter === "high") return item.status !== "done" && item.priority === "high";
+      return item.status === filter;
+    })
+    .sort(sortTasks);
 
   updateStats();
 
   if(visible.length === 0){
-    list.innerHTML = `<div class="empty">No business list items yet.<br><br>Add your first NC Studios task.</div>`;
+    list.innerHTML = `<div class="empty">No business to-dos in this view.<br><br>Add your first NC Studios action or use a quick preset.</div>`;
     return;
   }
 
   list.innerHTML = visible.map(item => `
-    <article class="item ${item.status === "done" ? "done" : ""}">
+    <article class="item ${item.status === "done" ? "done" : ""} ${item.status !== "done" && isOverdue(item.dueDate) ? "overdue" : ""} ${item.status !== "done" && isToday(item.dueDate) ? "today" : ""}">
       <div class="itemTop">
         <div>
           <h4>${escapeHTML(item.title)}</h4>
-          <small>${escapeHTML(item.category)} • ${item.status === "done" ? "Done" : "Open"}</small>
+          <small>${categoryLabel(item.category)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
         </div>
 
-        <span class="badge ${item.priority}">${priorityLabel(item.priority)}</span>
+        <span class="badge ${item.status === "waiting" ? "waiting" : item.priority}">${item.status === "waiting" ? "Waiting" : priorityLabel(item.priority)}</span>
       </div>
 
       <div class="meta">
+        <div class="metaLine">
+          <span>Category</span>
+          <strong>${categoryLabel(item.category)}</strong>
+        </div>
+
         <div class="metaLine">
           <span>Due date</span>
           <strong>${formatDate(item.dueDate)}</strong>
@@ -761,10 +838,71 @@ function renderTasks(){
 }
 
 function updateStats(){
-  document.getElementById("totalStat").textContent = tasks.length;
-  document.getElementById("openStat").textContent = tasks.filter(item => item.status === "open").length;
+  document.getElementById("todayStat").textContent = tasks.filter(item => item.status !== "done" && isToday(item.dueDate)).length;
+  document.getElementById("openStat").textContent = tasks.filter(item => item.status !== "done").length;
+  document.getElementById("overdueStat").textContent = tasks.filter(item => item.status !== "done" && isOverdue(item.dueDate)).length;
   document.getElementById("doneStat").textContent = tasks.filter(item => item.status === "done").length;
-  document.getElementById("highStat").textContent = tasks.filter(item => item.priority === "high").length;
+}
+
+function addPresetTask(title, category, priority, daysFromNow, notes){
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + Number(daysFromNow || 0));
+
+  tasks.unshift({
+    id:crypto.randomUUID(),
+    title,
+    category,
+    priority,
+    dueDate:dueDate.toISOString().slice(0,10),
+    status:"open",
+    notes,
+    updatedAt:new Date().toISOString()
+  });
+
+  saveTasks();
+  document.getElementById("filter").value = "next";
+  renderTasks();
+}
+
+function sortTasks(a,b){
+  const rankA = taskRank(a);
+  const rankB = taskRank(b);
+  if(rankA !== rankB) return rankA - rankB;
+
+  const dateA = a.dueDate || "9999-12-31";
+  const dateB = b.dueDate || "9999-12-31";
+  if(dateA !== dateB) return dateA.localeCompare(dateB);
+
+  return String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+}
+
+function taskRank(task){
+  if(task.status === "done") return 9;
+  if(isOverdue(task.dueDate)) return 0;
+  if(isToday(task.dueDate)) return 1;
+  if(task.priority === "high") return 2;
+  if(task.status === "waiting") return 5;
+  if(task.priority === "medium") return 3;
+  return 4;
+}
+
+function todayISO(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function isToday(value){
+  return Boolean(value) && value === todayISO();
+}
+
+function isOverdue(value){
+  return Boolean(value) && value < todayISO();
+}
+
+function dueLabel(value){
+  if(!value) return "No due date";
+  if(isOverdue(value)) return "Overdue";
+  if(isToday(value)) return "Due today";
+  return `Due ${formatDate(value)}`;
 }
 
 function editTask(id){
@@ -773,10 +911,10 @@ function editTask(id){
 
   document.getElementById("taskId").value = task.id;
   document.getElementById("title").value = task.title || "";
-  document.getElementById("category").value = task.category || "admin";
+  document.getElementById("category").value = normaliseCategory(task.category || "admin");
   document.getElementById("priority").value = task.priority || "high";
   document.getElementById("dueDate").value = task.dueDate || "";
-  document.getElementById("status").value = task.status || "open";
+  document.getElementById("status").value = normaliseStatus(task.status || "open");
   document.getElementById("notes").value = task.notes || "";
 
   window.scrollTo({top:0,behavior:"smooth"});
@@ -862,8 +1000,19 @@ function splitImportLine(line){
 
 function normaliseCategory(value){
   const text = String(value || "").toLowerCase().trim();
-  const allowed = ["admin","client","gear","shoot day","editing","finance","content"];
-  return allowed.includes(text) ? text : "admin";
+  const aliases = {
+    "shoot day":"shoot prep",
+    "shoot prep":"shoot prep",
+    "prep":"shoot prep",
+    "client":"client",
+    "clients":"client",
+    "payment":"finance",
+    "money":"finance",
+    "social":"content"
+  };
+  const allowed = ["admin","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"];
+  const normalised = aliases[text] || text;
+  return allowed.includes(normalised) ? normalised : "admin";
 }
 
 function normalisePriority(value){
@@ -874,7 +1023,10 @@ function normalisePriority(value){
 }
 
 function normaliseStatus(value){
-  return String(value || "").toLowerCase().includes("done") ? "done" : "open";
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("done") || text.includes("complete")) return "done";
+  if(text.includes("wait") || text.includes("hold")) return "waiting";
+  return "open";
 }
 
 function normaliseDate(value){
@@ -916,13 +1068,37 @@ function priorityLabel(value){
   return "Low";
 }
 
+function statusLabel(value){
+  if(value === "done") return "Done";
+  if(value === "waiting") return "Waiting";
+  return "Open";
+}
+
+function categoryLabel(value){
+  const key = normaliseCategory(value);
+  const labels = {
+    admin:"Admin",
+    client:"Client",
+    finance:"Finance",
+    editing:"Editing",
+    content:"Content",
+    marketing:"Marketing",
+    website:"Website",
+    "shoot prep":"Shoot prep",
+    delivery:"Delivery",
+    gear:"Gear"
+  };
+
+  return labels[key] || "Admin";
+}
+
 function formatDate(value){
   if(!value) return "No date";
   return new Intl.DateTimeFormat("en-GB", {
     day:"2-digit",
     month:"short",
     year:"numeric"
-  }).format(new Date(value));
+  }).format(new Date(value + "T00:00:00"));
 }
 
 function escapeHTML(value){

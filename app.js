@@ -11,7 +11,7 @@ const NC = (() => {
     { href:"shot-lists.html", title:"Shot Lists", copy:"Wedding filming plans and shot priorities." },
     { href:"timeline.html", title:"Timeline", copy:"Shoot day run sheets and live timing." },
     { href:"gear.html", title:"Gear", copy:"Pack checks, batteries, cards and rentals." },
-    { href:"lists.html", title:"Lists", copy:"Business checklists and quick tasks." },
+    { href:"lists.html", title:"To Do", copy:"Business tasks, reminders and follow-ups." },
     { href:"delivery.html", title:"Delivery", copy:"Editing stages, deadlines and handover." },
     { href:"templates.html", title:"Templates", copy:"Reusable messages, emails and client replies." }
   ];
