@@ -424,9 +424,48 @@ textarea{
 
 .searchBar{
   display:grid;
-  grid-template-columns:1fr 160px;
+  grid-template-columns:1fr 150px 150px;
   gap:8px;
-  min-width:360px;
+  min-width:520px;
+}
+
+.areaLane{
+  border:1px solid rgba(255,255,255,0.11);
+  background:rgba(255,255,255,0.045);
+  border-radius:24px;
+  overflow:hidden;
+}
+
+.areaHead{
+  min-height:48px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.areaHead h4{
+  font-size:15px;
+  letter-spacing:-0.2px;
+}
+
+.areaHead span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.areaItems{
+  display:grid;
+  gap:10px;
+  padding:10px;
+}
+
+.areaItems .item{
+  border-radius:20px;
 }
 
 .meta{
@@ -559,12 +598,13 @@ textarea{
     <div>
       <div class="kicker">Business tasks</div>
       <h2>Business To Do</h2>
-      <p>Keep NC Studios admin, clients, finance, editing, content and shoot prep separate from Pace.</p>
+        <p>Split NC Studios work into Overall, C1, C2, Accessories and business areas so it does not become one messy pile.</p>
     </div>
 
     <div class="actions">
       <button onclick="exportTasks()">Export</button>
       <button class="secondary" onclick="resetForm()">New item</button>
+      <button class="ghost" onclick="clearAllTasks()">Clear all</button>
     </div>
   </div>
 
@@ -623,8 +663,12 @@ textarea{
 
         <div class="row">
           <label>
-            Category
+            Area
             <select id="category">
+              <option value="overall">Overall</option>
+              <option value="c1">C1</option>
+              <option value="c2">C2</option>
+              <option value="accessories">Accessories</option>
               <option value="admin">Admin</option>
               <option value="client">Client</option>
               <option value="finance">Finance</option>
@@ -674,16 +718,16 @@ textarea{
       </form>
 
       <div class="quickTasks">
+        <button type="button" onclick="addPresetTask('Check C1 setup','c1','high',0,'Camera, lens, cards, batteries and settings ready.')">C1 check</button>
+        <button type="button" onclick="addPresetTask('Check C2 setup','c2','high',0,'Safety angle, tripod, power and cards ready.')">C2 check</button>
+        <button type="button" onclick="addPresetTask('Pack accessories','accessories','medium',0,'Cables, chargers, clamps, cloths and small extras.')">Accessories</button>
         <button type="button" onclick="addPresetTask('Chase outstanding payment','finance','high',0,'Follow up on a balance, deposit or overdue payment.')">Chase payment</button>
-        <button type="button" onclick="addPresetTask('Reply to client message','client','high',0,'Clear inbox and reply with next step.')">Client reply</button>
-        <button type="button" onclick="addPresetTask('Check edit progress','editing','medium',1,'Review current delivery stage and next action.')">Edit check</button>
-        <button type="button" onclick="addPresetTask('Post business content','content','medium',2,'Plan or post NC Studios content.')">Content post</button>
       </div>
 
       <div class="pasteBox">
         <h3>Paste to-dos</h3>
-        <p>One item per line, or use: title | category | priority | due date | status | notes</p>
-        <textarea id="taskPaste" placeholder="Chase deposit | finance | high | 2026-08-22 | open | Send reminder before holding date"></textarea>
+        <p>One item per line, or use: title | area | priority | due date | status | notes</p>
+        <textarea id="taskPaste" placeholder="Format C1 cards | c1 | high | 2026-08-22 | open | Label empty and full sides"></textarea>
         <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedTasks()">Import pasted list</button>
       </div>
     </div>
@@ -693,11 +737,29 @@ textarea{
     <div class="panelHead">
       <div>
         <h3>Business to-do</h3>
-        <p>Saved NC Studios actions.</p>
+        <p>Saved NC Studios actions split into working areas.</p>
       </div>
 
       <div class="searchBar">
         <input id="search" type="search" placeholder="Search to-dos" oninput="renderTasks()">
+        <select id="areaFilter" onchange="renderTasks()">
+          <option value="all">All areas</option>
+          <option value="overall">Overall</option>
+          <option value="c1">C1</option>
+          <option value="c2">C2</option>
+          <option value="accessories">Accessories</option>
+          <option value="admin">Admin</option>
+          <option value="client">Client</option>
+          <option value="finance">Finance</option>
+          <option value="editing">Editing</option>
+          <option value="content">Content</option>
+          <option value="marketing">Marketing</option>
+          <option value="website">Website</option>
+          <option value="shoot prep">Shoot prep</option>
+          <option value="delivery">Delivery</option>
+          <option value="gear">Gear</option>
+        </select>
+
         <select id="filter" onchange="renderTasks()">
           <option value="next">Next up</option>
           <option value="today">Today</option>
@@ -780,13 +842,16 @@ function saveTasks(){
 function renderTasks(){
   const list = document.getElementById("taskList");
   const filter = document.getElementById("filter").value;
+  const areaFilter = document.getElementById("areaFilter").value;
   const search = document.getElementById("search").value.trim().toLowerCase();
 
   const visible = tasks
     .filter(item => {
-      const searchMatch = !search || `${item.title} ${item.category} ${item.notes}`.toLowerCase().includes(search);
+      const area = normaliseCategory(item.category);
+      const searchMatch = !search || `${item.title} ${categoryLabel(area)} ${item.notes}`.toLowerCase().includes(search);
 
       if(!searchMatch) return false;
+      if(areaFilter !== "all" && area !== areaFilter) return false;
       if(filter === "all") return true;
       if(filter === "next") return item.status !== "done";
       if(filter === "today") return item.status !== "done" && isToday(item.dueDate);
@@ -803,12 +868,28 @@ function renderTasks(){
     return;
   }
 
-  list.innerHTML = visible.map(item => `
+  list.innerHTML = groupByArea(visible).map(group => `
+    <section class="areaLane">
+      <div class="areaHead">
+        <h4>${categoryLabel(group.area)}</h4>
+        <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+      </div>
+      <div class="areaItems">
+        ${group.items.map(renderTaskCard).join("")}
+      </div>
+    </section>
+  `).join("");
+}
+
+function renderTaskCard(item){
+  const area = normaliseCategory(item.category);
+
+  return `
     <article class="item ${item.status === "done" ? "done" : ""} ${item.status !== "done" && isOverdue(item.dueDate) ? "overdue" : ""} ${item.status !== "done" && isToday(item.dueDate) ? "today" : ""}">
       <div class="itemTop">
         <div>
           <h4>${escapeHTML(item.title)}</h4>
-          <small>${categoryLabel(item.category)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
+          <small>${categoryLabel(area)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
         </div>
 
         <span class="badge ${item.status === "waiting" ? "waiting" : item.priority}">${item.status === "waiting" ? "Waiting" : priorityLabel(item.priority)}</span>
@@ -816,8 +897,8 @@ function renderTasks(){
 
       <div class="meta">
         <div class="metaLine">
-          <span>Category</span>
-          <strong>${categoryLabel(item.category)}</strong>
+          <span>Area</span>
+          <strong>${categoryLabel(area)}</strong>
         </div>
 
         <div class="metaLine">
@@ -830,11 +911,12 @@ function renderTasks(){
 
       <div class="itemActions">
         <button class="secondary" onclick="toggleDone('${item.id}')">${item.status === "done" ? "Reopen" : "Done"}</button>
+        <button class="ghost" onclick="setTaskStatus('${item.id}','${item.status === "waiting" ? "open" : "waiting"}')">${item.status === "waiting" ? "Open" : "Waiting"}</button>
         <button class="ghost" onclick="editTask('${item.id}')">Edit</button>
         <button class="ghost" onclick="deleteTask('${item.id}')">Delete</button>
       </div>
     </article>
-  `).join("");
+  `;
 }
 
 function updateStats(){
@@ -842,6 +924,45 @@ function updateStats(){
   document.getElementById("openStat").textContent = tasks.filter(item => item.status !== "done").length;
   document.getElementById("overdueStat").textContent = tasks.filter(item => item.status !== "done" && isOverdue(item.dueDate)).length;
   document.getElementById("doneStat").textContent = tasks.filter(item => item.status === "done").length;
+}
+
+function groupByArea(items){
+  const groups = new Map();
+
+  items.forEach(item => {
+    const area = normaliseCategory(item.category);
+    if(!groups.has(area)) groups.set(area, []);
+    groups.get(area).push(item);
+  });
+
+  return [...groups.entries()]
+    .sort(([areaA],[areaB]) => areaOrder(areaA) - areaOrder(areaB))
+    .map(([area,groupItems]) => ({
+      area,
+      items:groupItems.sort(sortTasks)
+    }));
+}
+
+function areaOrder(area){
+  const order = [
+    "overall",
+    "c1",
+    "c2",
+    "accessories",
+    "shoot prep",
+    "client",
+    "finance",
+    "editing",
+    "delivery",
+    "gear",
+    "content",
+    "marketing",
+    "website",
+    "admin"
+  ];
+
+  const index = order.indexOf(normaliseCategory(area));
+  return index >= 0 ? index : 99;
 }
 
 function addPresetTask(title, category, priority, daysFromNow, notes){
@@ -934,6 +1055,20 @@ function toggleDone(id){
   renderTasks();
 }
 
+function setTaskStatus(id,status){
+  tasks = tasks.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      status,
+      updatedAt:new Date().toISOString()
+    };
+  });
+
+  saveTasks();
+  renderTasks();
+}
+
 function deleteTask(id){
   const task = tasks.find(item => item.id === id);
   if(!task) return;
@@ -941,6 +1076,25 @@ function deleteTask(id){
   if(!confirm(`Delete ${task.title}?`)) return;
 
   tasks = tasks.filter(item => item.id !== id);
+  saveTasks();
+  renderTasks();
+}
+
+function clearAllTasks(){
+  if(tasks.length === 0){
+    alert("There are no to-dos to clear.");
+    return;
+  }
+
+  if(!confirm(`Clear all ${tasks.length} business to-dos? This will remove every lane, including Overall, C1, C2 and Accessories.`)){
+    return;
+  }
+
+  if(!confirm("Are you sure? This cannot be undone.")){
+    return;
+  }
+
+  tasks = [];
   saveTasks();
   renderTasks();
 }
@@ -1001,6 +1155,22 @@ function splitImportLine(line){
 function normaliseCategory(value){
   const text = String(value || "").toLowerCase().trim();
   const aliases = {
+    "all":"overall",
+    "general":"overall",
+    "main":"overall",
+    "camera 1":"c1",
+    "cam 1":"c1",
+    "camera one":"c1",
+    "a cam":"c1",
+    "a camera":"c1",
+    "camera 2":"c2",
+    "cam 2":"c2",
+    "camera two":"c2",
+    "b cam":"c2",
+    "b camera":"c2",
+    "accessory":"accessories",
+    "accesseries":"accessories",
+    "access":"accessories",
     "shoot day":"shoot prep",
     "shoot prep":"shoot prep",
     "prep":"shoot prep",
@@ -1010,7 +1180,7 @@ function normaliseCategory(value){
     "money":"finance",
     "social":"content"
   };
-  const allowed = ["admin","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"];
+  const allowed = ["overall","c1","c2","accessories","admin","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"];
   const normalised = aliases[text] || text;
   return allowed.includes(normalised) ? normalised : "admin";
 }
@@ -1040,7 +1210,7 @@ function normaliseDate(value){
 function resetForm(){
   form.reset();
   document.getElementById("taskId").value = "";
-  document.getElementById("category").value = "admin";
+  document.getElementById("category").value = "overall";
   document.getElementById("priority").value = "high";
   document.getElementById("status").value = "open";
 }
@@ -1077,6 +1247,10 @@ function statusLabel(value){
 function categoryLabel(value){
   const key = normaliseCategory(value);
   const labels = {
+    overall:"Overall",
+    c1:"C1",
+    c2:"C2",
+    accessories:"Accessories",
     admin:"Admin",
     client:"Client",
     finance:"Finance",

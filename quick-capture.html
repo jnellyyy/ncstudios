@@ -319,7 +319,7 @@ function sendToTask(id){
   tasks.unshift({
     id:makeId(),
     title:item.title,
-    category:item.type === "gear" ? "gear" : "admin",
+    category:taskAreaFromCapture(item.type),
     priority:["payment","expense","lead"].includes(item.type) ? "high" : "medium",
     dueDate:"",
     status:"open",
@@ -329,6 +329,22 @@ function sendToTask(id){
 
   saveData("ncstudios_lists_v1", tasks);
   markProcessed(id);
+}
+
+function taskAreaFromCapture(type){
+  const areas = {
+    lead:"client",
+    "client-note":"client",
+    payment:"finance",
+    expense:"finance",
+    shot:"shoot prep",
+    timeline:"shoot prep",
+    gear:"gear",
+    task:"overall",
+    call:"overall"
+  };
+
+  return areas[type] || "overall";
 }
 
 function sendToFinance(id){
