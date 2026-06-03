@@ -126,6 +126,7 @@ const stores = {
   shots:readData("ncstudios_shots_v1"),
   timeline:readData("ncstudios_timeline_v1"),
   gear:readData("ncstudios_gear_v1"),
+  settings:readData("ncstudios_settings_v1"),
   callSheets:readData("ncstudios_callsheets_v1"),
   capture:readData("ncstudios_capture_v1")
 };
@@ -151,6 +152,7 @@ function buildProjects(){
   stores.shots.forEach(item => addName(names, item.project));
   stores.timeline.forEach(item => addName(names, item.project));
   stores.gear.forEach(item => addName(names, item.project));
+  stores.settings.forEach(item => addName(names, item.project));
   stores.callSheets.forEach(item => addName(names, item.project));
   stores.capture.forEach(item => addName(names, item.project));
 
@@ -176,6 +178,7 @@ function getProjectData(project){
   const shots = stores.shots.filter(item => match(item.project));
   const timeline = stores.timeline.filter(item => match(item.project));
   const gear = stores.gear.filter(item => match(item.project));
+  const settings = stores.settings.filter(item => match(item.project));
   const callSheets = stores.callSheets.filter(item => match(item.project));
   const capture = stores.capture.filter(item => match(item.project));
 
@@ -198,6 +201,7 @@ function getProjectData(project){
     shots,
     timeline,
     gear,
+    settings,
     callSheets,
     capture,
     income,
@@ -283,6 +287,7 @@ function renderDetail(data){
       <a href="call-sheet.html"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
       <a href="timeline.html"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
       <a href="gear.html"><span>Gear</span><strong>${gearLeft} left</strong></a>
+      <a href="shoot-settings.html"><span>Settings</span><strong>${data.settings.length} set</strong></a>
       <a href="delivery.html"><span>Delivery</span><strong>${delivery.stage || "Open"}</strong></a>
     </div>
 
@@ -312,6 +317,7 @@ function renderDetail(data){
         <div class="meta-list">
           <div class="meta-row"><span>Timeline active</span><b>${data.timeline.filter(item => item.status !== "done").length}</b></div>
           <div class="meta-row"><span>Gear left</span><b>${gearLeft}</b></div>
+          <div class="meta-row"><span>Settings</span><b>${data.settings.length}</b></div>
           <div class="meta-row"><span>Open captures</span><b>${openCaptures}</b></div>
           <div class="meta-row"><span>Delivery</span><b>${escapeHTML(delivery.stage || "Not started")}</b></div>
         </div>

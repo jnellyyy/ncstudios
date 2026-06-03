@@ -8,6 +8,7 @@
     "ncstudios_shots_v1",
     "ncstudios_timeline_v1",
     "ncstudios_gear_v1",
+    "ncstudios_settings_v1",
     "ncstudios_capture_v1",
     "ncstudios_callsheets_v1",
     "ncstudios_templates_v1",

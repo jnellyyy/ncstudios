@@ -338,7 +338,7 @@ body::before{
 
 .liveCTA{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:7px;
   position:relative;
   z-index:1;
@@ -601,7 +601,7 @@ body::before{
 
   .liveCTA{
     grid-column:1 / -1;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:5px;
   }
 
@@ -861,6 +861,11 @@ body::before{
         <span>Gear</span>
         <strong id="gearWidget">0 items</strong>
       </a>
+
+      <a class="liveAction" href="shoot-settings.html">
+        <span>Settings</span>
+        <strong id="settingsWidget">0 set</strong>
+      </a>
     </div>
   </section>
 
@@ -1031,6 +1036,7 @@ function countProjects(dataSets){
   (dataSets.shots || []).forEach(item => addProjectName(names, item.project));
   (dataSets.timeline || []).forEach(item => addProjectName(names, item.project));
   (dataSets.gear || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.settings || []).forEach(item => addProjectName(names, item.project));
   (dataSets.callSheets || []).forEach(item => addProjectName(names, item.project));
   (dataSets.capture || []).forEach(item => addProjectName(names, item.project));
 
@@ -1082,6 +1088,7 @@ function updateDashboardFromLocal(){
   const templates = readData("ncstudios_templates_v1");
   const timeline = readData("ncstudios_timeline_v1");
   const gear = readData("ncstudios_gear_v1");
+  const settings = readData("ncstudios_settings_v1");
   const capture = readData("ncstudios_capture_v1");
   const callSheets = readData("ncstudios_callsheets_v1");
   const adminClients = readData("ncStudiosAdminTrackerV1");
@@ -1105,9 +1112,10 @@ function updateDashboardFromLocal(){
   document.getElementById("adminWidget").textContent = adminClients.length;
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+  setText("settingsWidget", `${settings.length} set`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
-  setText("projectWidget", `${countProjects({bookings,clients,delivery,shots,timeline,gear,callSheets,capture})} live`);
+  setText("projectWidget", `${countProjects({bookings,clients,delivery,shots,timeline,gear,settings,callSheets,capture})} live`);
   updateShotPanel(shots);
 }
 
@@ -1132,6 +1140,7 @@ async function updateDashboardFromSupabase(){
         "ncstudios_templates_v1",
         "ncstudios_timeline_v1",
         "ncstudios_gear_v1",
+        "ncstudios_settings_v1",
         "ncstudios_capture_v1",
         "ncstudios_callsheets_v1"
       ]);
@@ -1151,6 +1160,7 @@ async function updateDashboardFromSupabase(){
       const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
       const timeline = map.ncstudios_timeline_v1 || readData("ncstudios_timeline_v1");
       const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
+      const settings = map.ncstudios_settings_v1 || readData("ncstudios_settings_v1");
       const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
       const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
 
@@ -1172,9 +1182,10 @@ async function updateDashboardFromSupabase(){
       document.getElementById("clientWidget").textContent = appStorageClients.length;
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+      setText("settingsWidget", `${settings.length} set`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);
-      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,delivery,shots,timeline,gear,callSheets,capture})} live`);
+      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,delivery,shots,timeline,gear,settings,callSheets,capture})} live`);
       updateShotPanel(shots);
     }
 
