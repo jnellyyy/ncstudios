@@ -101,6 +101,9 @@
         <div class="field">
           <label for="camera">Camera</label>
           <select id="camera">
+            <option value="C1 + C2">C1 + C2</option>
+            <option value="C1 + C2 + C3">C1 + C2 + C3</option>
+            <option value="All Cameras">All Cameras</option>
             <option value="C1">C1</option>
             <option value="C2">C2</option>
             <option value="C3">C3</option>
@@ -135,8 +138,8 @@
 
     <div class="import-box active">
       <h3>Paste settings</h3>
-      <p class="subtext">Use: setting | value | note. You can also use: camera | setting | value | note.</p>
-      <textarea id="bulkImport" placeholder="Frame rate | 25fps | Match across all cameras&#10;C2 | Angle | Locked wide safety | Ceremony camera"></textarea>
+      <p class="subtext">Use: camera | setting | value | note. Shared rows like C1 and C2 will appear when filtering either camera.</p>
+      <textarea id="bulkImport" placeholder="C1 and C2 | Shoot mode | Movie | Build all wedding settings in movie mode&#10;C1 and C2 | Exposure mode | Manual Exposure | Keeps footage consistent"></textarea>
       <button class="ghost-btn" type="button" style="margin-top:10px;width:100%;" onclick="importSettings()">Import pasted settings</button>
       <button class="ghost-btn" type="button" style="margin-top:10px;width:100%;" onclick="loadBaseSettings()">Load base camera settings</button>
     </div>
@@ -162,6 +165,9 @@
 
         <select id="filterCamera" onchange="renderSettings()">
           <option value="all">All cameras</option>
+          <option value="shared">Shared</option>
+          <option value="C1 + C2">C1 + C2</option>
+          <option value="C1 + C2 + C3">C1 + C2 + C3</option>
           <option value="C1">C1</option>
           <option value="C2">C2</option>
           <option value="C3">C3</option>
@@ -251,11 +257,11 @@ function renderSettings(){
   const visible = settings
     .filter(item => {
       const projectMatch = projectFilter === "all" || item.project === projectFilter;
-      const cameraMatch = cameraFilter === "all" || item.camera === cameraFilter;
+      const cameraMatch = cameraFilter === "all" || cameraMatches(item.camera, cameraFilter);
       const searchMatch = !search || `${item.project} ${item.camera} ${item.setting} ${item.value} ${item.note}`.toLowerCase().includes(search);
       return projectMatch && cameraMatch && searchMatch;
     })
-    .sort((a,b) => `${a.project} ${cameraOrder(a.camera)} ${a.setting}`.localeCompare(`${b.project} ${cameraOrder(b.camera)} ${b.setting}`));
+    .sort((a,b) => `${a.project} ${cameraOrder(cameraLabel(a.camera))} ${a.setting}`.localeCompare(`${b.project} ${cameraOrder(cameraLabel(b.camera))} ${b.setting}`));
 
   updateStats();
 
@@ -276,17 +282,25 @@ function renderSettings(){
 
       <div class="list-stack">
         ${group.items.map(item => `
-          <div class="small-row">
-            <div>
-              <b>${escapeHTML(item.setting)}</b><br>
-              <span>${escapeHTML(item.project)}${item.note ? ` | ${escapeHTML(item.note)}` : ""}</span>
+          <article class="settingItem">
+            <div class="settingItemTop">
+              <div>
+                <div class="ops-title">${escapeHTML(item.setting)}</div>
+                <div class="ops-sub">${escapeHTML(item.project)}</div>
+                <div class="settingMeta">
+                  <span class="badge blue">${escapeHTML(cameraLabel(item.camera))}</span>
+                </div>
+              </div>
+              <strong class="settingValue">${escapeHTML(item.value)}</strong>
             </div>
-            <span>${escapeHTML(item.value)}</span>
-          </div>
-          <div class="ops-actions" style="margin-top:0;">
-            <button type="button" class="ghost-btn" onclick="editSetting('${item.id}')">Edit</button>
-            <button type="button" class="danger-btn" onclick="deleteSetting('${item.id}')">Delete</button>
-          </div>
+
+            ${item.note ? `<p class="settingNote">${escapeHTML(item.note)}</p>` : ""}
+
+            <div class="ops-actions">
+              <button type="button" class="ghost-btn" onclick="editSetting('${item.id}')">Edit</button>
+              <button type="button" class="danger-btn" onclick="deleteSetting('${item.id}')">Delete</button>
+            </div>
+          </article>
         `).join("")}
       </div>
     </section>
@@ -296,7 +310,7 @@ function renderSettings(){
 function groupByCamera(items){
   const groups = new Map();
   items.forEach(item => {
-    const camera = item.camera || "Overall";
+    const camera = cameraLabel(item.camera || "Overall");
     if(!groups.has(camera)) groups.set(camera, []);
     groups.get(camera).push(item);
   });
@@ -307,8 +321,9 @@ function groupByCamera(items){
 }
 
 function cameraOrder(camera){
-  const order = ["Overall","C1","C2","C3","Audio","Drone","Lighting"];
-  const index = order.indexOf(camera);
+  const label = cameraLabel(camera);
+  const order = ["Overall","All Cameras","C1 + C2 + C3","C1 + C2","C1","C2","C3","Audio","Drone","Lighting"];
+  const index = order.indexOf(label);
   return index >= 0 ? index : 99;
 }
 
@@ -327,9 +342,9 @@ function updateProjectFilter(){
 
 function updateStats(){
   document.getElementById("statTotal").textContent = settings.length;
-  document.getElementById("statC1").textContent = settings.filter(item => item.camera === "C1").length;
-  document.getElementById("statC2").textContent = settings.filter(item => item.camera === "C2").length;
-  document.getElementById("statC3").textContent = settings.filter(item => item.camera === "C3").length;
+  document.getElementById("statC1").textContent = settings.filter(item => cameraMatches(item.camera, "C1")).length;
+  document.getElementById("statC2").textContent = settings.filter(item => cameraMatches(item.camera, "C2")).length;
+  document.getElementById("statC3").textContent = settings.filter(item => cameraMatches(item.camera, "C3")).length;
 }
 
 function showProject(project){
@@ -388,7 +403,7 @@ function importSettings(){
 
   const imported = parseSettingRows(raw, project, camera);
   if(!imported.length){
-    alert("No valid settings found. Use: setting | value | note");
+    alert("No valid settings found. Use: camera | setting | value | note");
     return;
   }
 
@@ -406,6 +421,8 @@ function parseSettingRows(text, project, fallbackCamera){
     .filter(line => line.includes("|"))
     .map(line => line.split("|").map(part => part.trim()))
     .map(parts => {
+      if(isHeaderRow(parts)) return null;
+
       const firstCamera = normaliseCamera(parts[0]);
       const hasCamera = Boolean(firstCamera);
       const camera = hasCamera ? firstCamera : fallbackCamera;
@@ -428,6 +445,11 @@ function parseSettingRows(text, project, fallbackCamera){
     .filter(Boolean);
 }
 
+function isHeaderRow(parts){
+  return String(parts[0] || "").toLowerCase().trim() === "camera" &&
+    String(parts[1] || "").toLowerCase().trim() === "setting";
+}
+
 function loadBaseSettings(){
   const selectedProject = document.getElementById("filterProject").value;
   const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
@@ -438,20 +460,27 @@ function loadBaseSettings(){
   }
 
   const rows = [
-    "Overall | Resolution | 4K | Match all cameras where possible",
-    "Overall | Frame rate | 25fps | Main real-time filming",
-    "Overall | Shutter | 1/50 | For 25fps",
-    "Overall | White balance | Manual | Match C1, C2 and C3 before ceremony",
-    "C1 | Role | Main handheld camera | Reactions, movement, portraits and emotion",
-    "C1 | Picture profile | Match project look | Keep consistent with C2 and C3",
-    "C1 | Audio | Scratch audio on | Useful for syncing",
-    "C2 | Role | Locked safety camera | Ceremony and speeches protection",
-    "C2 | Power | Continuous power or full battery | Do not risk cut-off",
-    "C2 | Framing | Wide enough for full action | Especially vows, rings and kiss",
+    "C1 and C2 | Shoot mode | Movie | Build all wedding settings in movie mode",
+    "C1 and C2 | Exposure mode | Manual Exposure | Keeps footage consistent",
+    "C1 and C2 | File format | XAVC S 4K | Safe and reliable wedding workflow",
+    "C1 and C2 | Proxy recording | Off | Keeps card workflow cleaner",
+    "C1 and C2 | Audio recording | On | Keep scratch audio on both cameras",
+    "C1 and C2 | Subject detection | Human | Best for weddings",
+    "C1 and C2 | Face Eye priority | On | Helps hold bride and groom focus",
+    "C1 and C2 | White balance | Manual Kelvin | Do not use auto white balance",
+    "C1 and C2 | Picture profile | Match on both cameras | Keeps colour consistent",
+    "C1 and C2 | File number | Continue | Cleaner file organisation",
+    "C1 and C2 | Auto power off temp | High | Safer for long recording",
+    "C1 and C2 | Date and time | Matched | Helps syncing later",
+    "C1 and C2 | Zebra | On if you use it | Helpful for quick exposure checks",
+    "C1 and C2 | Wind noise reduction | Off | Not needed for this setup",
+    "C1 and C2 | Audio level display | On | Helpful when checking levels",
+    "C1 and C2 | Subject recognition | Human | Keep face tracking stable",
+    "C1 and C2 | Focus mode | AF C | Best for wedding movement",
+    "C1 and C2 | Face memory | Off | Not needed for this job",
+    "C1 and C2 | Touch tracking | On | Useful if you need quick subject lock",
     "C3 | Role | Extra angle | Use when available for reactions or room safety",
-    "C3 | Frame rate | Match main cameras | Avoid mismatched timelines",
-    "Audio | Groom mic | On before ceremony | Check levels before procession",
-    "Audio | Speaker feed | Test before speeches | Backup if possible"
+    "C3 | Frame rate | Match C1 and C2 | Avoid mismatched timelines"
   ];
 
   settings = [...parseSettingRows(rows.join("\n"), project, "Overall"), ...settings];
@@ -462,6 +491,29 @@ function loadBaseSettings(){
 
 function normaliseCamera(value){
   const text = String(value || "").toLowerCase().trim();
+  const compact = text.replace(/\s+/g,"");
+
+  if(compact === "allcameras") return "All Cameras";
+
+  if([
+    "c1andc2",
+    "c1+c2",
+    "c1,c2",
+    "c1/c2",
+    "c1&c2",
+    "c1c2",
+    "both"
+  ].includes(compact)) return "C1 + C2";
+
+  if([
+    "c1andc2andc3",
+    "c1+c2+c3",
+    "c1,c2,c3",
+    "c1/c2/c3",
+    "c1&c2&c3",
+    "c1c2c3"
+  ].includes(compact)) return "C1 + C2 + C3";
+
   const cameras = {
     c1:"C1",
     "camera 1":"C1",
@@ -482,10 +534,34 @@ function normaliseCamera(value){
     lighting:"Lighting",
     light:"Lighting",
     overall:"Overall",
-    all:"Overall"
+    all:"All Cameras"
   };
 
   return cameras[text] || "";
+}
+
+function cameraLabel(value){
+  return normaliseCamera(value) || value || "Overall";
+}
+
+function cameraTargets(value){
+  const camera = cameraLabel(value);
+
+  if(camera === "C1 + C2") return ["C1","C2"];
+  if(camera === "C1 + C2 + C3" || camera === "All Cameras" || camera === "Overall") return ["C1","C2","C3"];
+  if(["C1","C2","C3"].includes(camera)) return [camera];
+
+  return [camera];
+}
+
+function cameraMatches(value, filter){
+  const camera = cameraLabel(value);
+
+  if(filter === "all") return true;
+  if(filter === "shared") return cameraTargets(camera).filter(item => ["C1","C2","C3"].includes(item)).length > 1 || camera === "Overall" || camera === "All Cameras";
+  if(["C1","C2","C3"].includes(filter)) return cameraTargets(camera).includes(filter);
+
+  return camera === filter;
 }
 
 function exportSettings(){
