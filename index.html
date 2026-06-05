@@ -152,7 +152,7 @@ p{
 }
 
 .hero{
-  min-height:100svh;
+  min-height:88svh;
   display:grid;
   align-items:end;
   padding:118px clamp(18px,5vw,72px) 42px;
@@ -199,16 +199,16 @@ p{
 .hero h1{
   max-width:860px;
   margin-top:14px;
-  font-size:clamp(58px,11vw,138px);
+  font-size:clamp(52px,9.5vw,112px);
   line-height:0.84;
   letter-spacing:0;
 }
 
 .heroLead{
-  max-width:680px;
+  max-width:640px;
   margin-top:22px;
   color:var(--paper);
-  font-size:clamp(18px,2.3vw,25px);
+  font-size:clamp(18px,2.1vw,23px);
   line-height:1.38;
 }
 
@@ -240,7 +240,7 @@ p{
 }
 
 .scrollCue{
-  margin-top:52px;
+  margin-top:36px;
   color:var(--soft);
   font-size:12px;
   font-weight:900;
@@ -286,21 +286,38 @@ p{
 }
 
 .portraitPanel{
+  position:relative;
   min-height:520px;
   border:1px solid var(--line);
   border-radius:8px;
-  background:
-    linear-gradient(180deg,rgba(7,8,11,0.08),rgba(7,8,11,0.92)),
-    url("ncstudios-logo-1024.png");
-  background-size:cover;
-  background-position:center;
+  background:#11131a;
   box-shadow:var(--shadow);
   display:flex;
   align-items:end;
   padding:20px;
+  overflow:hidden;
+}
+
+.portraitPanel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(7,8,11,0),rgba(7,8,11,0.22) 48%,rgba(7,8,11,0.90));
+  pointer-events:none;
+}
+
+.portraitImage{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 34%;
 }
 
 .portraitCaption{
+  position:relative;
+  z-index:1;
   width:100%;
   display:flex;
   align-items:center;
@@ -328,13 +345,18 @@ p{
   gap:20px;
 }
 
-.aboutCopy p{
+.aboutCopy > p{
   color:var(--paper);
   font-size:clamp(21px,3.2vw,38px);
   line-height:1.12;
 }
 
 .aboutCopy .smallCopy{
+  display:grid;
+  gap:12px;
+}
+
+.aboutCopy .smallCopy p{
   color:var(--muted);
   font-size:16px;
   line-height:1.72;
@@ -709,7 +731,7 @@ textarea:focus{
   }
 
   .hero{
-    min-height:94svh;
+    min-height:88svh;
     padding:104px 16px 34px;
   }
 
@@ -769,9 +791,9 @@ textarea:focus{
 <main id="home">
   <section class="hero" aria-labelledby="hero-title">
     <div class="heroInner">
-      <p class="eyebrow">Professional videography for weddings, events and content</p>
+      <p class="eyebrow">Photography and videography for weddings, events and content</p>
       <h1 id="hero-title">Turning your day into a film you can feel.</h1>
-      <p class="heroLead">NC Studios captures real moments with a cinematic finish, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
+      <p class="heroLead">NC Studios captures real moments in stills and motion, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
 
       <div class="heroActions">
         <a class="button" href="#films">View the feel</a>
@@ -784,20 +806,22 @@ textarea:focus{
 
   <section class="section" id="about">
     <div class="sectionInner aboutLayout">
-      <div class="portraitPanel" aria-label="NC Studios visual identity">
+      <div class="portraitPanel" aria-label="Portrait of the NC Studios creative">
+        <img class="portraitImage" src="assets/nc-about-portrait.png" alt="Portrait of the NC Studios creative">
         <div class="portraitCaption">
           <div>
-            <strong>NC Studios</strong>
-            <span>Wedding filmmaker and content creator</span>
+            <strong>The eye behind NC Studios</strong>
+            <span>Videography, photography and content</span>
           </div>
           <span>UK</span>
         </div>
       </div>
 
       <div class="aboutCopy">
-        <p>Not just coverage. A way to hear the voices, feel the room and remember how the whole day moved.</p>
+        <p>Not just coverage. I capture the way a moment looks, sounds and feels, so you can come back to it properly.</p>
         <div class="smallCopy">
-          <p>NC Studios is built around a relaxed, story-first approach. The aim is to capture what naturally happens, then shape it into a film that feels polished without feeling staged.</p>
+          <p>NC Studios is run by a photographer and videographer with a relaxed, story-first approach. I shoot engagements, weddings, events and content sessions with an eye for emotion, detail and atmosphere.</p>
+          <p>The wedding film portfolio is being built as new work is edited, so the site leads with the feeling, the process and the visual style. Engagement images, couple sessions and event coverage can still show the direction clearly while the next wedding film is being finished.</p>
           <p>From first enquiry to final delivery, everything feeds into the studio workflow so dates, plans, shot notes and next steps stay organised behind the scenes.</p>
         </div>
       </div>
