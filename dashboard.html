@@ -862,6 +862,11 @@ body::before{
         <strong id="gearWidget">0 items</strong>
       </a>
 
+      <a class="liveAction" href="buy-list.html">
+        <span>Buy</span>
+        <strong id="buyWidget">0 needed</strong>
+      </a>
+
       <a class="liveAction" href="shoot-settings.html">
         <span>Settings</span>
         <strong id="settingsWidget">0 set</strong>
@@ -1101,6 +1106,7 @@ function updateDashboardFromLocal(){
   const templates = readData("ncstudios_templates_v1");
   const timeline = readData("ncstudios_timeline_v1");
   const gear = readData("ncstudios_gear_v1");
+  const buyList = readData("ncstudios_buylist_v1");
   const settings = readData("ncstudios_settings_v1");
   const capture = readData("ncstudios_capture_v1");
   const callSheets = readData("ncstudios_callsheets_v1");
@@ -1125,6 +1131,7 @@ function updateDashboardFromLocal(){
   document.getElementById("adminWidget").textContent = adminClients.length;
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+  setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);
   setText("settingsWidget", `${settings.length} set`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
@@ -1153,6 +1160,7 @@ async function updateDashboardFromSupabase(){
         "ncstudios_templates_v1",
         "ncstudios_timeline_v1",
         "ncstudios_gear_v1",
+        "ncstudios_buylist_v1",
         "ncstudios_settings_v1",
         "ncstudios_capture_v1",
         "ncstudios_callsheets_v1"
@@ -1173,6 +1181,7 @@ async function updateDashboardFromSupabase(){
       const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
       const timeline = map.ncstudios_timeline_v1 || readData("ncstudios_timeline_v1");
       const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
+      const buyList = map.ncstudios_buylist_v1 || readData("ncstudios_buylist_v1");
       const settings = map.ncstudios_settings_v1 || readData("ncstudios_settings_v1");
       const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
       const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
@@ -1195,6 +1204,7 @@ async function updateDashboardFromSupabase(){
       document.getElementById("clientWidget").textContent = appStorageClients.length;
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+      setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);
       setText("settingsWidget", `${settings.length} set`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);

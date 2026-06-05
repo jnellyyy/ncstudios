@@ -28,6 +28,7 @@
   <nav class="nav-pill">
     <a class="pill" href="dashboard.html">Dashboard</a>
     <a class="pill" href="projects.html">Projects</a>
+    <a class="pill" href="buy-list.html">Buy List</a>
     <a class="pill" href="call-sheet.html">Call Sheet</a>
   </nav>
 </header>
@@ -40,6 +41,7 @@
   <a href="shot-lists.html">Shots</a>
   <a href="timeline.html">Timeline</a>
   <a href="gear.html">Gear</a>
+  <a href="buy-list.html">Buy</a>
   <a href="finance.html">Finance</a>
 </nav>
 
@@ -103,6 +105,7 @@
             <option value="shot">Shot idea</option>
             <option value="timeline">Timeline change</option>
             <option value="gear">Gear reminder</option>
+            <option value="buy">Buy list item</option>
             <option value="task">Task</option>
             <option value="call">Call sheet note</option>
             <option value="other">Other</option>
@@ -166,6 +169,7 @@
           <option value="shot">Shot</option>
           <option value="timeline">Timeline</option>
           <option value="gear">Gear</option>
+          <option value="buy">Buy list</option>
           <option value="task">Task</option>
           <option value="call">Call sheet</option>
           <option value="other">Other</option>
@@ -286,6 +290,7 @@ function renderCapture(){
         <button type="button" class="ghost-btn" onclick="sendToShot('${item.id}')">Shot</button>
         <button type="button" class="ghost-btn" onclick="sendToTimeline('${item.id}')">Timeline</button>
         <button type="button" class="ghost-btn" onclick="sendToGear('${item.id}')">Gear</button>
+        <button type="button" class="ghost-btn" onclick="sendToBuy('${item.id}')">Buy</button>
         <button type="button" class="btn" onclick="markProcessed('${item.id}')">Done</button>
         <button type="button" class="danger-btn" onclick="deleteCapture('${item.id}')">Delete</button>
       </div>
@@ -340,6 +345,7 @@ function taskAreaFromCapture(type){
     shot:"shoot prep",
     timeline:"shoot prep",
     gear:"gear",
+    buy:"gear",
     task:"overall",
     call:"overall"
   };
@@ -443,6 +449,29 @@ function sendToGear(id){
   markProcessed(id);
 }
 
+function sendToBuy(id){
+  const item = captureById(id);
+  if(!item) return;
+
+  const buyList = readData("ncstudios_buylist_v1");
+  buyList.unshift({
+    id:makeId(),
+    itemName:item.title,
+    category:item.type === "expense" ? "Camera + filming" : "Other",
+    priority:["expense","gear","buy"].includes(item.type) ? "soon" : "optional",
+    status:"needed",
+    quantity:1,
+    price:item.amount || 0,
+    targetDate:"",
+    source:"Quick Capture",
+    note:buildNote(item),
+    updatedAt:new Date().toISOString()
+  });
+
+  saveData("ncstudios_buylist_v1", buyList);
+  markProcessed(id);
+}
+
 function deleteCapture(id){
   const item = captureById(id);
   if(!item) return;
@@ -497,6 +526,7 @@ function typeLabel(value){
     shot:"Shot idea",
     timeline:"Timeline change",
     gear:"Gear reminder",
+    buy:"Buy list item",
     task:"Task",
     call:"Call sheet note",
     other:"Other"

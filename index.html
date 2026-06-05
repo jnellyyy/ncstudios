@@ -627,7 +627,6 @@ textarea:focus{
     <a href="#services">Services</a>
     <a href="#process">Process</a>
     <a class="bookLink" href="#enquire">Enquire</a>
-    <a href="dashboard.html">Studio login</a>
   </nav>
 </header>
 
@@ -825,15 +824,15 @@ textarea:focus{
 
 <footer class="footer">
   <span>NC Studios</span>
-  <a href="dashboard.html">Open studio dashboard</a>
+  <span>Wedding films and content</span>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-js.js?v=2.107.0"></script>
 <script src="supabase-config.js?v=public-site-1"></script>
 <script>
 (function(){
-  const BOOKINGS_KEY = "ncstudios_bookings_v1";
   const STORAGE_TABLE = "app_storage";
+  const ENQUIRY_PREFIX = "website_enquiry_";
 
   const form = document.getElementById("enquiryForm");
   const statusEl = document.querySelector("[data-form-status]");
@@ -916,7 +915,7 @@ textarea:focus{
     };
   }
 
-  async function readRemoteBookings(){
+  async function saveBooking(booking){
     const ready = await waitForSupabase();
 
     if(!ready){
@@ -925,32 +924,10 @@ textarea:focus{
 
     const response = await window.ncSupabase
       .from(STORAGE_TABLE)
-      .select("data")
-      .eq("app_key", BOOKINGS_KEY)
-      .maybeSingle();
-
-    if(response.error){
-      throw response.error;
-    }
-
-    return Array.isArray(response.data && response.data.data) ? response.data.data : [];
-  }
-
-  async function saveBooking(booking){
-    const existing = await readRemoteBookings();
-    const merged = [
-      booking,
-      ...existing.filter(function(item){
-        return item && item.id !== booking.id;
-      })
-    ];
-
-    const response = await window.ncSupabase
-      .from(STORAGE_TABLE)
       .upsert(
         {
-          app_key:BOOKINGS_KEY,
-          data:merged,
+          app_key:ENQUIRY_PREFIX + booking.id,
+          data:booking,
           updated_at:new Date().toISOString()
         },
         {
@@ -963,7 +940,8 @@ textarea:focus{
     }
 
     try{
-      localStorage.setItem(BOOKINGS_KEY,JSON.stringify(merged));
+      const saved = JSON.parse(localStorage.getItem("ncstudios_public_enquiries_v1")) || [];
+      localStorage.setItem("ncstudios_public_enquiries_v1",JSON.stringify([booking,...saved].slice(0,20)));
     }catch(error){
       console.warn("Could not mirror enquiry locally",error);
     }

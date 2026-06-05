@@ -844,8 +844,104 @@ input:focus,select:focus,textarea:focus{
   margin-top:9px;
 }
 
+.buy-layout{
+  grid-template-columns:minmax(330px,0.72fr) minmax(0,1.28fr);
+}
+
+.buy-controls{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.buy-list{
+  display:grid;
+  gap:14px;
+}
+
+.buy-group{
+  display:grid;
+  gap:10px;
+}
+
+.buy-group-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  color:var(--muted);
+}
+
+.buy-group-head span{
+  font-size:12px;
+  font-weight:800;
+}
+
+.buy-card{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.065);
+  border-radius:24px;
+  padding:16px;
+}
+
+.buy-card.urgent,
+.buy-card.needed{
+  border-color:rgba(255,91,109,0.30);
+  background:rgba(255,91,109,0.10);
+}
+
+.buy-card.ordered,
+.buy-card.research{
+  border-color:rgba(216,180,106,0.28);
+  background:rgba(216,180,106,0.09);
+}
+
+.buy-card.bought{
+  border-color:rgba(49,208,127,0.28);
+  background:rgba(49,208,127,0.09);
+}
+
+.buy-card.renting{
+  border-color:rgba(122,167,255,0.30);
+  background:rgba(122,167,255,0.10);
+}
+
+.buy-card.skip{
+  opacity:0.68;
+}
+
+.buy-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+}
+
+.buy-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:9px;
+}
+
+.buy-tags span{
+  border:1px solid var(--line);
+  background:rgba(0,0,0,0.20);
+  border-radius:999px;
+  color:var(--soft);
+  font-size:11px;
+  font-weight:850;
+  padding:6px 8px;
+}
+
+.buy-amount{
+  min-width:max-content;
+  font-size:18px;
+  letter-spacing:-0.04em;
+}
+
 @media(max-width:980px){
-  .hero,.dashboard-grid,.ops-layout{
+  .hero,.dashboard-grid,.ops-layout,.buy-layout{
     grid-template-columns:1fr;
   }
   .stat-grid,.link-grid,.records-grid,.ops-stats,.project-grid,.call-grid{
@@ -886,6 +982,15 @@ input:focus,select:focus,textarea:focus{
   }
   .stat-grid,.link-grid,.records-grid,.form-grid,.entry-grid,.ops-stats,.project-grid,.project-summary,.call-grid,.split-actions{
     grid-template-columns:1fr;
+  }
+  .buy-controls{
+    grid-template-columns:1fr;
+  }
+  .buy-top{
+    flex-direction:column;
+  }
+  .buy-amount{
+    min-width:0;
   }
   .ops-nav{
     grid-template-columns:repeat(2,1fr);

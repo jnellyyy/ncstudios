@@ -8,6 +8,7 @@
     "ncstudios_shots_v1",
     "ncstudios_timeline_v1",
     "ncstudios_gear_v1",
+    "ncstudios_buylist_v1",
     "ncstudios_settings_v1",
     "ncstudios_capture_v1",
     "ncstudios_callsheets_v1",
@@ -16,6 +17,8 @@
   ];
 
   const STORAGE_TABLE = "app_storage";
+  const BOOKINGS_KEY = "ncstudios_bookings_v1";
+  const PUBLIC_ENQUIRY_PREFIX = "website_enquiry_";
   const RELOAD_FLAG_PREFIX = "nc_sync_reloaded_";
   const SAVE_DELAY = 250;
 
@@ -155,6 +158,76 @@
     return false;
   }
 
+  function normalisePublicEnquiry(row){
+    const data = row && row.data;
+
+    if(!data || typeof data !== "object" || !data.id || !data.clientName){
+      return null;
+    }
+
+    return {
+      ...data,
+      status:data.status || "enquiry",
+      nextAction:data.nextAction || "Reply to website enquiry",
+      source:data.source || "website",
+      updatedAt:data.updatedAt || new Date().toISOString()
+    };
+  }
+
+  async function importPublicEnquiries(){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      console.warn("NC Sync: Supabase not ready while loading website enquiries");
+      return false;
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .select("app_key, data")
+      .like("app_key", PUBLIC_ENQUIRY_PREFIX + "%");
+
+    if(response.error){
+      console.warn("NC Sync: website enquiry load failed", response.error);
+      return false;
+    }
+
+    const rows = Array.isArray(response.data) ? response.data : [];
+    const incoming = rows
+      .map(normalisePublicEnquiry)
+      .filter(Boolean);
+
+    if(!incoming.length){
+      return false;
+    }
+
+    const bookings = readLocal(BOOKINGS_KEY);
+    const existingIds = new Set(bookings.map(item => item && item.id).filter(Boolean));
+    const newBookings = incoming.filter(item => !existingIds.has(item.id));
+
+    if(newBookings.length){
+      writeLocal(BOOKINGS_KEY, [...newBookings, ...bookings]);
+      await saveKeyToSupabase(BOOKINGS_KEY);
+    }
+
+    const importedKeys = rows
+      .map(row => row && row.app_key)
+      .filter(Boolean);
+
+    if(importedKeys.length){
+      const cleanup = await window.ncSupabase
+        .from(STORAGE_TABLE)
+        .delete()
+        .in("app_key", importedKeys);
+
+      if(cleanup.error){
+        console.warn("NC Sync: website enquiry cleanup failed", cleanup.error);
+      }
+    }
+
+    return newBookings.length > 0;
+  }
+
   function patchStorage(){
     if(window.__ncStoragePatched) return;
     window.__ncStoragePatched = true;
@@ -186,6 +259,11 @@
       }
     }
 
+    const importedPublicEnquiries = await importPublicEnquiries();
+    if(importedPublicEnquiries){
+      changed = true;
+    }
+
     initialPullFinished = true;
     pendingSaves.clear();
 
@@ -211,6 +289,7 @@
     writeLocal:writeLocal,
     saveKeyToSupabase:saveKeyToSupabase,
     loadKeyFromSupabase:loadKeyFromSupabase,
+    importPublicEnquiries:importPublicEnquiries,
     pullAllFromSupabase:pullAllFromSupabase,
     pushAllLocalToSupabase:pushAllLocalToSupabase,
     flushPendingSaves:flushPendingSaves

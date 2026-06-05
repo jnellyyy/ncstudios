@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios Buy List</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#050507">
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <div class="logo-mark">NC</div>
+    <div class="brand-text">
+      <p class="kicker">Kit planning</p>
+      <h2>Buy List</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="gear.html">Gear</a>
+    <a class="pill" href="finance.html">Finance</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a href="projects.html">Projects</a>
+  <a href="gear.html">Gear</a>
+  <a class="active" href="buy-list.html">Buy List</a>
+  <a href="finance.html">Finance</a>
+  <a href="lists.html">To Do</a>
+  <a href="templates.html">Templates</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">What to buy, rent, or wait on</p>
+      <h1>Studio Buy List</h1>
+      <p class="subtext">Track kit, storage, delivery pieces, admin setup and future upgrades in one place, with the current rented body and lenses kept visible.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn" type="button" onclick="focusItem()">Add item</button>
+      <button class="ghost-btn" type="button" onclick="loadBaseList()">Load missing base items</button>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Need now</span>
+    <strong id="statNeed">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Renting</span>
+    <strong id="statRenting">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Planned cost</span>
+    <strong id="statCost">£0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Bought</span>
+    <strong id="statBought">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout buy-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Add or edit</h2>
+        <p>Use price as a rough estimate until you have the exact link or receipt.</p>
+      </div>
+    </div>
+
+    <form id="buyForm">
+      <input type="hidden" id="itemId">
+
+      <div class="form-grid">
+        <div class="field wide">
+          <label for="itemName">Item</label>
+          <input id="itemName" type="text" placeholder="Extra Sony A7 IV batteries" required>
+        </div>
+
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category"></select>
+        </div>
+
+        <div class="field">
+          <label for="priority">Priority</label>
+          <select id="priority">
+            <option value="urgent">Need now</option>
+            <option value="soon">Soon</option>
+            <option value="client">When client pays</option>
+            <option value="future">Future weddings</option>
+            <option value="optional">Optional</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="needed">Need to buy</option>
+            <option value="research">Researching</option>
+            <option value="ordered">Ordered</option>
+            <option value="bought">Bought</option>
+            <option value="renting">Renting</option>
+            <option value="skip">Skip for now</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="quantity">Qty</label>
+          <input id="quantity" type="number" min="1" step="1" value="1">
+        </div>
+
+        <div class="field">
+          <label for="price">Estimate</label>
+          <input id="price" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+
+        <div class="field">
+          <label for="targetDate">Target date</label>
+          <input id="targetDate" type="date">
+        </div>
+
+        <div class="field wide">
+          <label for="source">Best option / supplier</label>
+          <input id="source" type="text" placeholder="Satechi, Crucial, WD, SmallRig, Namecheap">
+        </div>
+
+        <div class="field wide">
+          <label for="note">Note</label>
+          <textarea id="note" placeholder="Why you need it, when to buy it, or what to check first."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save item</button>
+        <button class="ghost-btn" type="button" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+
+    <div class="import-box active">
+      <h3>Paste buy list</h3>
+      <p class="subtext">One item per line, or use: item | category | priority | status | estimate | supplier | note</p>
+      <textarea id="pasteBox" placeholder="HDMI cable for monitor | Camera + filming | urgent | needed | 15 | Amazon | Check Sony A7 IV size"></textarea>
+      <button class="ghost-btn" type="button" onclick="importItems()" style="margin-top:10px;width:100%;">Import pasted items</button>
+    </div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Buying plan</h2>
+        <p>Use the quick buttons while you are deciding what to buy, rent, or leave for later.</p>
+      </div>
+      <button class="ghost-btn" type="button" onclick="exportBuyList()">Export</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search kit, storage, admin, supplier" oninput="renderBuyList()">
+      </div>
+
+      <div class="buy-controls">
+        <select id="filterCategory" onchange="renderBuyList()"></select>
+        <select id="filterStatus" onchange="renderBuyList()">
+          <option value="active">Active</option>
+          <option value="all">All statuses</option>
+          <option value="needed">Need to buy</option>
+          <option value="research">Researching</option>
+          <option value="ordered">Ordered</option>
+          <option value="bought">Bought</option>
+          <option value="renting">Renting</option>
+          <option value="skip">Skip for now</option>
+        </select>
+        <select id="filterPriority" onchange="renderBuyList()">
+          <option value="all">All priorities</option>
+          <option value="urgent">Need now</option>
+          <option value="soon">Soon</option>
+          <option value="client">Client pays</option>
+          <option value="future">Future</option>
+          <option value="optional">Optional</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="buyList" class="buy-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios buying and rental plan</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_buylist_v1";
+const SEED_KEY = "ncstudios_buylist_seeded_v1";
+const CATEGORIES = [
+  "Storage + backup",
+  "Camera + filming",
+  "Audio",
+  "Editing setup",
+  "Delivery items",
+  "Branding + admin",
+  "Website + online presence",
+  "Nice to buy soon",
+  "Future weddings",
+  "Rentals now",
+  "Other"
+];
+
+const STATUS_LABELS = {
+  needed:"Need to buy",
+  research:"Researching",
+  ordered:"Ordered",
+  bought:"Bought",
+  renting:"Renting",
+  skip:"Skip for now"
+};
+
+const PRIORITY_LABELS = {
+  urgent:"Need now",
+  soon:"Soon",
+  client:"Client pays",
+  future:"Future weddings",
+  optional:"Optional"
+};
+
+let items = readData(STORAGE_KEY);
+const form = document.getElementById("buyForm");
+
+populateCategoryControls();
+
+if(items.length === 0 && !localStorage.getItem(SEED_KEY)){
+  items = defaultItems();
+  saveItems();
+  localStorage.setItem(SEED_KEY, "yes");
+}
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("itemId").value || makeId();
+  const item = {
+    id,
+    itemName:document.getElementById("itemName").value.trim(),
+    category:document.getElementById("category").value,
+    priority:document.getElementById("priority").value,
+    status:document.getElementById("status").value,
+    quantity:Number(document.getElementById("quantity").value || 1),
+    price:Number(document.getElementById("price").value || 0),
+    targetDate:document.getElementById("targetDate").value,
+    source:document.getElementById("source").value.trim(),
+    note:document.getElementById("note").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!item.itemName){
+    alert("Add the item first.");
+    return;
+  }
+
+  const index = items.findIndex(saved => saved.id === id);
+  if(index >= 0){
+    items[index] = item;
+  } else {
+    const existingIndex = items.findIndex(saved => itemKey(saved) === itemKey(item));
+    if(existingIndex >= 0){
+      items[existingIndex] = {...items[existingIndex], ...item, id:items[existingIndex].id};
+    } else {
+      items.unshift(item);
+    }
+  }
+
+  saveItems();
+  resetForm();
+  renderBuyList();
+});
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveItems(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function makeId(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "buy_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function populateCategoryControls(){
+  const categoryOptions = CATEGORIES.map(category => `<option value="${escapeAttribute(category)}">${escapeHTML(category)}</option>`).join("");
+  document.getElementById("category").innerHTML = categoryOptions;
+  document.getElementById("filterCategory").innerHTML = `<option value="all">All categories</option>${categoryOptions}`;
+}
+
+function renderBuyList(){
+  const list = document.getElementById("buyList");
+  const search = document.getElementById("search").value.trim().toLowerCase();
+  const category = document.getElementById("filterCategory").value;
+  const status = document.getElementById("filterStatus").value;
+  const priority = document.getElementById("filterPriority").value;
+
+  const visible = items
+    .filter(item => {
+      const activeMatch = status === "active" ? !["bought","skip"].includes(item.status) : true;
+      const statusMatch = status === "all" || status === "active" || item.status === status;
+      const categoryMatch = category === "all" || item.category === category;
+      const priorityMatch = priority === "all" || item.priority === priority;
+      const searchMatch = !search || `${item.itemName} ${item.category} ${item.source} ${item.note}`.toLowerCase().includes(search);
+      return activeMatch && statusMatch && categoryMatch && priorityMatch && searchMatch;
+    })
+    .sort((a,b) => sortScore(a) - sortScore(b) || a.category.localeCompare(b.category) || a.itemName.localeCompare(b.itemName));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `<div class="empty-state">No buy list items in this view.</div>`;
+    return;
+  }
+
+  list.innerHTML = groupByCategory(visible).map(group => `
+    <section class="buy-group">
+      <div class="buy-group-head">
+        <h3>${escapeHTML(group.category)}</h3>
+        <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+      </div>
+      ${group.items.map(renderItem).join("")}
+    </section>
+  `).join("");
+}
+
+function renderItem(item){
+  const total = Number(item.price || 0) * Number(item.quantity || 1);
+  const hasPrice = total > 0;
+
+  return `
+    <article class="buy-card ${escapeAttribute(item.status)} ${escapeAttribute(item.priority)}">
+      <div class="buy-top">
+        <div>
+          <div class="ops-title">${escapeHTML(item.itemName)}</div>
+          <div class="buy-tags">
+            <span>${escapeHTML(PRIORITY_LABELS[item.priority] || item.priority)}</span>
+            <span>${escapeHTML(STATUS_LABELS[item.status] || item.status)}</span>
+            ${item.quantity > 1 ? `<span>Qty ${Number(item.quantity || 1)}</span>` : ""}
+          </div>
+        </div>
+        <strong class="buy-amount">${hasPrice ? money(total) : "No price"}</strong>
+      </div>
+
+      <div class="meta-list">
+        ${item.source ? `<div class="meta-row"><span>Best option</span><b>${escapeHTML(item.source)}</b></div>` : ""}
+        ${item.targetDate ? `<div class="meta-row"><span>Target</span><b>${escapeHTML(niceDate(item.targetDate))}</b></div>` : ""}
+      </div>
+
+      ${item.note ? `<p class="ops-note">${escapeHTML(item.note)}</p>` : ""}
+
+      <div class="ops-actions">
+        <button type="button" class="ghost-btn" onclick="setStatus('${item.id}','needed')">Need</button>
+        <button type="button" class="ghost-btn" onclick="setStatus('${item.id}','research')">Research</button>
+        <button type="button" class="ghost-btn" onclick="setStatus('${item.id}','ordered')">Ordered</button>
+        <button type="button" class="ghost-btn" onclick="setStatus('${item.id}','renting')">Renting</button>
+        <button type="button" class="btn" onclick="setStatus('${item.id}','bought')">Bought</button>
+        <button type="button" class="ghost-btn" onclick="editItem('${item.id}')">Edit</button>
+        <button type="button" class="danger-btn" onclick="deleteItem('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `;
+}
+
+function updateStats(){
+  const needNow = items.filter(item => ["needed","research","ordered"].includes(item.status) && ["urgent","soon"].includes(item.priority)).length;
+  const renting = items.filter(item => item.status === "renting").length;
+  const planned = items
+    .filter(item => !["bought","skip","renting"].includes(item.status))
+    .reduce((sum,item) => sum + (Number(item.price || 0) * Number(item.quantity || 1)), 0);
+  const bought = items.filter(item => item.status === "bought").length;
+
+  document.getElementById("statNeed").textContent = needNow;
+  document.getElementById("statRenting").textContent = renting;
+  document.getElementById("statCost").textContent = money(planned);
+  document.getElementById("statBought").textContent = bought;
+}
+
+function groupByCategory(list){
+  const groups = new Map();
+
+  list.forEach(item => {
+    const category = item.category || "Other";
+    if(!groups.has(category)) groups.set(category, []);
+    groups.get(category).push(item);
+  });
+
+  return [...groups.entries()].map(([category,groupItems]) => ({category,items:groupItems}));
+}
+
+function sortScore(item){
+  const statusScore = {needed:0,research:1,ordered:2,renting:3,bought:8,skip:9};
+  const priorityScore = {urgent:0,soon:1,client:2,future:3,optional:4};
+  return (statusScore[item.status] ?? 5) * 10 + (priorityScore[item.priority] ?? 5);
+}
+
+function setStatus(id,status){
+  items = items.map(item => item.id === id ? {...item,status,updatedAt:new Date().toISOString()} : item);
+  saveItems();
+  renderBuyList();
+}
+
+function editItem(id){
+  const item = items.find(entry => entry.id === id);
+  if(!item) return;
+
+  document.getElementById("itemId").value = item.id;
+  document.getElementById("itemName").value = item.itemName || "";
+  document.getElementById("category").value = item.category || "Other";
+  document.getElementById("priority").value = item.priority || "soon";
+  document.getElementById("status").value = item.status || "needed";
+  document.getElementById("quantity").value = item.quantity || 1;
+  document.getElementById("price").value = item.price || "";
+  document.getElementById("targetDate").value = item.targetDate || "";
+  document.getElementById("source").value = item.source || "";
+  document.getElementById("note").value = item.note || "";
+  focusItem();
+}
+
+function deleteItem(id){
+  const item = items.find(entry => entry.id === id);
+  if(!item) return;
+  if(!confirm(`Delete ${item.itemName}?`)) return;
+
+  items = items.filter(entry => entry.id !== id);
+  saveItems();
+  renderBuyList();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("itemId").value = "";
+  document.getElementById("category").value = "Storage + backup";
+  document.getElementById("priority").value = "soon";
+  document.getElementById("status").value = "needed";
+  document.getElementById("quantity").value = 1;
+}
+
+function focusItem(){
+  document.getElementById("itemName").focus();
+}
+
+function importItems(){
+  const raw = document.getElementById("pasteBox").value.trim();
+
+  if(!raw){
+    alert("Paste the buy list first.");
+    return;
+  }
+
+  const imported = parsePastedItems(raw);
+  if(!imported.length){
+    alert("I could not find any items to import.");
+    return;
+  }
+
+  const result = mergeItems(imported, true);
+  document.getElementById("pasteBox").value = "";
+  saveItems();
+  renderBuyList();
+  alert(`${result.added} added, ${result.updated} updated.`);
+}
+
+function loadBaseList(){
+  const result = mergeItems(defaultItems(), false);
+  saveItems();
+  localStorage.setItem(SEED_KEY, "yes");
+  renderBuyList();
+  alert(result.added ? `${result.added} missing base items added.` : "Base list is already loaded.");
+}
+
+function mergeItems(nextItems,updateExisting){
+  let added = 0;
+  let updated = 0;
+
+  nextItems.forEach(next => {
+    const index = items.findIndex(item => itemKey(item) === itemKey(next));
+
+    if(index >= 0){
+      if(updateExisting){
+        items[index] = {
+          ...items[index],
+          ...removeEmpty(next),
+          id:items[index].id,
+          updatedAt:new Date().toISOString()
+        };
+        updated++;
+      }
+      return;
+    }
+
+    items.push(next);
+    added++;
+  });
+
+  return {added,updated};
+}
+
+function parsePastedItems(raw){
+  let currentCategory = document.getElementById("category").value || "Other";
+
+  return raw
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .flatMap(line => {
+      const clean = line.replace(/^[•*\-]\s*/, "").trim();
+      const heading = headingCategory(clean);
+
+      if(heading){
+        currentCategory = heading;
+        return [];
+      }
+
+      const parts = clean.split("|").map(part => part.trim());
+
+      if(parts.length > 1){
+        return [makeItem({
+          itemName:parts[0],
+          category:validCategory(parts[1]) || currentCategory,
+          priority:normalisePriority(parts[2]),
+          status:normaliseStatus(parts[3]),
+          price:Number(parts[4] || 0),
+          source:parts[5] || "",
+          note:parts.slice(6).join(" | ")
+        })];
+      }
+
+      return [makeItem({
+        itemName:clean,
+        category:inferCategory(clean, currentCategory),
+        priority:inferPriority(clean),
+        status:"needed",
+        note:"Imported from pasted buy list."
+      })];
+    })
+    .filter(item => item.itemName);
+}
+
+function makeItem(data){
+  return {
+    id:makeId(),
+    itemName:data.itemName || "",
+    category:data.category || "Other",
+    priority:data.priority || "soon",
+    status:data.status || "needed",
+    quantity:Number(data.quantity || 1),
+    price:Number(data.price || 0),
+    targetDate:data.targetDate || "",
+    source:data.source || "",
+    note:data.note || "",
+    updatedAt:new Date().toISOString()
+  };
+}
+
+function defaultItems(){
+  return [
+    makeItem({itemName:"Mac mini M1 compatible dock with SSD enclosure",category:"Storage + backup",priority:"urgent",status:"research",source:"Satechi Stand & Hub for Mac mini with SSD enclosure",note:"Best option from current plan. This is the active editing drive setup."}),
+    makeItem({itemName:"2TB NVMe SSD for the dock",category:"Storage + backup",priority:"urgent",status:"research",source:"Crucial P3 Plus 2TB or WD Blue SN580 2TB",note:"For current wedding projects inside the Mac mini storage dock."}),
+    makeItem({itemName:"Extra external hard drive for raw footage backup",category:"Storage + backup",priority:"urgent",status:"needed",source:"4TB minimum, 5TB or 8TB better",note:"Use for original raw footage backup. Storage will become ongoing for weddings."}),
+    makeItem({itemName:"SD card / CFexpress card reader",category:"Storage + backup",priority:"soon",status:"research",note:"Only buy if you do not already have a reliable one."}),
+    makeItem({itemName:"Backblaze subscription",category:"Storage + backup",priority:"soon",status:"needed",source:"Backblaze",note:"Emergency cloud backup, not the only storage copy."}),
+    makeItem({itemName:"Extra camera batteries for Sony A7 IV",category:"Camera + filming",priority:"urgent",status:"needed",note:"Enough batteries so ceremony and speeches are not stressful."}),
+    makeItem({itemName:"Dual battery charger",category:"Camera + filming",priority:"soon",status:"needed",note:"Charge two camera batteries at once after a shoot."}),
+    makeItem({itemName:"Extra SD cards / V90 cards",category:"Camera + filming",priority:"urgent",status:"needed",note:"Especially for long ceremony and speeches."}),
+    makeItem({itemName:"CFexpress Type A card",category:"Camera + filming",priority:"optional",status:"research",note:"For faster, safer recording with heavier settings."}),
+    makeItem({itemName:"HDMI cable for Sony A7 IV to Feelworld monitor",category:"Camera + filming",priority:"urgent",status:"needed",note:"Check the exact Sony A7 IV camera port size and Feelworld monitor size before buying."}),
+    makeItem({itemName:"Monitor mount / cold shoe mount",category:"Camera + filming",priority:"soon",status:"needed",note:"For attaching the Feelworld monitor to camera or rig."}),
+    makeItem({itemName:"SmallRig video tripod with fluid head",category:"Camera + filming",priority:"soon",status:"research",source:"SmallRig 73 inch heavy duty tripod with 360 degree fluid head",note:"Good for C2 static ceremony coverage."}),
+    makeItem({itemName:"Tascam recorder",category:"Audio",priority:"urgent",status:"bought",source:"Tascam",note:"Already bought. Only buy extras if needed."}),
+    makeItem({itemName:"Lavalier mic for Tascam",category:"Audio",priority:"urgent",status:"needed",note:"For groom audio during ceremony."}),
+    makeItem({itemName:"Spare microSD card for Tascam",category:"Audio",priority:"soon",status:"needed",source:"32GB is fine",note:"Have a backup card."}),
+    makeItem({itemName:"Fresh batteries / rechargeable batteries for Tascam",category:"Audio",priority:"soon",status:"needed",note:"Keep audio power separate and ready."}),
+    makeItem({itemName:"DJI Mic accessories",category:"Audio",priority:"soon",status:"research",note:"Especially if receiver is on B cam and mics are used for handheld speeches."}),
+    makeItem({itemName:"3.5mm TRS cables",category:"Audio",priority:"soon",status:"needed",note:"For connecting audio gear to cameras and recorders."}),
+    makeItem({itemName:"Small pouch for audio kit",category:"Audio",priority:"soon",status:"needed",note:"Keep lavs, cables, clips and adapters together."}),
+    makeItem({itemName:"Optional second SSD",category:"Editing setup",priority:"optional",status:"research",note:"For editing on the go or transferring projects between machines."}),
+    makeItem({itemName:"USB stick for client delivery",category:"Delivery items",priority:"client",status:"needed",note:"Only needed if client pays for the USB add on."}),
+    makeItem({itemName:"USB presentation box",category:"Delivery items",priority:"client",status:"needed",note:"Makes USB delivery feel more premium."}),
+    makeItem({itemName:"Branded thank you card",category:"Delivery items",priority:"soon",status:"needed",note:"For client delivery packaging."}),
+    makeItem({itemName:"Small keepsake box or envelope",category:"Delivery items",priority:"optional",status:"research",note:"Useful for USBs, cards, prints, or future albums."}),
+    makeItem({itemName:"Domain email setup",category:"Branding + admin",priority:"urgent",status:"needed",source:"hello@ncstudiouk.co.uk",note:"Needs to work properly before using it for client confirmations."}),
+    makeItem({itemName:"Professional email hosting or forwarding",category:"Branding + admin",priority:"urgent",status:"research",source:"Namecheap Private Email, Google Workspace, or proper forwarding",note:"Use this to make the domain email professional."}),
+    makeItem({itemName:"Contract template",category:"Branding + admin",priority:"urgent",status:"needed",note:"Needs to be ready before taking more bookings."}),
+    makeItem({itemName:"Invoice template",category:"Branding + admin",priority:"urgent",status:"needed",note:"For deposits, balances and add ons."}),
+    makeItem({itemName:"Client questionnaire form",category:"Branding + admin",priority:"urgent",status:"needed",note:"You started this, but it needs to be fully ready for each booking."}),
+    makeItem({itemName:"Booking tracker / finance tracker",category:"Branding + admin",priority:"soon",status:"needed",note:"Could be this app, Notion, Google Sheets, or your Life Ops system."}),
+    makeItem({itemName:"Website hosting or website builder",category:"Website + online presence",priority:"soon",status:"research",source:"For ncstudiouk.co.uk",note:"Needed for the public website."}),
+    makeItem({itemName:"Google Workspace or email provider",category:"Website + online presence",priority:"soon",status:"research",note:"Use for professional domain email."}),
+    makeItem({itemName:"Gallery delivery platform",category:"Website + online presence",priority:"future",status:"research",source:"Pic-Time, Pixieset, Google Drive for now, or private web gallery later",note:"For client galleries and delivery."}),
+    makeItem({itemName:"Portfolio page setup",category:"Website + online presence",priority:"soon",status:"needed",note:"Needed for photos, videos, packages and enquiries."}),
+    makeItem({itemName:"Second tripod",category:"Nice to buy soon",priority:"future",status:"research",note:"Useful if moving toward 3 camera ceremony setups."}),
+    makeItem({itemName:"Monopod",category:"Nice to buy soon",priority:"future",status:"research",note:"Good for speeches, ceremony movement and stable roaming shots."}),
+    makeItem({itemName:"Camera cage or half cage",category:"Nice to buy soon",priority:"optional",status:"research",note:"Useful for monitor, handle and cable protection."}),
+    makeItem({itemName:"Top handle",category:"Nice to buy soon",priority:"optional",status:"research",note:"Helps with low moving shots and smoother handheld work."}),
+    makeItem({itemName:"Extra cold shoe mounts",category:"Nice to buy soon",priority:"soon",status:"needed",note:"Useful for monitors, mics and receivers."}),
+    makeItem({itemName:"Cable ties / velcro straps",category:"Nice to buy soon",priority:"soon",status:"needed",note:"For clean setups and fast packing."}),
+    makeItem({itemName:"Label maker or coloured tape",category:"Nice to buy soon",priority:"soon",status:"needed",note:"For marking C1, C2, cards, batteries and audio kit."}),
+    makeItem({itemName:"Hard case or organiser bag",category:"Nice to buy soon",priority:"soon",status:"research",note:"For separating camera, audio, cards, batteries and cables."}),
+    makeItem({itemName:"Second photographer / second videographer budget",category:"Future weddings",priority:"client",status:"needed",note:"Only needed when client pays for it or the wedding is too large for solo coverage."}),
+    makeItem({itemName:"Albums",category:"Future weddings",priority:"client",status:"needed",note:"Only buy when a client orders one."}),
+    makeItem({itemName:"Branded USBs",category:"Future weddings",priority:"client",status:"research",note:"Buy in small batches once you know clients want USB delivery."}),
+    makeItem({itemName:"More storage",category:"Future weddings",priority:"future",status:"needed",note:"Every wedding eventually needs its own backup plan."}),
+    makeItem({itemName:"Second camera body",category:"Rentals now",priority:"urgent",status:"renting",quantity:1,note:"Currently renting this. Keep visible until you buy or change the rental plan."}),
+    makeItem({itemName:"Lens rental 1",category:"Rentals now",priority:"urgent",status:"renting",quantity:1,note:"Currently renting one of the two lenses."}),
+    makeItem({itemName:"Lens rental 2",category:"Rentals now",priority:"urgent",status:"renting",quantity:1,note:"Currently renting one of the two lenses."})
+  ];
+}
+
+function itemKey(item){
+  return `${normalise(item.category)}|${normalise(item.itemName)}`;
+}
+
+function normalise(value){
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function removeEmpty(item){
+  return Object.fromEntries(Object.entries(item).filter(([,value]) => value !== "" && value !== 0 && value !== null && value !== undefined));
+}
+
+function headingCategory(value){
+  const cleaned = normalise(value);
+  const headings = {
+    "camera filming essentials":"Camera + filming",
+    "camera and filming essentials":"Camera + filming",
+    "audio essentials":"Audio",
+    "editing setup":"Editing setup",
+    "delivery items":"Delivery items",
+    "branding admin":"Branding + admin",
+    "branding and admin":"Branding + admin",
+    "website online presence":"Website + online presence",
+    "website and online presence":"Website + online presence",
+    "nice to buy soon":"Nice to buy soon",
+    "for future weddings":"Future weddings",
+    "future weddings":"Future weddings",
+    "storage backup":"Storage + backup",
+    "storage and backup":"Storage + backup",
+    "rentals now":"Rentals now"
+  };
+
+  return headings[cleaned] || "";
+}
+
+function inferCategory(value,fallback){
+  const text = normalise(value);
+
+  if(/ssd|drive|storage|backblaze|reader|dock|nvme/.test(text)) return "Storage + backup";
+  if(/battery|charger|card|cfexpress|hdmi|monitor|tripod|smallrig|camera|lens|monopod|cage|handle|shoe/.test(text)) return "Camera + filming";
+  if(/tascam|lav|audio|mic|trs|pouch|batteries/.test(text)) return "Audio";
+  if(/usb|thank you|keepsake|presentation box|delivery/.test(text)) return "Delivery items";
+  if(/domain|email|contract|invoice|questionnaire|tracker/.test(text)) return "Branding + admin";
+  if(/website|workspace|gallery|portfolio|hosting/.test(text)) return "Website + online presence";
+  if(/second photographer|album|branded usb|more storage/.test(text)) return "Future weddings";
+  return fallback || "Other";
+}
+
+function inferPriority(value){
+  const text = normalise(value);
+  if(/domain|contract|invoice|battery|v90|hard drive|backup|lav|hdmi|body|lens/.test(text)) return "urgent";
+  if(/usb|album|client pays|when client pays/.test(text)) return "client";
+  if(/second tripod|monopod|cage|top handle|future/.test(text)) return "future";
+  return "soon";
+}
+
+function validCategory(value){
+  const match = CATEGORIES.find(category => normalise(category) === normalise(value));
+  return match || "";
+}
+
+function normaliseStatus(value){
+  const key = normalise(value);
+  if(/bought|paid|owned|done/.test(key)) return "bought";
+  if(/order/.test(key)) return "ordered";
+  if(/rent/.test(key)) return "renting";
+  if(/research|check|decide/.test(key)) return "research";
+  if(/skip|later|hold/.test(key)) return "skip";
+  return "needed";
+}
+
+function normalisePriority(value){
+  const key = normalise(value);
+  if(/urgent|now|high/.test(key)) return "urgent";
+  if(/client|pay|addon|add on/.test(key)) return "client";
+  if(/future/.test(key)) return "future";
+  if(/optional|nice/.test(key)) return "optional";
+  return "soon";
+}
+
+function exportBuyList(){
+  const data = {
+    app:"NC Studios",
+    type:"buy-list",
+    exportedAt:new Date().toISOString(),
+    items
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-buy-list.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+resetForm();
+renderBuyList();
+</script>
+</body>
+</html>
