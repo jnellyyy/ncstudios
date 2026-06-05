@@ -1,6 +1,6 @@
 {
-  "name": "NC Studios",
-  "short_name": "NC Studios",
+  "name": "NC Studios App",
+  "short_name": "NC App",
   "description": "NC Studios business dashboard for bookings, clients, finance, shot lists, gear, buying and delivery.",
   "start_url": "./dashboard.html?v=sync-fixed-1",
   "scope": "./",
