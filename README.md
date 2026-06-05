@@ -8,6 +8,7 @@ Public website and studio dashboard for NC Studios.
 - `dashboard.html` is the private studio app entry point.
 - `bookings.html` is where website enquiries appear as new booking enquiries.
 - `buy-list.html` tracks things to buy, rent, research or leave for later.
+- `docs/` is the safe public deployment folder for the live website.
 
 ## Website enquiries
 
@@ -25,10 +26,10 @@ The public website uses the local `supabase-js.js` browser library so the enquir
 
 ## Hosting with your domain
 
-You can host this as a static website on GitHub Pages, Netlify or Vercel. Point your domain at the host, and make sure the domain opens `index.html`.
+You can host this as a static website on GitHub Pages, Netlify or Vercel. Publish the `docs/` folder only, then point your domain at the host.
 
 Do not publish the dashboard pages publicly unless the host protects them with login or password access. If you use GitHub Pages for the full repo, files like `dashboard.html` and `bookings.html` can still be opened by direct link.
 
-For GitHub Pages, add a `CNAME` file containing your domain once you know the exact domain name. Your DNS provider then needs the records GitHub Pages gives you.
+For step-by-step setup, see `HOSTING.md`.
 
 For production, the cleanest setup is to keep the public form behind a Supabase Edge Function or a dedicated enquiries table so visitors can submit enquiries without exposing wider app storage access.

@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios | Cinematic Wedding Films</title>
+<meta name="description" content="NC Studios creates cinematic wedding films, event coverage and social content. Check availability and send an enquiry online.">
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#07080b">
+
+<style>
+:root{
+  --bg:#07080b;
+  --bg2:#11131a;
+  --ink:#f8f5ef;
+  --paper:#ebe4d8;
+  --muted:#bcb4aa;
+  --soft:#888f9b;
+  --line:rgba(255,255,255,0.15);
+  --panel:rgba(255,255,255,0.075);
+  --panel2:rgba(255,255,255,0.105);
+  --red:#b91c1c;
+  --red2:#ef4444;
+  --gold:#d9b66f;
+  --green:#39d27d;
+  --shadow:0 28px 80px rgba(0,0,0,0.42);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+
+body{
+  margin:0;
+  color:var(--ink);
+  background:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  background-size:48px 48px,48px 48px,100% 100%;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+
+a{
+  color:inherit;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+h1,
+h2,
+h3,
+p{
+  margin:0;
+}
+
+.siteHeader{
+  position:fixed;
+  inset:0 0 auto;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:16px clamp(16px,4vw,54px);
+  background:linear-gradient(180deg,rgba(7,8,11,0.92),rgba(7,8,11,0.24));
+  backdrop-filter:blur(18px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  min-width:0;
+}
+
+.brandMark{
+  width:46px;
+  height:46px;
+  border-radius:8px;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,0.20);
+  box-shadow:0 14px 30px rgba(0,0,0,0.34);
+}
+
+.brandText{
+  display:grid;
+  gap:2px;
+}
+
+.brandText strong{
+  font-size:14px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+.brandText span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.nav a{
+  text-decoration:none;
+  color:rgba(248,245,239,0.78);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:9px 3px;
+}
+
+.nav a:hover,
+.nav a:focus-visible{
+  color:var(--ink);
+  outline:none;
+}
+
+.nav .navCta{
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  padding:0 15px;
+  color:#fff;
+  background:var(--red);
+  box-shadow:0 16px 34px rgba(185,28,28,0.24);
+}
+
+.hero{
+  min-height:88svh;
+  display:grid;
+  align-items:end;
+  padding:118px clamp(18px,5vw,72px) 42px;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:
+    linear-gradient(90deg,rgba(7,8,11,0.96),rgba(7,8,11,0.74) 45%,rgba(7,8,11,0.22)),
+    linear-gradient(0deg,rgba(7,8,11,0.98),rgba(7,8,11,0.20) 34%,rgba(7,8,11,0.52)),
+    url("ncstudios-logo-1024.png");
+  background-repeat:no-repeat;
+  background-size:cover,cover,min(66vw,760px);
+  background-position:center,center,right 6vw center;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:34vh;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(7,8,11,0),var(--bg));
+}
+
+.heroInner{
+  width:min(1180px,100%);
+}
+
+.eyebrow{
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:0.18em;
+  font-size:12px;
+  font-weight:950;
+}
+
+.hero h1{
+  max-width:860px;
+  margin-top:14px;
+  font-size:clamp(52px,9.5vw,112px);
+  line-height:0.84;
+  letter-spacing:0;
+}
+
+.heroLead{
+  max-width:640px;
+  margin-top:22px;
+  color:var(--paper);
+  font-size:clamp(18px,2.1vw,23px);
+  line-height:1.38;
+}
+
+.heroActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:30px;
+}
+
+.button{
+  min-height:50px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  padding:0 19px;
+  text-decoration:none;
+  color:white;
+  background:var(--red);
+  font-weight:950;
+  box-shadow:0 18px 46px rgba(185,28,28,0.27);
+}
+
+.button.secondary{
+  background:rgba(255,255,255,0.09);
+  box-shadow:none;
+}
+
+.scrollCue{
+  margin-top:36px;
+  color:var(--soft);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.section{
+  padding:76px clamp(18px,5vw,72px);
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.sectionInner{
+  width:min(1180px,100%);
+  margin:0 auto;
+}
+
+.sectionHead{
+  display:grid;
+  grid-template-columns:minmax(0,0.9fr) minmax(260px,0.6fr);
+  gap:28px;
+  align-items:end;
+  margin-bottom:34px;
+}
+
+.sectionHead h2{
+  font-size:clamp(36px,6.4vw,74px);
+  line-height:0.9;
+  letter-spacing:0;
+}
+
+.sectionHead p{
+  color:var(--muted);
+  line-height:1.62;
+  font-size:16px;
+}
+
+.aboutLayout{
+  display:grid;
+  grid-template-columns:minmax(260px,0.72fr) minmax(0,1.28fr);
+  gap:28px;
+  align-items:stretch;
+}
+
+.portraitPanel{
+  position:relative;
+  min-height:520px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#11131a;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:end;
+  padding:20px;
+  overflow:hidden;
+}
+
+.portraitPanel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(7,8,11,0),rgba(7,8,11,0.22) 48%,rgba(7,8,11,0.90));
+  pointer-events:none;
+}
+
+.portraitImage{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 34%;
+}
+
+.portraitCaption{
+  position:relative;
+  z-index:1;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  border-top:1px solid rgba(255,255,255,0.22);
+  padding-top:14px;
+}
+
+.portraitCaption strong{
+  display:block;
+  font-size:18px;
+}
+
+.portraitCaption span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.aboutCopy{
+  display:grid;
+  align-content:center;
+  gap:20px;
+}
+
+.aboutCopy > p{
+  color:var(--paper);
+  font-size:clamp(21px,3.2vw,38px);
+  line-height:1.12;
+}
+
+.aboutCopy .smallCopy{
+  display:grid;
+  gap:12px;
+}
+
+.aboutCopy .smallCopy p{
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.72;
+  max-width:740px;
+}
+
+.principles{
+  background:rgba(255,255,255,0.035);
+}
+
+.principleGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.principle{
+  min-height:260px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:linear-gradient(145deg,rgba(255,255,255,0.105),rgba(255,255,255,0.045));
+  box-shadow:var(--shadow);
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.principle span,
+.filmCard span,
+.serviceCard span{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+
+.principle h3{
+  margin-top:20px;
+  font-size:clamp(25px,3vw,34px);
+  line-height:0.95;
+}
+
+.principle p{
+  margin-top:16px;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+.splitFeature{
+  min-height:620px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:0;
+  overflow:hidden;
+}
+
+.featureImage{
+  min-height:620px;
+  background:
+    linear-gradient(180deg,rgba(7,8,11,0.08),rgba(7,8,11,0.72)),
+    url("ncstudios-logo-1024.png");
+  background-size:cover;
+  background-position:center;
+}
+
+.featureCopy{
+  padding:clamp(34px,6vw,76px);
+}
+
+.featureCopy h2{
+  font-size:clamp(44px,7vw,86px);
+  line-height:0.88;
+  letter-spacing:0;
+}
+
+.featureCopy p{
+  margin-top:22px;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:17px;
+  max-width:560px;
+}
+
+.filmGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.filmCard{
+  min-height:430px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:
+    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
+    url("ncstudios-logo-1024.png");
+  background-size:cover;
+  background-position:center;
+  box-shadow:var(--shadow);
+  padding:18px;
+  display:flex;
+  align-items:end;
+}
+
+.filmCard:nth-child(2){
+  background-position:55% center;
+}
+
+.filmCard:nth-child(3){
+  background-position:70% center;
+}
+
+.filmCard h3{
+  margin-top:12px;
+  font-size:30px;
+  line-height:0.95;
+}
+
+.filmCard p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.48;
+}
+
+.services{
+  background:rgba(255,255,255,0.03);
+}
+
+.serviceGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.serviceCard{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,0.07);
+  padding:22px;
+}
+
+.serviceCard h3{
+  margin-top:18px;
+  font-size:26px;
+}
+
+.serviceCard p{
+  margin-top:12px;
+  color:var(--muted);
+  line-height:1.58;
+}
+
+.availabilityStrip{
+  margin-top:28px;
+  border-top:1px solid rgba(217,182,111,0.48);
+  padding-top:22px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.availabilityStrip strong{
+  display:block;
+  font-size:18px;
+}
+
+.availabilityStrip span{
+  display:block;
+  margin-top:6px;
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+}
+
+.enquiry{
+  background:
+    linear-gradient(145deg,rgba(185,28,28,0.18),rgba(255,255,255,0.025)),
+    var(--bg);
+}
+
+.enquiryLayout{
+  display:grid;
+  grid-template-columns:minmax(260px,0.72fr) minmax(0,1.28fr);
+  gap:30px;
+  align-items:start;
+}
+
+.enquiryIntro{
+  position:sticky;
+  top:104px;
+}
+
+.enquiryIntro h2{
+  margin-top:12px;
+  font-size:clamp(40px,6.6vw,78px);
+  line-height:0.88;
+  letter-spacing:0;
+}
+
+.enquiryIntro p{
+  margin-top:18px;
+  color:var(--muted);
+  line-height:1.68;
+}
+
+.formPanel{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.045)),
+    rgba(16,19,26,0.94);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+
+.formGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.field{
+  display:grid;
+  gap:7px;
+}
+
+.field.wide{
+  grid-column:1 / -1;
+}
+
+label{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:0.10em;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(0,0,0,0.28);
+  color:var(--ink);
+  border-radius:8px;
+  padding:13px;
+  outline:none;
+}
+
+textarea{
+  min-height:132px;
+  resize:vertical;
+}
+
+select option{
+  color:#111827;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(217,182,111,0.68);
+  box-shadow:0 0 0 4px rgba(217,182,111,0.12);
+}
+
+.hiddenField{
+  position:absolute;
+  left:-9999px;
+  opacity:0;
+}
+
+.formFooter{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.submitButton{
+  min-height:50px;
+  border:0;
+  border-radius:999px;
+  background:var(--red);
+  color:white;
+  padding:0 20px;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 18px 42px rgba(185,28,28,0.30);
+}
+
+.submitButton:disabled{
+  opacity:0.62;
+  cursor:not-allowed;
+}
+
+.formStatus{
+  min-height:22px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.formStatus.success{
+  color:var(--green);
+}
+
+.formStatus.error{
+  color:#ff9b9b;
+}
+
+.footer{
+  padding:28px clamp(18px,5vw,72px) 36px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  color:var(--soft);
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+@media(max-width:980px){
+  .siteHeader{
+    position:absolute;
+  }
+
+  .nav a:not(.navCta){
+    display:none;
+  }
+
+  .brandText span{
+    display:none;
+  }
+
+  .sectionHead,
+  .aboutLayout,
+  .splitFeature,
+  .enquiryLayout,
+  .principleGrid,
+  .filmGrid,
+  .serviceGrid,
+  .availabilityStrip{
+    grid-template-columns:1fr;
+  }
+
+  .hero::before{
+    background-size:cover,cover,120vw;
+    background-position:center,center,42vw 54%;
+  }
+
+  .portraitPanel,
+  .featureImage{
+    min-height:420px;
+  }
+
+  .enquiryIntro{
+    position:static;
+  }
+}
+
+@media(max-width:640px){
+  .siteHeader{
+    padding:14px 16px;
+  }
+
+  .brandMark{
+    width:42px;
+    height:42px;
+  }
+
+  .hero{
+    min-height:88svh;
+    padding:104px 16px 34px;
+  }
+
+  .hero h1{
+    font-size:60px;
+  }
+
+  .heroLead{
+    font-size:17px;
+  }
+
+  .heroActions{
+    display:grid;
+  }
+
+  .button{
+    width:100%;
+  }
+
+  .section{
+    padding:54px 16px;
+  }
+
+  .featureCopy{
+    padding:44px 16px;
+  }
+
+  .formGrid{
+    grid-template-columns:1fr;
+  }
+
+  .formPanel{
+    padding:16px;
+  }
+}
+</style>
+</head>
+
+<body>
+<header class="siteHeader">
+  <a class="brand" href="#home" aria-label="NC Studios home">
+    <img class="brandMark" src="ncstudios-logo-1024.png" alt="NC Studios logo">
+    <span class="brandText">
+      <strong>NC Studios</strong>
+      <span>Cinematic wedding films</span>
+    </span>
+  </a>
+
+  <nav class="nav" aria-label="Site navigation">
+    <a href="#about">About</a>
+    <a href="#films">Work</a>
+    <a href="#services">Services</a>
+    <a class="navCta" href="#availability">Availability</a>
+  </nav>
+</header>
+
+<main id="home">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="heroInner">
+      <p class="eyebrow">Photography and videography for weddings, events and content</p>
+      <h1 id="hero-title">Turning your moments into stories you can feel.</h1>
+      <p class="heroLead">NC Studios captures real moments in stills and motion, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
+
+      <div class="heroActions">
+        <a class="button" href="#films">View the feel</a>
+        <a class="button secondary" href="#availability">Check availability</a>
+      </div>
+
+      <p class="scrollCue">Scroll for the story</p>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="sectionInner aboutLayout">
+      <div class="portraitPanel" aria-label="Portrait of the NC Studios creative">
+        <img class="portraitImage" src="assets/nc-about-portrait.jpg" alt="Portrait of the NC Studios creative">
+        <div class="portraitCaption">
+          <div>
+            <strong>The eye behind NC Studios</strong>
+            <span>Videography, photography and content</span>
+          </div>
+          <span>UK</span>
+        </div>
+      </div>
+
+      <div class="aboutCopy">
+        <p>Not just coverage. I capture the way a moment looks, sounds and feels, so you can come back to it properly.</p>
+        <div class="smallCopy">
+          <p>NC Studios is run by a photographer and videographer with a relaxed, story-first approach. I shoot engagements, weddings, events and content sessions with an eye for emotion, detail and atmosphere.</p>
+          <p>The wedding film portfolio is being built as new work is edited, so the site leads with the feeling, the process and the visual style. Engagement images, couple sessions and event coverage can still show the direction clearly while the next wedding film is being finished.</p>
+          <p>From first enquiry to final delivery, everything feeds into the studio workflow so dates, plans, shot notes and next steps stay organised behind the scenes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section principles" id="principles">
+    <div class="sectionInner">
+      <div class="sectionHead">
+        <h2>Guided by the real moments.</h2>
+        <p>The flow is simple: understand the couple, capture the atmosphere, then create a film that feels personal rather than generic.</p>
+      </div>
+
+      <div class="principleGrid">
+        <article class="principle">
+          <div>
+            <span>01</span>
+            <h3>Story with purpose</h3>
+          </div>
+          <p>Every film starts with the people, the energy and the moments that matter most, not a template.</p>
+        </article>
+
+        <article class="principle">
+          <div>
+            <span>02</span>
+            <h3>Cinematic finish</h3>
+          </div>
+          <p>Clean camera movement, considered pacing, colour and audio come together to make the day feel alive again.</p>
+        </article>
+
+        <article class="principle">
+          <div>
+            <span>03</span>
+            <h3>Client focused</h3>
+          </div>
+          <p>The process is calm, clear and collaborative so you know what is happening before, during and after the shoot.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="splitFeature" aria-labelledby="motion-title">
+    <div class="featureImage" aria-hidden="true"></div>
+    <div class="featureCopy">
+      <p class="eyebrow">Where emotion meets motion</p>
+      <h2 id="motion-title">Made for the parts photos cannot say.</h2>
+      <p>The laughter in a speech, the music in the room, the small reactions, the big entrances and the moments you missed while living it. That is where film earns its place.</p>
+    </div>
+  </section>
+
+  <section class="section" id="films">
+    <div class="sectionInner">
+      <div class="sectionHead">
+        <h2>Stories in stills and motion.</h2>
+        <p>A portfolio-style look at what NC Studios can create across engagements, weddings, celebrations and social content.</p>
+      </div>
+
+      <div class="filmGrid">
+        <article class="filmCard">
+          <div>
+            <span>Engagements</span>
+            <h3>Couple sessions</h3>
+            <p>Warm, polished images for proposals, engagements, anniversaries and couple portraits.</p>
+          </div>
+        </article>
+
+        <article class="filmCard">
+          <div>
+            <span>Weddings</span>
+            <h3>Photo and film</h3>
+            <p>Wedding coverage shaped around emotion, details, movement and the moments that matter most.</p>
+          </div>
+        </article>
+
+        <article class="filmCard">
+          <div>
+            <span>Events and content</span>
+            <h3>Short edits that move</h3>
+            <p>Event photography, vertical reels and teaser clips made for sharing quickly after the moment.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section services" id="services">
+    <div class="sectionInner">
+      <div class="sectionHead">
+        <h2>Services and experience.</h2>
+        <p>Choose the coverage style that matches the day. If you are unsure, enquire and NC Studios can guide you into the right photo or video fit.</p>
+      </div>
+
+      <div class="serviceGrid">
+        <article class="serviceCard">
+          <span>Wedding coverage</span>
+          <h3>Photo, film or both</h3>
+          <p>Cinematic wedding coverage for key moments, atmosphere, emotional details and storytelling edits.</p>
+        </article>
+
+        <article class="serviceCard">
+          <span>Engagement sessions</span>
+          <h3>Couples and proposals</h3>
+          <p>Engagement photography and couple sessions with a warm, editorial feel that can sit proudly on the site now.</p>
+        </article>
+
+        <article class="serviceCard">
+          <span>Events and content</span>
+          <h3>Ready for socials</h3>
+          <p>Photography, short-form edits, teasers and vertical content for Instagram, TikTok and client previews.</p>
+        </article>
+      </div>
+
+      <div class="availabilityStrip">
+        <div>
+          <strong>Limited date coverage</strong>
+          <span>Each date needs planning space, so availability is checked before confirming a booking.</span>
+        </div>
+        <div>
+          <strong>Planning support</strong>
+          <span>Shot priorities, timings, venue details and notes stay organised inside the studio app.</span>
+        </div>
+        <div>
+          <strong>Clear next steps</strong>
+          <span>Once you enquire, your request lands in the booking pipeline for follow up.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section enquiry" id="availability">
+    <div class="sectionInner enquiryLayout">
+      <div class="enquiryIntro">
+        <p class="eyebrow">Availability</p>
+        <h2>Tell NC Studios about your date.</h2>
+        <p>Complete the form and your enquiry will feed into the NC Studios booking app as a new enquiry, ready for follow up.</p>
+      </div>
+
+      <form class="formPanel" id="enquiryForm">
+        <div class="hiddenField" aria-hidden="true">
+          <label for="companyWebsite">Company website</label>
+          <input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="formGrid">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" type="text" autocomplete="name" required placeholder="Your name">
+          </div>
+
+          <div class="field">
+            <label for="partnerName">Partner or client name</label>
+            <input id="partnerName" name="partnerName" type="text" placeholder="Optional">
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Your number">
+          </div>
+
+          <div class="field">
+            <label for="eventType">Event type</label>
+            <select id="eventType" name="eventType" required>
+              <option value="">Select one</option>
+              <option>Wedding</option>
+              <option>Engagement</option>
+              <option>Birthday</option>
+              <option>Brand content</option>
+              <option>Church event</option>
+              <option>Other event</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="eventDate">Event date</label>
+            <input id="eventDate" name="eventDate" type="date">
+          </div>
+
+          <div class="field wide">
+            <label for="venue">Venue or location</label>
+            <input id="venue" name="venue" type="text" placeholder="Venue, city or postcode">
+          </div>
+
+          <div class="field">
+            <label for="guestCount">Guest count</label>
+            <input id="guestCount" name="guestCount" type="number" min="0" step="1" placeholder="Approximate">
+          </div>
+
+          <div class="field">
+            <label for="packageInterest">Package interest</label>
+            <select id="packageInterest" name="packageInterest">
+              <option>Not sure yet</option>
+              <option>Wedding highlight film</option>
+              <option>Full wedding film</option>
+              <option>Event coverage</option>
+              <option>Social content clips</option>
+              <option>Photo and film</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budget">Budget</label>
+            <input id="budget" name="budget" type="text" placeholder="Optional">
+          </div>
+
+          <div class="field">
+            <label for="instagram">Instagram</label>
+            <input id="instagram" name="instagram" type="text" placeholder="@username">
+          </div>
+
+          <div class="field wide">
+            <label for="message">What would you like captured?</label>
+            <textarea id="message" name="message" required placeholder="Tell us about the day, timings, style, important moments, or any questions."></textarea>
+          </div>
+        </div>
+
+        <div class="formFooter">
+          <button class="submitButton" type="submit">Send enquiry</button>
+          <p class="formStatus" data-form-status aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>NC Studios</span>
+  <span>Cinematic wedding films, events and content</span>
+</footer>
+
+<script src="supabase-js.js?v=2.107.0"></script>
+<script src="supabase-config.js?v=public-site-1"></script>
+<script>
+(function(){
+  const STORAGE_TABLE = "app_storage";
+  const ENQUIRY_PREFIX = "website_enquiry_";
+
+  const form = document.getElementById("enquiryForm");
+  const statusEl = document.querySelector("[data-form-status]");
+  const submitButton = form.querySelector("[type='submit']");
+
+  function setStatus(message,type){
+    statusEl.textContent = message;
+    statusEl.className = "formStatus" + (type ? " " + type : "");
+  }
+
+  function value(formData,name){
+    return String(formData.get(name) || "").trim();
+  }
+
+  function uid(){
+    if(window.crypto && crypto.randomUUID){
+      return crypto.randomUUID();
+    }
+
+    return "website_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+  }
+
+  function wait(ms){
+    return new Promise(function(resolve){
+      setTimeout(resolve,ms);
+    });
+  }
+
+  async function waitForSupabase(){
+    for(let attempt = 0; attempt < 50; attempt++){
+      if(window.ncSupabase){
+        return true;
+      }
+
+      await wait(120);
+    }
+
+    return false;
+  }
+
+  function buildNotes(data){
+    return [
+      "Website enquiry",
+      "Email: " + data.email,
+      "Phone: " + (data.phone || "Not provided"),
+      "Event type: " + data.eventType,
+      "Partner/client name: " + (data.partnerName || "Not provided"),
+      "Guest count: " + (data.guestCount || "Not provided"),
+      "Package interest: " + (data.packageInterest || "Not sure yet"),
+      "Budget: " + (data.budget || "Not provided"),
+      "Instagram: " + (data.instagram || "Not provided"),
+      "",
+      "Message:",
+      data.message,
+      "",
+      "Submitted: " + new Date().toLocaleString("en-GB")
+    ].join("\n");
+  }
+
+  function buildBooking(data){
+    const now = new Date().toISOString();
+    const eventName = data.eventType ? data.eventType + " enquiry" : "Website enquiry";
+
+    return {
+      id:uid(),
+      clientName:data.fullName,
+      eventName:eventName,
+      eventDate:data.eventDate,
+      status:"enquiry",
+      packagePrice:0,
+      depositPaid:0,
+      location:data.venue,
+      nextAction:"Reply to website enquiry",
+      notes:buildNotes(data),
+      source:"website",
+      contactEmail:data.email,
+      contactPhone:data.phone,
+      updatedAt:now,
+      createdAt:now
+    };
+  }
+
+  async function saveBooking(booking){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      throw new Error("Booking system is not available yet.");
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .upsert(
+        {
+          app_key:ENQUIRY_PREFIX + booking.id,
+          data:booking,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:"app_key"
+        }
+      );
+
+    if(response.error){
+      throw response.error;
+    }
+
+    try{
+      const saved = JSON.parse(localStorage.getItem("ncstudios_public_enquiries_v1")) || [];
+      localStorage.setItem("ncstudios_public_enquiries_v1",JSON.stringify([booking,...saved].slice(0,20)));
+    }catch(error){
+      console.warn("Could not mirror enquiry locally",error);
+    }
+  }
+
+  form.addEventListener("submit",async function(event){
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    if(value(formData,"companyWebsite")){
+      form.reset();
+      setStatus("Thank you. Your enquiry has been received.","success");
+      return;
+    }
+
+    const data = {
+      fullName:value(formData,"fullName"),
+      partnerName:value(formData,"partnerName"),
+      email:value(formData,"email"),
+      phone:value(formData,"phone"),
+      eventType:value(formData,"eventType"),
+      eventDate:value(formData,"eventDate"),
+      venue:value(formData,"venue"),
+      guestCount:value(formData,"guestCount"),
+      packageInterest:value(formData,"packageInterest"),
+      budget:value(formData,"budget"),
+      instagram:value(formData,"instagram"),
+      message:value(formData,"message")
+    };
+
+    if(!data.fullName || !data.email || !data.eventType || !data.message){
+      setStatus("Please complete your name, email, event type and message.","error");
+      return;
+    }
+
+    submitButton.disabled = true;
+    setStatus("Sending your enquiry...");
+
+    try{
+      await saveBooking(buildBooking(data));
+      form.reset();
+      setStatus("Thank you. Your enquiry has been received.","success");
+    }catch(error){
+      console.warn("Website enquiry failed",error);
+      setStatus("This could not send right now. Please try again in a moment.","error");
+    }finally{
+      submitButton.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

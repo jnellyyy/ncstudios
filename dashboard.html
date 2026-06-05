@@ -966,12 +966,12 @@ body::before{
     </div>
   </a>
 
-  <a class="tile" href="admin.html">
+  <a class="tile" href="buy-list.html">
     <div>
-      <div class="icon">A</div>
-      <h3>Admin</h3>
-      <span class="tileMetric" id="adminWidget">0</span>
-      <p>Client admin, checklists and follow-through.</p>
+      <div class="icon">B</div>
+      <h3>Buy List</h3>
+      <span class="tileMetric" id="buyTileWidget">0</span>
+      <p>Kit, rentals, storage and business purchases.</p>
     </div>
     <div class="tileFooter">
       <span>Open</span>
@@ -984,7 +984,7 @@ body::before{
 <nav class="bottomRow">
   <a href="shot-lists.html">Shots</a>
   <a href="lists.html">To Do</a>
-  <a href="templates.html">Templates</a>
+  <a href="buy-list.html">Buy</a>
   <a href="admin.html">Admin</a>
 </nav>
 
@@ -1128,7 +1128,8 @@ function updateDashboardFromLocal(){
   document.getElementById("shotsWidget").textContent = shots.length;
   document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
   document.getElementById("templatesWidget").textContent = templates.length;
-  document.getElementById("adminWidget").textContent = adminClients.length;
+  setText("adminWidget", adminClients.length);
+  setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
   setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);
@@ -1202,6 +1203,7 @@ async function updateDashboardFromSupabase(){
       document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
       document.getElementById("templatesWidget").textContent = templates.length;
       document.getElementById("clientWidget").textContent = appStorageClients.length;
+      setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
       setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);

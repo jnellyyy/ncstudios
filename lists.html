@@ -230,7 +230,7 @@ button.ghost{
 
 .nav{
   display:grid;
-  grid-template-columns:repeat(8,1fr);
+  grid-template-columns:repeat(9,1fr);
   gap:8px;
   margin:14px 0;
 }
@@ -424,9 +424,44 @@ textarea{
 
 .searchBar{
   display:grid;
-  grid-template-columns:1fr 150px 150px;
+  grid-template-columns:1fr 150px 150px 150px;
   gap:8px;
-  min-width:520px;
+  min-width:680px;
+}
+
+.projectLane{
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.045);
+  border-radius:26px;
+  overflow:hidden;
+}
+
+.projectHead{
+  min-height:54px;
+  padding:13px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.09);
+  background:rgba(0,0,0,0.15);
+}
+
+.projectHead h4{
+  font-size:16px;
+}
+
+.projectHead span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.projectAreas{
+  display:grid;
+  gap:10px;
+  padding:10px;
 }
 
 .areaLane{
@@ -540,6 +575,11 @@ textarea{
   .nav{
     grid-template-columns:repeat(4,1fr);
   }
+
+  .searchBar{
+    grid-template-columns:1fr 1fr;
+    min-width:0;
+  }
 }
 
 @media(max-width:560px){
@@ -598,7 +638,7 @@ textarea{
     <div>
       <div class="kicker">Business tasks</div>
       <h2>Business To Do</h2>
-        <p>Split NC Studios work into Overall, C1, C2, Accessories and business areas so it does not become one messy pile.</p>
+        <p>Split NC Studios work by couple first, then by Overall, C1, C2, Accessories and business areas.</p>
     </div>
 
     <div class="actions">
@@ -620,8 +660,8 @@ textarea{
     </div>
 
     <div class="stat">
-      <span>Overdue</span>
-      <strong id="overdueStat">0</strong>
+      <span>Couples</span>
+      <strong id="coupleStat">0</strong>
     </div>
 
     <div class="stat">
@@ -638,6 +678,7 @@ textarea{
   <a href="finance.html">Finance</a>
   <a href="shot-lists.html">Shots</a>
   <a class="active" href="lists.html">To Do</a>
+  <a href="buy-list.html">Buy</a>
   <a href="delivery.html">Delivery</a>
   <a href="templates.html">Templates</a>
 </nav>
@@ -659,6 +700,12 @@ textarea{
         <label>
           To-do
           <input id="title" type="text" placeholder="Send invoice, chase deposit, prep delivery email" required>
+        </label>
+
+        <label>
+          Couple / project
+          <input id="project" type="text" list="projectSuggestions" placeholder="Marvin + Blessing, or leave blank for business">
+          <datalist id="projectSuggestions"></datalist>
         </label>
 
         <div class="row">
@@ -726,8 +773,8 @@ textarea{
 
       <div class="pasteBox">
         <h3>Paste to-dos</h3>
-        <p>One item per line, or use: title | area | priority | due date | status | notes</p>
-        <textarea id="taskPaste" placeholder="Format C1 cards | c1 | high | 2026-08-22 | open | Label empty and full sides"></textarea>
+        <p>One item per line, or use: title | couple | area | priority | due date | status | notes</p>
+        <textarea id="taskPaste" placeholder="Format C1 cards | Marvin + Blessing | c1 | high | 2026-08-22 | open | Label empty and full sides"></textarea>
         <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedTasks()">Import pasted list</button>
       </div>
     </div>
@@ -742,6 +789,9 @@ textarea{
 
       <div class="searchBar">
         <input id="search" type="search" placeholder="Search to-dos" oninput="renderTasks()">
+        <select id="projectFilter" onchange="renderTasks()">
+          <option value="all">All couples</option>
+        </select>
         <select id="areaFilter" onchange="renderTasks()">
           <option value="all">All areas</option>
           <option value="overall">Overall</option>
@@ -801,6 +851,7 @@ form.addEventListener("submit", function(event){
   const task = {
     id,
     title:document.getElementById("title").value.trim(),
+    project:document.getElementById("project").value.trim(),
     category:document.getElementById("category").value,
     priority:document.getElementById("priority").value,
     dueDate:document.getElementById("dueDate").value,
@@ -839,18 +890,75 @@ function saveTasks(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function projectOptions(items){
+  const options = new Map();
+
+  items.forEach(item => {
+    const label = projectLabel(item.project);
+    options.set(projectKey(label), label);
+  });
+
+  return [...options.entries()]
+    .map(([key,label]) => ({key,label}))
+    .sort((a,b) => {
+      if(a.key === "business") return -1;
+      if(b.key === "business") return 1;
+      return a.label.localeCompare(b.label);
+    });
+}
+
+function addProjectSuggestion(map,value){
+  const label = String(value || "").trim();
+  const key = projectKey(label);
+  if(label && key !== "business") map.set(key, label);
+}
+
+function projectLabel(value){
+  const label = String(value || "").trim();
+  return label || "Business / no couple";
+}
+
+function projectKey(value){
+  const raw = String(value || "").trim();
+
+  if(!raw) return "business";
+
+  const key = raw
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+
+  return key === "business no couple" ? "business" : key;
+}
+
 function renderTasks(){
+  updateProjectControls();
+
   const list = document.getElementById("taskList");
   const filter = document.getElementById("filter").value;
   const areaFilter = document.getElementById("areaFilter").value;
+  const projectFilter = document.getElementById("projectFilter").value;
   const search = document.getElementById("search").value.trim().toLowerCase();
 
   const visible = tasks
     .filter(item => {
       const area = normaliseCategory(item.category);
-      const searchMatch = !search || `${item.title} ${categoryLabel(area)} ${item.notes}`.toLowerCase().includes(search);
+      const project = projectLabel(item.project);
+      const searchMatch = !search || `${item.title} ${project} ${categoryLabel(area)} ${item.notes}`.toLowerCase().includes(search);
 
       if(!searchMatch) return false;
+      if(projectFilter !== "all" && projectKey(project) !== projectFilter) return false;
       if(areaFilter !== "all" && area !== areaFilter) return false;
       if(filter === "all") return true;
       if(filter === "next") return item.status !== "done";
@@ -864,18 +972,28 @@ function renderTasks(){
   updateStats();
 
   if(visible.length === 0){
-    list.innerHTML = `<div class="empty">No business to-dos in this view.<br><br>Add your first NC Studios action or use a quick preset.</div>`;
+    list.innerHTML = `<div class="empty">No to-dos in this view.<br><br>Add a couple task, business task, or use a quick preset.</div>`;
     return;
   }
 
-  list.innerHTML = groupByArea(visible).map(group => `
-    <section class="areaLane">
-      <div class="areaHead">
-        <h4>${categoryLabel(group.area)}</h4>
-        <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+  list.innerHTML = groupByProject(visible).map(projectGroup => `
+    <section class="projectLane">
+      <div class="projectHead">
+        <h4>${escapeHTML(projectGroup.project)}</h4>
+        <span>${projectGroup.items.length} ${projectGroup.items.length === 1 ? "item" : "items"}</span>
       </div>
-      <div class="areaItems">
-        ${group.items.map(renderTaskCard).join("")}
+      <div class="projectAreas">
+        ${groupByArea(projectGroup.items).map(group => `
+          <section class="areaLane">
+            <div class="areaHead">
+              <h4>${categoryLabel(group.area)}</h4>
+              <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+            </div>
+            <div class="areaItems">
+              ${group.items.map(renderTaskCard).join("")}
+            </div>
+          </section>
+        `).join("")}
       </div>
     </section>
   `).join("");
@@ -889,13 +1007,18 @@ function renderTaskCard(item){
       <div class="itemTop">
         <div>
           <h4>${escapeHTML(item.title)}</h4>
-          <small>${categoryLabel(area)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
+          <small>${escapeHTML(projectLabel(item.project))} | ${categoryLabel(area)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
         </div>
 
         <span class="badge ${item.status === "waiting" ? "waiting" : item.priority}">${item.status === "waiting" ? "Waiting" : priorityLabel(item.priority)}</span>
       </div>
 
       <div class="meta">
+        <div class="metaLine">
+          <span>Couple</span>
+          <strong>${escapeHTML(projectLabel(item.project))}</strong>
+        </div>
+
         <div class="metaLine">
           <span>Area</span>
           <strong>${categoryLabel(area)}</strong>
@@ -922,8 +1045,67 @@ function renderTaskCard(item){
 function updateStats(){
   document.getElementById("todayStat").textContent = tasks.filter(item => item.status !== "done" && isToday(item.dueDate)).length;
   document.getElementById("openStat").textContent = tasks.filter(item => item.status !== "done").length;
-  document.getElementById("overdueStat").textContent = tasks.filter(item => item.status !== "done" && isOverdue(item.dueDate)).length;
+  document.getElementById("coupleStat").textContent = projectOptions(tasks).filter(item => item.key !== "business").length;
   document.getElementById("doneStat").textContent = tasks.filter(item => item.status === "done").length;
+}
+
+function updateProjectControls(){
+  const filter = document.getElementById("projectFilter");
+  const current = filter.value || "all";
+  const projects = projectOptions(tasks);
+
+  filter.innerHTML = [
+    `<option value="all">All couples</option>`,
+    ...projects.map(item => `<option value="${escapeAttribute(item.key)}">${escapeHTML(item.label)}</option>`)
+  ].join("");
+  filter.value = current === "all" || projects.some(item => item.key === current) ? current : "all";
+
+  const suggestions = document.getElementById("projectSuggestions");
+  const names = new Map();
+
+  projects.forEach(item => {
+    if(item.key !== "business") names.set(item.key, item.label);
+  });
+
+  readData("ncstudios_bookings_v1").forEach(item => addProjectSuggestion(names, item.clientName || item.eventName));
+  readData("ncstudios_clients_v1").forEach(item => addProjectSuggestion(names, item.clientName));
+  readData("ncstudios_shots_v1").forEach(item => addProjectSuggestion(names, item.project));
+  readData("ncstudios_delivery_v1").forEach(item => addProjectSuggestion(names, item.projectName || item.client));
+
+  suggestions.innerHTML = [...names.values()]
+    .sort((a,b) => a.localeCompare(b))
+    .map(name => `<option value="${escapeAttribute(name)}"></option>`)
+    .join("");
+}
+
+function groupByProject(items){
+  const groups = new Map();
+
+  items.forEach(item => {
+    const label = projectLabel(item.project);
+    const key = projectKey(label);
+
+    if(!groups.has(key)){
+      groups.set(key, {
+        key,
+        project:label,
+        items:[]
+      });
+    }
+
+    groups.get(key).items.push(item);
+  });
+
+  return [...groups.values()]
+    .sort((a,b) => {
+      if(a.key === "business") return -1;
+      if(b.key === "business") return 1;
+      return a.project.localeCompare(b.project);
+    })
+    .map(group => ({
+      ...group,
+      items:group.items.sort(sortTasks)
+    }));
 }
 
 function groupByArea(items){
@@ -972,6 +1154,7 @@ function addPresetTask(title, category, priority, daysFromNow, notes){
   tasks.unshift({
     id:crypto.randomUUID(),
     title,
+    project:document.getElementById("project").value.trim(),
     category,
     priority,
     dueDate:dueDate.toISOString().slice(0,10),
@@ -1032,6 +1215,7 @@ function editTask(id){
 
   document.getElementById("taskId").value = task.id;
   document.getElementById("title").value = task.title || "";
+  document.getElementById("project").value = task.project || "";
   document.getElementById("category").value = normaliseCategory(task.category || "admin");
   document.getElementById("priority").value = task.priority || "high";
   document.getElementById("dueDate").value = task.dueDate || "";
@@ -1086,7 +1270,7 @@ function clearAllTasks(){
     return;
   }
 
-  if(!confirm(`Clear all ${tasks.length} business to-dos? This will remove every lane, including Overall, C1, C2 and Accessories.`)){
+  if(!confirm(`Clear all ${tasks.length} to-dos? This will remove every couple/project and every lane, including Overall, C1, C2 and Accessories.`)){
     return;
   }
 
@@ -1135,11 +1319,7 @@ function parseTaskRows(text){
       return {
         id:crypto.randomUUID(),
         title,
-        category:normaliseCategory(parts[1] || "admin"),
-        priority:normalisePriority(parts[2] || "high"),
-        dueDate:normaliseDate(parts[3] || ""),
-        status:normaliseStatus(parts[4] || "open"),
-        notes:parts.slice(5).join(" | "),
+        ...parseTaskParts(parts),
         updatedAt:new Date().toISOString()
       };
     })
@@ -1150,6 +1330,27 @@ function splitImportLine(line){
   if(line.includes("|")) return line.split("|").map(part => part.trim());
   if(line.includes("\t")) return line.split("\t").map(part => part.trim());
   return [line.trim()];
+}
+
+function parseTaskParts(parts){
+  const secondIsArea = isKnownCategory(parts[1]);
+  const offset = secondIsArea ? 0 : 1;
+
+  return {
+    project:secondIsArea ? "" : String(parts[1] || "").trim(),
+    category:normaliseCategory(parts[1 + offset] || "admin"),
+    priority:normalisePriority(parts[2 + offset] || "high"),
+    dueDate:normaliseDate(parts[3 + offset] || ""),
+    status:normaliseStatus(parts[4 + offset] || "open"),
+    notes:parts.slice(5 + offset).join(" | ")
+  };
+}
+
+function isKnownCategory(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(!text) return false;
+  if(["admin","overall","c1","c2","accessories","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"].includes(text)) return true;
+  return normaliseCategory(text) !== "admin";
 }
 
 function normaliseCategory(value){
@@ -1210,6 +1411,7 @@ function normaliseDate(value){
 function resetForm(){
   form.reset();
   document.getElementById("taskId").value = "";
+  document.getElementById("project").value = "";
   document.getElementById("category").value = "overall";
   document.getElementById("priority").value = "high";
   document.getElementById("status").value = "open";
@@ -1282,6 +1484,10 @@ function escapeHTML(value){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
 }
 
 renderTasks();

@@ -324,6 +324,7 @@ function sendToTask(id){
   tasks.unshift({
     id:makeId(),
     title:item.title,
+    project:item.project || "",
     category:taskAreaFromCapture(item.type),
     priority:["payment","expense","lead"].includes(item.type) ? "high" : "medium",
     dueDate:"",
