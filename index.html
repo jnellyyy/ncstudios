@@ -4,25 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NC Studios</title>
+<title>NC Studios | Wedding Films and Bookings</title>
+<meta name="description" content="NC Studios wedding films, event coverage and social content. Enquire online and start your booking.">
 
 <link rel="manifest" href="site.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
-<meta name="theme-color" content="#0f1115">
+<meta name="theme-color" content="#08090c">
 
 <style>
 :root{
-  --bg1:#0f1115;
-  --bg2:#171a20;
-  --panel:rgba(255,255,255,0.07);
-  --panel2:rgba(255,255,255,0.10);
-  --line:rgba(255,255,255,0.12);
-  --text:#f5f7fb;
-  --muted:#a7afbe;
-  --accent:#b91c1c;
-  --accent2:#ef4444;
-  --shadow:0 20px 50px rgba(0,0,0,0.35);
+  --ink:#f8f5f0;
+  --soft:#948c83;
+  --bg:#08090c;
+  --bg2:#15171d;
+  --panel:#10131a;
+  --panel2:#171b24;
+  --line:rgba(255,255,255,0.16);
+  --red:#b91c1c;
+  --red2:#ef4444;
+  --gold:#d9b66f;
+  --green:#37d67a;
+  --shadow:0 26px 70px rgba(0,0,0,0.38);
 }
 
 *{
@@ -30,181 +33,987 @@
   -webkit-tap-highlight-color:transparent;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   min-height:100vh;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  color:var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(185,28,28,0.30), transparent 34%),
-    linear-gradient(145deg,var(--bg1),var(--bg2));
-  color:var(--text);
+    linear-gradient(180deg,rgba(8,9,12,0.22),rgba(8,9,12,0.94)),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  opacity:0.45;
+  pointer-events:none;
+  z-index:-1;
+}
+
+a{
+  color:inherit;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+.siteHeader{
+  position:fixed;
+  inset:0 0 auto;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:16px clamp(16px,4vw,52px);
+  background:linear-gradient(180deg,rgba(8,9,12,0.86),rgba(8,9,12,0.18));
+  backdrop-filter:blur(18px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  min-width:0;
+}
+
+.brandMark{
+  width:46px;
+  height:46px;
+  border-radius:17px;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:0 14px 30px rgba(0,0,0,0.32);
+}
+
+.brandText{
   display:grid;
-  place-items:center;
-  padding:18px;
+  gap:2px;
 }
 
-.shell{
-  width:min(520px,100%);
+.brandText strong{
+  font-size:15px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
 }
 
-.logo{
-  width:82px;
-  height:82px;
-  border-radius:26px;
+.brandText span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.nav a{
+  text-decoration:none;
+  color:rgba(248,245,240,0.82);
+  border:1px solid transparent;
+  padding:10px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.nav a:hover,
+.nav a:focus-visible{
+  border-color:var(--line);
+  background:rgba(255,255,255,0.08);
+  outline:none;
+}
+
+.nav .bookLink{
+  background:var(--red);
+  color:white;
+  border-color:rgba(255,255,255,0.12);
+}
+
+.hero{
+  min-height:86svh;
+  padding:112px clamp(18px,5vw,72px) 34px;
   display:grid;
-  place-items:center;
-  background:linear-gradient(145deg,#1f2937,#111827);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  font-size:24px;
-  font-weight:900;
-  letter-spacing:-1px;
-  margin:0 auto 18px;
+  align-items:end;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
 }
 
-.card{
-  background:linear-gradient(145deg,rgba(255,255,255,0.11),rgba(255,255,255,0.05));
-  border:1px solid var(--line);
-  border-radius:34px;
-  padding:26px;
-  box-shadow:var(--shadow);
-  text-align:center;
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(8,9,12,0.96),rgba(8,9,12,0.70) 48%,rgba(8,9,12,0.28)),
+    url("ncstudios-logo-1024.png");
+  background-repeat:no-repeat;
+  background-size:cover, min(64vw,720px);
+  background-position:center, right 6vw center;
+  opacity:0.92;
+  z-index:-2;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:auto -8vw -18vh 18vw;
+  height:42vh;
+  background:linear-gradient(90deg,rgba(185,28,28,0.28),rgba(217,182,111,0.16));
+  filter:blur(60px);
+  opacity:0.68;
+  z-index:-1;
+}
+
+.heroContent{
+  width:min(760px,100%);
 }
 
 .kicker{
+  margin:0 0 12px;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  font-weight:900;
+  font-size:12px;
+}
+
+h1,
+h2,
+h3,
+p{
+  margin:0;
+}
+
+h1{
+  max-width:720px;
+  font-size:clamp(54px,12vw,126px);
+  line-height:0.86;
+  letter-spacing:0;
+}
+
+.heroLead{
+  margin-top:18px;
+  color:var(--muted);
+  width:min(650px,100%);
+  font-size:clamp(17px,2.2vw,22px);
+  line-height:1.45;
+}
+
+.heroActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:28px;
+}
+
+.button{
+  min-height:48px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.14);
+  text-decoration:none;
+  color:white;
+  background:var(--red);
+  font-weight:900;
+  box-shadow:0 18px 42px rgba(185,28,28,0.28);
+}
+
+.button.secondary{
+  background:rgba(255,255,255,0.08);
+  box-shadow:none;
+}
+
+.heroFacts{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  width:min(680px,100%);
+  margin-top:32px;
+}
+
+.fact{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  border-radius:8px;
+  padding:14px;
+  backdrop-filter:blur(16px);
+}
+
+.fact strong{
+  display:block;
+  font-size:20px;
+}
+
+.fact span{
+  display:block;
   color:var(--muted);
   font-size:12px;
-  font-weight:800;
+  margin-top:4px;
+  line-height:1.35;
+}
+
+.band{
+  padding:56px clamp(18px,5vw,72px);
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.sectionHead{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:24px;
+  width:min(1160px,100%);
+  margin:0 auto 24px;
+}
+
+.sectionHead h2{
+  font-size:clamp(30px,5vw,54px);
+  line-height:0.96;
+  letter-spacing:0;
+}
+
+.sectionHead p{
+  width:min(450px,100%);
+  color:var(--muted);
+  line-height:1.55;
+}
+
+.serviceGrid{
+  width:min(1160px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.service{
+  min-height:210px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:20px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045)),
+    var(--panel);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.service span{
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
   text-transform:uppercase;
   letter-spacing:0.12em;
 }
 
-h1{
-  margin:10px 0 10px;
-  font-size:44px;
-  line-height:0.95;
-  letter-spacing:-1.8px;
+.service h3{
+  margin-top:18px;
+  font-size:25px;
+  line-height:1;
 }
 
-p{
-  margin:0;
+.service p{
+  margin-top:14px;
   color:var(--muted);
-  font-size:15px;
   line-height:1.5;
 }
 
-.actions{
+.process{
+  background:rgba(255,255,255,0.035);
+}
+
+.steps{
+  width:min(1160px,100%);
+  margin:0 auto;
   display:grid;
-  gap:10px;
-  margin-top:24px;
-}
-
-a{
-  display:block;
-  text-decoration:none;
-  color:var(--text);
-  background:var(--accent);
-  padding:15px 16px;
-  border-radius:18px;
-  font-weight:900;
-}
-
-a.secondary{
-  background:var(--panel2);
-  border:1px solid var(--line);
-}
-
-.mini{
-  margin-top:16px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
 }
 
-.stat{
-  background:rgba(255,255,255,0.06);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:12px;
+.step{
+  border-top:1px solid rgba(217,182,111,0.55);
+  padding:16px 4px 0;
 }
 
-.stat span{
-  display:block;
+.step strong{
+  color:var(--gold);
+  font-size:12px;
+  letter-spacing:0.12em;
+}
+
+.step h3{
+  margin-top:10px;
+  font-size:18px;
+}
+
+.step p{
+  margin-top:8px;
   color:var(--muted);
-  font-size:11px;
-  font-weight:800;
+  line-height:1.5;
+  font-size:14px;
 }
 
-.stat strong{
-  display:block;
-  margin-top:6px;
-  font-size:20px;
+.enquiryBand{
+  background:
+    linear-gradient(145deg,rgba(185,28,28,0.16),rgba(255,255,255,0.025)),
+    var(--bg);
 }
 
-@media(max-width:520px){
-  h1{
-    font-size:38px;
+.enquiryLayout{
+  width:min(1160px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(260px,0.76fr) minmax(0,1.24fr);
+  gap:28px;
+  align-items:start;
+}
+
+.enquiryIntro{
+  position:sticky;
+  top:96px;
+}
+
+.enquiryIntro h2{
+  font-size:clamp(32px,5.2vw,58px);
+  line-height:0.96;
+  letter-spacing:0;
+}
+
+.enquiryIntro p{
+  margin-top:16px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.formPanel{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.045)),
+    var(--panel2);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+
+.formGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.field{
+  display:grid;
+  gap:7px;
+}
+
+.field.wide{
+  grid-column:1 / -1;
+}
+
+label{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(0,0,0,0.28);
+  color:var(--ink);
+  border-radius:8px;
+  padding:13px 13px;
+  outline:none;
+}
+
+textarea{
+  min-height:124px;
+  resize:vertical;
+}
+
+select option{
+  color:#111827;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(217,182,111,0.68);
+  box-shadow:0 0 0 4px rgba(217,182,111,0.12);
+}
+
+.hiddenField{
+  position:absolute;
+  left:-9999px;
+  opacity:0;
+}
+
+.formFooter{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:16px;
+  flex-wrap:wrap;
+}
+
+.submitButton{
+  min-height:50px;
+  border:0;
+  border-radius:999px;
+  background:var(--red);
+  color:white;
+  padding:0 20px;
+  font-weight:950;
+  cursor:pointer;
+  box-shadow:0 18px 42px rgba(185,28,28,0.30);
+}
+
+.submitButton:disabled{
+  opacity:0.62;
+  cursor:not-allowed;
+}
+
+.formStatus{
+  min-height:22px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.formStatus.success{
+  color:var(--green);
+}
+
+.formStatus.error{
+  color:#ff9b9b;
+}
+
+.footer{
+  padding:26px clamp(18px,5vw,72px) 32px;
+  color:var(--soft);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.footer a{
+  color:var(--muted);
+  text-decoration:none;
+}
+
+@media(max-width:900px){
+  .siteHeader{
+    position:absolute;
+    align-items:flex-start;
   }
 
-  .card{
-    padding:22px;
+  .brandText span,
+  .nav a:not(.bookLink){
+    display:none;
+  }
+
+  .hero{
+    min-height:88svh;
+  }
+
+  .hero::before{
+    background-size:cover, 120vw;
+    background-position:center, 45vw 52%;
+  }
+
+  .heroFacts,
+  .serviceGrid,
+  .steps,
+  .enquiryLayout{
+    grid-template-columns:1fr;
+  }
+
+  .sectionHead{
+    display:grid;
+  }
+
+  .enquiryIntro{
+    position:static;
+  }
+}
+
+@media(max-width:620px){
+  .siteHeader{
+    padding:14px 16px;
+  }
+
+  .brandMark{
+    width:42px;
+    height:42px;
+  }
+
+  .hero{
+    padding:100px 16px 28px;
+  }
+
+  h1{
+    font-size:58px;
+  }
+
+  .heroLead{
+    font-size:17px;
+  }
+
+  .heroActions{
+    display:grid;
+  }
+
+  .button{
+    width:100%;
+  }
+
+  .band{
+    padding:42px 16px;
+  }
+
+  .formGrid{
+    grid-template-columns:1fr;
+  }
+
+  .formPanel{
+    padding:16px;
   }
 }
 </style>
 </head>
 
 <body>
-<div class="shell">
-  <div class="logo">NC</div>
+<header class="siteHeader">
+  <a class="brand" href="#top" aria-label="NC Studios home">
+    <img class="brandMark" src="ncstudios-logo-1024.png" alt="NC Studios logo">
+    <span class="brandText">
+      <strong>NC Studios</strong>
+      <span>Wedding films and content</span>
+    </span>
+  </a>
 
-  <section class="card">
-    <div class="kicker">Business hub</div>
-    <h1>NC Studios</h1>
-    <p>Manage bookings, clients, shoots, money, lists and delivery in one clean place.</p>
+  <nav class="nav" aria-label="Site navigation">
+    <a href="#services">Services</a>
+    <a href="#process">Process</a>
+    <a class="bookLink" href="#enquire">Enquire</a>
+    <a href="dashboard.html">Studio login</a>
+  </nav>
+</header>
 
-    <div class="mini">
-      <div class="stat">
-        <span>Bookings</span>
-        <strong id="bookingCount">0</strong>
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="heroContent">
+      <p class="kicker">Wedding films, event coverage and social content</p>
+      <h1 id="hero-title">NC Studios</h1>
+      <p class="heroLead">Cinematic coverage for weddings, celebrations and brand moments, with a simple enquiry flow that goes straight into the NC Studios booking system.</p>
+
+      <div class="heroActions">
+        <a class="button" href="#enquire">Start an enquiry</a>
+        <a class="button secondary" href="#services">See services</a>
       </div>
 
-      <div class="stat">
-        <span>Clients</span>
-        <strong id="clientCount">0</strong>
+      <div class="heroFacts" aria-label="NC Studios highlights">
+        <div class="fact">
+          <strong>Films</strong>
+          <span>Highlight reels, ceremony coverage and full wedding edits.</span>
+        </div>
+        <div class="fact">
+          <strong>Events</strong>
+          <span>Coverage for celebrations, launches and private moments.</span>
+        </div>
+        <div class="fact">
+          <strong>Content</strong>
+          <span>Short-form social clips planned for quick sharing.</span>
+        </div>
       </div>
-
-      <div class="stat">
-        <span>Projects</span>
-        <strong id="deliveryCount">0</strong>
-      </div>
-    </div>
-
-    <div class="actions">
-      <a href="dashboard.html">Open NC Studios</a>
-      <a class="secondary" href="bookings.html">Add a booking</a>
     </div>
   </section>
-</div>
 
+  <section class="band" id="services">
+    <div class="sectionHead">
+      <h2>Stories made to feel alive.</h2>
+      <p>Choose the kind of coverage you need, share your date and venue, then NC Studios can pick it up inside the app as a new booking enquiry.</p>
+    </div>
+
+    <div class="serviceGrid">
+      <article class="service">
+        <div>
+          <span>01</span>
+          <h3>Wedding films</h3>
+          <p>Coverage built around the day, from the morning energy through to the dance floor and final film delivery.</p>
+        </div>
+      </article>
+
+      <article class="service">
+        <div>
+          <span>02</span>
+          <h3>Event coverage</h3>
+          <p>Clean, polished video for birthdays, engagements, launches, church events and private celebrations.</p>
+        </div>
+      </article>
+
+      <article class="service">
+        <div>
+          <span>03</span>
+          <h3>Social content</h3>
+          <p>Vertical clips, teaser reels and short edits shaped for Instagram, TikTok and quick client previews.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="band process" id="process">
+    <div class="sectionHead">
+      <h2>From enquiry to booking.</h2>
+      <p>The form below keeps every request tidy, so names, dates, locations and next steps appear in the NC Studios workflow.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <strong>STEP 01</strong>
+        <h3>Send details</h3>
+        <p>Share the date, location, event type and what you are hoping to capture.</p>
+      </div>
+      <div class="step">
+        <strong>STEP 02</strong>
+        <h3>Check availability</h3>
+        <p>NC Studios reviews the date and follows up with the best package options.</p>
+      </div>
+      <div class="step">
+        <strong>STEP 03</strong>
+        <h3>Confirm package</h3>
+        <p>Once the plan feels right, your booking can move from enquiry to confirmed.</p>
+      </div>
+      <div class="step">
+        <strong>STEP 04</strong>
+        <h3>Plan the shoot</h3>
+        <p>Timelines, shot lists, payments and delivery stay organised inside the app.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band enquiryBand" id="enquire">
+    <div class="enquiryLayout">
+      <div class="enquiryIntro">
+        <p class="kicker">Enquire or book</p>
+        <h2>Tell NC Studios about your date.</h2>
+        <p>Complete the form and your enquiry will be saved into the NC Studios bookings list with the status set to Enquiry.</p>
+      </div>
+
+      <form class="formPanel" id="enquiryForm">
+        <div class="hiddenField" aria-hidden="true">
+          <label for="companyWebsite">Company website</label>
+          <input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="formGrid">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" type="text" autocomplete="name" required placeholder="Your name">
+          </div>
+
+          <div class="field">
+            <label for="partnerName">Partner or client name</label>
+            <input id="partnerName" name="partnerName" type="text" placeholder="Optional">
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Your number">
+          </div>
+
+          <div class="field">
+            <label for="eventType">Event type</label>
+            <select id="eventType" name="eventType" required>
+              <option value="">Select one</option>
+              <option>Wedding</option>
+              <option>Engagement</option>
+              <option>Birthday</option>
+              <option>Brand content</option>
+              <option>Church event</option>
+              <option>Other event</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="eventDate">Event date</label>
+            <input id="eventDate" name="eventDate" type="date">
+          </div>
+
+          <div class="field wide">
+            <label for="venue">Venue or location</label>
+            <input id="venue" name="venue" type="text" placeholder="Venue, city or postcode">
+          </div>
+
+          <div class="field">
+            <label for="guestCount">Guest count</label>
+            <input id="guestCount" name="guestCount" type="number" min="0" step="1" placeholder="Approximate">
+          </div>
+
+          <div class="field">
+            <label for="packageInterest">Package interest</label>
+            <select id="packageInterest" name="packageInterest">
+              <option>Not sure yet</option>
+              <option>Wedding highlight film</option>
+              <option>Full wedding film</option>
+              <option>Event coverage</option>
+              <option>Social content clips</option>
+              <option>Photo and film</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budget">Budget</label>
+            <input id="budget" name="budget" type="text" placeholder="Optional">
+          </div>
+
+          <div class="field">
+            <label for="instagram">Instagram</label>
+            <input id="instagram" name="instagram" type="text" placeholder="@username">
+          </div>
+
+          <div class="field wide">
+            <label for="message">What would you like captured?</label>
+            <textarea id="message" name="message" required placeholder="Tell us about the day, timings, style, important moments, or any questions."></textarea>
+          </div>
+        </div>
+
+        <div class="formFooter">
+          <button class="submitButton" type="submit">Send enquiry</button>
+          <p class="formStatus" data-form-status aria-live="polite"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>NC Studios</span>
+  <a href="dashboard.html">Open studio dashboard</a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=public-site-1"></script>
 <script>
-function getCount(key){
-  try{
-    const data = JSON.parse(localStorage.getItem(key)) || [];
-    return Array.isArray(data) ? data.length : 0;
-  }catch(error){
-    return 0;
+(function(){
+  const BOOKINGS_KEY = "ncstudios_bookings_v1";
+  const STORAGE_TABLE = "app_storage";
+
+  const form = document.getElementById("enquiryForm");
+  const statusEl = document.querySelector("[data-form-status]");
+  const submitButton = form.querySelector("[type='submit']");
+
+  function setStatus(message,type){
+    statusEl.textContent = message;
+    statusEl.className = "formStatus" + (type ? " " + type : "");
   }
-}
 
-document.getElementById("bookingCount").textContent = getCount("ncstudios_bookings_v1");
-document.getElementById("clientCount").textContent = getCount("ncstudios_clients_v1");
-document.getElementById("deliveryCount").textContent = getCount("ncstudios_delivery_v1");
+  function value(formData,name){
+    return String(formData.get(name) || "").trim();
+  }
 
-if("serviceWorker" in navigator){
-  window.addEventListener("load", function(){
-    navigator.serviceWorker.register("sw.js").catch(function(){});
+  function uid(){
+    if(window.crypto && crypto.randomUUID){
+      return crypto.randomUUID();
+    }
+
+    return "website_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+  }
+
+  function wait(ms){
+    return new Promise(function(resolve){
+      setTimeout(resolve,ms);
+    });
+  }
+
+  async function waitForSupabase(){
+    for(let attempt = 0; attempt < 50; attempt++){
+      if(window.ncSupabase){
+        return true;
+      }
+
+      await wait(120);
+    }
+
+    return false;
+  }
+
+  function buildNotes(data){
+    return [
+      "Website enquiry",
+      "Email: " + data.email,
+      "Phone: " + (data.phone || "Not provided"),
+      "Event type: " + data.eventType,
+      "Partner/client name: " + (data.partnerName || "Not provided"),
+      "Guest count: " + (data.guestCount || "Not provided"),
+      "Package interest: " + (data.packageInterest || "Not sure yet"),
+      "Budget: " + (data.budget || "Not provided"),
+      "Instagram: " + (data.instagram || "Not provided"),
+      "",
+      "Message:",
+      data.message,
+      "",
+      "Submitted: " + new Date().toLocaleString("en-GB")
+    ].join("\n");
+  }
+
+  function buildBooking(data){
+    const now = new Date().toISOString();
+    const eventName = data.eventType ? data.eventType + " enquiry" : "Website enquiry";
+
+    return {
+      id:uid(),
+      clientName:data.fullName,
+      eventName:eventName,
+      eventDate:data.eventDate,
+      status:"enquiry",
+      packagePrice:0,
+      depositPaid:0,
+      location:data.venue,
+      nextAction:"Reply to website enquiry",
+      notes:buildNotes(data),
+      source:"website",
+      contactEmail:data.email,
+      contactPhone:data.phone,
+      updatedAt:now,
+      createdAt:now
+    };
+  }
+
+  async function readRemoteBookings(){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      throw new Error("Booking system is not available yet.");
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .select("data")
+      .eq("app_key", BOOKINGS_KEY)
+      .maybeSingle();
+
+    if(response.error){
+      throw response.error;
+    }
+
+    return Array.isArray(response.data && response.data.data) ? response.data.data : [];
+  }
+
+  async function saveBooking(booking){
+    const existing = await readRemoteBookings();
+    const merged = [
+      booking,
+      ...existing.filter(function(item){
+        return item && item.id !== booking.id;
+      })
+    ];
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .upsert(
+        {
+          app_key:BOOKINGS_KEY,
+          data:merged,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:"app_key"
+        }
+      );
+
+    if(response.error){
+      throw response.error;
+    }
+
+    try{
+      localStorage.setItem(BOOKINGS_KEY,JSON.stringify(merged));
+    }catch(error){
+      console.warn("Could not mirror enquiry locally",error);
+    }
+  }
+
+  form.addEventListener("submit",async function(event){
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    if(value(formData,"companyWebsite")){
+      form.reset();
+      setStatus("Thank you. Your enquiry has been received.","success");
+      return;
+    }
+
+    const data = {
+      fullName:value(formData,"fullName"),
+      partnerName:value(formData,"partnerName"),
+      email:value(formData,"email"),
+      phone:value(formData,"phone"),
+      eventType:value(formData,"eventType"),
+      eventDate:value(formData,"eventDate"),
+      venue:value(formData,"venue"),
+      guestCount:value(formData,"guestCount"),
+      packageInterest:value(formData,"packageInterest"),
+      budget:value(formData,"budget"),
+      instagram:value(formData,"instagram"),
+      message:value(formData,"message")
+    };
+
+    if(!data.fullName || !data.email || !data.eventType || !data.message){
+      setStatus("Please complete your name, email, event type and message.","error");
+      return;
+    }
+
+    submitButton.disabled = true;
+    setStatus("Sending your enquiry...");
+
+    try{
+      await saveBooking(buildBooking(data));
+      form.reset();
+      setStatus("Thank you. Your enquiry has been received.","success");
+    }catch(error){
+      console.warn("Website enquiry failed",error);
+      setStatus("This could not send right now. Please try again in a moment.","error");
+    }finally{
+      submitButton.disabled = false;
+    }
   });
-}
+})();
 </script>
 </body>
 </html>
