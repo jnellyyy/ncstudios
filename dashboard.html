@@ -778,7 +778,7 @@ body::before{
 </section>
 
 <section class="quick">
-  <a href="bookings.html">New booking</a>
+  <a href="bookings.html?status=enquiry">New enquiries</a>
   <a href="finance.html">Add money</a>
 </section>
 
@@ -875,15 +875,15 @@ body::before{
   </section>
 
   <section class="tiles">
-  <a class="tile" href="bookings.html">
+  <a class="tile" href="bookings.html?status=enquiry">
     <div>
-      <div class="icon">B</div>
-      <h3>Bookings</h3>
-      <span class="tileMetric" id="bookingWidget">0</span>
-      <p>Enquiries, consultations and confirmed jobs.</p>
+      <div class="icon">E</div>
+      <h3>Enquiries</h3>
+      <span class="tileMetric" id="enquiryWidget">0</span>
+      <p>New availability forms from the website.</p>
     </div>
     <div class="tileFooter">
-      <span>Open</span>
+      <span>Review</span>
       <span>›</span>
     </div>
   </a>
@@ -1121,7 +1121,7 @@ function updateDashboardFromLocal(){
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
 
   document.getElementById("incomeTotal").textContent = money(income);
-  document.getElementById("bookingWidget").textContent = bookings.length;
+  setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
   document.getElementById("clientWidget").textContent = clients.length;
   document.getElementById("financeWidget").textContent = money(income);
   document.getElementById("deliveryWidget").textContent = delivery.length;
@@ -1196,7 +1196,7 @@ async function updateDashboardFromSupabase(){
 
       document.getElementById("incomeTotal").textContent = money(income);
       document.getElementById("clientsTotal").textContent = appStorageClients.length;
-      document.getElementById("bookingWidget").textContent = bookings.length;
+      setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
       document.getElementById("financeWidget").textContent = money(income);
       document.getElementById("deliveryWidget").textContent = delivery.length;
       document.getElementById("shotsWidget").textContent = shots.length;

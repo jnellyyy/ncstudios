@@ -170,6 +170,9 @@
       status:data.status || "enquiry",
       nextAction:data.nextAction || "Reply to website enquiry",
       source:data.source || "website",
+      contactEmail:data.contactEmail || data.contactemail || "",
+      contactPhone:data.contactPhone || data.contactphone || "",
+      createdAt:data.createdAt || data.updatedAt || new Date().toISOString(),
       updatedAt:data.updatedAt || new Date().toISOString()
     };
   }

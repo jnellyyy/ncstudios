@@ -346,6 +346,20 @@ select option{
   color:#e5e7eb;
 }
 
+.sourcePill{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  margin-top:8px;
+  padding:0 9px;
+  border-radius:999px;
+  border:1px solid rgba(96,165,250,0.28);
+  background:rgba(96,165,250,0.13);
+  color:#bfdbfe;
+  font-size:11px;
+  font-weight:900;
+}
+
 .meta{
   display:grid;
   gap:8px;
@@ -386,6 +400,62 @@ select option{
   padding:30px 16px;
   border:1px dashed var(--line);
   border-radius:22px;
+}
+
+.enquiryInbox{
+  margin-bottom:12px;
+  border:1px solid rgba(96,165,250,0.22);
+  background:linear-gradient(145deg,rgba(96,165,250,0.14),rgba(255,255,255,0.045));
+  border-radius:22px;
+  padding:13px;
+}
+
+.enquiryInboxHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.enquiryInboxHead h4{
+  margin:0;
+  font-size:15px;
+}
+
+.enquiryInboxHead p{
+  margin:3px 0 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+
+.enquiryInboxList{
+  display:grid;
+  gap:8px;
+}
+
+.enquiryRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(0,0,0,0.14);
+  border-radius:16px;
+  padding:10px;
+}
+
+.enquiryRow strong{
+  display:block;
+  font-size:13px;
+}
+
+.enquiryRow span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:11px;
 }
 
 .nav{
@@ -653,6 +723,7 @@ select option{
         </div>
 
         <div class="cardBody">
+          <div id="enquiryInbox" class="enquiryInbox"></div>
           <div id="bookingList" class="list"></div>
         </div>
       </section>
@@ -678,8 +749,10 @@ form.addEventListener("submit", function(event){
   event.preventDefault();
 
   const id = document.getElementById("bookingId").value || crypto.randomUUID();
+  const existingBooking = bookings.find(item => item.id === id) || {};
 
   const booking = {
+    ...existingBooking,
     id,
     clientName: document.getElementById("clientName").value.trim(),
     eventName: document.getElementById("eventName").value.trim(),
@@ -690,6 +763,7 @@ form.addEventListener("submit", function(event){
     location: document.getElementById("location").value.trim(),
     nextAction: document.getElementById("nextAction").value.trim(),
     notes: document.getElementById("notes").value.trim(),
+    createdAt: existingBooking.createdAt || new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
 
@@ -737,13 +811,14 @@ function renderBookings(){
     });
 
   updateStats();
+  renderEnquiryInbox();
 
   if(visibleBookings.length === 0){
     list.innerHTML = `
       <div class="empty">
-        No bookings here yet.
+        ${filter === "enquiry" ? "No new enquiries right now." : "No bookings here yet."}
         <br><br>
-        Add your first enquiry using the form.
+        ${filter === "enquiry" ? "Website availability forms will land here." : "Add your first enquiry using the form."}
       </div>
     `;
     return;
@@ -758,6 +833,7 @@ function renderBookings(){
           <div>
             <h4>${escapeHTML(booking.clientName)}</h4>
             <small>${escapeHTML(booking.eventName || "No event name added")}</small>
+            ${booking.source === "website" ? `<span class="sourcePill">Website enquiry</span>` : ""}
           </div>
 
           <span class="badge ${booking.status}">${statusLabel(booking.status)}</span>
@@ -773,6 +849,20 @@ function renderBookings(){
             <span>Location</span>
             <strong>${escapeHTML(booking.location || "Not added")}</strong>
           </div>
+
+          ${contactEmail(booking) ? `
+          <div class="metaLine">
+            <span>Email</span>
+            <strong>${escapeHTML(contactEmail(booking))}</strong>
+          </div>
+          ` : ""}
+
+          ${contactPhone(booking) ? `
+          <div class="metaLine">
+            <span>Phone</span>
+            <strong>${escapeHTML(contactPhone(booking))}</strong>
+          </div>
+          ` : ""}
 
           <div class="metaLine">
             <span>Package</span>
@@ -798,6 +888,8 @@ function renderBookings(){
         ${booking.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(booking.notes)}</p>` : ""}
 
 	        <div class="bookingActions">
+            ${booking.status === "enquiry" ? `<button type="button" class="secondary" onclick="setBookingStatus('${booking.id}','consultation')">Consultation</button>` : ""}
+            ${booking.status !== "confirmed" && booking.status !== "completed" ? `<button type="button" class="secondary" onclick="setBookingStatus('${booking.id}','confirmed')">Confirm</button>` : ""}
 	          <button type="button" class="secondary" onclick="editBooking('${booking.id}')">Edit</button>
 	          <button type="button" class="ghost" onclick="postponeBooking('${booking.id}')">Postpone</button>
 	          <button type="button" class="ghost" onclick="duplicateBooking('${booking.id}')">Duplicate</button>
@@ -818,6 +910,60 @@ function updateStats(){
   document.getElementById("statConsultation").textContent = consultation;
   document.getElementById("statConfirmed").textContent = confirmed;
   document.getElementById("statValue").textContent = money(totalValue);
+}
+
+function enquiryItems(){
+  return bookings
+    .filter(item => item.status === "enquiry")
+    .sort((a,b) => String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")));
+}
+
+function renderEnquiryInbox(){
+  const inbox = document.getElementById("enquiryInbox");
+  if(!inbox) return;
+
+  const enquiries = enquiryItems();
+  const latest = enquiries.slice(0,3);
+
+  if(!enquiries.length){
+    inbox.innerHTML = `
+      <div class="enquiryInboxHead">
+        <div>
+          <h4>Website enquiry inbox</h4>
+          <p>No new website enquiries waiting.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  inbox.innerHTML = `
+    <div class="enquiryInboxHead">
+      <div>
+        <h4>${enquiries.length} new ${enquiries.length === 1 ? "enquiry" : "enquiries"}</h4>
+        <p>Availability form submissions land here first, then you can move them to consultation or confirmed.</p>
+      </div>
+      <button type="button" class="secondary" onclick="showEnquiries()">View</button>
+    </div>
+
+    <div class="enquiryInboxList">
+      ${latest.map(item => `
+        <div class="enquiryRow">
+          <div>
+            <strong>${escapeHTML(item.clientName || "New enquiry")}</strong>
+            <span>${escapeHTML(item.eventName || "Website enquiry")} · ${formatDate(item.eventDate)}</span>
+          </div>
+          <button type="button" class="ghost" onclick="editBooking('${item.id}')">Open</button>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function showEnquiries(){
+  document.getElementById("filterStatus").value = "enquiry";
+  renderBookings();
+  document.getElementById("bookingList").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function editBooking(id){
@@ -869,6 +1015,22 @@ function postponeBooking(id){
   renderBookings();
 }
 
+function setBookingStatus(id,status){
+  bookings = bookings.map(item => {
+    if(item.id !== id) return item;
+
+    return {
+      ...item,
+      status,
+      nextAction:status === "consultation" && !item.nextAction ? "Book consultation" : item.nextAction,
+      updatedAt:new Date().toISOString()
+    };
+  });
+
+  saveBookings();
+  renderBookings();
+}
+
 function deleteBooking(id){
   const booking = bookings.find(item => item.id === id);
   if(!booking) return;
@@ -886,6 +1048,16 @@ function resetForm(){
   form.reset();
   document.getElementById("bookingId").value = "";
   document.getElementById("status").value = "enquiry";
+}
+
+function initialiseFilter(){
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get("status") || params.get("filter");
+  const select = document.getElementById("filterStatus");
+
+  if(requested && [...select.options].some(option => option.value === requested)){
+    select.value = requested;
+  }
 }
 
 function exportBookings(){
@@ -940,6 +1112,10 @@ function importBookings(event){
           location:item.location || "",
           nextAction:item.nextAction || "",
           notes:item.notes || "",
+          source:item.source || "",
+          contactEmail:item.contactEmail || item.contactemail || "",
+          contactPhone:item.contactPhone || item.contactphone || "",
+          createdAt:item.createdAt || item.updatedAt || new Date().toISOString(),
           updatedAt:item.updatedAt || new Date().toISOString()
         }));
 
@@ -1043,6 +1219,14 @@ function statusLabel(status){
   return labels[status] || "Enquiry";
 }
 
+function contactEmail(booking){
+  return booking.contactEmail || booking.contactemail || "";
+}
+
+function contactPhone(booking){
+  return booking.contactPhone || booking.contactphone || "";
+}
+
 function money(value){
   return new Intl.NumberFormat("en-GB", {
     style:"currency",
@@ -1070,6 +1254,7 @@ function escapeHTML(value){
     .replaceAll("'","&#039;");
 }
 
+initialiseFilter();
 renderBookings();
 </script>
 </body>
