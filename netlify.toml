@@ -2,6 +2,18 @@
   publish = "docs"
   command = ""
 
+[[redirects]]
+  from = "/me1"
+  to = "/index.html?me=1"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/me1/"
+  to = "/index.html?me=1"
+  status = 302
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
