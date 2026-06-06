@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512">
+  <title>nc dot write watermark</title>
+  <desc>transparent animated nc studios watermark where a red dot writes the nc mark.</desc>
+  <defs>
+    <filter id="red-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.95 0 0.15 0 0 0 0 0 0.15 0 0 0 0 0 0.9 0" result="red"/>
+      <feMerge>
+        <feMergeNode in="red"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <path id="nc-path" pathLength="980" d="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248"/>
+  </defs>
+  <style>
+    svg{background:transparent}
+    .glow,.core{
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      stroke-dasharray:980;
+      stroke-dashoffset:980;
+      animation:draw 2.35s cubic-bezier(.18,.86,.22,1) .15s forwards;
+    }
+    .glow{
+      stroke:#ff2525;
+      stroke-width:34;
+      filter:url(#red-glow);
+    }
+    .core{
+      stroke:#fff;
+      stroke-width:10;
+      filter:drop-shadow(0 0 10px rgba(255,255,255,.7));
+    }
+    .dot{
+      fill:#ff3030;
+      filter:url(#red-glow);
+      opacity:0;
+      animation:dot-on .01s linear .15s forwards, dot-off .22s ease 2.55s forwards;
+    }
+    @keyframes draw{to{stroke-dashoffset:0}}
+    @keyframes dot-on{to{opacity:1}}
+    @keyframes dot-off{to{opacity:0}}
+  </style>
+  <use class="glow" href="#nc-path"/>
+  <use class="core" href="#nc-path"/>
+  <circle class="dot" r="13">
+    <animateMotion dur="2.35s" begin=".15s" fill="freeze">
+      <mpath href="#nc-path"/>
+    </animateMotion>
+  </circle>
+</svg>
