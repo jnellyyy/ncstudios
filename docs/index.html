@@ -114,7 +114,7 @@ p{
     linear-gradient(90deg,rgba(255,255,255,0.035) 1px, transparent 1px),
     #050507;
   background-size:100% 100%,100% 100%,42px 42px,42px 42px,100% 100%;
-  animation:introLeave 760ms cubic-bezier(.72,0,.2,1) 3300ms forwards;
+  animation:introLeave 760ms cubic-bezier(.72,0,.2,1) 4700ms forwards;
 }
 
 .introLoader::before,
@@ -189,11 +189,8 @@ p{
   width:min(560px,86vw);
   aspect-ratio:2 / 1;
   display:block;
-  clip-path:inset(0 100% 0 0);
-  transform:translateY(26px) scale(0.96);
-  opacity:0;
-  filter:drop-shadow(0 0 26px rgba(239,68,68,0.34));
-  animation:introLogoReveal 900ms cubic-bezier(.2,.8,.2,1) 1500ms forwards, introLogoFlicker 1700ms linear 1500ms both;
+  transform:translateY(0) scale(1);
+  opacity:1;
 }
 
 .introBrand::after{
@@ -204,7 +201,7 @@ p{
   transform:translateX(-120%) skewX(-18deg);
   opacity:0;
   mix-blend-mode:screen;
-  animation:introLogoShine 720ms ease 2230ms forwards;
+  animation:introLogoShine 720ms ease 3550ms forwards;
 }
 
 .introWrite{
@@ -213,35 +210,14 @@ p{
   z-index:2;
   opacity:0;
   overflow:visible;
-  animation:introWriteShow 180ms ease 1240ms forwards, introWriteFade 420ms ease 2700ms forwards;
-}
-
-.introWritePath{
-  fill:none;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:980;
-  stroke-dashoffset:980;
-  animation:introPathDraw 1540ms cubic-bezier(.18,.86,.22,1) 1320ms forwards;
-}
-
-.introWritePath.glow{
-  stroke:#ff2525;
-  stroke-width:28;
-  filter:drop-shadow(0 0 18px rgba(239,68,68,0.88)) drop-shadow(0 0 44px rgba(185,28,28,0.48));
-}
-
-.introWritePath.core{
-  stroke:#fff;
-  stroke-width:8;
-  filter:drop-shadow(0 0 10px rgba(255,255,255,0.45));
+  animation:introWriteShow 180ms ease 1080ms forwards, introWriteFade 360ms ease 3250ms forwards;
 }
 
 .introWriterDot{
   fill:#ff3030;
   opacity:0;
-  filter:drop-shadow(0 0 14px rgba(239,68,68,0.95)) drop-shadow(0 0 34px rgba(185,28,28,0.62));
-  animation:introWriterDotShow 1ms linear 1320ms forwards, introWriterDotHide 180ms ease 2850ms forwards;
+  filter:drop-shadow(0 0 16px rgba(239,68,68,1)) drop-shadow(0 0 42px rgba(185,28,28,0.78));
+  animation:introWriterDotShow 1ms linear 1120ms forwards, introWriterDotHide 180ms ease 3230ms forwards;
 }
 
 .introLogo{
@@ -252,7 +228,7 @@ p{
   border-radius:8px;
   opacity:0;
   filter:drop-shadow(0 0 18px rgba(239,68,68,0.40)) drop-shadow(0 0 42px rgba(185,28,28,0.22));
-  animation:introLogoSettle 520ms ease 2600ms forwards;
+  animation:introLogoSettle 620ms ease 3370ms forwards;
 }
 
 .introSignal{
@@ -263,7 +239,7 @@ p{
   height:1px;
   background:linear-gradient(90deg,transparent,rgba(217,182,111,0.52),transparent);
   opacity:0;
-  animation:introSignal 900ms ease 2350ms forwards;
+  animation:introSignal 900ms ease 3520ms forwards;
 }
 
 .siteHeader{
@@ -1199,16 +1175,6 @@ body.me-panel-open .mePanel{
   100%{transform:translate(0,0) scale(0.9);opacity:0;}
 }
 
-@keyframes introLogoReveal{
-  to{clip-path:inset(0 0 0 0);transform:translateY(0) scale(1);opacity:1;}
-}
-
-@keyframes introLogoFlicker{
-  0%,8%,12%,18%{opacity:0.22;filter:drop-shadow(0 0 0 rgba(239,68,68,0));}
-  10%,14%,24%{opacity:1;filter:drop-shadow(0 0 34px rgba(239,68,68,0.56)) drop-shadow(0 0 82px rgba(185,28,28,0.34));}
-  100%{opacity:1;filter:drop-shadow(0 0 26px rgba(239,68,68,0.34));}
-}
-
 @keyframes introLogoShine{
   0%{opacity:0;transform:translateX(-120%) skewX(-18deg);}
   18%{opacity:0.7;}
@@ -1221,10 +1187,6 @@ body.me-panel-open .mePanel{
 
 @keyframes introWriteFade{
   to{opacity:0;}
-}
-
-@keyframes introPathDraw{
-  to{stroke-dashoffset:0;}
 }
 
 @keyframes introWriterDotShow{
@@ -1401,10 +1363,8 @@ body.me-panel-open .mePanel{
     <div class="introOrbit" aria-hidden="true"></div>
     <div class="introBrand" aria-hidden="true">
       <svg class="introWrite" viewBox="0 0 1024 512" focusable="false">
-        <path class="introWritePath glow" pathLength="980" d="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
-        <path class="introWritePath core" pathLength="980" d="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
         <circle class="introWriterDot" r="12">
-          <animateMotion dur="1.54s" begin="1.32s" fill="freeze" path="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
+          <animateMotion dur="2.1s" begin="1.12s" fill="freeze" path="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
         </circle>
       </svg>
       <img class="introLogo" src="ncstudios-logo-transparent.png" alt="">
@@ -1746,7 +1706,7 @@ body.me-panel-open .mePanel{
   if(prefersReducedMotion){
     finishIntro();
   }else{
-    setTimeout(finishIntro,3800);
+    setTimeout(finishIntro,5400);
   }
 
   function initReveals(){
