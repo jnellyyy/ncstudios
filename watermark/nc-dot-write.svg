@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512">
   <title>nc glowing dot watermark</title>
-  <desc>transparent animated nc studios watermark where a red neon dot, glow, and light flare move through the handwritten nc route.</desc>
+  <desc>transparent animated nc studios watermark where one red neon dot with glow and light flare moves through the handwritten nc route.</desc>
   <defs>
     <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ff4a4a" stop-opacity=".95"/>
-      <stop offset="34%" stop-color="#ff1f1f" stop-opacity=".46"/>
-      <stop offset="72%" stop-color="#b91c1c" stop-opacity=".16"/>
+      <stop offset="0%" stop-color="#ff4a4a" stop-opacity=".38"/>
+      <stop offset="38%" stop-color="#ff1f1f" stop-opacity=".22"/>
+      <stop offset="76%" stop-color="#b91c1c" stop-opacity=".09"/>
       <stop offset="100%" stop-color="#b91c1c" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="flare-beam" x1="0%" y1="50%" x2="100%" y2="50%">
@@ -53,13 +53,6 @@
       transform-origin:center;
       animation:flare-breathe 2.1s ease-in-out .12s both;
     }
-    .spark{
-      fill:#fff;
-      opacity:.9;
-      filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
-      animation:spark-pulse 2.1s ease-in-out .12s both;
-      transform-origin:center;
-    }
     .dot{
       fill:#ff3030;
       filter:drop-shadow(0 0 10px rgba(255,48,48,1)) drop-shadow(0 0 26px rgba(185,28,28,.82));
@@ -80,17 +73,11 @@
       82%{transform:scaleX(1.45);opacity:.9}
       100%{transform:scaleX(.8);opacity:.42}
     }
-    @keyframes spark-pulse{
-      0%,100%{transform:scale(.72);opacity:.68}
-      30%{transform:scale(1.18);opacity:1}
-      68%{transform:scale(.88);opacity:.76}
-    }
   </style>
   <g class="traveller">
-    <circle class="halo" r="58"/>
+    <circle class="halo" r="70"/>
     <rect class="beam-wide" x="-104" y="-5" width="208" height="10" rx="5"/>
     <rect class="beam-tall" x="-76" y="-3" width="152" height="6" rx="3"/>
-    <circle class="spark" r="5"/>
     <circle class="dot" r="12">
       <animate attributeName="r" values="10;16;11;14;12" dur="2.1s" begin=".12s" fill="freeze"/>
     </circle>

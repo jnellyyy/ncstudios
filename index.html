@@ -148,42 +148,6 @@ p{
   isolation:isolate;
 }
 
-.introOrbit{
-  position:absolute;
-  width:min(560px,76vw);
-  height:118px;
-  border-bottom:1px solid rgba(239,68,68,0.28);
-  filter:drop-shadow(0 0 18px rgba(239,68,68,0.34));
-  opacity:0.92;
-}
-
-.introOrbit::before,
-.introOrbit::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:-1px;
-  width:15px;
-  height:15px;
-  border-radius:999px;
-  background:#ff3f3f;
-  box-shadow:0 0 18px rgba(239,68,68,0.95),0 0 48px rgba(185,28,28,0.72),0 0 88px rgba(185,28,28,0.42);
-}
-
-.introOrbit::before{
-  animation:introDotBounce 1550ms cubic-bezier(.18,.86,.22,1) both;
-}
-
-.introOrbit::after{
-  width:44px;
-  height:44px;
-  margin-left:-14px;
-  margin-bottom:-14px;
-  background:rgba(239,68,68,0.15);
-  filter:blur(8px);
-  animation:introDotGlow 1550ms ease both;
-}
-
 .introBrand{
   position:relative;
   width:min(560px,86vw);
@@ -210,14 +174,14 @@ p{
   z-index:2;
   opacity:0;
   overflow:visible;
-  animation:introWriteShow 180ms ease 1080ms forwards, introWriteFade 360ms ease 3250ms forwards;
+  animation:introWriteShow 180ms ease 520ms forwards, introWriteFade 360ms ease 3020ms forwards;
 }
 
 .introWriterDot{
   fill:#ff3030;
   opacity:0;
-  filter:drop-shadow(0 0 16px rgba(239,68,68,1)) drop-shadow(0 0 42px rgba(185,28,28,0.78));
-  animation:introWriterDotShow 1ms linear 1120ms forwards, introWriterDotHide 180ms ease 3230ms forwards;
+  filter:drop-shadow(0 0 20px rgba(239,68,68,1)) drop-shadow(0 0 52px rgba(185,28,28,0.84));
+  animation:introWriterDotShow 1ms linear 560ms forwards, introWriterDotHide 180ms ease 3000ms forwards;
 }
 
 .introLogo{
@@ -228,7 +192,7 @@ p{
   border-radius:8px;
   opacity:0;
   filter:drop-shadow(0 0 18px rgba(239,68,68,0.40)) drop-shadow(0 0 42px rgba(185,28,28,0.22));
-  animation:introLogoSettle 620ms ease 3370ms forwards;
+  animation:introLogoSettle 620ms ease 3180ms forwards;
 }
 
 .introSignal{
@@ -239,7 +203,7 @@ p{
   height:1px;
   background:linear-gradient(90deg,transparent,rgba(217,182,111,0.52),transparent);
   opacity:0;
-  animation:introSignal 900ms ease 3520ms forwards;
+  animation:introSignal 900ms ease 3300ms forwards;
 }
 
 .siteHeader{
@@ -264,16 +228,6 @@ p{
   gap:0;
   text-decoration:none;
   min-width:0;
-}
-
-.brand::before{
-  content:"";
-  width:8px;
-  height:8px;
-  border-radius:999px;
-  background:var(--red2);
-  box-shadow:0 0 12px rgba(239,68,68,0.82),0 0 34px rgba(185,28,28,0.44);
-  animation:brandDotRun 1700ms cubic-bezier(.22,.8,.25,1) 320ms both, neonPulse 2600ms ease-in-out infinite 2200ms;
 }
 
 .brandMark{
@@ -1156,25 +1110,6 @@ body.me-panel-open .mePanel{
   to{opacity:1;background-position:0 0,0 0,0 0;}
 }
 
-@keyframes introDotBounce{
-  0%{transform:translate(-42vw,0) scale(0.74);opacity:0;}
-  10%{opacity:1;}
-  20%{transform:translate(-30vw,-66px) scale(1);}
-  34%{transform:translate(-18vw,0) scale(0.82);}
-  48%{transform:translate(-7vw,-48px) scale(1);}
-  62%{transform:translate(3vw,0) scale(0.86);}
-  76%{transform:translate(12vw,-30px) scale(1);}
-  90%{transform:translate(0,0) scale(1.62);}
-  100%{transform:translate(0,0) scale(1);}
-}
-
-@keyframes introDotGlow{
-  0%{transform:translate(-42vw,0) scale(0.8);opacity:0;}
-  10%,78%{opacity:0.7;}
-  90%{transform:translate(0,0) scale(2.25);opacity:1;}
-  100%{transform:translate(0,0) scale(0.9);opacity:0;}
-}
-
 @keyframes introLogoShine{
   0%{opacity:0;transform:translateX(-120%) skewX(-18deg);}
   18%{opacity:0.7;}
@@ -1232,18 +1167,6 @@ body.me-panel-open .mePanel{
 
 @keyframes riseIn{
   to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes brandDotRun{
-  0%{transform:translateX(76vw) scale(0.78);opacity:0;}
-  22%{opacity:1;}
-  62%{transform:translateX(18px) scale(1.05);}
-  100%{transform:translateX(0) scale(1);}
-}
-
-@keyframes neonPulse{
-  0%,100%{opacity:0.76;box-shadow:0 0 10px rgba(239,68,68,0.72),0 0 30px rgba(185,28,28,0.32);}
-  50%{opacity:1;box-shadow:0 0 14px rgba(239,68,68,0.96),0 0 44px rgba(185,28,28,0.48);}
 }
 
 @keyframes neonFlicker{
@@ -1360,11 +1283,11 @@ body.me-panel-open .mePanel{
 <body class="is-loading">
 <div class="introLoader" role="status" aria-label="nc studios loading">
   <div class="introStage">
-    <div class="introOrbit" aria-hidden="true"></div>
     <div class="introBrand" aria-hidden="true">
       <svg class="introWrite" viewBox="0 0 1024 512" focusable="false">
-        <circle class="introWriterDot" r="12">
-          <animateMotion dur="2.1s" begin="1.12s" fill="freeze" path="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
+        <circle class="introWriterDot" r="16">
+          <animate attributeName="r" values="14;20;15;18;16" dur="2.44s" begin="0.56s" fill="freeze"/>
+          <animateMotion dur="2.44s" begin="0.56s" fill="freeze" path="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
         </circle>
       </svg>
       <img class="introLogo" src="ncstudios-logo-transparent.png" alt="">
