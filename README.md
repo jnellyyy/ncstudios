@@ -2,6 +2,8 @@
 
 Public website and studio dashboard for NC Studios.
 
+Domain: `ncstudiouk.co.uk`
+
 ## Pages
 
 - `index.html` is the public website. This is the page your domain should open.

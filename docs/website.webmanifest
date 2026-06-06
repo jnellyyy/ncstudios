@@ -1,12 +1,12 @@
 {
-  "name": "NC Studios App",
-  "short_name": "NC App",
-  "description": "NC Studios business dashboard for bookings, clients, finance, shot lists, gear, buying and delivery.",
-  "start_url": "./dashboard.html?v=sync-fixed-1",
+  "name": "NC Studios",
+  "short_name": "NC Studios",
+  "description": "NC Studios photography and videography for weddings, engagements, events and content.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050507",
-  "theme_color": "#050507",
+  "background_color": "#07080b",
+  "theme_color": "#07080b",
   "orientation": "portrait",
   "icons": [
     {

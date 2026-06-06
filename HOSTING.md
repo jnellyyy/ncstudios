@@ -4,6 +4,8 @@ The public website is in `docs/`. Host that folder only.
 
 Do not publish the whole repo as the public website unless the dashboard pages are protected with login/password access.
 
+Domain: `ncstudiouk.co.uk`
+
 ## Recommended: Netlify
 
 1. Push this repo to GitHub.
@@ -18,8 +20,24 @@ Do not publish the whole repo as the public website unless the dashboard pages a
 
 For external DNS:
 
-- Root/apex domain, like `yourdomain.co.uk`: use Netlify's shown ALIAS/ANAME option if your domain provider supports it. If not, use an A record to `75.2.60.5`.
-- `www.yourdomain.co.uk`: add a CNAME pointing to your Netlify site name, like `your-site-name.netlify.app`.
+- Root/apex domain, `ncstudiouk.co.uk`: use Netlify's shown ALIAS/ANAME option if your domain provider supports it. If not, use an A record to `75.2.60.5`.
+- `www.ncstudiouk.co.uk`: add a CNAME pointing to your Netlify site name, like `your-site-name.netlify.app`.
+
+For Namecheap, this normally means:
+
+```text
+Type: A Record
+Host: @
+Value: 75.2.60.5
+TTL: Automatic
+```
+
+```text
+Type: CNAME Record
+Host: www
+Value: your-site-name.netlify.app
+TTL: Automatic
+```
 
 DNS can take 24-48 hours to fully update.
 
@@ -33,23 +51,42 @@ DNS can take 24-48 hours to fully update.
 
 For GitHub Pages DNS:
 
-- Root/apex domain, like `yourdomain.co.uk`: use A records for:
+- Root/apex domain, `ncstudiouk.co.uk`: use A records for:
   - `185.199.108.153`
   - `185.199.109.153`
   - `185.199.110.153`
   - `185.199.111.153`
-- `www.yourdomain.co.uk`: add a CNAME pointing to your GitHub Pages domain, usually `your-github-username.github.io`.
+- `www.ncstudiouk.co.uk`: add a CNAME pointing to your GitHub Pages domain, usually `your-github-username.github.io`.
 
 After GitHub accepts the domain, turn on Enforce HTTPS when it becomes available.
 
 ## Domain File
 
-Once you know the exact domain, add a file at `docs/CNAME` containing only the domain name.
+If you use GitHub Pages, add a file at `docs/CNAME` containing only the domain name.
 
 Example:
 
 ```text
-www.yourdomain.co.uk
+www.ncstudiouk.co.uk
 ```
 
 Use `www` as the main site unless you specifically want the root domain as primary.
+
+## Updating Website Content
+
+Open the live site with Me Mode turned on:
+
+```text
+https://ncstudiouk.co.uk/?me=1
+```
+
+Use the Me Mode button to edit page text and preview image/video changes.
+
+When you are happy:
+
+1. Click Export JSON.
+2. Save the downloaded file as `site-content.json`.
+3. Put `site-content.json` inside `docs/`.
+4. Redeploy the site.
+
+Images can be uploaded into Me Mode for quick previews. For large videos, upload the video file to your host or storage first, then paste the video URL into Me Mode.

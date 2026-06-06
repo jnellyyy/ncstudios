@@ -28,6 +28,11 @@
   --gold:#d9b66f;
   --green:#39d27d;
   --shadow:0 28px 80px rgba(0,0,0,0.42);
+  --hero-media:url("ncstudios-logo-1024.png");
+  --feature-media:url("ncstudios-logo-1024.png");
+  --film-one-media:url("ncstudios-logo-1024.png");
+  --film-two-media:url("ncstudios-logo-1024.png");
+  --film-three-media:url("ncstudios-logo-1024.png");
 }
 
 *{
@@ -49,6 +54,7 @@ body{
     linear-gradient(145deg,var(--bg),var(--bg2));
   background-size:48px 48px,48px 48px,100% 100%;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  animation:pageWake 900ms ease both;
 }
 
 a{
@@ -80,6 +86,9 @@ p{
   padding:16px clamp(16px,4vw,54px);
   background:linear-gradient(180deg,rgba(7,8,11,0.92),rgba(7,8,11,0.24));
   backdrop-filter:blur(18px);
+  transform:translateY(-16px);
+  opacity:0;
+  animation:dropIn 760ms ease 180ms forwards;
 }
 
 .brand{
@@ -90,6 +99,16 @@ p{
   min-width:0;
 }
 
+.brand::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:var(--red2);
+  box-shadow:0 0 12px rgba(239,68,68,0.82),0 0 34px rgba(185,28,28,0.44);
+  animation:brandDotRun 1700ms cubic-bezier(.22,.8,.25,1) 320ms both, neonPulse 2600ms ease-in-out infinite 2200ms;
+}
+
 .brandMark{
   width:46px;
   height:46px;
@@ -97,6 +116,14 @@ p{
   object-fit:cover;
   border:1px solid rgba(255,255,255,0.20);
   box-shadow:0 14px 30px rgba(0,0,0,0.34);
+  transition:transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+
+.brand:hover .brandMark,
+.brand:focus-visible .brandMark{
+  transform:translateY(-2px);
+  box-shadow:0 18px 44px rgba(185,28,28,0.36),0 0 28px rgba(239,68,68,0.22);
+  filter:saturate(1.18);
 }
 
 .brandText{
@@ -131,11 +158,14 @@ p{
   letter-spacing:0.08em;
   text-transform:uppercase;
   padding:9px 3px;
+  transition:color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
 }
 
 .nav a:hover,
 .nav a:focus-visible{
   color:var(--ink);
+  text-shadow:0 0 18px rgba(239,68,68,0.35);
+  transform:translateY(-1px);
   outline:none;
 }
 
@@ -149,6 +179,14 @@ p{
   color:#fff;
   background:var(--red);
   box-shadow:0 16px 34px rgba(185,28,28,0.24);
+  transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.nav .navCta:hover,
+.nav .navCta:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,0.30);
+  box-shadow:0 18px 50px rgba(185,28,28,0.42),0 0 34px rgba(239,68,68,0.24);
 }
 
 .hero{
@@ -169,7 +207,7 @@ p{
   background:
     linear-gradient(90deg,rgba(7,8,11,0.96),rgba(7,8,11,0.74) 45%,rgba(7,8,11,0.22)),
     linear-gradient(0deg,rgba(7,8,11,0.98),rgba(7,8,11,0.20) 34%,rgba(7,8,11,0.52)),
-    url("ncstudios-logo-1024.png");
+    var(--hero-media);
   background-repeat:no-repeat;
   background-size:cover,cover,min(66vw,760px);
   background-position:center,center,right 6vw center;
@@ -186,6 +224,9 @@ p{
 
 .heroInner{
   width:min(1180px,100%);
+  opacity:0;
+  transform:translateY(30px);
+  animation:riseIn 900ms ease 420ms forwards;
 }
 
 .eyebrow{
@@ -202,6 +243,7 @@ p{
   font-size:clamp(52px,9.5vw,112px);
   line-height:0.84;
   letter-spacing:0;
+  animation:neonFlicker 1600ms linear 540ms both;
 }
 
 .heroLead{
@@ -232,11 +274,27 @@ p{
   background:var(--red);
   font-weight:950;
   box-shadow:0 18px 46px rgba(185,28,28,0.27);
+  transition:transform 210ms ease, box-shadow 210ms ease, border-color 210ms ease, background 210ms ease;
 }
 
 .button.secondary{
   background:rgba(255,255,255,0.09);
   box-shadow:none;
+}
+
+.button:hover,
+.button:focus-visible,
+.submitButton:hover,
+.submitButton:focus-visible{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,0.32);
+  box-shadow:0 22px 58px rgba(185,28,28,0.42),0 0 34px rgba(239,68,68,0.24);
+  outline:none;
+}
+
+.button.secondary:hover,
+.button.secondary:focus-visible{
+  background:rgba(185,28,28,0.22);
 }
 
 .scrollCue{
@@ -246,6 +304,7 @@ p{
   font-weight:900;
   letter-spacing:0.12em;
   text-transform:uppercase;
+  animation:softBlink 2200ms ease-in-out infinite;
 }
 
 .section{
@@ -296,6 +355,7 @@ p{
   align-items:end;
   padding:20px;
   overflow:hidden;
+  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
 }
 
 .portraitPanel::after{
@@ -313,6 +373,22 @@ p{
   height:100%;
   object-fit:cover;
   object-position:center 34%;
+  transition:transform 700ms ease, filter 700ms ease;
+}
+
+.portraitPanel:hover,
+.filmCard:hover,
+.principle:hover,
+.serviceCard:hover,
+.formPanel:hover{
+  transform:translateY(-4px);
+  border-color:rgba(239,68,68,0.32);
+  box-shadow:0 32px 88px rgba(0,0,0,0.46),0 0 42px rgba(185,28,28,0.16);
+}
+
+.portraitPanel:hover .portraitImage{
+  transform:scale(1.035);
+  filter:saturate(1.08) contrast(1.03);
 }
 
 .portraitCaption{
@@ -383,6 +459,7 @@ p{
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
 }
 
 .principle span,
@@ -417,12 +494,14 @@ p{
 }
 
 .featureImage{
+  position:relative;
   min-height:620px;
   background:
     linear-gradient(180deg,rgba(7,8,11,0.08),rgba(7,8,11,0.72)),
-    url("ncstudios-logo-1024.png");
+    var(--feature-media);
   background-size:cover;
   background-position:center;
+  overflow:hidden;
 }
 
 .featureCopy{
@@ -450,25 +529,34 @@ p{
 }
 
 .filmCard{
+  position:relative;
   min-height:430px;
   border:1px solid var(--line);
   border-radius:8px;
   background:
     linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
-    url("ncstudios-logo-1024.png");
+    var(--film-one-media);
   background-size:cover;
   background-position:center;
   box-shadow:var(--shadow);
   padding:18px;
   display:flex;
   align-items:end;
+  overflow:hidden;
+  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease, filter 260ms ease;
 }
 
 .filmCard:nth-child(2){
+  background-image:
+    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
+    var(--film-two-media);
   background-position:55% center;
 }
 
 .filmCard:nth-child(3){
+  background-image:
+    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
+    var(--film-three-media);
   background-position:70% center;
 }
 
@@ -499,6 +587,7 @@ p{
   border-radius:8px;
   background:rgba(255,255,255,0.07);
   padding:22px;
+  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
 }
 
 .serviceCard h3{
@@ -573,6 +662,7 @@ p{
     rgba(16,19,26,0.94);
   box-shadow:var(--shadow);
   padding:22px;
+  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
 }
 
 .formGrid{
@@ -650,6 +740,7 @@ textarea:focus{
   font-weight:950;
   cursor:pointer;
   box-shadow:0 18px 42px rgba(185,28,28,0.30);
+  transition:transform 210ms ease, box-shadow 210ms ease, opacity 210ms ease;
 }
 
 .submitButton:disabled{
@@ -679,6 +770,217 @@ textarea:focus{
   justify-content:space-between;
   gap:16px;
   flex-wrap:wrap;
+}
+
+.mediaVideo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-3;
+  opacity:0.62;
+  pointer-events:none;
+}
+
+.mediaMount{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.mediaMount .mediaVideo{
+  z-index:0;
+}
+
+.filmCard .mediaVideo,
+.featureImage .mediaVideo,
+.portraitPanel .mediaVideo{
+  z-index:0;
+  opacity:1;
+}
+
+.filmCard > div,
+.featureCopy,
+.portraitCaption{
+  position:relative;
+  z-index:1;
+}
+
+.meModeToggle{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:50;
+  min-height:44px;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  padding:0 15px;
+  color:#fff;
+  background:rgba(185,28,28,0.82);
+  box-shadow:0 18px 44px rgba(185,28,28,0.34),0 0 26px rgba(239,68,68,0.20);
+  font-weight:950;
+  cursor:pointer;
+  display:none;
+}
+
+body.me-mode-ready .meModeToggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.mePanel{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:min(430px,100%);
+  z-index:60;
+  background:rgba(9,10,14,0.96);
+  border-left:1px solid rgba(255,255,255,0.14);
+  box-shadow:-28px 0 80px rgba(0,0,0,0.45);
+  transform:translateX(104%);
+  transition:transform 260ms ease;
+  display:flex;
+  flex-direction:column;
+}
+
+body.me-panel-open .mePanel{
+  transform:translateX(0);
+}
+
+.mePanelHeader,
+.mePanelFooter{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.mePanelFooter{
+  border-top:1px solid rgba(255,255,255,0.10);
+  border-bottom:0;
+  flex-wrap:wrap;
+}
+
+.mePanelHeader h2{
+  font-size:20px;
+}
+
+.mePanelHeader p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+
+.meClose,
+.meMiniButton{
+  min-height:38px;
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:999px;
+  color:#fff;
+  background:rgba(255,255,255,0.08);
+  padding:0 12px;
+  font-weight:850;
+  cursor:pointer;
+}
+
+.mePanelBody{
+  overflow:auto;
+  padding:16px;
+  display:grid;
+  gap:14px;
+}
+
+.meGroup{
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  background:rgba(255,255,255,0.055);
+  padding:12px;
+  display:grid;
+  gap:10px;
+}
+
+.meGroup h3{
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:0.10em;
+  color:var(--gold);
+}
+
+.meField{
+  display:grid;
+  gap:6px;
+}
+
+.meField input,
+.meField textarea,
+.meField select{
+  border-radius:8px;
+  background:rgba(0,0,0,0.28);
+}
+
+.meField textarea{
+  min-height:82px;
+}
+
+.meHint{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.42;
+}
+
+@keyframes pageWake{
+  from{opacity:0;background-position:0 0,0 0,0 0;}
+  to{opacity:1;background-position:0 0,0 0,0 0;}
+}
+
+@keyframes dropIn{
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes riseIn{
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes brandDotRun{
+  0%{transform:translateX(76vw) scale(0.78);opacity:0;}
+  22%{opacity:1;}
+  62%{transform:translateX(18px) scale(1.05);}
+  100%{transform:translateX(0) scale(1);}
+}
+
+@keyframes neonPulse{
+  0%,100%{opacity:0.76;box-shadow:0 0 10px rgba(239,68,68,0.72),0 0 30px rgba(185,28,28,0.32);}
+  50%{opacity:1;box-shadow:0 0 14px rgba(239,68,68,0.96),0 0 44px rgba(185,28,28,0.48);}
+}
+
+@keyframes neonFlicker{
+  0%,5%,8%,12%{opacity:0.22;text-shadow:none;}
+  6%,10%,16%{opacity:0.84;text-shadow:0 0 20px rgba(239,68,68,0.16);}
+  22%,100%{opacity:1;text-shadow:0 0 28px rgba(239,68,68,0.10);}
+}
+
+@keyframes softBlink{
+  0%,100%{opacity:0.48;}
+  50%{opacity:1;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:0.001ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+    transition:none !important;
+  }
 }
 
 @media(max-width:980px){
@@ -790,39 +1092,40 @@ textarea:focus{
 
 <main id="home">
   <section class="hero" aria-labelledby="hero-title">
+    <div class="mediaMount" data-media-target="hero"></div>
     <div class="heroInner">
-      <p class="eyebrow">Photography and videography for weddings, events and content</p>
-      <h1 id="hero-title">Turning your moments into stories you can feel.</h1>
-      <p class="heroLead">NC Studios captures real moments in stills and motion, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
+      <p class="eyebrow" data-site-field="heroEyebrow">Photography and videography for weddings, events and content</p>
+      <h1 id="hero-title" data-site-field="heroTitle">Turning your moments into stories you can feel.</h1>
+      <p class="heroLead" data-site-field="heroLead">NC Studios captures real moments in stills and motion, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
 
       <div class="heroActions">
         <a class="button" href="#films">View the feel</a>
         <a class="button secondary" href="#availability">Check availability</a>
       </div>
 
-      <p class="scrollCue">Scroll for the story</p>
+      <p class="scrollCue" data-site-field="scrollCue">Scroll for the story</p>
     </div>
   </section>
 
   <section class="section" id="about">
     <div class="sectionInner aboutLayout">
-      <div class="portraitPanel" aria-label="Portrait of the NC Studios creative">
-        <img class="portraitImage" src="assets/nc-about-portrait.jpg" alt="Portrait of the NC Studios creative">
+      <div class="portraitPanel" aria-label="Portrait of the NC Studios creative" data-media-panel="portrait">
+        <img class="portraitImage" data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Portrait of the NC Studios creative">
         <div class="portraitCaption">
           <div>
-            <strong>The eye behind NC Studios</strong>
-            <span>Videography, photography and content</span>
+            <strong data-site-field="aboutCaptionTitle">The eye behind NC Studios</strong>
+            <span data-site-field="aboutCaptionMeta">Videography, photography and content</span>
           </div>
           <span>UK</span>
         </div>
       </div>
 
       <div class="aboutCopy">
-        <p>Not just coverage. I capture the way a moment looks, sounds and feels, so you can come back to it properly.</p>
+        <p data-site-field="aboutHeadline">Not just coverage. I capture the way a moment looks, sounds and feels, so you can come back to it properly.</p>
         <div class="smallCopy">
-          <p>NC Studios is run by a photographer and videographer with a relaxed, story-first approach. I shoot engagements, weddings, events and content sessions with an eye for emotion, detail and atmosphere.</p>
-          <p>The wedding film portfolio is being built as new work is edited, so the site leads with the feeling, the process and the visual style. Engagement images, couple sessions and event coverage can still show the direction clearly while the next wedding film is being finished.</p>
-          <p>From first enquiry to final delivery, everything feeds into the studio workflow so dates, plans, shot notes and next steps stay organised behind the scenes.</p>
+          <p data-site-field="aboutBodyOne">NC Studios is run by a photographer and videographer with a relaxed, story-first approach. I shoot engagements, weddings, events and content sessions with an eye for emotion, detail and atmosphere.</p>
+          <p data-site-field="aboutBodyTwo">The wedding film portfolio is being built as new work is edited, so the site leads with the feeling, the process and the visual style. Engagement images, couple sessions and event coverage can still show the direction clearly while the next wedding film is being finished.</p>
+          <p data-site-field="aboutBodyThree">From first enquiry to final delivery, everything feeds into the studio workflow so dates, plans, shot notes and next steps stay organised behind the scenes.</p>
         </div>
       </div>
     </div>
@@ -831,8 +1134,8 @@ textarea:focus{
   <section class="section principles" id="principles">
     <div class="sectionInner">
       <div class="sectionHead">
-        <h2>Guided by the real moments.</h2>
-        <p>The flow is simple: understand the couple, capture the atmosphere, then create a film that feels personal rather than generic.</p>
+        <h2 data-site-field="principlesTitle">Guided by the real moments.</h2>
+        <p data-site-field="principlesLead">The flow is simple: understand the couple, capture the atmosphere, then create a film that feels personal rather than generic.</p>
       </div>
 
       <div class="principleGrid">
@@ -841,7 +1144,7 @@ textarea:focus{
             <span>01</span>
             <h3>Story with purpose</h3>
           </div>
-          <p>Every film starts with the people, the energy and the moments that matter most, not a template.</p>
+          <p data-site-field="principleOneText">Every film starts with the people, the energy and the moments that matter most, not a template.</p>
         </article>
 
         <article class="principle">
@@ -849,7 +1152,7 @@ textarea:focus{
             <span>02</span>
             <h3>Cinematic finish</h3>
           </div>
-          <p>Clean camera movement, considered pacing, colour and audio come together to make the day feel alive again.</p>
+          <p data-site-field="principleTwoText">Clean camera movement, considered pacing, colour and audio come together to make the day feel alive again.</p>
         </article>
 
         <article class="principle">
@@ -857,50 +1160,50 @@ textarea:focus{
             <span>03</span>
             <h3>Client focused</h3>
           </div>
-          <p>The process is calm, clear and collaborative so you know what is happening before, during and after the shoot.</p>
+          <p data-site-field="principleThreeText">The process is calm, clear and collaborative so you know what is happening before, during and after the shoot.</p>
         </article>
       </div>
     </div>
   </section>
 
   <section class="splitFeature" aria-labelledby="motion-title">
-    <div class="featureImage" aria-hidden="true"></div>
+    <div class="featureImage" aria-hidden="true" data-media-panel="feature"></div>
     <div class="featureCopy">
-      <p class="eyebrow">Where emotion meets motion</p>
-      <h2 id="motion-title">Made for the parts photos cannot say.</h2>
-      <p>The laughter in a speech, the music in the room, the small reactions, the big entrances and the moments you missed while living it. That is where film earns its place.</p>
+      <p class="eyebrow" data-site-field="featureEyebrow">Where emotion meets motion</p>
+      <h2 id="motion-title" data-site-field="featureTitle">Made for the parts photos cannot say.</h2>
+      <p data-site-field="featureBody">The laughter in a speech, the music in the room, the small reactions, the big entrances and the moments you missed while living it. That is where film earns its place.</p>
     </div>
   </section>
 
   <section class="section" id="films">
     <div class="sectionInner">
       <div class="sectionHead">
-        <h2>Stories in stills and motion.</h2>
-        <p>A portfolio-style look at what NC Studios can create across engagements, weddings, celebrations and social content.</p>
+        <h2 data-site-field="workTitle">Stories in stills and motion.</h2>
+        <p data-site-field="workLead">A portfolio-style look at what NC Studios can create across engagements, weddings, celebrations and social content.</p>
       </div>
 
       <div class="filmGrid">
-        <article class="filmCard">
+        <article class="filmCard" data-media-panel="filmOne">
           <div>
             <span>Engagements</span>
-            <h3>Couple sessions</h3>
-            <p>Warm, polished images for proposals, engagements, anniversaries and couple portraits.</p>
+            <h3 data-site-field="filmOneTitle">Couple sessions</h3>
+            <p data-site-field="filmOneBody">Warm, polished images for proposals, engagements, anniversaries and couple portraits.</p>
           </div>
         </article>
 
-        <article class="filmCard">
+        <article class="filmCard" data-media-panel="filmTwo">
           <div>
             <span>Weddings</span>
-            <h3>Photo and film</h3>
-            <p>Wedding coverage shaped around emotion, details, movement and the moments that matter most.</p>
+            <h3 data-site-field="filmTwoTitle">Photo and film</h3>
+            <p data-site-field="filmTwoBody">Wedding coverage shaped around emotion, details, movement and the moments that matter most.</p>
           </div>
         </article>
 
-        <article class="filmCard">
+        <article class="filmCard" data-media-panel="filmThree">
           <div>
             <span>Events and content</span>
-            <h3>Short edits that move</h3>
-            <p>Event photography, vertical reels and teaser clips made for sharing quickly after the moment.</p>
+            <h3 data-site-field="filmThreeTitle">Short edits that move</h3>
+            <p data-site-field="filmThreeBody">Event photography, vertical reels and teaser clips made for sharing quickly after the moment.</p>
           </div>
         </article>
       </div>
@@ -910,27 +1213,27 @@ textarea:focus{
   <section class="section services" id="services">
     <div class="sectionInner">
       <div class="sectionHead">
-        <h2>Services and experience.</h2>
-        <p>Choose the coverage style that matches the day. If you are unsure, enquire and NC Studios can guide you into the right photo or video fit.</p>
+        <h2 data-site-field="servicesTitle">Services and experience.</h2>
+        <p data-site-field="servicesLead">Choose the coverage style that matches the day. If you are unsure, enquire and NC Studios can guide you into the right photo or video fit.</p>
       </div>
 
       <div class="serviceGrid">
         <article class="serviceCard">
           <span>Wedding coverage</span>
           <h3>Photo, film or both</h3>
-          <p>Cinematic wedding coverage for key moments, atmosphere, emotional details and storytelling edits.</p>
+          <p data-site-field="serviceOneBody">Cinematic wedding coverage for key moments, atmosphere, emotional details and storytelling edits.</p>
         </article>
 
         <article class="serviceCard">
           <span>Engagement sessions</span>
           <h3>Couples and proposals</h3>
-          <p>Engagement photography and couple sessions with a warm, editorial feel that can sit proudly on the site now.</p>
+          <p data-site-field="serviceTwoBody">Engagement photography and couple sessions with a warm, editorial feel that can sit proudly on the site now.</p>
         </article>
 
         <article class="serviceCard">
           <span>Events and content</span>
           <h3>Ready for socials</h3>
-          <p>Photography, short-form edits, teasers and vertical content for Instagram, TikTok and client previews.</p>
+          <p data-site-field="serviceThreeBody">Photography, short-form edits, teasers and vertical content for Instagram, TikTok and client previews.</p>
         </article>
       </div>
 
@@ -955,8 +1258,8 @@ textarea:focus{
     <div class="sectionInner enquiryLayout">
       <div class="enquiryIntro">
         <p class="eyebrow">Availability</p>
-        <h2>Tell NC Studios about your date.</h2>
-        <p>Complete the form and your enquiry will feed into the NC Studios booking app as a new enquiry, ready for follow up.</p>
+        <h2 data-site-field="enquiryTitle">Tell NC Studios about your date.</h2>
+        <p data-site-field="enquiryLead">Complete the form and your enquiry will feed into the NC Studios booking app as a new enquiry, ready for follow up.</p>
       </div>
 
       <form class="formPanel" id="enquiryForm">
@@ -1056,8 +1359,341 @@ textarea:focus{
   <span>Cinematic wedding films, events and content</span>
 </footer>
 
+<button class="meModeToggle" type="button" data-me-open>Me Mode</button>
+
+<aside class="mePanel" aria-label="NC Studios Me Mode editor" aria-hidden="true">
+  <div class="mePanelHeader">
+    <div>
+      <h2>Me Mode</h2>
+      <p>Edit text and preview media. Saves on this browser unless you export it.</p>
+    </div>
+    <button class="meClose" type="button" data-me-close>Close</button>
+  </div>
+
+  <div class="mePanelBody">
+    <div class="meGroup">
+      <h3>Page Copy</h3>
+      <div data-me-fields></div>
+    </div>
+
+    <div class="meGroup">
+      <h3>Media</h3>
+      <p class="meHint">Use images freely. For big videos, upload them to your host or storage first, then paste the video URL here.</p>
+      <div data-me-media></div>
+    </div>
+  </div>
+
+  <div class="mePanelFooter">
+    <button class="meMiniButton" type="button" data-me-save>Save</button>
+    <button class="meMiniButton" type="button" data-me-export>Export JSON</button>
+    <label class="meMiniButton" for="meImportFile">Import JSON</label>
+    <input id="meImportFile" type="file" accept="application/json" hidden data-me-import>
+    <button class="meMiniButton" type="button" data-me-reset>Reset</button>
+  </div>
+</aside>
+
 <script src="supabase-js.js?v=2.107.0"></script>
 <script src="supabase-config.js?v=public-site-1"></script>
+<script>
+(function(){
+  const STORAGE_KEY = "ncstudios_site_editor_v1";
+  const params = new URLSearchParams(location.search);
+  const modeOn = params.get("me") === "1" || params.get("mode") === "me" || localStorage.getItem("ncstudios_me_mode") === "on";
+
+  const fields = [
+    ["heroEyebrow","Hero eyebrow","input"],
+    ["heroTitle","Hero title","textarea"],
+    ["heroLead","Hero intro","textarea"],
+    ["aboutHeadline","About headline","textarea"],
+    ["aboutBodyOne","About paragraph 1","textarea"],
+    ["aboutBodyTwo","About paragraph 2","textarea"],
+    ["aboutBodyThree","About paragraph 3","textarea"],
+    ["workTitle","Work title","input"],
+    ["workLead","Work intro","textarea"],
+    ["filmOneTitle","Work card 1 title","input"],
+    ["filmOneBody","Work card 1 copy","textarea"],
+    ["filmTwoTitle","Work card 2 title","input"],
+    ["filmTwoBody","Work card 2 copy","textarea"],
+    ["filmThreeTitle","Work card 3 title","input"],
+    ["filmThreeBody","Work card 3 copy","textarea"],
+    ["servicesLead","Services intro","textarea"],
+    ["enquiryTitle","Enquiry title","input"],
+    ["enquiryLead","Enquiry copy","textarea"]
+  ];
+
+  const mediaTargets = [
+    ["hero","Hero background"],
+    ["portrait","About portrait"],
+    ["feature","Motion feature"],
+    ["filmOne","Work card 1"],
+    ["filmTwo","Work card 2"],
+    ["filmThree","Work card 3"]
+  ];
+
+  const mediaVarMap = {
+    hero:"--hero-media",
+    feature:"--feature-media",
+    filmOne:"--film-one-media",
+    filmTwo:"--film-two-media",
+    filmThree:"--film-three-media"
+  };
+
+  function readConfig(){
+    try{
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return parsed && typeof parsed === "object" ? parsed : {fields:{},media:{}};
+    }catch(error){
+      return {fields:{},media:{}};
+    }
+  }
+
+  function writeConfig(config){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(config));
+  }
+
+  function getFieldValue(key){
+    const node = document.querySelector(`[data-site-field="${key}"]`);
+    return node ? node.textContent.trim() : "";
+  }
+
+  function setFieldValue(key,value){
+    const node = document.querySelector(`[data-site-field="${key}"]`);
+    if(node && value !== undefined && value !== null){
+      node.textContent = value;
+    }
+  }
+
+  function esc(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function cssUrl(value){
+    return `url("${String(value).replaceAll("\\\\","\\\\\\\\").replaceAll('"','\\"')}")`;
+  }
+
+  function clearVideo(target){
+    document.querySelectorAll(`[data-generated-video="${target}"]`).forEach(node => node.remove());
+  }
+
+  function setVideo(target,value){
+    clearVideo(target);
+    const video = document.createElement("video");
+    video.className = "mediaVideo";
+    video.src = value;
+    video.autoplay = true;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("data-generated-video",target);
+
+    const mount = document.querySelector(`[data-media-target="${target}"]`) || document.querySelector(`[data-media-panel="${target}"]`);
+    if(mount){
+      mount.prepend(video);
+    }
+  }
+
+  function isVideo(value){
+    return /^data:video\//.test(value) || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
+  }
+
+  function setMedia(target,value){
+    if(!value) return;
+
+    if(isVideo(value)){
+      setVideo(target,value);
+      return;
+    }
+
+    clearVideo(target);
+
+    if(target === "portrait"){
+      const image = document.querySelector('[data-media-image="portrait"]');
+      if(image){
+        image.src = value;
+      }
+      return;
+    }
+
+    const cssVar = mediaVarMap[target];
+    if(cssVar){
+      document.documentElement.style.setProperty(cssVar,cssUrl(value));
+    }
+  }
+
+  function applyConfig(config){
+    Object.entries(config.fields || {}).forEach(([key,value]) => setFieldValue(key,value));
+    Object.entries(config.media || {}).forEach(([key,value]) => setMedia(key,value));
+  }
+
+  async function loadPublishedConfig(){
+    try{
+      const response = await fetch("site-content.json",{cache:"no-store"});
+      if(!response.ok) return null;
+      return await response.json();
+    }catch(error){
+      return null;
+    }
+  }
+
+  function collectConfig(){
+    const config = readConfig();
+    config.fields = config.fields || {};
+    config.media = config.media || {};
+
+    fields.forEach(([key]) => {
+      const input = document.querySelector(`[data-me-input="${key}"]`);
+      if(input){
+        config.fields[key] = input.value.trim();
+      }
+    });
+
+    mediaTargets.forEach(([key]) => {
+      const input = document.querySelector(`[data-me-media-url="${key}"]`);
+      if(input && input.value.trim()){
+        config.media[key] = input.value.trim();
+      }
+    });
+
+    return config;
+  }
+
+  function renderEditor(config){
+    const fieldsWrap = document.querySelector("[data-me-fields]");
+    const mediaWrap = document.querySelector("[data-me-media]");
+    if(!fieldsWrap || !mediaWrap) return;
+
+    fieldsWrap.innerHTML = fields.map(([key,label,type]) => {
+      const value = (config.fields && config.fields[key]) || getFieldValue(key);
+      const control = type === "textarea"
+        ? `<textarea data-me-input="${esc(key)}">${esc(value)}</textarea>`
+        : `<input data-me-input="${esc(key)}" type="text" value="${esc(value)}">`;
+      return `<label class="meField"><span>${esc(label)}</span>${control}</label>`;
+    }).join("");
+
+    mediaWrap.innerHTML = mediaTargets.map(([key,label]) => `
+      <div class="meField">
+        <label for="media_${esc(key)}">${esc(label)}</label>
+        <input id="media_${esc(key)}" data-me-media-url="${esc(key)}" type="text" placeholder="Paste image, video URL or upload below" value="${esc((config.media && config.media[key]) || "")}">
+        <input data-me-media-file="${esc(key)}" type="file" accept="image/*,video/*">
+      </div>
+    `).join("");
+
+    mediaWrap.querySelectorAll("[data-me-media-file]").forEach(input => {
+      input.addEventListener("change",() => {
+        const file = input.files && input.files[0];
+        if(!file) return;
+
+        if(file.size > 4200000){
+          alert("That file is too large to save inside the page editor. Upload it to your host or storage, then paste the URL here.");
+          input.value = "";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const target = input.dataset.meMediaFile;
+          const urlInput = document.querySelector(`[data-me-media-url="${target}"]`);
+          if(urlInput){
+            urlInput.value = reader.result;
+          }
+          setMedia(target,reader.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+
+  function openPanel(){
+    document.body.classList.add("me-panel-open");
+    document.querySelector(".mePanel")?.setAttribute("aria-hidden","false");
+  }
+
+  function closePanel(){
+    document.body.classList.remove("me-panel-open");
+    document.querySelector(".mePanel")?.setAttribute("aria-hidden","true");
+  }
+
+  function exportConfig(){
+    const config = collectConfig();
+    writeConfig(config);
+    applyConfig(config);
+
+    const blob = new Blob([JSON.stringify(config,null,2)],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "site-content.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function initMeMode(){
+    const localConfig = readConfig();
+    const hasLocalConfig = Boolean(localStorage.getItem(STORAGE_KEY));
+    const publishedConfig = await loadPublishedConfig();
+    const config = modeOn && hasLocalConfig ? localConfig : (publishedConfig || localConfig);
+
+    applyConfig(config);
+
+    if(!modeOn) return;
+
+    localStorage.setItem("ncstudios_me_mode","on");
+    document.body.classList.add("me-mode-ready");
+    renderEditor(config);
+
+    document.querySelector("[data-me-open]")?.addEventListener("click",openPanel);
+    document.querySelector("[data-me-close]")?.addEventListener("click",closePanel);
+
+    document.querySelector("[data-me-save]")?.addEventListener("click",() => {
+      const nextConfig = collectConfig();
+      writeConfig(nextConfig);
+      applyConfig(nextConfig);
+      renderEditor(nextConfig);
+      alert("Saved on this browser.");
+    });
+
+    document.querySelector("[data-me-export]")?.addEventListener("click",exportConfig);
+
+    document.querySelector("[data-me-reset]")?.addEventListener("click",() => {
+      if(confirm("Reset local Me Mode edits on this browser?")){
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem("ncstudios_me_mode");
+        location.href = location.pathname + location.hash;
+      }
+    });
+
+    document.querySelector("[data-me-import]")?.addEventListener("change",event => {
+      const file = event.target.files && event.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const imported = JSON.parse(reader.result);
+          writeConfig(imported);
+          applyConfig(imported);
+          renderEditor(imported);
+          alert("Imported.");
+        }catch(error){
+          alert("That JSON file could not be imported.");
+        }
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",initMeMode);
+  }else{
+    initMeMode();
+  }
+})();
+</script>
 <script>
 (function(){
   const STORAGE_TABLE = "app_storage";
