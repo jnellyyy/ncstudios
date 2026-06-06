@@ -1,10 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512">
-  <title>nc bouncing dot watermark</title>
-  <desc>transparent animated nc studios watermark where one red dot moves in the handwritten nc route.</desc>
+  <title>nc glowing dot watermark</title>
+  <desc>transparent animated nc studios watermark where a red neon dot, glow, and light flare move through the handwritten nc route.</desc>
   <defs>
-    <filter id="red-glow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="9" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.95 0 0.08 0 0 0 0 0 0.08 0 0 0 0 0 0.9 0" result="red"/>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff4a4a" stop-opacity=".95"/>
+      <stop offset="34%" stop-color="#ff1f1f" stop-opacity=".46"/>
+      <stop offset="72%" stop-color="#b91c1c" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#b91c1c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="flare-beam" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#ff3030" stop-opacity="0"/>
+      <stop offset="43%" stop-color="#ff3030" stop-opacity=".2"/>
+      <stop offset="50%" stop-color="#fff" stop-opacity=".92"/>
+      <stop offset="57%" stop-color="#ff3030" stop-opacity=".2"/>
+      <stop offset="100%" stop-color="#ff3030" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="red-glow" x="-140%" y="-140%" width="380%" height="380%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.98 0 0.08 0 0 0 0 0 0.08 0 0 0 0 0 1 0" result="red"/>
       <feMerge>
         <feMergeNode in="red"/>
         <feMergeNode in="SourceGraphic"/>
@@ -14,19 +27,75 @@
   </defs>
   <style>
     svg{background:transparent}
+    .traveller{
+      opacity:0;
+      filter:url(#red-glow);
+      animation:mark-on .01s linear .12s forwards, mark-off .3s ease 2.42s forwards;
+    }
+    .halo{
+      fill:url(#halo);
+      mix-blend-mode:screen;
+      animation:halo-pulse 2.1s ease-in-out .12s both;
+      transform-origin:center;
+    }
+    .beam-wide{
+      fill:url(#flare-beam);
+      opacity:.78;
+      mix-blend-mode:screen;
+      animation:flare-breathe 2.1s ease-in-out .12s both;
+      transform-origin:center;
+    }
+    .beam-tall{
+      fill:url(#flare-beam);
+      opacity:.34;
+      mix-blend-mode:screen;
+      transform:rotate(90deg);
+      transform-origin:center;
+      animation:flare-breathe 2.1s ease-in-out .12s both;
+    }
+    .spark{
+      fill:#fff;
+      opacity:.9;
+      filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
+      animation:spark-pulse 2.1s ease-in-out .12s both;
+      transform-origin:center;
+    }
     .dot{
       fill:#ff3030;
-      filter:url(#red-glow);
-      opacity:0;
-      animation:dot-on .01s linear .12s forwards, dot-off .24s ease 2.28s forwards;
+      filter:drop-shadow(0 0 10px rgba(255,48,48,1)) drop-shadow(0 0 26px rgba(185,28,28,.82));
     }
-    @keyframes dot-on{to{opacity:1}}
-    @keyframes dot-off{to{opacity:0}}
+    @keyframes mark-on{to{opacity:1}}
+    @keyframes mark-off{to{opacity:0}}
+    @keyframes halo-pulse{
+      0%{transform:scale(.76);opacity:.48}
+      24%{transform:scale(1.2);opacity:.82}
+      52%{transform:scale(.92);opacity:.6}
+      78%{transform:scale(1.34);opacity:.9}
+      100%{transform:scale(1);opacity:.62}
+    }
+    @keyframes flare-breathe{
+      0%{transform:scaleX(.42);opacity:.18}
+      28%{transform:scaleX(1.22);opacity:.88}
+      58%{transform:scaleX(.72);opacity:.46}
+      82%{transform:scaleX(1.45);opacity:.9}
+      100%{transform:scaleX(.8);opacity:.42}
+    }
+    @keyframes spark-pulse{
+      0%,100%{transform:scale(.72);opacity:.68}
+      30%{transform:scale(1.18);opacity:1}
+      68%{transform:scale(.88);opacity:.76}
+    }
   </style>
-  <circle class="dot" r="12">
-    <animate attributeName="r" values="10;16;11;14;12" dur="2.1s" begin=".12s" fill="freeze"/>
+  <g class="traveller">
+    <circle class="halo" r="58"/>
+    <rect class="beam-wide" x="-104" y="-5" width="208" height="10" rx="5"/>
+    <rect class="beam-tall" x="-76" y="-3" width="152" height="6" rx="3"/>
+    <circle class="spark" r="5"/>
+    <circle class="dot" r="12">
+      <animate attributeName="r" values="10;16;11;14;12" dur="2.1s" begin=".12s" fill="freeze"/>
+    </circle>
     <animateMotion dur="2.1s" begin=".12s" fill="freeze">
       <mpath href="#nc-route"/>
     </animateMotion>
-  </circle>
+  </g>
 </svg>
