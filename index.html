@@ -186,34 +186,33 @@ p{
 
 .introBrand{
   position:relative;
-  display:grid;
-  justify-items:center;
-  gap:8px;
-  text-align:center;
-  text-transform:lowercase;
-}
-
-.introLetters{
-  font-size:clamp(92px,19vw,190px);
-  font-weight:1000;
-  line-height:0.78;
-  letter-spacing:0;
-  color:#fff;
-  text-shadow:0 0 26px rgba(239,68,68,0.28),0 0 72px rgba(185,28,28,0.24);
+  width:min(560px,86vw);
+  aspect-ratio:2 / 1;
+  display:block;
   clip-path:inset(0 100% 0 0);
   transform:translateY(26px) scale(0.96);
   opacity:0;
-  animation:introTextReveal 760ms cubic-bezier(.2,.8,.2,1) 1500ms forwards, introNeonSnap 1600ms linear 1500ms both;
+  filter:drop-shadow(0 0 26px rgba(239,68,68,0.34));
+  animation:introLogoReveal 900ms cubic-bezier(.2,.8,.2,1) 1500ms forwards, introLogoFlicker 1700ms linear 1500ms both;
 }
 
-.introName{
-  color:var(--gold);
-  font-size:clamp(16px,3.2vw,28px);
-  font-weight:950;
-  letter-spacing:0.20em;
+.introBrand::after{
+  content:"";
+  position:absolute;
+  inset:16% 8% 20%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
+  transform:translateX(-120%) skewX(-18deg);
   opacity:0;
-  transform:translateY(18px);
-  animation:introNameRise 680ms ease 2150ms forwards;
+  mix-blend-mode:screen;
+  animation:introLogoShine 720ms ease 2230ms forwards;
+}
+
+.introLogo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  border-radius:8px;
 }
 
 .introSignal{
@@ -1161,18 +1160,20 @@ body.me-panel-open .mePanel{
   100%{transform:translate(0,0) scale(0.9);opacity:0;}
 }
 
-@keyframes introTextReveal{
+@keyframes introLogoReveal{
   to{clip-path:inset(0 0 0 0);transform:translateY(0) scale(1);opacity:1;}
 }
 
-@keyframes introNameRise{
-  to{opacity:1;transform:translateY(0);}
+@keyframes introLogoFlicker{
+  0%,8%,12%,18%{opacity:0.22;filter:drop-shadow(0 0 0 rgba(239,68,68,0));}
+  10%,14%,24%{opacity:1;filter:drop-shadow(0 0 34px rgba(239,68,68,0.56)) drop-shadow(0 0 82px rgba(185,28,28,0.34));}
+  100%{opacity:1;filter:drop-shadow(0 0 26px rgba(239,68,68,0.34));}
 }
 
-@keyframes introNeonSnap{
-  0%,8%,12%,18%{opacity:0.28;text-shadow:none;}
-  10%,14%,24%{opacity:1;text-shadow:0 0 28px rgba(239,68,68,0.45),0 0 92px rgba(185,28,28,0.42);}
-  100%{opacity:1;text-shadow:0 0 26px rgba(239,68,68,0.28),0 0 72px rgba(185,28,28,0.24);}
+@keyframes introLogoShine{
+  0%{opacity:0;transform:translateX(-120%) skewX(-18deg);}
+  18%{opacity:0.7;}
+  100%{opacity:0;transform:translateX(130%) skewX(-18deg);}
 }
 
 @keyframes introSignal{
@@ -1336,8 +1337,7 @@ body.me-panel-open .mePanel{
   <div class="introStage">
     <div class="introOrbit" aria-hidden="true"></div>
     <div class="introBrand" aria-hidden="true">
-      <span class="introLetters">nc</span>
-      <span class="introName">nc studios</span>
+      <img class="introLogo" src="ncstudios-logo-1024.png" alt="">
     </div>
     <div class="introSignal" aria-hidden="true"></div>
   </div>
