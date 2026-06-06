@@ -447,6 +447,14 @@ textarea{
   background:rgba(0,0,0,0.15);
 }
 
+.headActions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
 .projectHead h4{
   font-size:16px;
 }
@@ -479,6 +487,17 @@ textarea{
   justify-content:space-between;
   gap:12px;
   border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.miniDanger{
+  min-height:30px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(255,59,48,0.10);
+  border:1px solid rgba(255,59,48,0.30);
+  color:#fecaca;
+  box-shadow:none;
+  font-size:11px;
 }
 
 .areaHead h4{
@@ -611,6 +630,16 @@ textarea{
 
   .nav{
     grid-template-columns:repeat(2,1fr);
+  }
+
+  .projectHead,
+  .areaHead{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .headActions{
+    justify-content:flex-start;
   }
 }
 </style>
@@ -980,14 +1009,20 @@ function renderTasks(){
     <section class="projectLane">
       <div class="projectHead">
         <h4>${escapeHTML(projectGroup.project)}</h4>
-        <span>${projectGroup.items.length} ${projectGroup.items.length === 1 ? "item" : "items"}</span>
+        <div class="headActions">
+          <span>${projectGroup.items.length} ${projectGroup.items.length === 1 ? "item" : "items"}</span>
+          <button type="button" class="miniDanger" onclick="clearProjectTasks('${escapeAttribute(projectGroup.key)}')">Clear couple</button>
+        </div>
       </div>
       <div class="projectAreas">
         ${groupByArea(projectGroup.items).map(group => `
           <section class="areaLane">
             <div class="areaHead">
               <h4>${categoryLabel(group.area)}</h4>
-              <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+              <div class="headActions">
+                <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+                <button type="button" class="miniDanger" onclick="clearSectionTasks('${escapeAttribute(projectGroup.key)}','${escapeAttribute(group.area)}')">Clear section</button>
+              </div>
             </div>
             <div class="areaItems">
               ${group.items.map(renderTaskCard).join("")}
@@ -1279,6 +1314,50 @@ function clearAllTasks(){
   }
 
   tasks = [];
+  saveTasks();
+  renderTasks();
+}
+
+function clearProjectTasks(targetProjectKey){
+  const matching = tasks.filter(item => projectKey(projectLabel(item.project)) === targetProjectKey);
+
+  if(matching.length === 0){
+    alert("There are no to-dos in this couple/project.");
+    return;
+  }
+
+  const label = projectLabel(matching[0].project);
+  if(!confirm(`Clear all ${matching.length} to-do${matching.length === 1 ? "" : "s"} for ${label}?`)){
+    return;
+  }
+
+  tasks = tasks.filter(item => projectKey(projectLabel(item.project)) !== targetProjectKey);
+  saveTasks();
+  renderTasks();
+}
+
+function clearSectionTasks(targetProjectKey,targetArea){
+  const area = normaliseCategory(targetArea);
+  const matching = tasks.filter(item => (
+    projectKey(projectLabel(item.project)) === targetProjectKey &&
+    normaliseCategory(item.category) === area
+  ));
+
+  if(matching.length === 0){
+    alert("There are no to-dos in this section.");
+    return;
+  }
+
+  const label = projectLabel(matching[0].project);
+  const areaLabel = categoryLabel(area);
+  if(!confirm(`Clear all ${matching.length} ${areaLabel} to-do${matching.length === 1 ? "" : "s"} for ${label}?`)){
+    return;
+  }
+
+  tasks = tasks.filter(item => !(
+    projectKey(projectLabel(item.project)) === targetProjectKey &&
+    normaliseCategory(item.category) === area
+  ));
   saveTasks();
   renderTasks();
 }
