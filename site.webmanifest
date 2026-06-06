@@ -5,8 +5,8 @@
   "start_url": "./dashboard.html?v=sync-fixed-1",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050507",
-  "theme_color": "#050507",
+  "background_color": "#050504",
+  "theme_color": "#050504",
   "orientation": "portrait",
   "icons": [
     {

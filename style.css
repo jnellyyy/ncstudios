@@ -1,19 +1,19 @@
 :root{
-  --bg1:#07080b;
-  --bg2:#11131a;
-  --panel:rgba(255,255,255,0.07);
-  --panel2:rgba(255,255,255,0.10);
-  --line:rgba(255,255,255,0.12);
-  --text:#f7f7fb;
-  --muted:#a9adba;
-  --soft:#d7d9e2;
-  --accent:#b11226;
-  --accent2:#ff465f;
-  --gold:#d8b46a;
+  --bg1:#050504;
+  --bg2:#11100c;
+  --panel:rgba(247,239,227,0.07);
+  --panel2:rgba(247,239,227,0.11);
+  --line:rgba(247,239,227,0.14);
+  --text:#f7efe3;
+  --muted:#b8ac9a;
+  --soft:#efe1cc;
+  --accent:#d8b76e;
+  --accent2:#f0dca8;
+  --gold:#d8b76e;
   --green:#31d07f;
   --blue:#7aa7ff;
   --orange:#ffb35c;
-  --red:#ff5b6d;
+  --red:#a32024;
   --shadow:0 24px 70px rgba(0,0,0,0.42);
   --radius:28px;
 }
@@ -34,8 +34,8 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at top left,rgba(177,18,38,0.32),transparent 34%),
-    radial-gradient(circle at bottom right,rgba(216,180,106,0.18),transparent 34%),
+    radial-gradient(circle at top left,rgba(216,183,110,0.22),transparent 34%),
+    radial-gradient(circle at bottom right,rgba(240,220,168,0.12),transparent 34%),
     linear-gradient(135deg,var(--bg1),var(--bg2));
 }
 
@@ -88,13 +88,13 @@ button{
   border-radius:17px;
   display:grid;
   place-items:center;
-  color:#fff;
+  color:#11100c;
   font-weight:850;
   letter-spacing:-0.06em;
   background:
     linear-gradient(145deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02)),
-    linear-gradient(145deg,#3a0710,#b11226);
-  box-shadow:0 16px 32px rgba(177,18,38,0.28);
+    linear-gradient(145deg,#f0dca8,#b99546);
+  box-shadow:0 16px 32px rgba(216,183,110,0.22);
 }
 
 .brand-text{
@@ -168,14 +168,14 @@ h3{
 
 .btn{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;
-  box-shadow:0 16px 30px rgba(177,18,38,0.24);
+  color:#11100c;
+  box-shadow:0 16px 30px rgba(216,183,110,0.22);
 }
 
 .danger-btn{
-  background:rgba(255,91,109,0.12);
-  border:1px solid rgba(255,91,109,0.28);
-  color:#ffd6db;
+  background:rgba(163,32,36,0.13);
+  border:1px solid rgba(163,32,36,0.30);
+  color:#ffd8d8;
 }
 
 .entry-card{
@@ -200,8 +200,8 @@ h3{
   letter-spacing:-0.06em;
   background:
     linear-gradient(145deg,rgba(255,255,255,0.22),rgba(255,255,255,0.02)),
-    linear-gradient(145deg,#31060d,#b11226);
-  box-shadow:0 26px 60px rgba(177,18,38,0.28);
+    linear-gradient(145deg,#f0dca8,#b99546);
+  box-shadow:0 26px 60px rgba(216,183,110,0.24);
 }
 
 .entry-title{
@@ -278,7 +278,7 @@ h3{
   right:-100px;
   bottom:-130px;
   border-radius:999px;
-  background:radial-gradient(circle,rgba(177,18,38,0.52),transparent 64%);
+  background:radial-gradient(circle,rgba(216,183,110,0.42),transparent 64%);
   pointer-events:none;
 }
 
@@ -407,8 +407,8 @@ textarea{
 }
 
 input:focus,select:focus,textarea:focus{
-  border-color:rgba(255,70,95,0.7);
-  box-shadow:0 0 0 4px rgba(177,18,38,0.17);
+  border-color:rgba(216,183,110,0.72);
+  box-shadow:0 0 0 4px rgba(216,183,110,0.15);
 }
 
 .form-actions,.toolbar,.card-actions{
@@ -476,7 +476,7 @@ input:focus,select:focus,textarea:focus{
 }
 
 .badge.green{color:#d8ffe9;background:rgba(49,208,127,0.12);border-color:rgba(49,208,127,0.25)}
-.badge.red{color:#ffe0e4;background:rgba(255,91,109,0.12);border-color:rgba(255,91,109,0.25)}
+.badge.red{color:#ffd8d8;background:rgba(163,32,36,0.12);border-color:rgba(163,32,36,0.26)}
 .badge.gold{color:#fff2cf;background:rgba(216,180,106,0.12);border-color:rgba(216,180,106,0.25)}
 .badge.blue{color:#dce7ff;background:rgba(122,167,255,0.12);border-color:rgba(122,167,255,0.25)}
 
@@ -620,8 +620,8 @@ input:focus,select:focus,textarea:focus{
 
 .ops-nav a.active{
   color:var(--text);
-  border-color:rgba(255,70,95,0.42);
-  background:rgba(177,18,38,0.22);
+  border-color:rgba(216,183,110,0.46);
+  background:rgba(216,183,110,0.16);
 }
 
 .ops-stats{
@@ -652,8 +652,8 @@ input:focus,select:focus,textarea:focus{
 
 .ops-card.urgent,
 .ops-card.missing{
-  border-color:rgba(255,91,109,0.30);
-  background:rgba(255,91,109,0.10);
+  border-color:rgba(163,32,36,0.32);
+  background:rgba(163,32,36,0.12);
 }
 
 .ops-card-top{
@@ -818,9 +818,9 @@ input:focus,select:focus,textarea:focus{
 
 .settingValue{
   display:block;
-  color:#fff;
-  background:linear-gradient(145deg,rgba(177,18,38,0.34),rgba(255,255,255,0.07));
-  border:1px solid rgba(255,70,95,0.22);
+  color:#11100c;
+  background:linear-gradient(145deg,rgba(216,183,110,0.58),rgba(240,220,168,0.18));
+  border:1px solid rgba(216,183,110,0.34);
   border-radius:18px;
   padding:12px;
   font-size:21px;
@@ -886,8 +886,8 @@ input:focus,select:focus,textarea:focus{
 
 .buy-card.urgent,
 .buy-card.needed{
-  border-color:rgba(255,91,109,0.30);
-  background:rgba(255,91,109,0.10);
+  border-color:rgba(163,32,36,0.32);
+  background:rgba(163,32,36,0.12);
 }
 
 .buy-card.ordered,

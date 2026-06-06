@@ -10,22 +10,23 @@
 <link rel="manifest" href="website.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
-<meta name="theme-color" content="#07080b">
+<meta name="theme-color" content="#050504">
 
 <style>
 :root{
-  --bg:#07080b;
-  --bg2:#11131a;
-  --ink:#f8f5ef;
-  --paper:#ebe4d8;
-  --muted:#bcb4aa;
-  --soft:#888f9b;
-  --line:rgba(255,255,255,0.15);
-  --panel:rgba(255,255,255,0.075);
-  --panel2:rgba(255,255,255,0.105);
-  --red:#b91c1c;
-  --red2:#ef4444;
-  --gold:#d9b66f;
+  --bg:#050504;
+  --bg2:#11100c;
+  --ink:#f7efe3;
+  --paper:#efe1cc;
+  --muted:#b8ac9a;
+  --soft:#8f8678;
+  --line:rgba(247,239,227,0.14);
+  --panel:rgba(247,239,227,0.07);
+  --panel2:rgba(247,239,227,0.11);
+  --red:#a32024;
+  --red2:#ff3b3f;
+  --gold:#d8b76e;
+  --gold2:#f0dca8;
   --green:#39d27d;
   --shadow:0 28px 80px rgba(0,0,0,0.42);
   --hero-media:url("ncstudios-logo-transparent.png");
@@ -108,8 +109,8 @@ p{
   overflow:hidden;
   color:var(--ink);
   background:
-    radial-gradient(circle at 50% 56%,rgba(239,68,68,0.20),transparent 31%),
-    radial-gradient(circle at 50% 112%,rgba(185,28,28,0.42),transparent 38%),
+    radial-gradient(circle at 50% 56%,rgba(216,183,110,0.18),transparent 31%),
+    radial-gradient(circle at 50% 112%,rgba(216,183,110,0.26),transparent 38%),
     linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,0.035) 1px, transparent 1px),
     #050507;
@@ -126,15 +127,15 @@ p{
 }
 
 .introLoader::before{
-  background:linear-gradient(90deg,transparent,rgba(239,68,68,0.18),transparent);
+  background:linear-gradient(90deg,transparent,rgba(216,183,110,0.20),transparent);
   transform:translateX(-115%) skewX(-16deg);
   animation:introSweep 1100ms ease 1600ms forwards;
 }
 
 .introLoader::after{
   background:
-    linear-gradient(180deg,transparent 0 48%,rgba(239,68,68,0.22) 50%,transparent 53%),
-    radial-gradient(circle,rgba(255,255,255,0.08),transparent 45%);
+    linear-gradient(180deg,transparent 0 48%,rgba(216,183,110,0.18) 50%,transparent 53%),
+    radial-gradient(circle,rgba(240,220,168,0.10),transparent 45%);
   opacity:0;
   animation:introBlink 1700ms linear 1180ms both;
 }
@@ -215,7 +216,7 @@ p{
   justify-content:space-between;
   gap:18px;
   padding:16px clamp(16px,4vw,54px);
-  background:linear-gradient(180deg,rgba(7,8,11,0.92),rgba(7,8,11,0.24));
+  background:linear-gradient(180deg,rgba(5,5,4,0.92),rgba(5,5,4,0.24));
   backdrop-filter:blur(18px);
   transform:translateY(-16px);
   opacity:0;
@@ -236,14 +237,14 @@ p{
   object-fit:contain;
   border:0;
   border-radius:0;
-  filter:drop-shadow(0 0 14px rgba(239,68,68,0.28));
+  filter:drop-shadow(0 0 14px rgba(216,183,110,0.22));
   transition:transform 220ms ease, filter 220ms ease;
 }
 
 .brand:hover .brandMark,
 .brand:focus-visible .brandMark{
   transform:translateY(-2px);
-  filter:drop-shadow(0 0 18px rgba(239,68,68,0.46)) drop-shadow(0 0 38px rgba(185,28,28,0.24));
+  filter:drop-shadow(0 0 18px rgba(216,183,110,0.36)) drop-shadow(0 0 38px rgba(163,32,36,0.16));
 }
 
 .brandText{
@@ -284,7 +285,7 @@ p{
 .nav a:hover,
 .nav a:focus-visible{
   color:var(--ink);
-  text-shadow:0 0 18px rgba(239,68,68,0.35);
+  text-shadow:0 0 18px rgba(216,183,110,0.34);
   transform:translateY(-1px);
   outline:none;
 }
@@ -296,9 +297,9 @@ p{
   border:1px solid rgba(255,255,255,0.18);
   border-radius:999px;
   padding:0 15px;
-  color:#fff;
-  background:var(--red);
-  box-shadow:0 16px 34px rgba(185,28,28,0.24);
+  color:#11100c;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  box-shadow:0 16px 34px rgba(216,183,110,0.20);
   transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 
@@ -306,7 +307,7 @@ p{
 .nav .navCta:focus-visible{
   transform:translateY(-2px);
   border-color:rgba(255,255,255,0.30);
-  box-shadow:0 18px 50px rgba(185,28,28,0.42),0 0 34px rgba(239,68,68,0.24);
+  box-shadow:0 18px 50px rgba(216,183,110,0.30),0 0 34px rgba(163,32,36,0.12);
 }
 
 .hero{
@@ -343,8 +344,8 @@ p{
   width:72px;
   height:2px;
   margin-bottom:18px;
-  background:linear-gradient(90deg,var(--red2),transparent);
-  box-shadow:0 0 24px rgba(239,68,68,0.55);
+  background:linear-gradient(90deg,var(--gold),transparent);
+  box-shadow:0 0 24px rgba(216,183,110,0.45);
   transform-origin:left;
   animation:heroSignal 1000ms ease 950ms both;
 }
@@ -426,10 +427,10 @@ p{
   border-radius:999px;
   padding:0 19px;
   text-decoration:none;
-  color:white;
-  background:var(--red);
+  color:#11100c;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
   font-weight:950;
-  box-shadow:0 18px 46px rgba(185,28,28,0.27);
+  box-shadow:0 18px 46px rgba(216,183,110,0.22);
   transition:transform 210ms ease, box-shadow 210ms ease, border-color 210ms ease, background 210ms ease;
 }
 
@@ -444,13 +445,13 @@ p{
 .submitButton:focus-visible{
   transform:translateY(-2px);
   border-color:rgba(255,255,255,0.32);
-  box-shadow:0 22px 58px rgba(185,28,28,0.42),0 0 34px rgba(239,68,68,0.24);
+  box-shadow:0 22px 58px rgba(216,183,110,0.30),0 0 34px rgba(163,32,36,0.12);
   outline:none;
 }
 
 .button.secondary:hover,
 .button.secondary:focus-visible{
-  background:rgba(185,28,28,0.22);
+  background:rgba(216,183,110,0.16);
 }
 
 .scrollCue{
@@ -538,8 +539,8 @@ p{
 .serviceCard:hover,
 .formPanel:hover{
   transform:translateY(-4px);
-  border-color:rgba(239,68,68,0.32);
-  box-shadow:0 32px 88px rgba(0,0,0,0.46),0 0 42px rgba(185,28,28,0.16);
+  border-color:rgba(216,183,110,0.32);
+  box-shadow:0 32px 88px rgba(0,0,0,0.46),0 0 42px rgba(216,183,110,0.14);
 }
 
 .portraitPanel:hover .portraitImage{
@@ -781,7 +782,7 @@ p{
 
 .enquiry{
   background:
-    linear-gradient(145deg,rgba(185,28,28,0.18),rgba(255,255,255,0.025)),
+    linear-gradient(145deg,rgba(216,183,110,0.16),rgba(247,239,227,0.025)),
     var(--bg);
 }
 
@@ -890,12 +891,12 @@ textarea:focus{
   min-height:50px;
   border:0;
   border-radius:999px;
-  background:var(--red);
-  color:white;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#11100c;
   padding:0 20px;
   font-weight:950;
   cursor:pointer;
-  box-shadow:0 18px 42px rgba(185,28,28,0.30);
+  box-shadow:0 18px 42px rgba(216,183,110,0.24);
   transition:transform 210ms ease, box-shadow 210ms ease, opacity 210ms ease;
 }
 
@@ -988,8 +989,9 @@ textarea:focus{
   border-radius:999px;
   padding:0 15px;
   color:#fff;
-  background:rgba(185,28,28,0.82);
-  box-shadow:0 18px 44px rgba(185,28,28,0.34),0 0 26px rgba(239,68,68,0.20);
+  color:#11100c;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  box-shadow:0 18px 44px rgba(216,183,110,0.28),0 0 26px rgba(163,32,36,0.12);
   font-weight:950;
   cursor:pointer;
   display:none;
