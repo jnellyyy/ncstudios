@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NC Studios Intro Export</title>
+<style>
+:root{
+  --ink:#050507;
+  --panel:rgba(15,15,18,0.72);
+  --line:rgba(216,183,110,0.26);
+  --gold:#d8b76e;
+  --gold-soft:#f0dca8;
+  --cream:#fff8de;
+  --text:#f9f3e6;
+  --muted:#b9ad96;
+}
+
+*{box-sizing:border-box;}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:#050507;
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
+  display:grid;
+  min-height:100svh;
+  grid-template-rows:1fr auto;
+  overflow:hidden;
+}
+
+.stage{
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:
+    radial-gradient(circle at 50% 34%,rgba(216,183,110,0.18),transparent 30%),
+    radial-gradient(circle at 50% 110%,rgba(240,220,168,0.16),transparent 38%),
+    #050507;
+}
+
+.frame{
+  width:min(1180px,100%);
+  aspect-ratio:16 / 9;
+  border:1px solid rgba(216,183,110,0.28);
+  background:#050507;
+  box-shadow:0 30px 90px rgba(0,0,0,0.62),0 0 90px rgba(216,183,110,0.12);
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(5,5,7,0.88);
+  border-top:1px solid rgba(216,183,110,0.18);
+  backdrop-filter:blur(18px);
+}
+
+.status{
+  min-width:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+
+.status strong{
+  display:block;
+  color:var(--text);
+  font-size:14px;
+  font-weight:650;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex:0 0 auto;
+}
+
+button{
+  border:1px solid rgba(216,183,110,0.34);
+  background:linear-gradient(180deg,rgba(255,248,222,0.15),rgba(216,183,110,0.09));
+  color:var(--text);
+  min-height:44px;
+  padding:0 14px;
+  border-radius:8px;
+  font:inherit;
+  font-weight:650;
+  cursor:pointer;
+}
+
+button.primary{
+  background:linear-gradient(180deg,rgba(240,220,168,0.92),rgba(216,183,110,0.84));
+  color:#11100d;
+  border-color:rgba(255,248,222,0.6);
+}
+
+button:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+@media(max-width:720px){
+  body{overflow:auto;}
+  .stage{padding:10px;}
+  .controls{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .actions{
+    width:100%;
+  }
+  button{
+    flex:1;
+  }
+}
+</style>
+</head>
+<body>
+  <main class="stage">
+    <div class="frame">
+      <canvas id="introCanvas" width="1920" height="1080" aria-label="NC Studios gold dot intro preview"></canvas>
+    </div>
+  </main>
+
+  <footer class="controls">
+    <div class="status" id="status">
+      <strong>Gold dot intro</strong>
+      1920 x 1080, 5 seconds. Use save video intro to download.
+    </div>
+    <div class="actions">
+      <button type="button" id="previewBtn">preview again</button>
+      <button type="button" class="primary" id="recordBtn">save video intro</button>
+    </div>
+  </footer>
+
+<script>
+(() => {
+  const canvas = document.getElementById("introCanvas");
+  const ctx = canvas.getContext("2d", { alpha: false });
+  const previewBtn = document.getElementById("previewBtn");
+  const recordBtn = document.getElementById("recordBtn");
+  const status = document.getElementById("status");
+  const duration = 5.1;
+  const logo = new Image();
+  let startTime = performance.now();
+  let rafId = 0;
+  let recording = false;
+
+  logo.src = "ncstudios-logo-transparent.png";
+
+  const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+  const easeOut = value => 1 - Math.pow(1 - clamp(value), 3);
+  const easeInOut = value => {
+    value = clamp(value);
+    return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+  };
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function setStatus(title, detail){
+    status.innerHTML = `<strong>${title}</strong>${detail}`;
+  }
+
+  function drawRoundedRect(x, y, width, height, radius){
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + width, y, x + width, y + height, radius);
+    ctx.arcTo(x + width, y + height, x, y + height, radius);
+    ctx.arcTo(x, y + height, x, y, radius);
+    ctx.arcTo(x, y, x + width, y, radius);
+    ctx.closePath();
+  }
+
+  function orbPoint(progress){
+    const points = [
+      [0, 0.16, 0, 0.82],
+      [0.12, 0.24, -0.18, 1.06],
+      [0.25, 0.36, 0, 0.9],
+      [0.4, 0.5, -0.16, 1.04],
+      [0.55, 0.63, 0, 0.92],
+      [0.72, 0.76, -0.12, 1.02],
+      [0.88, 0.86, 0, 0.96],
+      [1, 0.92, -0.04, 1]
+    ];
+    for(let i = 0; i < points.length - 1; i += 1){
+      const a = points[i];
+      const b = points[i + 1];
+      if(progress >= a[0] && progress <= b[0]){
+        const span = (progress - a[0]) / (b[0] - a[0]);
+        const eased = easeInOut(span);
+        return {
+          x: lerp(a[1], b[1], eased),
+          y: lerp(a[2], b[2], eased),
+          scale: lerp(a[3], b[3], eased)
+        };
+      }
+    }
+    return { x:0.92, y:-0.04, scale:1 };
+  }
+
+  function drawBackground(){
+    ctx.fillStyle = "#050507";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let glow = ctx.createRadialGradient(960, 430, 40, 960, 430, 720);
+    glow.addColorStop(0, "rgba(240,220,168,0.16)");
+    glow.addColorStop(0.34, "rgba(216,183,110,0.08)");
+    glow.addColorStop(1, "rgba(5,5,7,0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    glow = ctx.createRadialGradient(960, 1120, 10, 960, 1120, 720);
+    glow.addColorStop(0, "rgba(216,183,110,0.22)");
+    glow.addColorStop(1, "rgba(5,5,7,0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function drawOrb(time){
+    const intro = clamp((time - 0.54) / 2.35);
+    if(time < 0.5 || time > 3.04) return;
+
+    const point = orbPoint(intro);
+    const baseY = 626;
+    const x = point.x * canvas.width;
+    const y = baseY + point.y * canvas.height;
+    const radius = 30 * point.scale;
+    const trailAlpha = clamp(Math.sin(intro * Math.PI) * 0.85);
+
+    const trail = ctx.createLinearGradient(280, baseY + 58, 1640, baseY + 58);
+    trail.addColorStop(0, "rgba(216,183,110,0)");
+    trail.addColorStop(0.4, `rgba(216,183,110,${0.12 * trailAlpha})`);
+    trail.addColorStop(0.7, `rgba(255,248,222,${0.55 * trailAlpha})`);
+    trail.addColorStop(1, "rgba(216,183,110,0)");
+    ctx.fillStyle = trail;
+    drawRoundedRect(300, baseY + 58, 1320, 7, 4);
+    ctx.fill();
+
+    const beam = ctx.createRadialGradient(x, y, 8, x, y, 148);
+    beam.addColorStop(0, "rgba(255,248,222,0.48)");
+    beam.addColorStop(0.38, "rgba(216,183,110,0.20)");
+    beam.addColorStop(1, "rgba(216,183,110,0)");
+    ctx.fillStyle = beam;
+    ctx.beginPath();
+    ctx.arc(x, y, 150, 0, Math.PI * 2);
+    ctx.fill();
+
+    const orb = ctx.createRadialGradient(x - radius * 0.32, y - radius * 0.35, 2, x, y, radius * 1.2);
+    orb.addColorStop(0, "#fffdf0");
+    orb.addColorStop(0.28, "#f6e6b7");
+    orb.addColorStop(0.66, "#d8b76e");
+    orb.addColorStop(1, "#8f6f2f");
+
+    ctx.shadowColor = "rgba(216,183,110,0.78)";
+    ctx.shadowBlur = 54;
+    ctx.fillStyle = orb;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = "rgba(255,255,255,0.82)";
+    ctx.beginPath();
+    ctx.arc(x - radius * 0.28, y - radius * 0.28, radius * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawLogo(time){
+    if(!logo.complete) return;
+    const show = easeOut((time - 3.05) / 0.66);
+    if(show <= 0) return;
+
+    const logoWidth = 720;
+    const logoHeight = 360;
+    const scale = lerp(0.965, 1, show);
+    const x = (canvas.width - logoWidth * scale) / 2;
+    const y = (canvas.height - logoHeight * scale) / 2 - 6;
+
+    ctx.save();
+    ctx.globalAlpha = show;
+    ctx.shadowColor = "rgba(216,183,110,0.34)";
+    ctx.shadowBlur = 42;
+    ctx.drawImage(logo, x, y, logoWidth * scale, logoHeight * scale);
+    ctx.shadowBlur = 0;
+
+    const shine = clamp((time - 3.52) / 0.72);
+    if(shine > 0 && shine < 1){
+      ctx.globalAlpha = Math.sin(shine * Math.PI) * 0.72;
+      ctx.globalCompositeOperation = "screen";
+      const sweepX = lerp(x - 160, x + logoWidth * scale + 160, shine);
+      const grad = ctx.createLinearGradient(sweepX - 180, y, sweepX + 180, y);
+      grad.addColorStop(0, "rgba(255,255,255,0)");
+      grad.addColorStop(0.5, "rgba(255,248,222,0.72)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = grad;
+      ctx.translate(sweepX, y + logoHeight * scale / 2);
+      ctx.rotate(-0.18);
+      ctx.fillRect(-180, -logoHeight * scale / 2, 360, logoHeight * scale);
+    }
+    ctx.restore();
+  }
+
+  function drawFrame(now){
+    const time = ((now - startTime) / 1000) % duration;
+    drawBackground();
+    drawOrb(time);
+    drawLogo(time);
+    rafId = requestAnimationFrame(drawFrame);
+  }
+
+  function preview(){
+    startTime = performance.now();
+    setStatus("Gold dot intro", "Previewing the 5 second intro.");
+  }
+
+  function pickMimeType(){
+    const types = [
+      "video/mp4;codecs=h264",
+      "video/mp4",
+      "video/webm;codecs=vp9",
+      "video/webm;codecs=vp8",
+      "video/webm"
+    ];
+    return types.find(type => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || "";
+  }
+
+  async function recordIntro(){
+    if(!window.MediaRecorder || !canvas.captureStream){
+      setStatus("Recording unavailable", "Use screen recording on this page, or export from a desktop browser that supports canvas recording.");
+      return;
+    }
+
+    recordBtn.disabled = true;
+    previewBtn.disabled = true;
+    recording = true;
+    const mimeType = pickMimeType();
+    const extension = mimeType.includes("mp4") ? "mp4" : "webm";
+    const stream = canvas.captureStream(60);
+    const chunks = [];
+    const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+
+    recorder.ondataavailable = event => {
+      if(event.data && event.data.size) chunks.push(event.data);
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type:mimeType || "video/webm" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `nc-studios-gold-dot-intro.${extension}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1200);
+      stream.getTracks().forEach(track => track.stop());
+      recordBtn.disabled = false;
+      previewBtn.disabled = false;
+      recording = false;
+      setStatus("Saved", `Downloaded nc-studios-gold-dot-intro.${extension}`);
+    };
+
+    recorder.start();
+    startTime = performance.now();
+    setStatus("Recording", "Keep this page open. The download will start automatically.");
+    setTimeout(() => {
+      if(recording && recorder.state !== "inactive") recorder.stop();
+    }, duration * 1000 + 180);
+  }
+
+  previewBtn.addEventListener("click", preview);
+  recordBtn.addEventListener("click", recordIntro);
+  logo.addEventListener("load", preview, { once:true });
+  drawFrame(performance.now());
+})();
+</script>
+</body>
+</html>
