@@ -1,88 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512">
-  <title>nc glowing dot watermark</title>
-  <desc>transparent animated nc studios watermark where one red neon dot with glow and light flare moves through the handwritten nc route.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <title>nc logo light sweep watermark</title>
+  <desc>transparent animated nc studios watermark using the real logo with champagne light sweep and gold signature glow.</desc>
   <defs>
-    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ff4a4a" stop-opacity=".38"/>
-      <stop offset="38%" stop-color="#ff1f1f" stop-opacity=".22"/>
-      <stop offset="76%" stop-color="#b91c1c" stop-opacity=".09"/>
-      <stop offset="100%" stop-color="#b91c1c" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="flare-beam" x1="0%" y1="50%" x2="100%" y2="50%">
-      <stop offset="0%" stop-color="#ff3030" stop-opacity="0"/>
-      <stop offset="43%" stop-color="#ff3030" stop-opacity=".2"/>
-      <stop offset="50%" stop-color="#fff" stop-opacity=".92"/>
-      <stop offset="57%" stop-color="#ff3030" stop-opacity=".2"/>
-      <stop offset="100%" stop-color="#ff3030" stop-opacity="0"/>
+    <mask id="logo-reveal">
+      <rect x="150" y="70" width="0" height="580" rx="8" fill="#fff">
+        <animate attributeName="width" from="0" to="980" dur="1.65s" begin=".18s" fill="freeze"/>
+      </rect>
+    </mask>
+    <linearGradient id="sweep-gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#d8b76e" stop-opacity="0"/>
+      <stop offset="42%" stop-color="#f0dca8" stop-opacity=".18"/>
+      <stop offset="50%" stop-color="#fff7ef" stop-opacity=".9"/>
+      <stop offset="58%" stop-color="#f0dca8" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#d8b76e" stop-opacity="0"/>
     </linearGradient>
-    <filter id="red-glow" x="-140%" y="-140%" width="380%" height="380%">
-      <feGaussianBlur stdDeviation="10" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.98 0 0.08 0 0 0 0 0 0.08 0 0 0 0 0 1 0" result="red"/>
+    <radialGradient id="gold-bloom" cx="50%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#fff8de" stop-opacity=".28"/>
+      <stop offset="42%" stop-color="#d8b76e" stop-opacity=".14"/>
+      <stop offset="100%" stop-color="#8f6f2f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="gold-glow" x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.85 0 0.72 0 0 0.37 0 0 0.42 0 0.1 0 0 0 0.82 0" result="gold"/>
       <feMerge>
-        <feMergeNode in="red"/>
+        <feMergeNode in="gold"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <path id="nc-route" d="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248"/>
+    <filter id="signature-glow" x="-22%" y="-45%" width="144%" height="190%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.85 0 0.72 0 0 0.37 0 0 0.42 0 0.10 0 0 0 .72 0" result="signature"/>
+      <feMerge>
+        <feMergeNode in="signature"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   <style>
     svg{background:transparent}
-    .traveller{
+    .logo-wrap{
       opacity:0;
-      filter:url(#red-glow);
-      animation:mark-on .01s linear .12s forwards, mark-off .3s ease 2.42s forwards;
+      animation:logo-in .35s ease .18s forwards, logo-hold 4.2s ease 1.75s forwards;
     }
-    .halo{
-      fill:url(#halo);
+    .logo-base{
+      opacity:.92;
+      filter:url(#gold-glow);
+    }
+    .logo-signature{
+      opacity:0;
+      filter:url(#signature-glow);
+      animation:gold-signature 2.2s ease 1.55s forwards;
+    }
+    .bloom{
+      opacity:0;
+      animation:bloom-in 1.8s ease 1.2s forwards;
       mix-blend-mode:screen;
-      animation:halo-pulse 2.1s ease-in-out .12s both;
-      transform-origin:center;
     }
-    .beam-wide{
-      fill:url(#flare-beam);
-      opacity:.78;
+    .sweep{
+      opacity:0;
       mix-blend-mode:screen;
-      animation:flare-breathe 2.1s ease-in-out .12s both;
-      transform-origin:center;
+      filter:drop-shadow(0 0 18px rgba(240,220,168,.52));
+      transform:translateX(-460px) skewX(-17deg);
+      animation:sweep-across 1.8s cubic-bezier(.18,.86,.2,1) .12s forwards;
     }
-    .beam-tall{
-      fill:url(#flare-beam);
-      opacity:.34;
-      mix-blend-mode:screen;
-      transform:rotate(90deg);
-      transform-origin:center;
-      animation:flare-breathe 2.1s ease-in-out .12s both;
+    .hairline{
+      opacity:0;
+      stroke:#d8b76e;
+      stroke-width:1.2;
+      stroke-linecap:round;
+      stroke-dasharray:650;
+      stroke-dashoffset:650;
+      filter:drop-shadow(0 0 10px rgba(216,183,110,.38));
+      animation:hairline-write 1.8s cubic-bezier(.18,.86,.2,1) .32s forwards, hairline-fade 1.4s ease 2s forwards;
     }
-    .dot{
-      fill:#ff3030;
-      filter:drop-shadow(0 0 10px rgba(255,48,48,1)) drop-shadow(0 0 26px rgba(185,28,28,.82));
+    @keyframes logo-in{to{opacity:1}}
+    @keyframes logo-hold{
+      0%,100%{transform:scale(1)}
+      45%{transform:scale(1.008)}
     }
-    @keyframes mark-on{to{opacity:1}}
-    @keyframes mark-off{to{opacity:0}}
-    @keyframes halo-pulse{
-      0%{transform:scale(.76);opacity:.48}
-      24%{transform:scale(1.2);opacity:.82}
-      52%{transform:scale(.92);opacity:.6}
-      78%{transform:scale(1.34);opacity:.9}
-      100%{transform:scale(1);opacity:.62}
+    @keyframes gold-signature{
+      0%{opacity:0}
+      26%{opacity:.32}
+      100%{opacity:.12}
     }
-    @keyframes flare-breathe{
-      0%{transform:scaleX(.42);opacity:.18}
-      28%{transform:scaleX(1.22);opacity:.88}
-      58%{transform:scaleX(.72);opacity:.46}
-      82%{transform:scaleX(1.45);opacity:.9}
-      100%{transform:scaleX(.8);opacity:.42}
+    @keyframes bloom-in{
+      0%{opacity:0;transform:scale(.82)}
+      45%{opacity:.72}
+      100%{opacity:.18;transform:scale(1.05)}
     }
+    @keyframes sweep-across{
+      0%{opacity:0;transform:translateX(-460px) skewX(-17deg)}
+      18%{opacity:.95}
+      100%{opacity:0;transform:translateX(760px) skewX(-17deg)}
+    }
+    @keyframes hairline-write{
+      0%{opacity:0;stroke-dashoffset:650}
+      14%{opacity:.9}
+      100%{opacity:.9;stroke-dashoffset:0}
+    }
+    @keyframes hairline-fade{to{opacity:0}}
   </style>
-  <g class="traveller">
-    <circle class="halo" r="70"/>
-    <rect class="beam-wide" x="-104" y="-5" width="208" height="10" rx="5"/>
-    <rect class="beam-tall" x="-76" y="-3" width="152" height="6" rx="3"/>
-    <circle class="dot" r="12">
-      <animate attributeName="r" values="10;16;11;14;12" dur="2.1s" begin=".12s" fill="freeze"/>
-    </circle>
-    <animateMotion dur="2.1s" begin=".12s" fill="freeze">
-      <mpath href="#nc-route"/>
-    </animateMotion>
+  <g class="logo-wrap" mask="url(#logo-reveal)">
+    <ellipse class="bloom" cx="640" cy="300" rx="340" ry="155" fill="url(#gold-bloom)"/>
+    <image class="logo-signature" href="nc-watermark-logo.png" x="190" y="104" width="900" height="450" preserveAspectRatio="xMidYMid meet"/>
+    <image class="logo-base" href="nc-watermark-logo.png" x="190" y="104" width="900" height="450" preserveAspectRatio="xMidYMid meet"/>
   </g>
+  <rect class="sweep" x="360" y="72" width="120" height="580" rx="60" fill="url(#sweep-gradient)"/>
+  <path class="hairline" d="M308 532 C430 557 750 560 972 526" fill="none"/>
 </svg>

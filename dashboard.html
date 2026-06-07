@@ -356,6 +356,8 @@ body::before{
   flex-direction:column;
   justify-content:space-between;
   gap:5px;
+  min-width:0;
+  overflow:hidden;
 }
 
 .liveAction:active{
@@ -368,11 +370,13 @@ body::before{
   font-weight:950;
   letter-spacing:0.08em;
   text-transform:uppercase;
+  min-width:0;
 }
 
 .liveAction strong{
   font-size:12px;
   line-height:1;
+  min-width:0;
 }
 
 .liveAction.primary{
@@ -404,6 +408,7 @@ body::before{
   overflow:hidden;
   box-shadow:0 15px 35px rgba(0,0,0,0.26);
   position:relative;
+  min-width:0;
 }
 
 .tile:active{
@@ -459,6 +464,7 @@ body::before{
   line-height:1.22;
   position:relative;
   z-index:1;
+  overflow-wrap:break-word;
 }
 
 .tileFooter{
@@ -608,17 +614,25 @@ body::before{
   .liveAction{
     min-height:27px;
     border-radius:11px;
-    padding:6px 7px;
+    padding:6px 5px;
     flex-direction:row;
     align-items:center;
+    gap:4px;
+    justify-content:flex-start;
   }
 
   .liveAction span{
-    font-size:7.5px;
+    font-size:7px;
+    letter-spacing:0.045em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
 
   .liveAction strong{
-    font-size:10px;
+    font-size:9px;
+    overflow:hidden;
+    text-overflow:ellipsis;
     white-space:nowrap;
   }
 
@@ -648,6 +662,7 @@ body::before{
   .tile{
     border-radius:20px;
     padding:10px;
+    justify-content:flex-start;
   }
 
   .icon{
@@ -670,11 +685,14 @@ body::before{
   .tile p{
     font-size:9.5px;
     line-height:1.15;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
   }
 
   .tileFooter{
-    font-size:10px;
-    margin-top:4px;
+    display:none;
   }
 }
 

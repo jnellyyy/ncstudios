@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc">
+  <title id="title">NC Studios Instagram icon</title>
+  <desc id="desc">Dark NC Studios icon with a gold light beam and Instagram camera mark.</desc>
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="42%" r="64%">
+      <stop offset="0" stop-color="#2b2416"/>
+      <stop offset="0.58" stop-color="#11100c"/>
+      <stop offset="1" stop-color="#050504"/>
+    </radialGradient>
+    <linearGradient id="goldBeam" x1="180" y1="160" x2="890" y2="920">
+      <stop offset="0" stop-color="#8f6f2f"/>
+      <stop offset="0.34" stop-color="#d8b76e"/>
+      <stop offset="0.62" stop-color="#fff8de"/>
+      <stop offset="1" stop-color="#b99546"/>
+    </linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.85 0 1 0 0 0.68 0 0 1 0 0.36 0 0 0 0.72 0" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1080" height="1080" rx="180" fill="url(#bgGlow)"/>
+  <path d="M178 766 C314 514 460 298 662 198 C610 330 492 474 356 600 C512 512 704 420 894 332" fill="none" stroke="url(#goldBeam)" stroke-width="20" stroke-linecap="round" opacity="0.34" filter="url(#softGlow)"/>
+  <circle cx="540" cy="540" r="334" fill="none" stroke="#d8b76e" stroke-opacity="0.24" stroke-width="2"/>
+  <rect x="308" y="308" width="464" height="464" rx="132" fill="none" stroke="url(#goldBeam)" stroke-width="42" filter="url(#softGlow)"/>
+  <circle cx="540" cy="540" r="122" fill="none" stroke="#f0dca8" stroke-width="40"/>
+  <circle cx="666" cy="414" r="32" fill="#f0dca8"/>
+  <text x="540" y="925" text-anchor="middle" fill="#f7efe3" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="82" font-weight="900" letter-spacing="18">NC</text>
+</svg>
