@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marvin and Blessing Acheampong Title Export</title>
+<style>
+:root{
+  --black:#020203;
+  --panel:rgba(10,10,12,0.88);
+  --gold:#d8b76e;
+  --gold-soft:#f0dca8;
+  --ivory:#f8f3eb;
+  --muted:#aaa196;
+}
+
+*{box-sizing:border-box;}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:var(--black);
+  color:var(--ivory);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
+  display:grid;
+  min-height:100svh;
+  grid-template-rows:1fr auto;
+  overflow:hidden;
+}
+
+.stage{
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:#050505;
+}
+
+.frame{
+  width:min(1180px,100%);
+  aspect-ratio:16 / 9;
+  border:1px solid rgba(216,183,110,0.24);
+  background-color:#111;
+  background-image:
+    linear-gradient(45deg,rgba(255,255,255,0.055) 25%,transparent 25%),
+    linear-gradient(-45deg,rgba(255,255,255,0.055) 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,rgba(255,255,255,0.055) 75%),
+    linear-gradient(-45deg,transparent 75%,rgba(255,255,255,0.055) 75%);
+  background-position:0 0,0 12px,12px -12px,-12px 0;
+  background-size:24px 24px;
+  box-shadow:0 30px 100px rgba(0,0,0,0.76);
+}
+
+canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:var(--panel);
+  border-top:1px solid rgba(216,183,110,0.18);
+  backdrop-filter:blur(18px);
+}
+
+.status{
+  min-width:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+
+.status strong{
+  display:block;
+  color:var(--ivory);
+  font-size:14px;
+  font-weight:650;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex:0 0 auto;
+}
+
+button{
+  border:1px solid rgba(216,183,110,0.34);
+  background:linear-gradient(180deg,rgba(255,248,222,0.13),rgba(216,183,110,0.08));
+  color:var(--ivory);
+  min-height:44px;
+  padding:0 14px;
+  border-radius:8px;
+  font:inherit;
+  font-weight:650;
+  cursor:pointer;
+}
+
+button.primary{
+  background:linear-gradient(180deg,rgba(240,220,168,0.92),rgba(216,183,110,0.84));
+  color:#11100d;
+  border-color:rgba(255,248,222,0.62);
+}
+
+button:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+@media(max-width:720px){
+  body{overflow:auto;}
+  .stage{padding:10px;}
+  .controls{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .actions{
+    width:100%;
+  }
+  button{
+    flex:1;
+  }
+}
+</style>
+</head>
+<body>
+  <main class="stage">
+    <div class="frame">
+      <canvas id="titleCanvas" width="1920" height="1080" aria-label="Marvin and Blessing Acheampong title card preview"></canvas>
+    </div>
+  </main>
+
+  <footer class="controls">
+    <div class="status" id="status">
+      <strong>Marvin & Blessing Acheampong</strong>
+      Transparent 1920 x 1080 title card in the new NC Studios gold branding.
+    </div>
+    <div class="actions">
+      <button type="button" id="previewBtn">preview again</button>
+      <button type="button" id="pngBtn">save still</button>
+      <button type="button" class="primary" id="videoBtn">save title video</button>
+    </div>
+  </footer>
+
+<script>
+(() => {
+  const canvas = document.getElementById("titleCanvas");
+  const ctx = canvas.getContext("2d", { alpha:true });
+  const previewBtn = document.getElementById("previewBtn");
+  const pngBtn = document.getElementById("pngBtn");
+  const videoBtn = document.getElementById("videoBtn");
+  const status = document.getElementById("status");
+  const logo = new Image();
+  const duration = 5.2;
+  const vogueFont = "Didot, 'Bodoni 72', 'Bodoni 72 Smallcaps', 'Bodoni 72 Oldstyle', 'Times New Roman', Times, serif";
+  let startTime = performance.now();
+  let recording = false;
+
+  logo.src = "ncstudios-logo-transparent.png";
+
+  const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+  const easeOut = value => 1 - Math.pow(1 - clamp(value), 3);
+  const easeInOut = value => {
+    value = clamp(value);
+    return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+  };
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function setStatus(title, detail){
+    status.innerHTML = `<strong>${title}</strong>${detail}`;
+  }
+
+  function textWidth(text, tracking){
+    let width = 0;
+    for(let i = 0; i < text.length; i += 1){
+      width += ctx.measureText(text[i]).width;
+      if(i < text.length - 1) width += tracking;
+    }
+    return width;
+  }
+
+  function drawTrackedText(text, x, y, tracking){
+    const width = textWidth(text, tracking);
+    let cursor = x - width / 2;
+    for(let i = 0; i < text.length; i += 1){
+      const char = text[i];
+      ctx.fillText(char, cursor, y);
+      cursor += ctx.measureText(char).width + tracking;
+    }
+  }
+
+  function drawRevealedText(text, x, y, font, tracking, color, show, blur = 0){
+    if(show <= 0) return;
+    ctx.save();
+    ctx.font = font;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = color;
+    ctx.globalAlpha = easeOut(show);
+    ctx.shadowColor = "rgba(216,183,110,0.18)";
+    ctx.shadowBlur = blur;
+    ctx.translate(0, lerp(18, 0, easeOut(show)));
+    drawTrackedText(text, x, y, tracking);
+    ctx.restore();
+  }
+
+  function drawBackground(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function drawTintedLogo(show){
+    if(!logo.complete || show <= 0) return;
+
+    const eased = easeOut(show);
+    const crop = { x:260, y:116, width:500, height:230 };
+    const width = 245;
+    const height = 112;
+    const x = (canvas.width - width) / 2;
+    const y = 192 - height / 2 + lerp(10, 0, eased);
+    const buffer = document.createElement("canvas");
+    const bctx = buffer.getContext("2d");
+
+    buffer.width = width;
+    buffer.height = height;
+    bctx.drawImage(logo, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height);
+    bctx.globalCompositeOperation = "source-in";
+
+    const tint = bctx.createLinearGradient(0, 0, width, height);
+    tint.addColorStop(0, "#8f6f2f");
+    tint.addColorStop(0.32, "#f0dca8");
+    tint.addColorStop(0.58, "#fff8de");
+    tint.addColorStop(1, "#d8b76e");
+    bctx.fillStyle = tint;
+    bctx.fillRect(0, 0, width, height);
+
+    ctx.save();
+    ctx.globalAlpha = eased;
+    ctx.shadowColor = "rgba(216,183,110,0.48)";
+    ctx.shadowBlur = 26;
+    ctx.drawImage(buffer, x, y, width, height);
+    ctx.restore();
+  }
+
+  function drawTitle(time){
+    drawBackground();
+
+    const logoShow = clamp((time - 0.18) / 0.68);
+    const studioShow = clamp((time - 0.72) / 0.72);
+    const namesShow = clamp((time - 1.08) / 0.88);
+    const surnameShow = clamp((time - 1.72) / 0.9);
+    drawTintedLogo(logoShow);
+
+    drawRevealedText(
+      "NC STUDIOS | VIDEOGRAPHY",
+      960,
+      333,
+      `28px ${vogueFont}`,
+      9.5,
+      "rgba(248,243,235,0.94)",
+      studioShow,
+      0
+    );
+
+    drawRevealedText(
+      "MARVIN & BLESSING",
+      960,
+      506,
+      `112px ${vogueFont}`,
+      12,
+      "#fbf6ee",
+      namesShow,
+      8
+    );
+
+    drawRevealedText(
+      "ACHEAMPONG",
+      960,
+      666,
+      `62px ${vogueFont}`,
+      27,
+      "rgba(240,220,168,0.94)",
+      surnameShow,
+      4
+    );
+  }
+
+  function drawFrame(now){
+    const elapsed = (now - startTime) / 1000;
+    const time = recording ? Math.min(elapsed, duration) : elapsed % duration;
+    drawTitle(time);
+    requestAnimationFrame(drawFrame);
+  }
+
+  function preview(){
+    startTime = performance.now();
+    setStatus("Marvin & Blessing Acheampong", "Previewing the transparent Vogue-style title reveal.");
+  }
+
+  function saveStill(){
+    drawTitle(duration);
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "marvin-blessing-acheampong-title.png";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setStatus("Still saved", "Downloaded transparent marvin-blessing-acheampong-title.png");
+  }
+
+  function pickMimeType(){
+    const types = [
+      "video/webm;codecs=vp9",
+      "video/webm;codecs=vp8",
+      "video/webm"
+    ];
+    return types.find(type => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || "";
+  }
+
+  function saveVideo(){
+    if(!window.MediaRecorder || !canvas.captureStream){
+      setStatus("Recording unavailable", "Use screen recording on this page, or export from a desktop browser that supports canvas recording.");
+      return;
+    }
+
+    videoBtn.disabled = true;
+    pngBtn.disabled = true;
+    previewBtn.disabled = true;
+    recording = true;
+
+    const mimeType = pickMimeType();
+    if(!mimeType){
+      videoBtn.disabled = false;
+      pngBtn.disabled = false;
+      previewBtn.disabled = false;
+      recording = false;
+      setStatus("Transparent export unavailable", "This browser cannot record WebM from the canvas. Try Chrome on desktop for this export page.");
+      return;
+    }
+    const extension = "webm";
+    const stream = canvas.captureStream(60);
+    const chunks = [];
+    const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+
+    recorder.ondataavailable = event => {
+      if(event.data && event.data.size) chunks.push(event.data);
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type:mimeType || "video/webm" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `marvin-blessing-acheampong-title.${extension}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1200);
+      stream.getTracks().forEach(track => track.stop());
+      videoBtn.disabled = false;
+      pngBtn.disabled = false;
+      previewBtn.disabled = false;
+      recording = false;
+      setStatus("Video saved", `Downloaded transparent marvin-blessing-acheampong-title.${extension}`);
+    };
+
+    recorder.start();
+    startTime = performance.now();
+    setStatus("Recording transparent title video", "Keep this page open. The download will start automatically.");
+    setTimeout(() => {
+      if(recording && recorder.state !== "inactive") recorder.stop();
+    }, duration * 1000 + 180);
+  }
+
+  previewBtn.addEventListener("click", preview);
+  pngBtn.addEventListener("click", saveStill);
+  videoBtn.addEventListener("click", saveVideo);
+  logo.addEventListener("load", preview, { once:true });
+  drawFrame(performance.now());
+})();
+</script>
+</body>
+</html>
