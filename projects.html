@@ -27,6 +27,7 @@
 
   <nav class="nav-pill">
     <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="consultations.html">Consult</a>
     <a class="pill" href="quick-capture.html">Capture</a>
     <a class="pill" href="call-sheet.html">Call Sheet</a>
   </nav>
@@ -35,6 +36,7 @@
 <nav class="ops-nav">
   <a href="dashboard.html">Home</a>
   <a href="quick-capture.html">Capture</a>
+  <a href="consultations.html">Consult</a>
   <a class="active" href="projects.html">Projects</a>
   <a href="call-sheet.html">Call Sheet</a>
   <a href="shot-lists.html">Shots</a>
@@ -127,6 +129,7 @@ const STORE_KEYS = {
   timeline:"ncstudios_timeline_v1",
   gear:"ncstudios_gear_v1",
   settings:"ncstudios_settings_v1",
+  consultations:"ncstudios_consultations_v1",
   callSheets:"ncstudios_callsheets_v1",
   capture:"ncstudios_capture_v1"
 };
@@ -140,6 +143,7 @@ const PROJECT_FIELDS = {
   timeline:["project"],
   gear:["project"],
   settings:["project"],
+  consultations:["project"],
   callSheets:["project"],
   capture:["project"]
 };
@@ -213,6 +217,7 @@ function getProjectData(group){
   const timeline = filterProjectStore("timeline", key);
   const gear = filterProjectStore("gear", key);
   const settings = filterProjectStore("settings", key);
+  const consultations = filterProjectStore("consultations", key);
   const callSheets = filterProjectStore("callSheets", key);
   const capture = filterProjectStore("capture", key);
 
@@ -238,6 +243,7 @@ function getProjectData(group){
     timeline,
     gear,
     settings,
+    consultations,
     callSheets,
     capture,
     income,
@@ -327,7 +333,8 @@ function renderProjects(){
   updateStats(projects);
 
   if(!selectedProjectKey && visible.length){
-    selectedProjectKey = visible[0].key;
+    const requestedKey = normaliseProjectKey(new URLSearchParams(window.location.search).get("project"));
+    selectedProjectKey = visible.find(item => item.key === requestedKey)?.key || visible[0].key;
   }
 
   if(selectedProjectKey && visible.length && !visible.some(item => item.key === selectedProjectKey)){
@@ -375,6 +382,7 @@ function renderDetail(data){
   const client = data.clients[0] || {};
   const delivery = data.delivery[0] || {};
   const callSheet = data.callSheets[0] || {};
+  const consultation = data.consultations[0] || {};
   const neededShots = data.shots.filter(item => !item.captured).length;
   const gearLeft = data.gear.filter(item => !["packed","checked","charged"].includes(item.status)).length;
   const openCaptures = data.capture.filter(item => item.status !== "processed").length;
@@ -396,6 +404,7 @@ function renderDetail(data){
 
     <div class="split-actions">
       <a href="quick-capture.html"><span>Capture</span><strong>Add note</strong></a>
+      <a href="consultations.html?project=${encodeURIComponent(data.project)}"><span>Consult</span><strong>${data.consultations.length || "Start"}</strong></a>
       <a href="shot-lists.html?project=${encodeURIComponent(data.project)}#liveShots"><span>Shots</span><strong>${neededShots} left</strong></a>
       <a href="call-sheet.html"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
       <a href="timeline.html"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
@@ -434,9 +443,20 @@ function renderDetail(data){
         <div class="meta-list">
           <div class="meta-row"><span>Timeline active</span><b>${data.timeline.filter(item => item.status !== "done").length}</b></div>
           <div class="meta-row"><span>Gear left</span><b>${gearLeft}</b></div>
+          <div class="meta-row"><span>Consultations</span><b>${data.consultations.length}</b></div>
           <div class="meta-row"><span>Settings</span><b>${data.settings.length}</b></div>
           <div class="meta-row"><span>Open captures</span><b>${openCaptures}</b></div>
           <div class="meta-row"><span>Delivery</span><b>${escapeHTML(delivery.stage || "Not started")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Consultation</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Status</span><b>${escapeHTML(statusLabel(consultation.status || "Not started"))}</b></div>
+          <div class="meta-row"><span>Package</span><b>${escapeHTML(packageLabel(consultation.recommendedPackage))}</b></div>
+          <div class="meta-row"><span>Price</span><b>${money(consultation.packagePrice || 0)}</b></div>
+          <div class="meta-row"><span>Next step</span><b>${escapeHTML(consultation.nextStep || "Not added")}</b></div>
         </div>
       </article>
 
@@ -464,7 +484,7 @@ function deleteProject(projectKey,projectName){
     return;
   }
 
-  const firstConfirm = confirm(`Delete ${displayName} from Project Hub?\n\nThis removes matching bookings, clients, payments, delivery, shots, timeline, gear, settings, call sheets and capture notes.`);
+  const firstConfirm = confirm(`Delete ${displayName} from Project Hub?\n\nThis removes matching bookings, clients, payments, delivery, shots, timeline, gear, settings, consultations, call sheets and capture notes.`);
   if(!firstConfirm) return;
 
   const finalConfirm = confirm(`Delete ${displayName} now?\n\nThis cannot be undone inside the app.`);
@@ -491,6 +511,7 @@ function deleteProject(projectKey,projectName){
 function renderRecent(data){
   const rows = [
     ...data.capture.slice(0,3).map(item => ({label:"Capture", title:item.title, meta:item.status || "open"})),
+    ...data.consultations.slice(0,3).map(item => ({label:"Consult", title:item.project, meta:statusLabel(item.status || "open")})),
     ...data.timeline.slice(0,3).map(item => ({label:"Timeline", title:item.title, meta:`${item.time || "--"} ${item.status || ""}`})),
     ...data.finance.slice(0,3).map(item => ({label:"Finance", title:item.title, meta:money(item.amount || 0)}))
   ].slice(0,6);
@@ -516,6 +537,10 @@ function statusLabel(value){
   const labels = {
     enquiry:"Enquiry",
     consultation:"Consultation",
+    open:"Open",
+    "follow-up":"Follow up",
+    secured:"Secured",
+    "not-booking":"Not booking",
     confirmed:"Confirmed",
     postponed:"Postponed",
     completed:"Completed",
@@ -523,6 +548,16 @@ function statusLabel(value){
   };
 
   return labels[value] || value || "Not set";
+}
+
+function packageLabel(value){
+  const labels = {
+    "full-day":"Full day",
+    "half-day":"Half day",
+    custom:"Custom"
+  };
+
+  return labels[value] || "Not set";
 }
 
 function money(value){

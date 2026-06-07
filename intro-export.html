@@ -38,18 +38,22 @@ body{
   display:grid;
   place-items:center;
   padding:18px;
-  background:
-    radial-gradient(circle at 50% 34%,rgba(216,183,110,0.18),transparent 30%),
-    radial-gradient(circle at 50% 110%,rgba(240,220,168,0.16),transparent 38%),
-    #050507;
+  background:#050507;
 }
 
 .frame{
   width:min(1180px,100%);
   aspect-ratio:16 / 9;
   border:1px solid rgba(216,183,110,0.28);
-  background:#050507;
-  box-shadow:0 30px 90px rgba(0,0,0,0.62),0 0 90px rgba(216,183,110,0.12);
+  background-color:#111;
+  background-image:
+    linear-gradient(45deg,rgba(255,255,255,0.055) 25%,transparent 25%),
+    linear-gradient(-45deg,rgba(255,255,255,0.055) 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,rgba(255,255,255,0.055) 75%),
+    linear-gradient(-45deg,transparent 75%,rgba(255,255,255,0.055) 75%);
+  background-position:0 0,0 12px,12px -12px,-12px 0;
+  background-size:24px 24px;
+  box-shadow:0 30px 90px rgba(0,0,0,0.62);
 }
 
 canvas{
@@ -138,7 +142,7 @@ button:disabled{
   <footer class="controls">
     <div class="status" id="status">
       <strong>Gold dot intro</strong>
-      1920 x 1080, 5 seconds. Use save video intro to download.
+      Transparent 1920 x 1080 WebM, 5 seconds. Use save video intro to download.
     </div>
     <div class="actions">
       <button type="button" id="previewBtn">preview again</button>
@@ -149,7 +153,7 @@ button:disabled{
 <script>
 (() => {
   const canvas = document.getElementById("introCanvas");
-  const ctx = canvas.getContext("2d", { alpha: false });
+  const ctx = canvas.getContext("2d", { alpha: true });
   const previewBtn = document.getElementById("previewBtn");
   const recordBtn = document.getElementById("recordBtn");
   const status = document.getElementById("status");
@@ -171,16 +175,6 @@ button:disabled{
 
   function setStatus(title, detail){
     status.innerHTML = `<strong>${title}</strong>${detail}`;
-  }
-
-  function drawRoundedRect(x, y, width, height, radius){
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + width, y, x + width, y + height, radius);
-    ctx.arcTo(x + width, y + height, x, y + height, radius);
-    ctx.arcTo(x, y + height, x, y, radius);
-    ctx.arcTo(x, y, x + width, y, radius);
-    ctx.closePath();
   }
 
   function orbPoint(progress){
@@ -210,24 +204,6 @@ button:disabled{
     return { x:0.92, y:-0.04, scale:1 };
   }
 
-  function drawBackground(){
-    ctx.fillStyle = "#050507";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let glow = ctx.createRadialGradient(960, 430, 40, 960, 430, 720);
-    glow.addColorStop(0, "rgba(240,220,168,0.16)");
-    glow.addColorStop(0.34, "rgba(216,183,110,0.08)");
-    glow.addColorStop(1, "rgba(5,5,7,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    glow = ctx.createRadialGradient(960, 1120, 10, 960, 1120, 720);
-    glow.addColorStop(0, "rgba(216,183,110,0.22)");
-    glow.addColorStop(1, "rgba(5,5,7,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
   function drawOrb(time){
     const intro = clamp((time - 0.54) / 2.35);
     if(time < 0.5 || time > 3.04) return;
@@ -237,25 +213,6 @@ button:disabled{
     const x = point.x * canvas.width;
     const y = baseY + point.y * canvas.height;
     const radius = 30 * point.scale;
-    const trailAlpha = clamp(Math.sin(intro * Math.PI) * 0.85);
-
-    const trail = ctx.createLinearGradient(280, baseY + 58, 1640, baseY + 58);
-    trail.addColorStop(0, "rgba(216,183,110,0)");
-    trail.addColorStop(0.4, `rgba(216,183,110,${0.12 * trailAlpha})`);
-    trail.addColorStop(0.7, `rgba(255,248,222,${0.55 * trailAlpha})`);
-    trail.addColorStop(1, "rgba(216,183,110,0)");
-    ctx.fillStyle = trail;
-    drawRoundedRect(300, baseY + 58, 1320, 7, 4);
-    ctx.fill();
-
-    const beam = ctx.createRadialGradient(x, y, 8, x, y, 148);
-    beam.addColorStop(0, "rgba(255,248,222,0.48)");
-    beam.addColorStop(0.38, "rgba(216,183,110,0.20)");
-    beam.addColorStop(1, "rgba(216,183,110,0)");
-    ctx.fillStyle = beam;
-    ctx.beginPath();
-    ctx.arc(x, y, 150, 0, Math.PI * 2);
-    ctx.fill();
 
     const orb = ctx.createRadialGradient(x - radius * 0.32, y - radius * 0.35, 2, x, y, radius * 1.2);
     orb.addColorStop(0, "#fffdf0");
@@ -263,8 +220,8 @@ button:disabled{
     orb.addColorStop(0.66, "#d8b76e");
     orb.addColorStop(1, "#8f6f2f");
 
-    ctx.shadowColor = "rgba(216,183,110,0.78)";
-    ctx.shadowBlur = 54;
+    ctx.shadowColor = "rgba(216,183,110,0.46)";
+    ctx.shadowBlur = 22;
     ctx.fillStyle = orb;
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -290,10 +247,7 @@ button:disabled{
 
     ctx.save();
     ctx.globalAlpha = show;
-    ctx.shadowColor = "rgba(216,183,110,0.34)";
-    ctx.shadowBlur = 42;
     ctx.drawImage(logo, x, y, logoWidth * scale, logoHeight * scale);
-    ctx.shadowBlur = 0;
 
     const shine = clamp((time - 3.52) / 0.72);
     if(shine > 0 && shine < 1){
@@ -313,8 +267,9 @@ button:disabled{
   }
 
   function drawFrame(now){
-    const time = ((now - startTime) / 1000) % duration;
-    drawBackground();
+    const elapsed = (now - startTime) / 1000;
+    const time = recording ? Math.min(elapsed, duration) : elapsed % duration;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawOrb(time);
     drawLogo(time);
     rafId = requestAnimationFrame(drawFrame);
@@ -322,13 +277,11 @@ button:disabled{
 
   function preview(){
     startTime = performance.now();
-    setStatus("Gold dot intro", "Previewing the 5 second intro.");
+    setStatus("Transparent gold dot intro", "Previewing the 5 second intro.");
   }
 
   function pickMimeType(){
     const types = [
-      "video/mp4;codecs=h264",
-      "video/mp4",
       "video/webm;codecs=vp9",
       "video/webm;codecs=vp8",
       "video/webm"
@@ -346,7 +299,14 @@ button:disabled{
     previewBtn.disabled = true;
     recording = true;
     const mimeType = pickMimeType();
-    const extension = mimeType.includes("mp4") ? "mp4" : "webm";
+    if(!mimeType){
+      recordBtn.disabled = false;
+      previewBtn.disabled = false;
+      recording = false;
+      setStatus("Transparent export unavailable", "This browser cannot record WebM from the canvas. Try Chrome on desktop for this export page.");
+      return;
+    }
+    const extension = "webm";
     const stream = canvas.captureStream(60);
     const chunks = [];
     const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
@@ -368,12 +328,12 @@ button:disabled{
       recordBtn.disabled = false;
       previewBtn.disabled = false;
       recording = false;
-      setStatus("Saved", `Downloaded nc-studios-gold-dot-intro.${extension}`);
+      setStatus("Saved", `Downloaded transparent nc-studios-gold-dot-intro.${extension}`);
     };
 
     recorder.start();
     startTime = performance.now();
-    setStatus("Recording", "Keep this page open. The download will start automatically.");
+    setStatus("Recording transparent WebM", "Keep this page open. The download will start automatically.");
     setTimeout(() => {
       if(recording && recorder.state !== "inactive") recorder.stop();
     }, duration * 1000 + 180);
