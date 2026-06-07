@@ -6,7 +6,24 @@ Do not publish the whole repo as the public website unless the dashboard pages a
 
 Domain: `ncstudiouk.co.uk`
 
-## Recommended: Netlify
+## Credit-Safe Hosting Rule
+
+Use Netlify only for the public static website in `docs/`.
+
+Do not use Netlify for:
+
+- the private business app
+- Supabase sync logic
+- repeated tiny preview/test deploys
+- Netlify Functions
+- Netlify Forms
+- image/video storage
+
+The enquiry form already sends straight to Supabase from the static website, so Netlify does not need to process forms or run backend code.
+
+To save credits, test with the local files first, then deploy grouped finished changes.
+
+## Netlify Static Setup
 
 1. Push this repo to GitHub.
 2. In Netlify, choose Add new project, then Import an existing project.

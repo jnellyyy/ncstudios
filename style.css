@@ -82,18 +82,17 @@ button{
 }
 
 .logo-mark{
-  width:48px;
+  width:58px;
   height:48px;
-  flex:0 0 48px;
+  flex:0 0 58px;
   border-radius:17px;
-  display:grid;
-  place-items:center;
-  color:#11100c;
-  font-weight:850;
-  letter-spacing:-0.06em;
+  display:block;
+  object-fit:contain;
+  padding:7px;
   background:
-    linear-gradient(145deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02)),
-    linear-gradient(145deg,#f0dca8,#b99546);
+    radial-gradient(circle at 25% 18%,rgba(216,183,110,0.28),transparent 40%),
+    linear-gradient(145deg,#22242a,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
   box-shadow:0 16px 32px rgba(216,183,110,0.22);
 }
 

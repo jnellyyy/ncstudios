@@ -177,33 +177,76 @@ p{
   animation:introLogoShine 720ms ease 3550ms forwards;
 }
 
-.introWrite{
+.introOrbCanvas{
   position:absolute;
   inset:0;
   z-index:2;
   opacity:0;
-  overflow:visible;
-  animation:introWriteShow 180ms ease 520ms forwards, introWriteFade 360ms ease 3020ms forwards;
+  animation:introOrbCanvasShow 180ms ease 520ms forwards, introOrbCanvasFade 360ms ease 3020ms forwards;
+  pointer-events:none;
 }
 
-.introTrace{
-  fill:none;
-  stroke:url(#introTraceGradient);
-  stroke-width:7;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:1;
-  stroke-dashoffset:1;
-  opacity:0;
-  filter:drop-shadow(0 0 16px rgba(240,220,168,0.82)) drop-shadow(0 0 42px rgba(216,183,110,0.44));
-  animation:introTraceDraw 2440ms cubic-bezier(.22,.76,.2,1) 560ms forwards, introTraceFade 360ms ease 3000ms forwards;
+.introOrbTrack{
+  position:absolute;
+  left:50%;
+  top:51%;
+  width:min(280px,72vw);
+  height:108px;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 22px rgba(216,183,110,0.36));
 }
 
-.introWriterBeam{
-  fill:url(#introBeamGradient);
+.introOrbTrail{
+  position:absolute;
+  left:7%;
+  right:7%;
+  bottom:14px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(216,183,110,0.22),rgba(255,248,222,0.72),rgba(216,183,110,0.18),transparent);
+  filter:blur(1px);
   opacity:0;
-  mix-blend-mode:screen;
-  filter:drop-shadow(0 0 16px rgba(255,248,222,0.96)) drop-shadow(0 0 42px rgba(216,183,110,0.72));
+  transform:scaleX(0.3);
+  animation:introOrbTrailPulse 2280ms ease-in-out 620ms both;
+}
+
+.introGoldOrb{
+  position:absolute;
+  left:8%;
+  bottom:12px;
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 34% 28%,#fffdf0 0 15%,#f6e6b7 24%,#d8b76e 58%,#8f6f2f 100%);
+  box-shadow:
+    0 0 14px rgba(255,248,222,0.9),
+    0 0 34px rgba(216,183,110,0.76),
+    0 0 72px rgba(216,183,110,0.34);
+  transform:translate(-50%,0) scale(0.9);
+  animation:introGoldBounce 2280ms cubic-bezier(.22,.74,.18,1) 620ms both;
+}
+
+.introGoldOrb::before{
+  content:"";
+  position:absolute;
+  inset:-34px;
+  border-radius:inherit;
+  background:radial-gradient(circle,rgba(255,248,222,0.32),rgba(216,183,110,0.15) 38%,transparent 70%);
+  opacity:0.9;
+  animation:introOrbGlow 2280ms ease-in-out 620ms both;
+}
+
+.introGoldOrb::after{
+  content:"";
+  position:absolute;
+  top:7px;
+  left:8px;
+  width:7px;
+  height:7px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.86);
+  box-shadow:0 0 10px rgba(255,248,222,0.82);
 }
 
 .introLogo{
@@ -1139,23 +1182,39 @@ body.me-panel-open .mePanel{
   100%{opacity:0;transform:translateX(130%) skewX(-18deg);}
 }
 
-@keyframes introWriteShow{
+@keyframes introOrbCanvasShow{
   to{opacity:1;}
 }
 
-@keyframes introWriteFade{
+@keyframes introOrbCanvasFade{
   to{opacity:0;}
 }
 
-@keyframes introTraceDraw{
-  0%{opacity:0;stroke-dashoffset:1;}
-  16%{opacity:1;}
-  82%{opacity:0.92;}
-  100%{opacity:0.46;stroke-dashoffset:0;}
+@keyframes introGoldBounce{
+  0%{left:8%;transform:translate(-50%,0) scale(0.82);}
+  12%{left:18%;transform:translate(-50%,-52px) scale(1.05);}
+  24%{left:30%;transform:translate(-50%,0) scale(0.9);}
+  38%{left:45%;transform:translate(-50%,-46px) scale(1.03);}
+  52%{left:60%;transform:translate(-50%,0) scale(0.92);}
+  68%{left:74%;transform:translate(-50%,-34px) scale(1.01);}
+  84%{left:86%;transform:translate(-50%,0) scale(0.96);}
+  100%{left:92%;transform:translate(-50%,-10px) scale(1);}
 }
 
-@keyframes introTraceFade{
-  to{opacity:0;}
+@keyframes introOrbGlow{
+  0%{opacity:0.34;transform:scale(0.72);}
+  18%{opacity:0.9;transform:scale(1.12);}
+  42%{opacity:0.52;transform:scale(0.88);}
+  68%{opacity:0.82;transform:scale(1.04);}
+  100%{opacity:0.46;transform:scale(0.92);}
+}
+
+@keyframes introOrbTrailPulse{
+  0%{opacity:0;transform:scaleX(0.18);}
+  18%{opacity:0.76;transform:scaleX(0.62);}
+  44%{opacity:0.36;transform:scaleX(0.82);}
+  72%{opacity:0.72;transform:scaleX(1);}
+  100%{opacity:0.28;transform:scaleX(0.86);}
 }
 
 @keyframes introLogoSettle{
@@ -1310,28 +1369,12 @@ body.me-panel-open .mePanel{
 <div class="introLoader" role="status" aria-label="nc studios loading">
   <div class="introStage">
     <div class="introBrand" aria-hidden="true">
-      <svg class="introWrite" viewBox="0 0 1024 512" focusable="false">
-        <defs>
-          <linearGradient id="introTraceGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#8f6f2f" stop-opacity="0"/>
-            <stop offset="0.28" stop-color="#d8b76e" stop-opacity="0.88"/>
-            <stop offset="0.58" stop-color="#fff8de" stop-opacity="1"/>
-            <stop offset="1" stop-color="#f0dca8" stop-opacity="0"/>
-          </linearGradient>
-          <radialGradient id="introBeamGradient" cx="50%" cy="50%" r="60%">
-            <stop offset="0" stop-color="#fff8de"/>
-            <stop offset="0.46" stop-color="#f0dca8"/>
-            <stop offset="1" stop-color="#d8b76e" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <path class="introTrace" pathLength="1" d="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248"/>
-        <ellipse class="introWriterBeam" rx="34" ry="8">
-          <animate attributeName="opacity" values="0;1;0.92;1;0.9;0" dur="2.64s" begin="0.56s" fill="freeze"/>
-          <animate attributeName="rx" values="24;42;30;46;32;40" dur="2.44s" begin="0.56s" fill="freeze"/>
-          <animate attributeName="ry" values="6;10;7;12;8;7" dur="2.44s" begin="0.56s" fill="freeze"/>
-          <animateMotion dur="2.44s" begin="0.56s" fill="freeze" rotate="auto" path="M348 306 C373 258 402 208 423 188 C413 232 381 281 352 306 C407 260 455 196 482 212 C514 231 450 315 516 316 C586 317 589 191 631 198 C686 207 578 319 647 319 C687 319 716 279 744 248" />
-        </ellipse>
-      </svg>
+      <div class="introOrbCanvas">
+        <div class="introOrbTrack">
+          <span class="introOrbTrail"></span>
+          <span class="introGoldOrb"></span>
+        </div>
+      </div>
       <img class="introLogo" src="ncstudios-logo-transparent.png" alt="">
     </div>
     <div class="introSignal" aria-hidden="true"></div>

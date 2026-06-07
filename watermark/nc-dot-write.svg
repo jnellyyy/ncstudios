@@ -77,7 +77,7 @@
       stroke-linejoin:round;
       stroke-dasharray:1;
       stroke-dashoffset:1;
-      filter:drop-shadow(0 0 12px rgba(240,220,168,.68)) drop-shadow(0 0 18px rgba(163,32,36,.2));
+      filter:drop-shadow(0 0 12px rgba(240,220,168,.68)) drop-shadow(0 0 18px rgba(216,183,110,.2));
     }
     .c-trace-top{
       animation:c-write .92s cubic-bezier(.18,.86,.2,1) .86s forwards, c-rest .9s ease 2.16s forwards;
