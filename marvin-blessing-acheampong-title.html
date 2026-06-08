@@ -329,52 +329,89 @@ button:disabled{
       return;
     }
 
+    recording = true;
     videoBtn.disabled = true;
     pngBtn.disabled = true;
     previewBtn.disabled = true;
-    recording = true;
+    videoBtn.textContent = "recording...";
 
     const mimeType = pickMimeType();
     if(!mimeType){
       videoBtn.disabled = false;
       pngBtn.disabled = false;
       previewBtn.disabled = false;
+      videoBtn.textContent = "save title video";
       recording = false;
       setStatus("Transparent export unavailable", "This browser cannot record WebM from the canvas. Try Chrome on desktop for this export page.");
       return;
     }
-    const extension = "webm";
-    const stream = canvas.captureStream(60);
-    const chunks = [];
-    const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
 
-    recorder.ondataavailable = event => {
-      if(event.data && event.data.size) chunks.push(event.data);
-    };
+    try{
+      const extension = "webm";
+      const stream = canvas.captureStream(60);
+      const chunks = [];
+      const recorder = new MediaRecorder(stream, { mimeType });
 
-    recorder.onstop = () => {
-      const blob = new Blob(chunks, { type:mimeType || "video/webm" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `marvin-blessing-acheampong-title.${extension}`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(link.href), 1200);
-      stream.getTracks().forEach(track => track.stop());
+      recorder.ondataavailable = event => {
+        if(event.data && event.data.size) chunks.push(event.data);
+      };
+
+      recorder.onerror = () => {
+        stream.getTracks().forEach(track => track.stop());
+        videoBtn.disabled = false;
+        pngBtn.disabled = false;
+        previewBtn.disabled = false;
+        videoBtn.textContent = "save title video";
+        recording = false;
+        setStatus("Recording failed", "The browser could not finish the transparent WebM export. Try Chrome on desktop, or use screen recording for now.");
+      };
+
+      recorder.onstop = () => {
+        stream.getTracks().forEach(track => track.stop());
+        if(!chunks.length){
+          videoBtn.disabled = false;
+          pngBtn.disabled = false;
+          previewBtn.disabled = false;
+          videoBtn.textContent = "save title video";
+          recording = false;
+          setStatus("No video created", "The browser stopped recording but did not return a file. Try Chrome on desktop for transparent WebM export.");
+          return;
+        }
+
+        const blob = new Blob(chunks, { type:mimeType || "video/webm" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `marvin-blessing-acheampong-title.${extension}`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        videoBtn.disabled = false;
+        pngBtn.disabled = false;
+        previewBtn.disabled = false;
+        videoBtn.textContent = "save title video";
+        recording = false;
+        setStatus("Video saved", `Downloaded transparent marvin-blessing-acheampong-title.${extension}`);
+      };
+
+      recorder.start(250);
+      startTime = performance.now();
+      setStatus("Recording transparent title video", "Wait about 5 seconds. The download starts after the title reveal finishes.");
+      setTimeout(() => {
+        if(recording && recorder.state !== "inactive"){
+          recorder.requestData();
+          recorder.stop();
+        }
+      }, duration * 1000 + 220);
+    }catch(error){
       videoBtn.disabled = false;
       pngBtn.disabled = false;
       previewBtn.disabled = false;
+      videoBtn.textContent = "save title video";
       recording = false;
-      setStatus("Video saved", `Downloaded transparent marvin-blessing-acheampong-title.${extension}`);
-    };
-
-    recorder.start();
-    startTime = performance.now();
-    setStatus("Recording transparent title video", "Keep this page open. The download will start automatically.");
-    setTimeout(() => {
-      if(recording && recorder.state !== "inactive") recorder.stop();
-    }, duration * 1000 + 180);
+      setStatus("Recording failed", "This browser could not start the transparent WebM recorder. Try Chrome on desktop, or screen record this page.");
+    }
   }
 
   previewBtn.addEventListener("click", preview);
