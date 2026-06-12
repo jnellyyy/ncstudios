@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NC Studios Intro Export</title>
+<title>NC Studio Watermark Reveal Export</title>
 <style>
 @font-face{
   font-family:"NC Studio Brand";
@@ -143,19 +143,19 @@ button:disabled{
 <body>
   <main class="stage">
     <div class="frame">
-      <canvas id="introCanvas" width="1920" height="1080" aria-label="NC Studios gold dot intro preview"></canvas>
+      <canvas id="introCanvas" width="1920" height="1080" aria-label="NC Studio watermark reveal preview"></canvas>
     </div>
   </main>
 
   <footer class="controls">
     <div class="status" id="status">
-      <strong>Gold dot intro</strong>
-      Transparent 1920 x 1080, fast 15fps Safari frame sequence.
+      <strong>NC watermark reveal</strong>
+      Transparent 1920 x 1080, 30fps Safari frame sequence for Premiere.
     </div>
     <div class="actions">
       <button type="button" id="previewBtn">preview again</button>
       <button type="button" class="primary" id="framesBtn">save Safari frames</button>
-      <button type="button" id="recordBtn">save WebM video</button>
+      <button type="button" id="recordBtn">save video</button>
     </div>
   </footer>
 
@@ -169,12 +169,14 @@ button:disabled{
   const status = document.getElementById("status");
   const duration = 4;
   const logo = new Image();
+  const markLogo = new Image();
   let startTime = performance.now();
   let rafId = 0;
   let recording = false;
   let exportingFrames = false;
 
-  logo.src = "ncstudios-logo-transparent.png";
+  logo.src = "ncstudios-logo-transparent.png?v=brand-20260612";
+  markLogo.src = "ncstudios-logo-mark-transparent.png?v=brand-20260612";
 
   const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
   const easeOut = value => 1 - Math.pow(1 - clamp(value), 3);
@@ -295,99 +297,95 @@ button:disabled{
     });
   }
 
-  function orbPoint(progress){
-    const points = [
-      [0, 0.16, 0, 0.82],
-      [0.12, 0.24, -0.18, 1.06],
-      [0.25, 0.36, 0, 0.9],
-      [0.4, 0.5, -0.16, 1.04],
-      [0.55, 0.63, 0, 0.92],
-      [0.72, 0.76, -0.12, 1.02],
-      [0.88, 0.86, 0, 0.96],
-      [1, 0.92, -0.04, 1]
-    ];
-    for(let i = 0; i < points.length - 1; i += 1){
-      const a = points[i];
-      const b = points[i + 1];
-      if(progress >= a[0] && progress <= b[0]){
-        const span = (progress - a[0]) / (b[0] - a[0]);
-        const eased = easeInOut(span);
-        return {
-          x: lerp(a[1], b[1], eased),
-          y: lerp(a[2], b[2], eased),
-          scale: lerp(a[3], b[3], eased)
-        };
-      }
-    }
-    return { x:0.92, y:-0.04, scale:1 };
-  }
-
-  function drawOrb(time){
-    const intro = clamp((time - 0.54) / 2.35);
-    if(time < 0.5 || time > 3.04) return;
-
-    const point = orbPoint(intro);
-    const baseY = 626;
-    const x = point.x * canvas.width;
-    const y = baseY + point.y * canvas.height;
-    const radius = 30 * point.scale;
-
-    const orb = ctx.createRadialGradient(x - radius * 0.32, y - radius * 0.35, 2, x, y, radius * 1.2);
-    orb.addColorStop(0, "#fffdf0");
-    orb.addColorStop(0.28, "#f6e6b7");
-    orb.addColorStop(0.66, "#d8b76e");
-    orb.addColorStop(1, "#8f6f2f");
-
-    ctx.shadowColor = "rgba(216,183,110,0.46)";
-    ctx.shadowBlur = 22;
-    ctx.fillStyle = orb;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = "rgba(255,255,255,0.82)";
-    ctx.beginPath();
-    ctx.arc(x - radius * 0.28, y - radius * 0.28, radius * 0.18, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  function drawLogo(time){
-    if(!logo.complete) return;
-    const show = easeOut((time - 3.05) / 0.66);
-    if(show <= 0) return;
-
-    const logoWidth = 720;
-    const logoHeight = 360;
-    const scale = lerp(0.965, 1, show);
-    const x = (canvas.width - logoWidth * scale) / 2;
-    const y = (canvas.height - logoHeight * scale) / 2 - 6;
+  function drawLogoImage(image, targetWidth, alpha, xOffset = 0, clipRight = 0, blur = 0){
+    if(!image.complete) return;
+    const ratio = image.height / image.width;
+    const width = targetWidth;
+    const height = width * ratio;
+    const x = (canvas.width - width) / 2 + xOffset;
+    const y = (canvas.height - height) / 2;
 
     ctx.save();
-    ctx.globalAlpha = show;
-    ctx.drawImage(logo, x, y, logoWidth * scale, logoHeight * scale);
+    ctx.globalAlpha = alpha;
+    if(blur > 0) ctx.filter = `blur(${blur}px)`;
+    if(clipRight > 0){
+      ctx.beginPath();
+      ctx.rect(x, y, width * (1 - clipRight), height);
+      ctx.clip();
+    }
+    ctx.drawImage(image, x, y, width, height);
+    ctx.restore();
+  }
 
-    const shine = clamp((time - 3.52) / 0.72);
-    if(shine > 0 && shine < 1){
-      ctx.globalAlpha = Math.sin(shine * Math.PI) * 0.72;
-      ctx.globalCompositeOperation = "screen";
-      const sweepX = lerp(x - 160, x + logoWidth * scale + 160, shine);
-      const grad = ctx.createLinearGradient(sweepX - 180, y, sweepX + 180, y);
-      grad.addColorStop(0, "rgba(255,255,255,0)");
-      grad.addColorStop(0.5, "rgba(255,248,222,0.72)");
-      grad.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = grad;
-      ctx.translate(sweepX, y + logoHeight * scale / 2);
-      ctx.rotate(-0.18);
-      ctx.fillRect(-180, -logoHeight * scale / 2, 360, logoHeight * scale);
+  function drawBeam(progress){
+    if(progress <= 0 || progress >= 1) return;
+    const x = lerp(-260, canvas.width + 260, progress);
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.translate(x, canvas.height / 2);
+    ctx.rotate(-0.075);
+
+    const beam = ctx.createLinearGradient(-80, 0, 80, 0);
+    beam.addColorStop(0, "rgba(255,248,222,0)");
+    beam.addColorStop(0.44, "rgba(255,248,222,0.54)");
+    beam.addColorStop(0.5, "rgba(216,183,110,0.94)");
+    beam.addColorStop(0.56, "rgba(255,248,222,0.52)");
+    beam.addColorStop(1, "rgba(255,248,222,0)");
+    ctx.fillStyle = beam;
+    ctx.filter = "blur(1px)";
+    ctx.fillRect(-95, -310, 190, 620);
+
+    ctx.filter = "blur(0px)";
+    ctx.fillStyle = "rgba(255,248,222,0.85)";
+    ctx.fillRect(-2, -300, 4, 600);
+    ctx.restore();
+  }
+
+  function drawSparkles(time){
+    if(time < 1.42 || time > 2.18) return;
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    for(let i = 0; i < 5; i += 1){
+      const phase = (time * 3.2 + i * 0.37) % 1;
+      const x = canvas.width / 2 - 320 + 640 * phase;
+      const y = canvas.height / 2 - 120 + 240 * (((i * 37) % 100) / 100);
+      const alpha = Math.max(0, 1 - Math.abs(phase - 0.5) * 2) * 0.58;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "#fff8de";
+      ctx.beginPath();
+      ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+      ctx.fill();
     }
     ctx.restore();
   }
 
   function drawAtTime(time){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawOrb(time);
-    drawLogo(time);
+
+    const fullIn = easeOut(time / 0.45);
+    const cut = easeInOut((time - 1.38) / 0.72);
+    const fullFade = 1 - clamp((time - 1.55) / 0.48);
+    const fullAlpha = fullIn * fullFade;
+    const fullWidth = lerp(980, 900, cut);
+
+    if(fullAlpha > 0){
+      drawLogoImage(logo, fullWidth, fullAlpha * 0.28, -82 * cut, 0.58 * cut, 10);
+      drawLogoImage(logo, fullWidth, fullAlpha, -82 * cut, 0.58 * cut, cut * 1.2);
+    }
+
+    const markReveal = easeOut((time - 1.42) / 0.68);
+    const markFade = time < 3.45 ? 1 : 1 - clamp((time - 3.45) / 0.45);
+    const pulse = 1 + 0.045 * Math.sin(Math.max(0, time - 1.55) * Math.PI * 4.4) * Math.max(0, 1 - clamp((time - 1.55) / 1.4));
+    const markAlpha = markReveal * markFade;
+
+    if(markAlpha > 0){
+      const markWidth = 640 * lerp(0.88, 1, markReveal) * pulse;
+      drawLogoImage(markLogo, markWidth, markAlpha * 0.42, 0, 0, 12);
+      drawLogoImage(markLogo, markWidth, markAlpha, 0, 0, 0);
+    }
+
+    drawBeam((time - 1.24) / 0.98);
+    drawSparkles(time);
   }
 
   function drawFrame(now){
@@ -403,11 +401,13 @@ button:disabled{
 
   function preview(){
     startTime = performance.now();
-    setStatus("Transparent gold dot intro", "Previewing the 5 second intro.");
+    setStatus("NC watermark reveal", "Previewing the transparent full-logo-to-[nc] watermark animation.");
   }
 
   function pickMimeType(){
     const types = [
+      "video/mp4;codecs=hvc1",
+      "video/mp4",
       "video/webm;codecs=vp9",
       "video/webm;codecs=vp8",
       "video/webm"
@@ -416,7 +416,7 @@ button:disabled{
   }
 
   async function saveFrameSequence(){
-    const frameRate = 15;
+    const frameRate = 30;
     const totalFrames = Math.round(duration * frameRate);
     const entries = [];
 
@@ -432,7 +432,7 @@ button:disabled{
         const time = frame / frameRate;
         drawAtTime(Math.min(time, duration));
         entries.push({
-          name:`nc-studios-gold-dot-intro/frame_${padNumber(frame + 1, 4)}.png`,
+          name:`nc-studio-watermark-reveal/frame_${padNumber(frame + 1, 4)}.png`,
           data:await canvasPngBytes()
         });
         if(frame % 10 === 0){
@@ -440,8 +440,8 @@ button:disabled{
         }
       }
 
-      downloadBlob(createZip(entries), "nc-studios-gold-dot-intro-png-sequence.zip");
-      setStatus("Saved Safari frames", "Downloaded nc-studios-gold-dot-intro-png-sequence.zip");
+      downloadBlob(createZip(entries), "nc-studio-watermark-reveal-png-sequence.zip");
+      setStatus("Saved Safari frames", "Downloaded nc-studio-watermark-reveal-png-sequence.zip");
     }catch(error){
       setStatus("Frame export failed", "Safari could not finish the PNG sequence. Try saving a shorter export or screen record as a fallback.");
     }finally{
@@ -450,7 +450,7 @@ button:disabled{
       recordBtn.disabled = false;
       previewBtn.disabled = false;
       framesBtn.textContent = "save Safari frames";
-      recordBtn.textContent = "save WebM video";
+      recordBtn.textContent = "save video";
       startTime = performance.now();
     }
   }
@@ -468,13 +468,13 @@ button:disabled{
     recordBtn.textContent = "recording...";
     const mimeType = pickMimeType();
     if(!mimeType){
-      recordBtn.textContent = "save WebM video";
+      recordBtn.textContent = "save video";
       await saveFrameSequence();
       return;
     }
 
     try{
-      const extension = "webm";
+      const extension = mimeType.includes("mp4") ? "mp4" : "webm";
       const stream = canvas.captureStream(60);
       const chunks = [];
       const recorder = new MediaRecorder(stream, { mimeType });
@@ -488,9 +488,9 @@ button:disabled{
         recordBtn.disabled = false;
         framesBtn.disabled = false;
         previewBtn.disabled = false;
-        recordBtn.textContent = "save WebM video";
+        recordBtn.textContent = "save video";
         recording = false;
-        setStatus("Recording failed", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
+        setStatus("Recording failed", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
       };
 
       recorder.onstop = () => {
@@ -499,9 +499,9 @@ button:disabled{
           recordBtn.disabled = false;
           framesBtn.disabled = false;
           previewBtn.disabled = false;
-          recordBtn.textContent = "save WebM video";
+          recordBtn.textContent = "save video";
           recording = false;
-          setStatus("No video created", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
+          setStatus("No video created", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
           return;
         }
 
@@ -509,7 +509,7 @@ button:disabled{
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `nc-studios-gold-dot-intro.${extension}`;
+        link.download = `nc-studio-watermark-reveal.${extension}`;
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -517,14 +517,14 @@ button:disabled{
         recordBtn.disabled = false;
         framesBtn.disabled = false;
         previewBtn.disabled = false;
-        recordBtn.textContent = "save WebM video";
+        recordBtn.textContent = "save video";
         recording = false;
-        setStatus("Saved", `Downloaded transparent nc-studios-gold-dot-intro.${extension}`);
+        setStatus("Saved", `Downloaded transparent nc-studio-watermark-reveal.${extension}`);
       };
 
       recorder.start(250);
       startTime = performance.now();
-      setStatus("Recording transparent WebM", "Wait about 5 seconds. The download starts after the intro finishes.");
+      setStatus("Recording transparent video", "Wait about 5 seconds. The download starts after the watermark reveal finishes.");
       setTimeout(() => {
         if(recording && recorder.state !== "inactive"){
           recorder.requestData();
@@ -535,16 +535,21 @@ button:disabled{
       recordBtn.disabled = false;
       framesBtn.disabled = false;
       previewBtn.disabled = false;
-      recordBtn.textContent = "save WebM video";
+      recordBtn.textContent = "save video";
       recording = false;
-      setStatus("Recording failed", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
+      setStatus("Recording failed", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
     }
   }
 
   previewBtn.addEventListener("click", preview);
   framesBtn.addEventListener("click", saveFrameSequence);
   recordBtn.addEventListener("click", recordIntro);
-  logo.addEventListener("load", preview, { once:true });
+  function maybePreview(){
+    if(logo.complete && markLogo.complete) preview();
+  }
+  logo.addEventListener("load", maybePreview, { once:true });
+  markLogo.addEventListener("load", maybePreview, { once:true });
+  maybePreview();
   drawFrame(performance.now());
 })();
 </script>

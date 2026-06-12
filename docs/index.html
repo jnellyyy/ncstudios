@@ -8,14 +8,14 @@
 <meta name="description" content="nc studios creates cinematic wedding films, event coverage and social content. check availability and send an enquiry online.">
 
 <link rel="manifest" href="website.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-32.png">
+<link rel="apple-touch-icon" href="icon-180.png?v=brand-20260612">
+<link rel="icon" href="icon-32.png?v=brand-20260612">
 <meta name="theme-color" content="#050504">
 
 <style>
 @font-face{
   font-family:"NC Studio Brand";
-  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  src:url("assets/fonts/NC_Font_.ttf?v=brand-20260612") format("truetype");
   font-weight:400;
   font-style:normal;
   font-display:swap;
@@ -38,11 +38,11 @@
   --gold2:#f0dca8;
   --green:#39d27d;
   --shadow:0 28px 80px rgba(0,0,0,0.42);
-  --hero-media:url("ncstudios-logo-transparent.png");
-  --feature-media:url("ncstudios-logo-transparent.png");
-  --film-one-media:url("ncstudios-logo-transparent.png");
-  --film-two-media:url("ncstudios-logo-transparent.png");
-  --film-three-media:url("ncstudios-logo-transparent.png");
+  --hero-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
+  --feature-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
+  --film-one-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
+  --film-two-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
+  --film-three-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
 }
 
 *{
@@ -167,105 +167,62 @@ p{
 
 .introBrand{
   position:relative;
-  width:min(560px,86vw);
-  aspect-ratio:2 / 1;
-  display:block;
+  width:min(680px,88vw);
+  aspect-ratio:2.28 / 1;
+  display:grid;
+  place-items:center;
   transform:translateY(0) scale(1);
   opacity:1;
 }
 
-.introBrand::after{
-  content:"";
-  position:absolute;
-  inset:16% 8% 20%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
-  transform:translateX(-120%) skewX(-18deg);
-  opacity:0;
-  mix-blend-mode:screen;
-  animation:introLogoShine 720ms ease 3550ms forwards;
-}
-
-.introOrbCanvas{
+.introWatermark{
   position:absolute;
   inset:0;
-  z-index:2;
-  opacity:0;
-  animation:introOrbCanvasShow 180ms ease 520ms forwards, introOrbCanvasFade 360ms ease 3020ms forwards;
-  pointer-events:none;
-}
-
-.introOrbTrack{
-  position:absolute;
-  left:50%;
-  top:51%;
-  width:min(280px,72vw);
-  height:108px;
-  transform:translate(-50%,-50%);
-  filter:drop-shadow(0 0 22px rgba(216,183,110,0.36));
-}
-
-.introOrbTrail{
-  position:absolute;
-  left:7%;
-  right:7%;
-  bottom:14px;
-  height:4px;
-  border-radius:999px;
-  background:linear-gradient(90deg,transparent,rgba(216,183,110,0.22),rgba(255,248,222,0.72),rgba(216,183,110,0.18),transparent);
-  filter:blur(1px);
-  opacity:0;
-  transform:scaleX(0.3);
-  animation:introOrbTrailPulse 2280ms ease-in-out 620ms both;
-}
-
-.introGoldOrb{
-  position:absolute;
-  left:8%;
-  bottom:12px;
-  width:30px;
-  height:30px;
-  border-radius:999px;
-  background:
-    radial-gradient(circle at 34% 28%,#fffdf0 0 15%,#f6e6b7 24%,#d8b76e 58%,#8f6f2f 100%);
-  box-shadow:
-    0 0 14px rgba(255,248,222,0.9),
-    0 0 34px rgba(216,183,110,0.76),
-    0 0 72px rgba(216,183,110,0.34);
-  transform:translate(-50%,0) scale(0.9);
-  animation:introGoldBounce 2280ms cubic-bezier(.22,.74,.18,1) 620ms both;
-}
-
-.introGoldOrb::before{
-  content:"";
-  position:absolute;
-  inset:-34px;
-  border-radius:inherit;
-  background:radial-gradient(circle,rgba(255,248,222,0.32),rgba(216,183,110,0.15) 38%,transparent 70%);
-  opacity:0.9;
-  animation:introOrbGlow 2280ms ease-in-out 620ms both;
-}
-
-.introGoldOrb::after{
-  content:"";
-  position:absolute;
-  top:7px;
-  left:8px;
-  width:7px;
-  height:7px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.86);
-  box-shadow:0 0 10px rgba(255,248,222,0.82);
+  display:grid;
+  place-items:center;
+  isolation:isolate;
 }
 
 .introLogo{
-  width:100%;
-  height:100%;
+  position:absolute;
   display:block;
   object-fit:contain;
   border-radius:8px;
-  opacity:0;
   filter:drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.20));
-  animation:introLogoSettle 620ms ease 3180ms forwards;
+  will-change:opacity,transform,clip-path,filter;
+}
+
+.introLogoFull{
+  width:100%;
+  height:100%;
+  opacity:0;
+  animation:introFullToMark 3900ms cubic-bezier(.2,.8,.2,1) 520ms forwards;
+}
+
+.introLogoMark{
+  width:68%;
+  height:68%;
+  opacity:0;
+  transform:scale(0.88);
+  animation:introMarkReveal 3900ms cubic-bezier(.2,.8,.2,1) 520ms forwards;
+}
+
+.introCutBeam{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:2px;
+  height:68%;
+  border-radius:999px;
+  background:linear-gradient(180deg,transparent,rgba(255,248,222,0.98),rgba(216,183,110,0.84),transparent);
+  box-shadow:
+    0 0 12px rgba(255,248,222,0.9),
+    0 0 34px rgba(216,183,110,0.68),
+    0 0 80px rgba(216,183,110,0.28);
+  opacity:0;
+  transform:translate(-50%,-50%) scaleY(0.36);
+  animation:introCutBeam 3900ms cubic-bezier(.2,.8,.2,1) 520ms forwards;
+  z-index:4;
 }
 
 .introSignal{
@@ -276,7 +233,7 @@ p{
   height:1px;
   background:linear-gradient(90deg,transparent,rgba(217,182,111,0.52),transparent);
   opacity:0;
-  animation:introSignal 900ms ease 3300ms forwards;
+  animation:introSignal 900ms ease 3650ms forwards;
 }
 
 .siteHeader{
@@ -304,8 +261,8 @@ p{
 }
 
 .brandMark{
-  width:clamp(98px,11vw,142px);
-  height:58px;
+  width:clamp(132px,16vw,220px);
+  height:72px;
   object-fit:contain;
   border:0;
   border-radius:0;
@@ -402,12 +359,12 @@ p{
   inset:0;
   z-index:-2;
   background:
-    linear-gradient(90deg,rgba(7,8,11,0.96),rgba(7,8,11,0.74) 45%,rgba(7,8,11,0.22)),
-    linear-gradient(0deg,rgba(7,8,11,0.98),rgba(7,8,11,0.20) 34%,rgba(7,8,11,0.52)),
+    linear-gradient(90deg,rgba(7,8,11,0.96),rgba(7,8,11,0.68) 44%,rgba(7,8,11,0.10)),
+    linear-gradient(0deg,rgba(7,8,11,0.96),rgba(7,8,11,0.10) 38%,rgba(7,8,11,0.38)),
     var(--hero-media);
   background-repeat:no-repeat;
-  background-size:cover,cover,min(66vw,760px);
-  background-position:center,center,right 6vw center;
+  background-size:cover,cover,min(72vw,840px);
+  background-position:center,center,right 3vw center;
 }
 
 .heroInner::before{
@@ -1184,49 +1141,28 @@ body.me-panel-open .mePanel{
   to{opacity:1;background-position:0 0,0 0,0 0;}
 }
 
-@keyframes introLogoShine{
-  0%{opacity:0;transform:translateX(-120%) skewX(-18deg);}
-  18%{opacity:0.7;}
-  100%{opacity:0;transform:translateX(130%) skewX(-18deg);}
+@keyframes introFullToMark{
+  0%{opacity:0;transform:translateY(10px) scale(0.94);clip-path:inset(0 0 0 0);filter:blur(8px) drop-shadow(0 0 24px rgba(216,183,110,0.18));}
+  14%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42));}
+  42%{opacity:1;transform:translateY(0) scale(1);clip-path:inset(0 0 0 0);}
+  56%{opacity:1;transform:translateX(-5%) scale(0.98);clip-path:inset(0 45% 0 0);}
+  66%{opacity:0.36;transform:translateX(-8%) scale(0.96);clip-path:inset(0 58% 0 0);filter:blur(1px) drop-shadow(0 0 34px rgba(216,183,110,0.40));}
+  78%,100%{opacity:0;transform:translateX(-8%) scale(0.96);clip-path:inset(0 62% 0 0);}
 }
 
-@keyframes introOrbCanvasShow{
-  to{opacity:1;}
+@keyframes introMarkReveal{
+  0%,42%{opacity:0;transform:scale(0.86);filter:blur(8px) drop-shadow(0 0 18px rgba(216,183,110,0.08));}
+  56%{opacity:0.2;transform:scale(1.08);filter:blur(2px) drop-shadow(0 0 36px rgba(216,183,110,0.34));}
+  66%{opacity:1;transform:scale(1.02);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.55));}
+  82%,100%{opacity:1;transform:scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.20));}
 }
 
-@keyframes introOrbCanvasFade{
-  to{opacity:0;}
-}
-
-@keyframes introGoldBounce{
-  0%{left:8%;transform:translate(-50%,0) scale(0.82);}
-  12%{left:18%;transform:translate(-50%,-52px) scale(1.05);}
-  24%{left:30%;transform:translate(-50%,0) scale(0.9);}
-  38%{left:45%;transform:translate(-50%,-46px) scale(1.03);}
-  52%{left:60%;transform:translate(-50%,0) scale(0.92);}
-  68%{left:74%;transform:translate(-50%,-34px) scale(1.01);}
-  84%{left:86%;transform:translate(-50%,0) scale(0.96);}
-  100%{left:92%;transform:translate(-50%,-10px) scale(1);}
-}
-
-@keyframes introOrbGlow{
-  0%{opacity:0.34;transform:scale(0.72);}
-  18%{opacity:0.9;transform:scale(1.12);}
-  42%{opacity:0.52;transform:scale(0.88);}
-  68%{opacity:0.82;transform:scale(1.04);}
-  100%{opacity:0.46;transform:scale(0.92);}
-}
-
-@keyframes introOrbTrailPulse{
-  0%{opacity:0;transform:scaleX(0.18);}
-  18%{opacity:0.76;transform:scaleX(0.62);}
-  44%{opacity:0.36;transform:scaleX(0.82);}
-  72%{opacity:0.72;transform:scaleX(1);}
-  100%{opacity:0.28;transform:scaleX(0.86);}
-}
-
-@keyframes introLogoSettle{
-  to{opacity:1;}
+@keyframes introCutBeam{
+  0%,40%{opacity:0;transform:translate(-180%,-50%) scaleY(0.35);}
+  48%{opacity:1;transform:translate(-40%,-50%) scaleY(1);}
+  58%{opacity:0.92;transform:translate(68%,-50%) scaleY(0.96);}
+  70%{opacity:0;transform:translate(180%,-50%) scaleY(0.35);}
+  100%{opacity:0;transform:translate(180%,-50%) scaleY(0.35);}
 }
 
 @keyframes introSignal{
@@ -1329,8 +1265,8 @@ body.me-panel-open .mePanel{
   }
 
   .brandMark{
-    width:104px;
-    height:48px;
+    width:132px;
+    height:58px;
   }
 
   .hero{
@@ -1377,13 +1313,11 @@ body.me-panel-open .mePanel{
 <div class="introLoader" role="status" aria-label="nc studios loading">
   <div class="introStage">
     <div class="introBrand" aria-hidden="true">
-      <div class="introOrbCanvas">
-        <div class="introOrbTrack">
-          <span class="introOrbTrail"></span>
-          <span class="introGoldOrb"></span>
-        </div>
+      <div class="introWatermark">
+        <img class="introLogo introLogoFull" src="ncstudios-logo-transparent.png?v=brand-20260612" alt="">
+        <img class="introLogo introLogoMark" src="ncstudios-logo-mark-transparent.png?v=brand-20260612" alt="">
+        <span class="introCutBeam"></span>
       </div>
-      <img class="introLogo" src="ncstudios-logo-transparent.png" alt="">
     </div>
     <div class="introSignal" aria-hidden="true"></div>
   </div>
@@ -1391,7 +1325,7 @@ body.me-panel-open .mePanel{
 
 <header class="siteHeader">
   <a class="brand" href="#home" aria-label="nc studios home">
-    <img class="brandMark" src="ncstudios-logo-transparent.png" alt="nc studios logo">
+    <img class="brandMark" src="ncstudios-logo-transparent.png?v=brand-20260612" alt="nc studios logo">
   </a>
 
   <nav class="nav" aria-label="site navigation">
