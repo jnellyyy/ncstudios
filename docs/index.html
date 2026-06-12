@@ -179,7 +179,7 @@ p{
 
 .introBrand{
   position:relative;
-  width:min(760px,90vw);
+  width:min(800px,90vw);
   min-height:220px;
   display:grid;
   place-items:center;
@@ -195,35 +195,43 @@ p{
   isolation:isolate;
 }
 
-.introText{
-  position:absolute;
-  display:block;
+.introWordmark{
+  position:relative;
+  display:inline-flex;
+  align-items:baseline;
+  justify-content:center;
   margin:0;
   color:var(--gold);
-  font-family:"NC Studio Brand Lighter", "NC Studio Brand", sans-serif;
-  font-size:clamp(42px,8vw,92px);
+  font-size:clamp(48px,8.4vw,104px);
   line-height:1;
   letter-spacing:0;
   text-transform:lowercase;
   white-space:nowrap;
   filter:drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.18));
-  will-change:opacity,transform,clip-path,filter;
-}
-
-.introTextFull{
   opacity:0;
-  animation:introAdultFull 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
+  transform:translateY(10px) scale(0.94);
+  animation:introWordmarkIn 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
 }
 
-.introTextShort{
+.introBracket,
+.introCore{
   font-family:"NC Studio Brand", "NC Studio Brand Lighter", sans-serif;
-  font-size:clamp(58px,10vw,132px);
-  opacity:0;
-  transform:scale(0.92);
-  animation:introAdultShort 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
+  flex:0 0 auto;
+}
+
+.introStudio{
+  font-family:"NC Studio Brand Lighter", "NC Studio Brand", sans-serif;
+  display:inline-block;
+  overflow:hidden;
+  max-width:7.8ch;
+  padding-left:0.18ch;
+  opacity:1;
+  flex:0 1 auto;
+  animation:introStudioCollapse 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
 }
 
 .introCutBeam{
+  display:none;
   position:absolute;
   left:50%;
   top:50%;
@@ -239,6 +247,7 @@ p{
 }
 
 .introSignal{
+  display:none;
   position:absolute;
   inset:auto 0 42px;
   margin:auto;
@@ -1228,28 +1237,27 @@ label{
   to{opacity:1;background-position:0 0,0 0,0 0;}
 }
 
-@keyframes introAdultFull{
-  0%{opacity:0;transform:translateY(10px) scale(0.94);clip-path:inset(0 0 0 0);filter:blur(8px) drop-shadow(0 0 24px rgba(216,183,110,0.18));}
+@keyframes introWordmarkIn{
+  0%{opacity:0;transform:translateY(10px) scale(0.94);filter:blur(8px) drop-shadow(0 0 24px rgba(216,183,110,0.18));}
   14%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42));}
-  42%{opacity:1;transform:translateY(0) scale(1);clip-path:inset(0 0 0 0);}
-  55%{opacity:1;transform:translateX(-3%) scale(0.99);clip-path:inset(0 36% 0 0);}
-  66%{opacity:0.32;transform:translateX(-5%) scale(0.98);clip-path:inset(0 58% 0 0);filter:blur(1px) drop-shadow(0 0 34px rgba(216,183,110,0.40));}
-  78%,100%{opacity:0;transform:translateX(-5%) scale(0.98);clip-path:inset(0 62% 0 0);}
+  42%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42));}
+  66%{opacity:1;transform:translateY(0) scale(0.99);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.52));}
+  82%,100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.20));}
 }
 
-@keyframes introAdultShort{
-  0%,42%{opacity:0;transform:scale(0.92);filter:blur(8px) drop-shadow(0 0 18px rgba(216,183,110,0.08));}
-  55%{opacity:0.18;transform:scale(1.12);filter:blur(2px) drop-shadow(0 0 36px rgba(216,183,110,0.34));}
-  66%{opacity:1;transform:scale(1.03);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.55));}
-  82%,100%{opacity:1;transform:scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.20));}
+@keyframes introStudioCollapse{
+  0%,42%{max-width:7.8ch;opacity:1;transform:translateX(0);}
+  56%{max-width:4.1ch;opacity:0.58;transform:translateX(-0.06ch);}
+  66%{max-width:0;opacity:0;transform:translateX(-0.18ch);}
+  100%{max-width:0;opacity:0;transform:translateX(-0.18ch);}
 }
 
 @keyframes introCutBeam{
-  0%,40%{opacity:0;transform:translate(-220%,-50%) scaleY(0.35);}
-  48%{opacity:1;transform:translate(-38%,-50%) scaleY(1);}
+  0%,40%{opacity:0;transform:translate(-235%,-50%) scaleY(0.35);}
+  48%{opacity:1;transform:translate(-42%,-50%) scaleY(1);}
   58%{opacity:0.88;transform:translate(68%,-50%) scaleY(0.96);}
-  70%{opacity:0;transform:translate(220%,-50%) scaleY(0.35);}
-  100%{opacity:0;transform:translate(220%,-50%) scaleY(0.35);}
+  70%{opacity:0;transform:translate(235%,-50%) scaleY(0.35);}
+  100%{opacity:0;transform:translate(235%,-50%) scaleY(0.35);}
 }
 
 @keyframes introSignal{
@@ -1401,8 +1409,9 @@ label{
   <div class="introStage">
     <div class="introBrand" aria-hidden="true">
       <div class="introWatermark">
-        <span class="introText introTextFull">[nc studios]</span>
-        <span class="introText introTextShort">[nc]</span>
+        <p class="introWordmark">
+          <span class="introBracket">[</span><span class="introCore">nc</span><span class="introStudio"> studio</span><span class="introBracket">]</span>
+        </p>
         <span class="introCutBeam"></span>
       </div>
     </div>

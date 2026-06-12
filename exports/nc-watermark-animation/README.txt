@@ -8,7 +8,7 @@ Use in Premiere Pro:
 - APNG preview: nc-watermark-animation-transparent.apng.
 
 Website loading screen:
-- index.html and docs/index.html now use the same `[nc studios]` to `[nc]` reveal.
+- index.html and docs/index.html now use the same `[nc studio]` to `[nc]` reveal.
 
 Video note:
 - This machine does not have a working encoder that can turn the transparent sequence into MP4/MOV directly.
