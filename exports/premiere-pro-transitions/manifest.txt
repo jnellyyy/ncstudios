@@ -1,5 +1,0 @@
-01_gold_flare_sweep_transition: 14 frames, 1920x1080, RGBA
-02_gold_flicker_flash_transition: 12 frames, 1920x1080, RGBA
-03_champagne_edge_light_leak_transition: 15 frames, 1920x1080, RGBA
-04_gold_shutter_flicker_transition: 14 frames, 1920x1080, RGBA
-05_nc_logo_wow_intro: 63 frames, 1920x1080, RGBA

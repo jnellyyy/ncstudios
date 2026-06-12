@@ -1490,6 +1490,10 @@ label{
     grid-template-columns:1fr;
   }
 
+  .heroDeck{
+    grid-template-columns:1fr;
+  }
+
   .hero::before{
     background-size:cover,cover,120vw;
     background-position:center,center,42vw 54%;
@@ -1528,6 +1532,16 @@ label{
     font-size:17px;
   }
 
+  .heroDeck{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    margin-top:26px;
+  }
+
+  .heroDeck a{
+    min-height:76px;
+    padding:12px;
+  }
+
   .heroActions{
     display:grid;
   }
@@ -1550,6 +1564,21 @@ label{
 
   .formPanel{
     padding:16px;
+  }
+
+  .messageLauncher{
+    right:14px;
+    bottom:14px;
+  }
+
+  body.me-mode-ready .messageLauncher{
+    bottom:72px;
+  }
+
+  .messageWidget{
+    right:10px;
+    bottom:72px;
+    width:calc(100vw - 20px);
   }
 }
 </style>
@@ -1594,6 +1623,29 @@ label{
       <div class="heroActions">
         <a class="button" href="#films">view the feel</a>
         <a class="button secondary" href="#availability">check availability</a>
+      </div>
+
+      <div class="heroDeck" aria-label="nc studio process">
+        <a href="#about">
+          <strong>01</strong>
+          <span>overview</span>
+          <em>the feeling</em>
+        </a>
+        <a href="#principles">
+          <strong>02</strong>
+          <span>process</span>
+          <em>how we work</em>
+        </a>
+        <a href="#services">
+          <strong>03</strong>
+          <span>services</span>
+          <em>what fits</em>
+        </a>
+        <a href="#availability">
+          <strong>04</strong>
+          <span>next step</span>
+          <em>send details</em>
+        </a>
       </div>
 
       <p class="scrollCue" data-site-field="scrollCue">scroll for the story</p>
@@ -1852,6 +1904,59 @@ label{
   <span>nc studios</span>
   <span>cinematic wedding films, events and content</span>
 </footer>
+
+<button class="messageLauncher" type="button" data-message-open>message nc</button>
+
+<aside class="messageWidget" aria-label="direct message nc studio" aria-hidden="true" data-message-widget>
+  <div class="messageWidgetHead">
+    <div>
+      <strong>message nc studio</strong>
+      <span>send a direct note without WhatsApp. It lands in the studio inbox.</span>
+    </div>
+    <button class="messageClose" type="button" aria-label="close message box" data-message-close>&times;</button>
+  </div>
+
+  <form class="directMessageForm" id="directMessageForm">
+    <div class="hiddenField" aria-hidden="true">
+      <label for="messageWebsite">website</label>
+      <input id="messageWebsite" name="messageWebsite" type="text" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label for="directName">name</label>
+      <input id="directName" name="directName" type="text" autocomplete="name" required placeholder="your name">
+    </div>
+
+    <div class="field">
+      <label for="directEmail">email</label>
+      <input id="directEmail" name="directEmail" type="email" autocomplete="email" placeholder="you@example.com">
+    </div>
+
+    <div class="field">
+      <label for="directPhone">phone</label>
+      <input id="directPhone" name="directPhone" type="tel" autocomplete="tel" placeholder="optional">
+    </div>
+
+    <div class="field">
+      <label for="directSubject">what is this about?</label>
+      <select id="directSubject" name="directSubject">
+        <option>quick question</option>
+        <option>availability</option>
+        <option>wedding booking</option>
+        <option>event coverage</option>
+        <option>existing client</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="directMessage">message</label>
+      <textarea id="directMessage" name="directMessage" required placeholder="write what you need here."></textarea>
+    </div>
+
+    <button class="submitButton" type="submit">send message</button>
+    <p class="formStatus" data-message-status aria-live="polite"></p>
+  </form>
+</aside>
 
 <button class="meModeToggle" type="button" data-me-open>me mode</button>
 
@@ -2426,6 +2531,167 @@ label{
       setStatus("thank you. Your enquiry has been received.","success");
     }catch(error){
       console.warn("website enquiry failed",error);
+      setStatus("this could not send right now. Please try again in a moment.","error");
+    }finally{
+      submitButton.disabled = false;
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  const STORAGE_TABLE = "app_storage";
+  const MESSAGE_PREFIX = "website_message_";
+
+  const form = document.getElementById("directMessageForm");
+  const openButton = document.querySelector("[data-message-open]");
+  const closeButton = document.querySelector("[data-message-close]");
+  const widget = document.querySelector("[data-message-widget]");
+  const statusEl = document.querySelector("[data-message-status]");
+
+  if(!form || !openButton || !closeButton || !widget || !statusEl){
+    return;
+  }
+
+  function setOpen(isOpen){
+    document.body.classList.toggle("message-open", isOpen);
+    widget.setAttribute("aria-hidden", isOpen ? "false" : "true");
+  }
+
+  function setStatus(message,type){
+    statusEl.textContent = message;
+    statusEl.className = "formStatus" + (type ? " " + type : "");
+  }
+
+  function value(formData,name){
+    return String(formData.get(name) || "").trim();
+  }
+
+  function uid(){
+    if(window.crypto && crypto.randomUUID){
+      return crypto.randomUUID();
+    }
+
+    return "message_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+  }
+
+  function wait(ms){
+    return new Promise(function(resolve){
+      setTimeout(resolve,ms);
+    });
+  }
+
+  async function waitForSupabase(){
+    for(let attempt = 0; attempt < 50; attempt++){
+      if(window.ncSupabase){
+        return true;
+      }
+
+      await wait(120);
+    }
+
+    return false;
+  }
+
+  function mirrorLocally(message){
+    try{
+      const saved = JSON.parse(localStorage.getItem("ncstudios_public_messages_v1")) || [];
+      localStorage.setItem("ncstudios_public_messages_v1", JSON.stringify([message, ...saved].slice(0,20)));
+    }catch(error){
+      console.warn("Could not mirror website message locally", error);
+    }
+  }
+
+  async function saveMessage(message){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      throw new Error("Message system is not available yet.");
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .upsert(
+        {
+          app_key:MESSAGE_PREFIX + message.id,
+          data:message,
+          updated_at:new Date().toISOString()
+        },
+        {
+          onConflict:"app_key"
+        }
+      );
+
+    if(response.error){
+      throw response.error;
+    }
+
+    mirrorLocally(message);
+  }
+
+  openButton.addEventListener("click", function(){
+    setOpen(true);
+    setTimeout(function(){
+      const input = document.getElementById("directName");
+      if(input) input.focus();
+    }, 180);
+  });
+
+  closeButton.addEventListener("click", function(){
+    setOpen(false);
+  });
+
+  document.addEventListener("keydown", function(event){
+    if(event.key === "Escape"){
+      setOpen(false);
+    }
+  });
+
+  form.addEventListener("submit", async function(event){
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    if(value(formData,"messageWebsite")){
+      form.reset();
+      setStatus("thank you. Your message has been received.","success");
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const message = {
+      id:uid(),
+      clientName:value(formData,"directName"),
+      contactEmail:value(formData,"directEmail"),
+      contactPhone:value(formData,"directPhone"),
+      subject:value(formData,"directSubject") || "quick question",
+      message:value(formData,"directMessage"),
+      status:"new",
+      source:"website message",
+      channel:"website",
+      createdAt:now,
+      updatedAt:now,
+      replies:[]
+    };
+
+    if(!message.clientName || !message.message){
+      setStatus("please add your name and message.","error");
+      return;
+    }
+
+    const submitButton = form.querySelector("[type='submit']");
+    submitButton.disabled = true;
+    setStatus("sending your message...");
+
+    try{
+      await saveMessage(message);
+      form.reset();
+      setStatus("thank you. Your message has been received.","success");
+      setTimeout(function(){
+        setOpen(false);
+      }, 900);
+    }catch(error){
+      console.warn("website message failed", error);
       setStatus("this could not send right now. Please try again in a moment.","error");
     }finally{
       submitButton.disabled = false;

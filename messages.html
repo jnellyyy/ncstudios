@@ -539,7 +539,7 @@ textarea:focus{
 <main>
   <section class="hero">
     <div>
-      <div class="kicker">client messages · &lt;004&gt;</div>
+      <div class="kicker">client messages - &lt;004&gt;</div>
       <h2>Messages</h2>
       <p>Direct website messages land here, so you can reply without living inside WhatsApp. Keep it calm: review, reply, convert to a booking, or archive.</p>
     </div>
@@ -761,7 +761,7 @@ function renderMessages(){
       <div class="messageTop">
         <div>
           <h4>${escapeHTML(item.clientName || "Website visitor")}</h4>
-          <span class="messageMeta">${escapeHTML(item.subject || "Website message")} · ${niceDate(item.createdAt || item.updatedAt)} · ${escapeHTML(item.source || item.channel || "message")}</span>
+          <span class="messageMeta">${escapeHTML(item.subject || "Website message")} - ${niceDate(item.createdAt || item.updatedAt)} - ${escapeHTML(item.source || item.channel || "message")}</span>
         </div>
         <span class="chip ${escapeHTML(item.status || "new")}">${statusLabel(item.status)}</span>
       </div>

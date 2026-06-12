@@ -1160,7 +1160,7 @@ function updateDashboardFromLocal(){
   document.getElementById("deliveryWidget").textContent = delivery.length;
   document.getElementById("shotsWidget").textContent = shots.length;
   document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
-  document.getElementById("templatesWidget").textContent = templates.length;
+  setText("templatesWidget", templates.length);
   setText("adminWidget", adminClients.length);
   setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
@@ -1240,7 +1240,7 @@ async function updateDashboardFromSupabase(){
       document.getElementById("deliveryWidget").textContent = delivery.length;
       document.getElementById("shotsWidget").textContent = shots.length;
       document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
-      document.getElementById("templatesWidget").textContent = templates.length;
+      setText("templatesWidget", templates.length);
       document.getElementById("clientWidget").textContent = appStorageClients.length;
       setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);

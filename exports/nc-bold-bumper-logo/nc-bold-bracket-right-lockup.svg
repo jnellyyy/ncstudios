@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520">
-  <title>NC Studio right aligned bracket lockup</title>
-  <g fill="#b8913f">
-    <path d="M75 90h125v58h-70v225h70v58H75V90Zm600 0v341H550v-58h70V148h-70V90h125Z"/>
-    <path d="M230 220h75v160h-75V220Zm0-6c0-50 38-83 98-83 68 0 108 40 108 104v145h-76V242c0-28-15-45-42-45-24 0-40 15-40 42v141h-48V214Zm255 19c0-64 50-106 126-106 72 0 120 38 128 94h-80c-7-18-23-27-48-27-30 0-49 17-49 44v39c0 27 19 44 49 44 25 0 41-9 48-27h80c-8 56-56 94-128 94-76 0-126-42-126-106v-49Z"/>
-    <text x="770" y="280" font-family="DIN Condensed, Arial, sans-serif" font-size="82" letter-spacing="28">NC STUDIO</text>
-  </g>
-</svg>
