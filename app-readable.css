@@ -772,17 +772,49 @@ hr,
 }
 
 @media(max-width:760px){
+  html,
+  body{
+    width:100% !important;
+    height:auto !important;
+    min-height:100% !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    overscroll-behavior-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    touch-action:pan-y !important;
+  }
+
+  body{
+    min-height:100svh !important;
+    position:static !important;
+  }
+
   body::after{
     inset:8px !important;
   }
 
   .app,
   .app-shell{
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:100svh !important;
+    overflow:visible !important;
     padding-inline:14px !important;
+    padding-bottom:calc(82px + env(safe-area-inset-bottom)) !important;
   }
 
   .topbar{
     padding-block:14px !important;
+    margin-bottom:10px !important;
+  }
+
+  .hero,
+  .quick,
+  .stats,
+  .ops-stats,
+  .dashboardMain{
+    margin-bottom:10px !important;
   }
 
   .logo,
@@ -843,14 +875,19 @@ hr,
   }
 
   .dashboardMain{
+    display:block !important;
     grid-template-columns:1fr !important;
     grid-template-rows:auto auto !important;
     gap:10px !important;
+    min-height:0 !important;
+    overflow:visible !important;
   }
 
   .livePanel{
     display:block !important;
     min-height:auto !important;
+    margin-bottom:10px !important;
+    overflow:visible !important;
   }
 
   .livePanel p,
@@ -883,10 +920,12 @@ hr,
   }
 
   .tiles{
+    display:grid !important;
     grid-template-columns:1fr !important;
     grid-template-rows:none !important;
     grid-auto-rows:auto !important;
     gap:10px !important;
+    overflow:visible !important;
   }
 
   .tile{
@@ -905,9 +944,14 @@ hr,
   }
 
   .bottomRow{
-    position:sticky !important;
+    position:fixed !important;
+    left:14px !important;
+    right:14px !important;
     bottom:0 !important;
     display:grid !important;
+    z-index:20 !important;
+    padding:6px !important;
+    padding-bottom:max(6px, env(safe-area-inset-bottom)) !important;
   }
 
   .nav-pill,
