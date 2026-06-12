@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marvin and Blessing Acheampong Title Export</title>
 <style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --black:#020203;
   --panel:rgba(10,10,12,0.88);
@@ -22,7 +30,7 @@ body{
   min-height:100%;
   background:var(--black);
   color:var(--ivory);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"NC Studio Brand",sans-serif;
 }
 
 body{
@@ -140,12 +148,13 @@ button:disabled{
   <footer class="controls">
     <div class="status" id="status">
       <strong>Marvin & Blessing Acheampong</strong>
-      Transparent 1920 x 1080 title card in the new NC Studios gold branding.
+      Transparent 1920 x 1080 title card, fast 15fps Safari frame sequence.
     </div>
     <div class="actions">
       <button type="button" id="previewBtn">preview again</button>
       <button type="button" id="pngBtn">save still</button>
-      <button type="button" class="primary" id="videoBtn">save title video</button>
+      <button type="button" class="primary" id="framesBtn">save Safari frames</button>
+      <button type="button" id="videoBtn">save WebM video</button>
     </div>
   </footer>
 
@@ -155,13 +164,15 @@ button:disabled{
   const ctx = canvas.getContext("2d", { alpha:true });
   const previewBtn = document.getElementById("previewBtn");
   const pngBtn = document.getElementById("pngBtn");
+  const framesBtn = document.getElementById("framesBtn");
   const videoBtn = document.getElementById("videoBtn");
   const status = document.getElementById("status");
   const logo = new Image();
-  const duration = 5.2;
+  const duration = 3.4;
   const vogueFont = "Didot, 'Bodoni 72', 'Bodoni 72 Smallcaps', 'Bodoni 72 Oldstyle', 'Times New Roman', Times, serif";
   let startTime = performance.now();
   let recording = false;
+  let exportingFrames = false;
 
   logo.src = "ncstudios-logo-transparent.png";
 
@@ -175,6 +186,113 @@ button:disabled{
 
   function setStatus(title, detail){
     status.innerHTML = `<strong>${title}</strong>${detail}`;
+  }
+
+  function padNumber(value, size){
+    return String(value).padStart(size, "0");
+  }
+
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+
+  function crcTable(){
+    const table = new Uint32Array(256);
+    for(let n = 0; n < 256; n += 1){
+      let c = n;
+      for(let k = 0; k < 8; k += 1){
+        c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      }
+      table[n] = c >>> 0;
+    }
+    return table;
+  }
+
+  const crcLookup = crcTable();
+
+  function crc32(data){
+    let crc = 0xffffffff;
+    for(let i = 0; i < data.length; i += 1){
+      crc = crcLookup[(crc ^ data[i]) & 0xff] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+
+  function createZip(entries){
+    const encoder = new TextEncoder();
+    const localParts = [];
+    const centralParts = [];
+    let offset = 0;
+    const now = new Date();
+    const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2);
+    const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+
+    entries.forEach(entry => {
+      const name = encoder.encode(entry.name);
+      const data = entry.data;
+      const crc = crc32(data);
+      const local = new Uint8Array(30 + name.length + data.length);
+      const localView = new DataView(local.buffer);
+      localView.setUint32(0, 0x04034b50, true);
+      localView.setUint16(4, 20, true);
+      localView.setUint16(8, 0, true);
+      localView.setUint16(10, dosTime, true);
+      localView.setUint16(12, dosDate, true);
+      localView.setUint32(14, crc, true);
+      localView.setUint32(18, data.length, true);
+      localView.setUint32(22, data.length, true);
+      localView.setUint16(26, name.length, true);
+      local.set(name, 30);
+      local.set(data, 30 + name.length);
+      localParts.push(local);
+
+      const central = new Uint8Array(46 + name.length);
+      const centralView = new DataView(central.buffer);
+      centralView.setUint32(0, 0x02014b50, true);
+      centralView.setUint16(4, 20, true);
+      centralView.setUint16(6, 20, true);
+      centralView.setUint16(10, 0, true);
+      centralView.setUint16(12, dosTime, true);
+      centralView.setUint16(14, dosDate, true);
+      centralView.setUint32(16, crc, true);
+      centralView.setUint32(20, data.length, true);
+      centralView.setUint32(24, data.length, true);
+      centralView.setUint16(28, name.length, true);
+      centralView.setUint32(42, offset, true);
+      central.set(name, 46);
+      centralParts.push(central);
+      offset += local.length;
+    });
+
+    const centralSize = centralParts.reduce((total, part) => total + part.length, 0);
+    const end = new Uint8Array(22);
+    const endView = new DataView(end.buffer);
+    endView.setUint32(0, 0x06054b50, true);
+    endView.setUint16(8, entries.length, true);
+    endView.setUint16(10, entries.length, true);
+    endView.setUint32(12, centralSize, true);
+    endView.setUint32(16, offset, true);
+
+    return new Blob([...localParts, ...centralParts, end], { type:"application/zip" });
+  }
+
+  function canvasPngBytes(){
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if(!blob){
+          reject(new Error("Could not create PNG frame."));
+          return;
+        }
+        blob.arrayBuffer().then(buffer => resolve(new Uint8Array(buffer))).catch(reject);
+      }, "image/png");
+    });
   }
 
   function textWidth(text, tracking){
@@ -273,10 +391,10 @@ button:disabled{
       960,
       506,
       `112px ${vogueFont}`,
-      12,
+      16,
       "#fbf6ee",
       namesShow,
-      8
+      0
     );
 
     drawRevealedText(
@@ -285,13 +403,17 @@ button:disabled{
       666,
       `62px ${vogueFont}`,
       27,
-      "rgba(240,220,168,0.94)",
+      "rgba(248,243,235,0.94)",
       surnameShow,
-      4
+      0
     );
   }
 
   function drawFrame(now){
+    if(exportingFrames){
+      requestAnimationFrame(drawFrame);
+      return;
+    }
     const elapsed = (now - startTime) / 1000;
     const time = recording ? Math.min(elapsed, duration) : elapsed % duration;
     drawTitle(time);
@@ -303,15 +425,15 @@ button:disabled{
     setStatus("Marvin & Blessing Acheampong", "Previewing the transparent Vogue-style title reveal.");
   }
 
-  function saveStill(){
+  async function saveStill(){
     drawTitle(duration);
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "marvin-blessing-acheampong-title.png";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setStatus("Still saved", "Downloaded transparent marvin-blessing-acheampong-title.png");
+    try{
+      const data = await canvasPngBytes();
+      downloadBlob(new Blob([data], { type:"image/png" }), "marvin-blessing-acheampong-title.png");
+      setStatus("Still saved", "Downloaded transparent marvin-blessing-acheampong-title.png");
+    }catch(error){
+      setStatus("Still export failed", "Safari could not create the PNG still. Try the Safari frames button instead.");
+    }
   }
 
   function pickMimeType(){
@@ -323,26 +445,65 @@ button:disabled{
     return types.find(type => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || "";
   }
 
+  async function saveFrameSequence(){
+    const frameRate = 15;
+    const totalFrames = Math.round(duration * frameRate);
+    const entries = [];
+
+    exportingFrames = true;
+    recording = false;
+    framesBtn.disabled = true;
+    videoBtn.disabled = true;
+    pngBtn.disabled = true;
+    previewBtn.disabled = true;
+    framesBtn.textContent = "saving...";
+
+    try{
+      for(let frame = 0; frame < totalFrames; frame += 1){
+        const time = frame / frameRate;
+        drawTitle(Math.min(time, duration));
+        entries.push({
+          name:`marvin-blessing-acheampong-title/frame_${padNumber(frame + 1, 4)}.png`,
+          data:await canvasPngBytes()
+        });
+        if(frame % 10 === 0){
+          setStatus("Saving Safari frames", `${frame + 1} of ${totalFrames} transparent PNG frames.`);
+        }
+      }
+
+      downloadBlob(createZip(entries), "marvin-blessing-acheampong-title-png-sequence.zip");
+      setStatus("Saved Safari frames", "Downloaded marvin-blessing-acheampong-title-png-sequence.zip");
+    }catch(error){
+      setStatus("Frame export failed", "Safari could not finish the PNG sequence. Try save still, then screen record as a fallback.");
+    }finally{
+      exportingFrames = false;
+      framesBtn.disabled = false;
+      videoBtn.disabled = false;
+      pngBtn.disabled = false;
+      previewBtn.disabled = false;
+      framesBtn.textContent = "save Safari frames";
+      videoBtn.textContent = "save WebM video";
+      startTime = performance.now();
+    }
+  }
+
   function saveVideo(){
     if(!window.MediaRecorder || !canvas.captureStream){
-      setStatus("Recording unavailable", "Use screen recording on this page, or export from a desktop browser that supports canvas recording.");
+      saveFrameSequence();
       return;
     }
 
     recording = true;
     videoBtn.disabled = true;
+    framesBtn.disabled = true;
     pngBtn.disabled = true;
     previewBtn.disabled = true;
     videoBtn.textContent = "recording...";
 
     const mimeType = pickMimeType();
     if(!mimeType){
-      videoBtn.disabled = false;
-      pngBtn.disabled = false;
-      previewBtn.disabled = false;
-      videoBtn.textContent = "save title video";
-      recording = false;
-      setStatus("Transparent export unavailable", "This browser cannot record WebM from the canvas. Try Chrome on desktop for this export page.");
+      videoBtn.textContent = "save WebM video";
+      saveFrameSequence();
       return;
     }
 
@@ -359,22 +520,24 @@ button:disabled{
       recorder.onerror = () => {
         stream.getTracks().forEach(track => track.stop());
         videoBtn.disabled = false;
+        framesBtn.disabled = false;
         pngBtn.disabled = false;
         previewBtn.disabled = false;
-        videoBtn.textContent = "save title video";
+        videoBtn.textContent = "save WebM video";
         recording = false;
-        setStatus("Recording failed", "The browser could not finish the transparent WebM export. Try Chrome on desktop, or use screen recording for now.");
+        setStatus("Recording failed", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
       };
 
       recorder.onstop = () => {
         stream.getTracks().forEach(track => track.stop());
         if(!chunks.length){
           videoBtn.disabled = false;
+          framesBtn.disabled = false;
           pngBtn.disabled = false;
           previewBtn.disabled = false;
-          videoBtn.textContent = "save title video";
+          videoBtn.textContent = "save WebM video";
           recording = false;
-          setStatus("No video created", "The browser stopped recording but did not return a file. Try Chrome on desktop for transparent WebM export.");
+          setStatus("No video created", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
           return;
         }
 
@@ -388,9 +551,10 @@ button:disabled{
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 4000);
         videoBtn.disabled = false;
+        framesBtn.disabled = false;
         pngBtn.disabled = false;
         previewBtn.disabled = false;
-        videoBtn.textContent = "save title video";
+        videoBtn.textContent = "save WebM video";
         recording = false;
         setStatus("Video saved", `Downloaded transparent marvin-blessing-acheampong-title.${extension}`);
       };
@@ -406,16 +570,18 @@ button:disabled{
       }, duration * 1000 + 220);
     }catch(error){
       videoBtn.disabled = false;
+      framesBtn.disabled = false;
       pngBtn.disabled = false;
       previewBtn.disabled = false;
-      videoBtn.textContent = "save title video";
+      videoBtn.textContent = "save WebM video";
       recording = false;
-      setStatus("Recording failed", "This browser could not start the transparent WebM recorder. Try Chrome on desktop, or screen record this page.");
+      setStatus("Recording failed", "Safari cannot reliably create transparent WebM. Use save Safari frames instead.");
     }
   }
 
   previewBtn.addEventListener("click", preview);
   pngBtn.addEventListener("click", saveStill);
+  framesBtn.addEventListener("click", saveFrameSequence);
   videoBtn.addEventListener("click", saveVideo);
   logo.addEventListener("load", preview, { once:true });
   drawFrame(performance.now());

@@ -12,6 +12,14 @@
 <meta name="theme-color" content="#050504">
 
 <style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --bg:#050504;
   --bg2:#11100c;
@@ -40,7 +48,7 @@ body{
 
 body{
   min-height:100svh;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-family:"NC Studio Brand",sans-serif;
   background:
     radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 30%),
     radial-gradient(circle at bottom right, rgba(216,183,110,0.28), transparent 35%),
@@ -102,13 +110,13 @@ body::before{
   border:1px solid rgba(255,255,255,0.16);
   box-shadow:var(--shadow);
   font-weight:950;
-  letter-spacing:-1px;
+  letter-spacing:0;
 }
 
 .brand h1{
   margin:0;
   font-size:18px;
-  letter-spacing:-0.4px;
+  letter-spacing:0;
 }
 
 .brand p{
@@ -164,7 +172,7 @@ body::before{
   margin:5px 0 6px;
   font-size:28px;
   line-height:0.96;
-  letter-spacing:-1.3px;
+  letter-spacing:0;
   position:relative;
   z-index:1;
 }
@@ -236,7 +244,7 @@ body::before{
   margin-top:7px;
   font-size:22px;
   line-height:1;
-  letter-spacing:-0.7px;
+  letter-spacing:0;
 }
 
 .dashboardMain{
@@ -279,7 +287,7 @@ body::before{
   margin:5px 0 0;
   font-size:22px;
   line-height:1;
-  letter-spacing:-0.7px;
+  letter-spacing:0;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
@@ -324,7 +332,7 @@ body::before{
   margin-top:5px;
   font-size:21px;
   line-height:1;
-  letter-spacing:-0.6px;
+  letter-spacing:0;
 }
 
 .liveNext{
@@ -440,7 +448,7 @@ body::before{
 .tile h3{
   margin:8px 0 3px;
   font-size:15px;
-  letter-spacing:-0.35px;
+  letter-spacing:0;
   position:relative;
   z-index:1;
 }
@@ -452,7 +460,7 @@ body::before{
   font-size:20px;
   font-weight:950;
   line-height:1;
-  letter-spacing:-0.6px;
+  letter-spacing:0;
   position:relative;
   z-index:1;
 }
@@ -779,7 +787,7 @@ body::before{
 
 <header class="topbar">
   <div class="brand">
-    <div class="logo"><img src="ncstudios-logo-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
     <div>
       <h1>NC Studios</h1>
       <p>Business dashboard</p>

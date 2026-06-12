@@ -12,6 +12,14 @@
 <meta name="theme-color" content="#050504">
 
 <style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --bg1:#050504;
   --bg2:#11100c;
@@ -38,7 +46,7 @@
 body{
   margin:0;
   min-height:100vh;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-family:"NC Studio Brand",sans-serif;
   background:
     radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 32%),
     linear-gradient(145deg,var(--bg1),var(--bg2));
@@ -75,13 +83,13 @@ body{
   border:1px solid var(--line);
   box-shadow:var(--shadow);
   font-weight:800;
-  letter-spacing:-1px;
+  letter-spacing:0;
 }
 
 .brand h1{
   margin:0;
   font-size:20px;
-  letter-spacing:-0.4px;
+  letter-spacing:0;
 }
 
 .brand p{
@@ -130,7 +138,7 @@ body{
   margin:6px 0 6px;
   font-size:32px;
   line-height:1;
-  letter-spacing:-1px;
+  letter-spacing:0;
 }
 
 .hero p{
@@ -193,7 +201,7 @@ button.ghost{
   display:block;
   margin-top:8px;
   font-size:24px;
-  letter-spacing:-0.7px;
+  letter-spacing:0;
 }
 
 .grid{
@@ -223,7 +231,7 @@ button.ghost{
 .cardHead h3{
   margin:0;
   font-size:17px;
-  letter-spacing:-0.3px;
+  letter-spacing:0;
 }
 
 .cardHead p{
@@ -299,7 +307,7 @@ select option{
 .booking h4{
   margin:0;
   font-size:16px;
-  letter-spacing:-0.3px;
+  letter-spacing:0;
 }
 
 .booking small{
@@ -564,7 +572,7 @@ select option{
 
   <header class="topbar">
     <div class="brand">
-      <div class="logo"><img src="ncstudios-logo-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+      <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
       <div>
         <h1>NC Studios</h1>
         <p>Bookings</p>

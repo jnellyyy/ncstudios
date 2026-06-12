@@ -12,6 +12,14 @@
 <meta name="theme-color" content="#050504">
 
 <style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --bg:#050504;
   --bg2:#11100c;
@@ -35,7 +43,7 @@
 body{
   margin:0;
   min-height:100vh;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-family:"NC Studio Brand",sans-serif;
   background:
     radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 30%),
     radial-gradient(circle at bottom right, rgba(216,183,110,0.24), transparent 34%),
@@ -157,7 +165,7 @@ h1,h2,h3,h4,p{
   margin:7px 0;
   font-size:34px;
   line-height:0.95;
-  letter-spacing:-1.5px;
+  letter-spacing:0;
 }
 
 .hero p{
@@ -227,7 +235,7 @@ button.ghost{
   display:block;
   margin-top:10px;
   font-size:25px;
-  letter-spacing:-0.8px;
+  letter-spacing:0;
 }
 
 .nav{
@@ -468,7 +476,7 @@ textarea{
 
 <header class="topbar">
   <div class="brand">
-    <div class="logo"><img src="ncstudios-logo-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
     <div>
       <h1>NC Studios</h1>
       <p>Finance</p>

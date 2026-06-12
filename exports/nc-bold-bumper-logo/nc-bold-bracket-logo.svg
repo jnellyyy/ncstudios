@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <title>NC Studio bracket bumper logo</title>
+  <rect width="1600" height="900" fill="none"/>
+  <g fill="#b8913f">
+    <path d="M270 185h190v75H355v380h105v75H270V185Zm1060 0v530h-190v-75h105V260h-105v-75h190Z"/>
+    <path d="M545 345h95v190H545V345Zm0-8c0-60 47-100 120-100 82 0 130 48 130 125v173h-96V370c0-34-18-54-50-54-28 0-48 18-48 50v169h-56V337Zm310 23c0-76 60-126 150-126 86 0 143 45 153 112h-96c-8-21-27-32-57-32-36 0-58 20-58 52v46c0 32 22 52 58 52 30 0 49-11 57-32h96c-10 67-67 112-153 112-90 0-150-50-150-126v-68Z"/>
+    <text x="800" y="795" text-anchor="middle" font-family="DIN Condensed, Arial, sans-serif" font-size="82" letter-spacing="28">NC STUDIO</text>
+  </g>
+</svg>
