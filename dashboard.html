@@ -1059,6 +1059,27 @@ function sectionLabel(value){
   return labels[value] || "Shots";
 }
 
+function projectStageMap(projectStages){
+  const map = new Map();
+
+  (Array.isArray(projectStages) ? projectStages : []).forEach(item => {
+    const key = item.key || normaliseProjectKey(item.project);
+    if(key) map.set(key, item.stage || "not-live");
+  });
+
+  return map;
+}
+
+function projectStageFor(map,project){
+  return map.get(normaliseProjectKey(project)) || "not-live";
+}
+
+function liveProjectCount(projectStages){
+  return (Array.isArray(projectStages) ? projectStages : [])
+    .filter(item => item.stage === "live" && normaliseProjectKey(item.project || item.key))
+    .length;
+}
+
 function countProjects(dataSets){
   const names = new Set();
 
@@ -1095,25 +1116,29 @@ function normaliseProjectKey(value){
     .join(" ");
 }
 
-function updateShotPanel(shots){
+function updateShotPanel(shots,projectStages){
   const safeShots = Array.isArray(shots) ? shots : [];
-  const needed = safeShots.filter(item => !item.captured);
-  const captured = safeShots.filter(item => item.captured);
-  const activePool = needed.length ? needed : safeShots;
+  const stages = projectStageMap(projectStages);
+  const liveShots = safeShots.filter(item => projectStageFor(stages, item.project) === "live");
+  const needed = liveShots.filter(item => !item.captured);
+  const captured = liveShots.filter(item => item.captured);
+  const activePool = needed.length ? needed : liveShots;
   const activeProject = activePool.find(item => item.project)?.project || "";
   const nextShot = needed.find(item => item.project === activeProject) || needed[0] || safeShots[0];
   const link = document.getElementById("liveShotLink");
 
   setText("liveNeeded", needed.length);
   setText("liveCaptured", captured.length);
-  setText("liveTotal", safeShots.length);
+  setText("liveTotal", liveShots.length);
   setText("liveShotAction", `${needed.length} left`);
-  setText("liveProject", activeProject || "Set up live shots");
+  setText("liveProject", activeProject || "No live shoot");
 
-  if(nextShot && needed.length){
+  if(nextShot && needed.length && activeProject){
     setText("liveNextShot", `${sectionLabel(nextShot.section)}: ${nextShot.shotText || "Next shot"}`);
-  } else if(safeShots.length){
+  } else if(liveShots.length){
     setText("liveNextShot", "All shots captured. Review or reset in Shots.");
+  } else if(safeShots.length){
+    setText("liveNextShot", "Mark a project Live in Projects when you are actively shooting.");
   } else {
     setText("liveNextShot", "Load a list or paste one in Shots.");
   }
@@ -1138,6 +1163,7 @@ function updateDashboardFromLocal(){
   const gear = readData("ncstudios_gear_v1");
   const buyList = readData("ncstudios_buylist_v1");
   const settings = readData("ncstudios_settings_v1");
+  const projectStages = readData("ncstudios_project_status_v1");
   const consultations = readData("ncstudios_consultations_v1");
   const capture = readData("ncstudios_capture_v1");
   const callSheets = readData("ncstudios_callsheets_v1");
@@ -1169,8 +1195,8 @@ function updateDashboardFromLocal(){
   setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
-  setText("projectWidget", `${countProjects({bookings,clients,messages,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
-  updateShotPanel(shots);
+  setText("projectWidget", `${liveProjectCount(projectStages)} live`);
+  updateShotPanel(shots, projectStages);
 }
 
 async function updateDashboardFromSupabase(){
@@ -1197,6 +1223,7 @@ async function updateDashboardFromSupabase(){
         "ncstudios_gear_v1",
         "ncstudios_buylist_v1",
         "ncstudios_settings_v1",
+        "ncstudios_project_status_v1",
         "ncstudios_consultations_v1",
         "ncstudios_capture_v1",
         "ncstudios_callsheets_v1"
@@ -1220,6 +1247,7 @@ async function updateDashboardFromSupabase(){
       const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
       const buyList = map.ncstudios_buylist_v1 || readData("ncstudios_buylist_v1");
       const settings = map.ncstudios_settings_v1 || readData("ncstudios_settings_v1");
+      const projectStages = map.ncstudios_project_status_v1 || readData("ncstudios_project_status_v1");
       const consultations = map.ncstudios_consultations_v1 || readData("ncstudios_consultations_v1");
       const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
       const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
@@ -1249,8 +1277,8 @@ async function updateDashboardFromSupabase(){
       setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);
-      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,messages,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
-      updateShotPanel(shots);
+      setText("projectWidget", `${liveProjectCount(projectStages)} live`);
+      updateShotPanel(shots, projectStages);
     }
 
     const clientsResponse = await window.ncSupabase

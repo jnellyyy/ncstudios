@@ -10,6 +10,7 @@
     "ncstudios_gear_v1",
     "ncstudios_buylist_v1",
     "ncstudios_settings_v1",
+    "ncstudios_project_status_v1",
     "ncstudios_consultations_v1",
     "ncstudios_capture_v1",
     "ncstudios_callsheets_v1",

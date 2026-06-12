@@ -130,6 +130,7 @@ const STORE_KEYS = {
   timeline:"ncstudios_timeline_v1",
   gear:"ncstudios_gear_v1",
   settings:"ncstudios_settings_v1",
+  projectStages:"ncstudios_project_status_v1",
   consultations:"ncstudios_consultations_v1",
   callSheets:"ncstudios_callsheets_v1",
   capture:"ncstudios_capture_v1"
@@ -144,6 +145,7 @@ const PROJECT_FIELDS = {
   timeline:["project"],
   gear:["project"],
   settings:["project"],
+  projectStages:["project"],
   consultations:["project"],
   callSheets:["project"],
   capture:["project"]
@@ -218,6 +220,7 @@ function getProjectData(group){
   const timeline = filterProjectStore("timeline", key);
   const gear = filterProjectStore("gear", key);
   const settings = filterProjectStore("settings", key);
+  const projectStages = filterProjectStore("projectStages", key);
   const consultations = filterProjectStore("consultations", key);
   const callSheets = filterProjectStore("callSheets", key);
   const capture = filterProjectStore("capture", key);
@@ -244,6 +247,7 @@ function getProjectData(group){
     timeline,
     gear,
     settings,
+    projectStages,
     consultations,
     callSheets,
     capture,
@@ -387,6 +391,7 @@ function renderDetail(data){
   const neededShots = data.shots.filter(item => !item.captured).length;
   const gearLeft = data.gear.filter(item => !["packed","checked","charged"].includes(item.status)).length;
   const openCaptures = data.capture.filter(item => item.status !== "processed").length;
+  const projectStage = getProjectStage(data);
 
   document.getElementById("projectTitle").textContent = data.project;
   document.getElementById("projectSub").textContent = [
@@ -396,6 +401,23 @@ function renderDetail(data){
   ].filter(Boolean).join(" | ") || "Project data pulled from the app.";
 
   detail.innerHTML = `
+    <div class="ops-card">
+      <div class="ops-header" style="margin-bottom:10px;">
+        <div>
+          <div class="ops-title">Shoot stage</div>
+          <p>Controls whether this project appears as the live shoot on the dashboard.</p>
+        </div>
+        <span class="badge">${escapeHTML(projectStageLabel(projectStage))}</span>
+      </div>
+
+      <div class="split-actions">
+        <button type="button" class="${projectStage === "live" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "live")'><span>Stage</span><strong>Live shoot</strong></button>
+        <button type="button" class="${projectStage === "delivery" ? "btn primary" : "ghost-btn"}" onclick='moveProjectToDelivery(${jsString(data.key)}, ${jsString(data.project)})'><span>Stage</span><strong>Delivery</strong></button>
+        <button type="button" class="${projectStage === "not-live" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "not-live")'><span>Stage</span><strong>Not live</strong></button>
+        <button type="button" class="${projectStage === "completed" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "completed")'><span>Stage</span><strong>Complete</strong></button>
+      </div>
+    </div>
+
     <div class="project-summary">
       <div><span>Income</span><strong>${money(data.income)}</strong></div>
       <div><span>Waiting</span><strong>${money(data.waiting)}</strong></div>
@@ -474,6 +496,74 @@ function renderDetail(data){
 
     ${renderRecent(data)}
   `;
+}
+
+function getProjectStage(data){
+  const saved = data.projectStages[0];
+  if(saved && saved.stage) return saved.stage;
+  return "not-live";
+}
+
+function projectStageLabel(value){
+  const labels = {
+    live:"Live shoot",
+    delivery:"Delivery",
+    "not-live":"Not live",
+    completed:"Complete"
+  };
+
+  return labels[value] || "Not live";
+}
+
+function setProjectStage(projectKey,projectName,stage){
+  const now = new Date().toISOString();
+  const existingIndex = stores.projectStages.findIndex(item => normaliseProjectKey(item.project) === projectKey || item.key === projectKey);
+  const stageItem = {
+    id:existingIndex >= 0 ? stores.projectStages[existingIndex].id : crypto.randomUUID(),
+    key:projectKey,
+    project:projectName,
+    stage,
+    updatedAt:now
+  };
+
+  if(existingIndex >= 0){
+    stores.projectStages[existingIndex] = stageItem;
+  }else{
+    stores.projectStages.unshift(stageItem);
+  }
+
+  writeData(STORE_KEYS.projectStages, stores.projectStages);
+  selectedProjectKey = projectKey;
+  renderProjects();
+}
+
+function moveProjectToDelivery(projectKey,projectName){
+  ensureDeliveryJob(projectKey, projectName);
+  setProjectStage(projectKey, projectName, "delivery");
+  alert(`${projectName} moved to delivery. It will no longer show as the live shoot.`);
+}
+
+function ensureDeliveryJob(projectKey,projectName){
+  const existing = stores.delivery.find(item => normaliseProjectKey(item.projectName || item.client) === projectKey);
+
+  if(existing){
+    return;
+  }
+
+  stores.delivery.unshift({
+    id:crypto.randomUUID(),
+    projectName,
+    client:projectName,
+    packageType:"Wedding Film",
+    dueDate:"",
+    stage:"not-started",
+    progress:0,
+    nextAction:"Start edit / delivery workflow",
+    notes:"Moved from Project Hub.",
+    updatedAt:new Date().toISOString()
+  });
+
+  writeData(STORE_KEYS.delivery, stores.delivery);
 }
 
 function deleteProject(projectKey,projectName){
