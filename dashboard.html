@@ -1143,23 +1143,23 @@ function updateDashboardFromLocal(){
   const callSheets = readData("ncstudios_callsheets_v1");
   const adminClients = readData("ncStudiosAdminTrackerV1");
 
-  document.getElementById("bookingsTotal").textContent = bookings.length;
-  document.getElementById("clientsTotal").textContent = clients.length;
-  document.getElementById("deliveryTotal").textContent = delivery.length;
+  setText("bookingsTotal", bookings.length);
+  setText("clientsTotal", clients.length);
+  setText("deliveryTotal", delivery.length);
 
   const income = finance
     .filter(item => item.type === "income" && item.status !== "unpaid")
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
   const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
 
-  document.getElementById("incomeTotal").textContent = money(income);
+  setText("incomeTotal", money(income));
   setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
   setText("messageTileWidget", openMessages);
-  document.getElementById("clientWidget").textContent = clients.length;
-  document.getElementById("financeWidget").textContent = money(income);
-  document.getElementById("deliveryWidget").textContent = delivery.length;
-  document.getElementById("shotsWidget").textContent = shots.length;
-  document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
+  setText("clientWidget", clients.length);
+  setText("financeWidget", money(income));
+  setText("deliveryWidget", delivery.length);
+  setText("shotsWidget", shots.length);
+  setText("listsWidget", lists.filter(item => item.status !== "done").length);
   setText("templatesWidget", templates.length);
   setText("adminWidget", adminClients.length);
   setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
@@ -1224,24 +1224,24 @@ async function updateDashboardFromSupabase(){
       const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
       const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
 
-      document.getElementById("bookingsTotal").textContent = bookings.length;
-      document.getElementById("deliveryTotal").textContent = delivery.length;
+      setText("bookingsTotal", bookings.length);
+      setText("deliveryTotal", delivery.length);
 
       const income = finance
         .filter(item => item.type === "income" && item.status !== "unpaid")
         .reduce((sum,item) => sum + Number(item.amount || 0), 0);
       const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
 
-      document.getElementById("incomeTotal").textContent = money(income);
-      document.getElementById("clientsTotal").textContent = appStorageClients.length;
+      setText("incomeTotal", money(income));
+      setText("clientsTotal", appStorageClients.length);
       setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
       setText("messageTileWidget", openMessages);
-      document.getElementById("financeWidget").textContent = money(income);
-      document.getElementById("deliveryWidget").textContent = delivery.length;
-      document.getElementById("shotsWidget").textContent = shots.length;
-      document.getElementById("listsWidget").textContent = lists.filter(item => item.status !== "done").length;
+      setText("financeWidget", money(income));
+      setText("deliveryWidget", delivery.length);
+      setText("shotsWidget", shots.length);
+      setText("listsWidget", lists.filter(item => item.status !== "done").length);
       setText("templatesWidget", templates.length);
-      document.getElementById("clientWidget").textContent = appStorageClients.length;
+      setText("clientWidget", appStorageClients.length);
       setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);

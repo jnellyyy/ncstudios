@@ -233,11 +233,17 @@ p{
   font-family:"NC Studio Brand Lighter", "NC Studio Brand", sans-serif;
   display:inline-block;
   overflow:hidden;
-  max-width:7.8ch;
-  padding-left:0.18ch;
+  max-width:6.8ch;
+  margin-left:0;
   opacity:1;
+  white-space:nowrap;
   flex:0 1 auto;
   animation:introStudioCollapse 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
+}
+
+.introBracketClose{
+  transform:translateX(0);
+  animation:introBracketClose 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
 }
 
 .introCutBeam{
@@ -1390,17 +1396,21 @@ label{
 
 @keyframes introWordmarkIn{
   0%{opacity:0;transform:translateY(10px) scale(0.94);filter:blur(8px) drop-shadow(0 0 24px rgba(216,183,110,0.18));}
-  14%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42));}
-  42%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42));}
-  66%{opacity:1;transform:translateY(0) scale(0.99);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.52));}
-  82%,100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.20));}
+  15%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.34));}
+  40%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.34));}
+  72%{opacity:1;transform:translateY(0) scale(0.985);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.48));}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 16px rgba(216,183,110,0.34));}
 }
 
 @keyframes introStudioCollapse{
-  0%,42%{max-width:7.8ch;opacity:1;transform:translateX(0);}
-  56%{max-width:4.1ch;opacity:0.58;transform:translateX(-0.06ch);}
-  66%{max-width:0;opacity:0;transform:translateX(-0.18ch);}
-  100%{max-width:0;opacity:0;transform:translateX(-0.18ch);}
+  0%,40%{max-width:6.8ch;opacity:1;filter:blur(0);transform:translateX(0);}
+  58%{max-width:3.3ch;opacity:0.46;filter:blur(0.6px);transform:translateX(-0.04ch);}
+  72%,100%{max-width:0;opacity:0;filter:blur(1.4px);transform:translateX(-0.12ch);}
+}
+
+@keyframes introBracketClose{
+  0%,40%{transform:translateX(0);}
+  72%,100%{transform:translateX(-0.04ch);}
 }
 
 @keyframes introCutBeam{
@@ -1581,6 +1591,345 @@ label{
     width:calc(100vw - 20px);
   }
 }
+
+/* NC Studio guide alignment
+   Header: large serif titles.
+   Subheader: small mono labels and section cues.
+   Normal: readable body copy, forms and cards.
+   Brand: approved [nc] lockup and custom font only. */
+body{
+  background:
+    linear-gradient(rgba(216,183,110,0.045) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(216,183,110,0.045) 1px, transparent 1px),
+    linear-gradient(145deg,#050504,#0d0c0a) !important;
+  background-size:48px 48px,48px 48px,100% 100% !important;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif !important;
+  letter-spacing:0 !important;
+}
+
+body::after{
+  inset:clamp(10px,2vw,28px) !important;
+  border-color:rgba(216,183,110,0.26) !important;
+  background:
+    linear-gradient(90deg,transparent 0 6%,rgba(216,183,110,0.16) 6% calc(6% + 1px),transparent calc(6% + 1px) 100%),
+    linear-gradient(180deg,transparent 0 15%,rgba(216,183,110,0.16) 15% calc(15% + 1px),transparent calc(15% + 1px) 100%),
+    linear-gradient(180deg,transparent 0 calc(100% - 70px),rgba(216,183,110,0.18) calc(100% - 70px) calc(100% - 69px),transparent calc(100% - 69px) 100%) !important;
+  opacity:0.86 !important;
+}
+
+.siteHeader{
+  padding:clamp(18px,3vw,34px) clamp(20px,5vw,72px) !important;
+  border-bottom:1px solid rgba(216,183,110,0.24) !important;
+  background:rgba(5,5,4,0.72) !important;
+  backdrop-filter:none !important;
+  box-shadow:none !important;
+}
+
+.brandMark{
+  width:clamp(156px,18vw,240px) !important;
+  height:auto !important;
+  filter:drop-shadow(0 8px 20px rgba(216,183,110,0.18)) !important;
+}
+
+.nav a,
+.eyebrow,
+.scrollCue,
+.serviceMeta,
+.filmMeta span,
+.heroDeck span,
+.heroDeck em,
+.availabilityStrip span,
+.portraitCaption span,
+.formPanel label,
+.footer,
+.meModeToggle,
+.meMiniButton,
+.meclose{
+  font-family:"SFMono-Regular","Menlo","Monaco","Courier New",monospace !important;
+  font-weight:500 !important;
+  letter-spacing:0 !important;
+  text-transform:uppercase !important;
+}
+
+.nav a{
+  color:rgba(247,239,227,0.78) !important;
+  padding:10px 0 !important;
+}
+
+.nav .navCta{
+  min-height:40px !important;
+  border-radius:0 !important;
+  border-color:rgba(216,183,110,0.42) !important;
+  color:#080704 !important;
+  background:linear-gradient(90deg,var(--gold),var(--gold2)) !important;
+  box-shadow:none !important;
+  padding:0 14px !important;
+}
+
+.hero{
+  min-height:92svh !important;
+  align-items:center !important;
+  padding:138px clamp(20px,5vw,72px) 48px !important;
+}
+
+.hero::before{
+  background:
+    linear-gradient(90deg,rgba(5,5,4,0.98),rgba(5,5,4,0.78) 54%,rgba(5,5,4,0.36)),
+    linear-gradient(180deg,rgba(5,5,4,0.22),rgba(5,5,4,0.96)),
+    var(--hero-media) !important;
+  background-repeat:no-repeat !important;
+  background-size:cover,cover,min(58vw,720px) !important;
+  background-position:center,center,right 5vw center !important;
+  filter:saturate(0.86) contrast(1.02) !important;
+}
+
+.hero::after{
+  background:linear-gradient(180deg,rgba(5,5,4,0),#050504) !important;
+}
+
+.heroInner{
+  border-left:1px solid rgba(216,183,110,0.28) !important;
+  padding-left:clamp(22px,4vw,52px) !important;
+}
+
+.heroInner::before{
+  width:122px !important;
+  height:1px !important;
+  margin-bottom:24px !important;
+  background:var(--gold) !important;
+  box-shadow:none !important;
+}
+
+h1,
+h2,
+h3,
+.hero h1,
+.sectionHead h2,
+.splitText h2,
+.featureCopy h2,
+.enquiryIntro h2,
+.filmCard h3,
+.serviceCard h3,
+.principle h3,
+.formPanel h3{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+  color:var(--ink) !important;
+}
+
+.hero h1{
+  max-width:860px !important;
+  color:var(--ink) !important;
+  font-size:clamp(62px,9.5vw,132px) !important;
+  line-height:0.9 !important;
+  text-shadow:0 18px 34px rgba(0,0,0,0.42),0 0 24px rgba(216,183,110,0.10) !important;
+}
+
+.sectionHead h2,
+.featureCopy h2,
+.enquiryIntro h2{
+  color:var(--gold2) !important;
+  font-size:clamp(44px,7vw,92px) !important;
+  line-height:0.92 !important;
+}
+
+.heroLead,
+.sectionHead p,
+.splitText p,
+.formPanel p,
+.serviceCard p,
+.principle p,
+.footer p,
+.aboutCopy .smallCopy p,
+.featureCopy p,
+.enquiryIntro p,
+.filmCard p,
+input,
+select,
+textarea{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif !important;
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+  color:var(--paper) !important;
+}
+
+.heroLead{
+  max-width:640px !important;
+  font-size:clamp(17px,1.8vw,22px) !important;
+}
+
+.button,
+.submitButton,
+.messageLauncher,
+.messageClose,
+.meModeToggle,
+.meMiniButton,
+.meclose{
+  border-radius:0 !important;
+  border:1px solid rgba(216,183,110,0.42) !important;
+  box-shadow:none !important;
+  font-family:"SFMono-Regular","Menlo","Monaco","Courier New",monospace !important;
+  font-weight:600 !important;
+  letter-spacing:0 !important;
+  text-transform:uppercase !important;
+}
+
+.button,
+.submitButton{
+  min-height:48px !important;
+  color:#080704 !important;
+  background:linear-gradient(90deg,var(--gold),var(--gold2)) !important;
+}
+
+.button.secondary,
+.messageLauncher,
+.messageClose,
+.meModeToggle,
+.meMiniButton,
+.meclose{
+  color:var(--gold2) !important;
+  background:rgba(5,5,4,0.72) !important;
+}
+
+.heroDeck,
+.portraitPanel,
+.principle,
+.filmCard,
+.serviceCard,
+.formPanel,
+.messageWidget,
+.mePanel,
+.availabilityStrip,
+.splitFeature{
+  border:1px solid rgba(216,183,110,0.26) !important;
+  border-radius:0 !important;
+  background:
+    linear-gradient(180deg,rgba(216,183,110,0.075),rgba(216,183,110,0.02)),
+    rgba(5,5,4,0.74) !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+.heroDeck{
+  border-left:1px solid rgba(216,183,110,0.26) !important;
+}
+
+.heroDeck a{
+  border-left:1px solid rgba(216,183,110,0.26) !important;
+}
+
+.heroDeck a:first-child{
+  border-left:0 !important;
+}
+
+.heroDeck strong,
+.principle span,
+.filmCard span,
+.serviceCard span,
+.eyebrow{
+  color:var(--gold) !important;
+  font-family:"NC Studio Brand Lighter","NC Studio Brand",Impact,sans-serif !important;
+  letter-spacing:0 !important;
+}
+
+.section{
+  border-top:1px solid rgba(216,183,110,0.18) !important;
+}
+
+.principles,
+.services,
+.enquiry{
+  background:rgba(5,5,4,0.42) !important;
+}
+
+.featureImage,
+.portraitPanel,
+.filmCard{
+  background-color:#080704 !important;
+}
+
+.formPanel input,
+.formPanel select,
+.formPanel textarea,
+.messageWidget input,
+.messageWidget textarea,
+.meField input,
+.meField textarea,
+.meField select{
+  border-radius:0 !important;
+  border:1px solid rgba(216,183,110,0.28) !important;
+  background:rgba(0,0,0,0.34) !important;
+  color:var(--ink) !important;
+  box-shadow:none !important;
+}
+
+.messageWidget{
+  background:rgba(5,5,4,0.94) !important;
+}
+
+.introLoader{
+  background:
+    linear-gradient(rgba(216,183,110,0.05) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(216,183,110,0.05) 1px, transparent 1px),
+    #050504 !important;
+  background-size:42px 42px,42px 42px,100% 100% !important;
+}
+
+.introWordmark{
+  color:var(--gold) !important;
+  text-shadow:none !important;
+}
+
+.introSignal{
+  background:rgba(216,183,110,0.42) !important;
+  box-shadow:none !important;
+}
+
+@media(max-width:980px){
+  .siteHeader{
+    position:absolute !important;
+  }
+
+  .hero h1{
+    font-size:clamp(54px,13vw,94px) !important;
+  }
+}
+
+@media(max-width:640px){
+  body::after{
+    inset:8px !important;
+  }
+
+  .siteHeader{
+    padding:14px 16px !important;
+  }
+
+  .brandMark{
+    width:142px !important;
+  }
+
+  .hero{
+    min-height:92svh !important;
+    padding:112px 16px 34px !important;
+  }
+
+  .heroInner{
+    padding-left:18px !important;
+  }
+
+  .hero h1{
+    font-size:clamp(48px,17vw,72px) !important;
+  }
+
+  .heroDeck{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .section{
+    padding:56px 16px !important;
+  }
+}
 </style>
 </head>
 
@@ -1590,7 +1939,7 @@ label{
     <div class="introBrand" aria-hidden="true">
       <div class="introWatermark">
         <p class="introWordmark">
-          <span class="introBracket">[</span><span class="introCore">nc</span><span class="introStudio"> studio</span><span class="introBracket">]</span>
+          <span class="introBracket">[</span><span class="introCore">nc</span><span class="introStudio"> studio</span><span class="introBracket introBracketClose">]</span>
         </p>
         <span class="introCutBeam"></span>
       </div>

@@ -309,9 +309,9 @@ button:disabled{
 
   function drawWordmark(time, glow = false){
     const fadeIn = 1;
-    const collapse = easeInOut((time - 0.70) / 1.02);
+    const collapse = easeInOut((time - 1.18) / 1.08);
     const studioVisible = 1 - collapse;
-    const studioAlpha = 1 - easeInOut((time - 1.06) / 0.62);
+    const studioAlpha = 1 - easeInOut((time - 1.28) / 0.82);
     const alpha = fadeIn;
     if(alpha <= 0) return;
 
@@ -334,10 +334,11 @@ button:disabled{
     ctx.font = coreFont;
     const coreW = ctx.measureText("nc").width;
     ctx.font = studioFont;
-    const studioText = " studio";
+    const studioGap = 38 * studioVisible;
+    const studioText = "studio";
     const studioW = ctx.measureText(studioText).width;
     const visibleStudioW = studioW * studioVisible;
-    const totalW = leftW + coreW + visibleStudioW + rightW;
+    const totalW = leftW + coreW + studioGap + visibleStudioW + rightW;
     let x = (canvas.width - totalW) / 2;
 
     ctx.font = bracketFont;
@@ -347,6 +348,7 @@ button:disabled{
     ctx.font = coreFont;
     ctx.fillText("nc", x, centerY);
     x += coreW;
+    x += studioGap;
 
     if(visibleStudioW > 0.5){
       ctx.save();
