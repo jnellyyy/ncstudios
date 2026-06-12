@@ -1,0 +1,207 @@
+/* Readability override for the studio app UI. Keep this loaded after page styles. */
+html{
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif !important;
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+.entry-title,
+.ops-title,
+.record-title,
+.itemTitle,
+.cardTitle,
+.tile h3,
+.brand h1,
+.brand-text h2,
+.hero h2,
+.heroTitle,
+.sectionTitle{
+  font-weight:540 !important;
+  letter-spacing:0 !important;
+  line-height:1.14 !important;
+}
+
+h1,
+.entry-title,
+.hero h1,
+.hero h2{
+  font-size:clamp(26px,4.8vw,44px) !important;
+}
+
+h2,
+.brand-text h2{
+  font-size:clamp(18px,3vw,26px) !important;
+}
+
+h3,
+.ops-title,
+.record-title,
+.itemTitle,
+.tile h3{
+  font-size:clamp(14px,2.4vw,17px) !important;
+}
+
+p,
+li,
+.subtext,
+.ops-sub,
+.ops-note,
+.note-box,
+.settingNote,
+.field,
+.meta-row,
+.call-line,
+.small-row,
+.empty-state,
+.tile p,
+.brand p,
+.hero p,
+.entry-copy,
+.introCopy{
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+  line-height:1.5 !important;
+}
+
+strong,
+b,
+.stat strong,
+.stat-card strong,
+.tileMetric,
+.settingValue,
+.buy-amount,
+.liveStat strong,
+.liveAction strong,
+.project-summary strong{
+  font-weight:560 !important;
+  letter-spacing:0 !important;
+  line-height:1.12 !important;
+}
+
+.kicker,
+label,
+.badge,
+.chip,
+.pill,
+.btn,
+.ghost-btn,
+.danger-btn,
+button,
+.home,
+.topPill,
+.statusPill,
+.nav a,
+.nav-pill a,
+.ops-nav a,
+.stat span,
+.stat-card span,
+.liveLabel,
+.liveStat span,
+.liveAction span,
+.tileFooter,
+.split-actions span,
+.project-summary span,
+.buy-tags span{
+  font-weight:520 !important;
+  letter-spacing:0.02em !important;
+}
+
+.pill,
+.btn,
+.ghost-btn,
+.danger-btn,
+button,
+.home,
+.topPill,
+.statusPill,
+.nav a,
+.ops-nav a{
+  line-height:1.18 !important;
+}
+
+.badge,
+.chip,
+.buy-tags span{
+  line-height:1.2 !important;
+}
+
+input,
+select,
+textarea{
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+  line-height:1.35 !important;
+}
+
+textarea{
+  line-height:1.5 !important;
+}
+
+.panel,
+.form-card,
+.record-card,
+.ops-card,
+.buy-card,
+.call-box,
+.settingItem,
+.stat,
+.stat-card,
+.tile{
+  letter-spacing:0 !important;
+}
+
+.meta-row b,
+.call-line b,
+.small-row b{
+  font-weight:550 !important;
+}
+
+@media(max-width:640px){
+  h1,
+  .entry-title,
+  .hero h1,
+  .hero h2{
+    font-size:clamp(24px,7vw,30px) !important;
+    line-height:1.14 !important;
+  }
+
+  .stat strong,
+  .stat-card strong,
+  .tileMetric{
+    font-size:clamp(17px,5.5vw,22px) !important;
+  }
+
+  .tile p{
+    line-height:1.35 !important;
+  }
+
+  .liveAction{
+    min-height:34px !important;
+    padding:6px !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    justify-content:center !important;
+    gap:3px !important;
+  }
+
+  .liveAction span{
+    font-size:7px !important;
+    letter-spacing:0.01em !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    white-space:normal !important;
+  }
+
+  .liveAction strong{
+    font-size:9px !important;
+  }
+}

@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>NC Studios Messages</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050504">
+
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+:root{
+  --bg:#050504;
+  --bg2:#11100c;
+  --line:rgba(216,183,110,0.22);
+  --lineSoft:rgba(247,239,227,0.12);
+  --text:#f7efe3;
+  --muted:#b8ac9a;
+  --gold:#d8b76e;
+  --gold2:#f0dca8;
+  --panel:rgba(247,239,227,0.075);
+  --panel2:rgba(247,239,227,0.12);
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  background:var(--bg);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:var(--body);
+  background:
+    linear-gradient(rgba(216,183,110,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(216,183,110,0.055) 1px, transparent 1px),
+    radial-gradient(circle at 18% 10%, rgba(216,183,110,0.18), transparent 30%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  background-size:52px 52px,52px 52px,100% 100%,100% 100%;
+  color:var(--text);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:22px;
+  border:1px solid rgba(216,183,110,0.26);
+  pointer-events:none;
+  opacity:0.72;
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:1px solid var(--line);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.logo{
+  width:54px;
+  height:54px;
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1,
+.hero h2,
+.stat strong,
+.empty strong{
+  font-family:"NC Studio Brand",Impact,sans-serif;
+  letter-spacing:0;
+}
+
+.brand h1{
+  font-size:20px;
+  color:var(--gold);
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+}
+
+.topActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+a,
+button{
+  font:inherit;
+}
+
+.topPill,
+button{
+  min-height:42px;
+  border:1px solid var(--lineSoft);
+  border-radius:0;
+  background:rgba(255,255,255,0.065);
+  color:var(--text);
+  padding:0 13px;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+button.primary,
+.topPill.primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#11100c;
+  border-color:rgba(255,255,255,0.20);
+}
+
+.hero{
+  padding:26px 0 22px;
+  border-bottom:1px solid var(--line);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(260px,0.56fr);
+  gap:18px;
+  align-items:end;
+}
+
+.kicker,
+.sectionCode,
+.messageMeta,
+label,
+.nav a,
+.chip{
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+
+.kicker{
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+}
+
+.hero h2{
+  margin-top:10px;
+  font-size:clamp(44px,8vw,86px);
+  line-height:0.88;
+}
+
+.hero p{
+  margin-top:14px;
+  max-width:660px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);
+}
+
+.stat{
+  min-height:96px;
+  padding:14px;
+  border-right:1px solid var(--line);
+  background:rgba(0,0,0,0.24);
+}
+
+.stat:last-child{
+  border-right:0;
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.stat strong{
+  display:block;
+  margin-top:12px;
+  font-size:28px;
+  color:var(--gold);
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:14px 0;
+}
+
+.nav a{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--lineSoft);
+  color:var(--muted);
+  text-decoration:none;
+  padding:0 12px;
+  font-size:11px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.nav a.active{
+  color:#11100c;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(270px,0.72fr) minmax(0,1.28fr);
+  gap:14px;
+}
+
+.panel{
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  box-shadow:var(--shadow);
+}
+
+.panelHead{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  border-bottom:1px solid var(--line);
+}
+
+.panelHead h3{
+  font-size:20px;
+}
+
+.panelHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.panelBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:850;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--lineSoft);
+  background:rgba(0,0,0,0.30);
+  color:var(--text);
+  padding:12px;
+  outline:none;
+  border-radius:0;
+  font:inherit;
+}
+
+select option{
+  color:#11100c;
+}
+
+textarea{
+  min-height:132px;
+  resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(216,183,110,0.76);
+  box-shadow:0 0 0 3px rgba(216,183,110,0.13);
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.toolbar select{
+  width:auto;
+  min-width:170px;
+}
+
+.list{
+  display:grid;
+  gap:12px;
+}
+
+.message{
+  border:1px solid var(--lineSoft);
+  background:rgba(0,0,0,0.24);
+  padding:14px;
+}
+
+.messageTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.message h4{
+  font-size:18px;
+}
+
+.messageMeta{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.messageText{
+  margin-top:12px;
+  color:var(--text);
+  line-height:1.58;
+  white-space:pre-wrap;
+}
+
+.contactGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+
+.contactGrid div{
+  border:1px solid var(--lineSoft);
+  padding:10px;
+  min-width:0;
+}
+
+.contactGrid span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.contactGrid strong{
+  display:block;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+  font-size:13px;
+}
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:0 9px;
+  border:1px solid rgba(216,183,110,0.28);
+  color:var(--gold);
+  background:rgba(216,183,110,0.09);
+  font-size:10px;
+  font-weight:900;
+}
+
+.chip.open{
+  color:#f0dca8;
+}
+
+.chip.replied{
+  color:#6ee7b7;
+  border-color:rgba(110,231,183,0.28);
+  background:rgba(110,231,183,0.08);
+}
+
+.chip.archived{
+  color:var(--muted);
+}
+
+.messageActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+
+.empty{
+  min-height:240px;
+  border:1px dashed rgba(216,183,110,0.34);
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  padding:22px;
+}
+
+.empty strong{
+  display:block;
+  color:var(--gold);
+  font-size:32px;
+  margin-bottom:8px;
+}
+
+.note{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+@media(max-width:840px){
+  body::before{
+    inset:10px;
+  }
+
+  .app{
+    padding:12px;
+  }
+
+  .topbar,
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .topActions{
+    width:100%;
+  }
+
+  .topPill,
+  .topActions button{
+    flex:1;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stat:nth-child(2){
+    border-right:0;
+  }
+
+  .stat:nth-child(1),
+  .stat:nth-child(2){
+    border-bottom:1px solid var(--line);
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .contactGrid{
+    grid-template-columns:1fr;
+  }
+
+  .messageTop{
+    flex-direction:column;
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css">
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo"></div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>message control</p>
+    </div>
+  </div>
+
+  <div class="topActions">
+    <button type="button" onclick="enableNotifications()">Enable alerts</button>
+    <a class="topPill primary" href="dashboard.html">Dashboard</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="kicker">client messages · &lt;004&gt;</div>
+      <h2>Messages</h2>
+      <p>Direct website messages land here, so you can reply without living inside WhatsApp. Keep it calm: review, reply, convert to a booking, or archive.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>New</span>
+        <strong id="newStat">0</strong>
+      </div>
+      <div class="stat">
+        <span>Open</span>
+        <strong id="openStat">0</strong>
+      </div>
+      <div class="stat">
+        <span>Replied</span>
+        <strong id="repliedStat">0</strong>
+      </div>
+      <div class="stat">
+        <span>Total</span>
+        <strong id="totalStat">0</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="messages.html">Messages</a>
+    <a href="bookings.html?status=enquiry">Enquiries</a>
+    <a href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="layout">
+    <aside class="panel">
+      <div class="panelHead">
+        <div>
+          <h3>Add message</h3>
+          <p>Use this for DMs, email notes, calls, or anything copied from socials.</p>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <form class="form" id="messageForm">
+          <input type="hidden" id="messageId">
+
+          <label>
+            Name
+            <input id="clientName" type="text" placeholder="Client name" required>
+          </label>
+
+          <label>
+            Email
+            <input id="contactEmail" type="email" placeholder="client@example.com">
+          </label>
+
+          <label>
+            Phone
+            <input id="contactPhone" type="tel" placeholder="optional">
+          </label>
+
+          <label>
+            Subject
+            <input id="subject" type="text" placeholder="Wedding date question">
+          </label>
+
+          <label>
+            Message
+            <textarea id="messageText" placeholder="Paste or type the message here." required></textarea>
+          </label>
+
+          <button type="submit" class="primary">Save message</button>
+          <button type="button" onclick="resetForm()">Clear form</button>
+        </form>
+
+        <p class="note" id="notificationNote">Alerts work when this app is open or installed and your browser allows notifications. Full closed-app phone pings need the next backend stage.</p>
+      </div>
+    </aside>
+
+    <section class="panel">
+      <div class="panelHead">
+        <div>
+          <h3>Inbox</h3>
+          <p>New website messages and manual notes.</p>
+        </div>
+
+        <div class="toolbar">
+          <select id="filter" onchange="renderMessages()">
+            <option value="active">Active</option>
+            <option value="new">New</option>
+            <option value="open">Open</option>
+            <option value="replied">Replied</option>
+            <option value="archived">Archived</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="panelBody">
+        <div id="messageList" class="list"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_messages_v1";
+const BOOKINGS_KEY = "ncstudios_bookings_v1";
+let messages = loadMessages();
+const form = document.getElementById("messageForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("messageId").value || crypto.randomUUID();
+  const existing = messages.find(item => item.id === id) || {};
+  const now = new Date().toISOString();
+
+  const item = {
+    ...existing,
+    id,
+    clientName:value("clientName"),
+    contactEmail:value("contactEmail"),
+    contactPhone:value("contactPhone"),
+    subject:value("subject") || "Manual message",
+    message:value("messageText"),
+    channel:existing.channel || "manual",
+    source:existing.source || "manual",
+    status:existing.status || "new",
+    createdAt:existing.createdAt || now,
+    updatedAt:now,
+    replies:Array.isArray(existing.replies) ? existing.replies : []
+  };
+
+  if(!item.clientName || !item.message){
+    alert("Add a name and message first.");
+    return;
+  }
+
+  const index = messages.findIndex(message => message.id === id);
+
+  if(index >= 0){
+    messages[index] = item;
+  }else{
+    messages.unshift(item);
+  }
+
+  saveMessages();
+  resetForm();
+  renderMessages();
+});
+
+function value(id){
+  return String(document.getElementById(id).value || "").trim();
+}
+
+function loadMessages(){
+  try{
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveMessages(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function writeData(key,data){
+  localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+}
+
+function renderMessages(){
+  messages = loadMessages();
+  const list = document.getElementById("messageList");
+  const filter = document.getElementById("filter").value;
+
+  const visible = messages
+    .filter(item => {
+      if(filter === "all") return true;
+      if(filter === "active") return !["replied","archived"].includes(item.status);
+      return item.status === filter;
+    })
+    .sort((a,b) => String(b.createdAt || b.updatedAt || "").localeCompare(String(a.createdAt || a.updatedAt || "")));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `
+      <div class="empty">
+        <div>
+          <strong>[nc]</strong>
+          No messages here yet.
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="message">
+      <div class="messageTop">
+        <div>
+          <h4>${escapeHTML(item.clientName || "Website visitor")}</h4>
+          <span class="messageMeta">${escapeHTML(item.subject || "Website message")} · ${niceDate(item.createdAt || item.updatedAt)} · ${escapeHTML(item.source || item.channel || "message")}</span>
+        </div>
+        <span class="chip ${escapeHTML(item.status || "new")}">${statusLabel(item.status)}</span>
+      </div>
+
+      <div class="contactGrid">
+        <div>
+          <span>Email</span>
+          <strong>${escapeHTML(item.contactEmail || "Not added")}</strong>
+        </div>
+        <div>
+          <span>Phone</span>
+          <strong>${escapeHTML(item.contactPhone || "Not added")}</strong>
+        </div>
+      </div>
+
+      <p class="messageText">${escapeHTML(item.message || "")}</p>
+
+      <div class="messageActions">
+        ${item.contactEmail ? `<button type="button" class="primary" onclick="replyByEmail('${item.id}')">Reply email</button>` : ""}
+        <button type="button" onclick="copyMessage('${item.id}')">Copy</button>
+        <button type="button" onclick="convertToBooking('${item.id}')">Make booking</button>
+        <button type="button" onclick="setMessageStatus('${item.id}','open')">Open</button>
+        <button type="button" onclick="setMessageStatus('${item.id}','replied')">Replied</button>
+        <button type="button" onclick="setMessageStatus('${item.id}','archived')">Archive</button>
+        <button type="button" onclick="editMessage('${item.id}')">Edit</button>
+        <button type="button" onclick="deleteMessage('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  setText("newStat", messages.filter(item => item.status === "new").length);
+  setText("openStat", messages.filter(item => item.status === "open").length);
+  setText("repliedStat", messages.filter(item => item.status === "replied").length);
+  setText("totalStat", messages.length);
+}
+
+function setText(id,value){
+  const element = document.getElementById(id);
+  if(element) element.textContent = value;
+}
+
+async function enableNotifications(){
+  const note = document.getElementById("notificationNote");
+
+  if(!("Notification" in window)){
+    note.textContent = "This browser does not support notifications here.";
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if(permission === "granted"){
+    note.textContent = "Alerts are on. New website messages can notify you while the app is open or installed.";
+    new Notification("NC Studio alerts are on", { body:"New website messages will show here first." });
+  }else{
+    note.textContent = "Alerts were not enabled. You can still use the inbox normally.";
+  }
+}
+
+function editMessage(id){
+  const item = messages.find(message => message.id === id);
+  if(!item) return;
+
+  document.getElementById("messageId").value = item.id;
+  document.getElementById("clientName").value = item.clientName || "";
+  document.getElementById("contactEmail").value = item.contactEmail || "";
+  document.getElementById("contactPhone").value = item.contactPhone || "";
+  document.getElementById("subject").value = item.subject || "";
+  document.getElementById("messageText").value = item.message || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("messageId").value = "";
+}
+
+function setMessageStatus(id,status){
+  messages = messages.map(item => item.id === id ? {...item,status,updatedAt:new Date().toISOString()} : item);
+  saveMessages();
+  renderMessages();
+}
+
+function deleteMessage(id){
+  const item = messages.find(message => message.id === id);
+  if(!item) return;
+
+  if(!confirm(`Delete message from ${item.clientName || "website visitor"}?`)) return;
+
+  messages = messages.filter(message => message.id !== id);
+  saveMessages();
+  renderMessages();
+}
+
+async function copyMessage(id){
+  const item = messages.find(message => message.id === id);
+  if(!item) return;
+
+  const text = [
+    item.clientName || "Website visitor",
+    item.contactEmail ? "Email: " + item.contactEmail : "",
+    item.contactPhone ? "Phone: " + item.contactPhone : "",
+    item.subject ? "Subject: " + item.subject : "",
+    "",
+    item.message || ""
+  ].filter(Boolean).join("\\n");
+
+  try{
+    await navigator.clipboard.writeText(text);
+    alert("Message copied.");
+  }catch(error){
+    alert(text);
+  }
+}
+
+function replyByEmail(id){
+  const item = messages.find(message => message.id === id);
+  if(!item || !item.contactEmail) return;
+
+  setMessageStatus(id, "open");
+
+  const subject = encodeURIComponent("Re: " + (item.subject || "your NC Studios message"));
+  const body = encodeURIComponent(`Hi ${firstName(item.clientName)},\\n\\nThank you for messaging NC Studios.\\n\\n`);
+  window.location.href = `mailto:${encodeURIComponent(item.contactEmail)}?subject=${subject}&body=${body}`;
+}
+
+function convertToBooking(id){
+  const item = messages.find(message => message.id === id);
+  if(!item) return;
+
+  const bookings = readData(BOOKINGS_KEY);
+  const existing = bookings.find(booking => booking.sourceMessageId === id);
+
+  if(existing){
+    alert("This message already has a booking enquiry.");
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const booking = {
+    id:crypto.randomUUID(),
+    clientName:item.clientName || "Website visitor",
+    eventName:item.subject || "Website message enquiry",
+    eventDate:"",
+    status:"enquiry",
+    packagePrice:0,
+    depositPaid:0,
+    location:"",
+    nextAction:"reply to website message",
+    notes:[
+      "created from website message",
+      item.contactEmail ? "email: " + item.contactEmail : "",
+      item.contactPhone ? "phone: " + item.contactPhone : "",
+      "",
+      item.message || ""
+    ].filter(Boolean).join("\\n"),
+    source:"website message",
+    sourceMessageId:id,
+    contactEmail:item.contactEmail || "",
+    contactPhone:item.contactPhone || "",
+    createdAt:now,
+    updatedAt:now
+  };
+
+  writeData(BOOKINGS_KEY, [booking, ...bookings]);
+  messages = messages.map(message => message.id === id ? {...message,status:"open",linkedBookingId:booking.id,updatedAt:now} : message);
+  saveMessages();
+  renderMessages();
+  alert("Booking enquiry created.");
+}
+
+function firstName(name){
+  return String(name || "lovely").trim().split(/\s+/)[0] || "lovely";
+}
+
+function statusLabel(status){
+  return {
+    new:"New",
+    open:"Open",
+    replied:"Replied",
+    archived:"Archived"
+  }[status] || "New";
+}
+
+function niceDate(value){
+  if(!value) return "No date";
+  const date = new Date(value);
+  if(Number.isNaN(date.getTime())) return "No date";
+  return date.toLocaleString("en-GB", { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+window.addEventListener("nc:messages-imported", function(){
+  messages = loadMessages();
+  renderMessages();
+});
+
+setTimeout(function(){
+  messages = loadMessages();
+  renderMessages();
+}, 900);
+
+renderMessages();
+</script>
+</body>
+</html>

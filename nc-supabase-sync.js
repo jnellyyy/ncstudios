@@ -13,13 +13,16 @@
     "ncstudios_consultations_v1",
     "ncstudios_capture_v1",
     "ncstudios_callsheets_v1",
+    "ncstudios_messages_v1",
     "ncstudios_templates_v1",
     "ncStudiosAdminTrackerV1"
   ];
 
   const STORAGE_TABLE = "app_storage";
   const BOOKINGS_KEY = "ncstudios_bookings_v1";
+  const MESSAGES_KEY = "ncstudios_messages_v1";
   const PUBLIC_ENQUIRY_PREFIX = "website_enquiry_";
+  const PUBLIC_MESSAGE_PREFIX = "website_message_";
   const RELOAD_FLAG_PREFIX = "nc_sync_reloaded_";
   const SAVE_DELAY = 250;
 
@@ -232,6 +235,104 @@
     return newBookings.length > 0;
   }
 
+  function normalisePublicMessage(row){
+    const data = row && row.data;
+
+    if(!data || typeof data !== "object" || !data.id || !data.message){
+      return null;
+    }
+
+    const now = new Date().toISOString();
+
+    return {
+      ...data,
+      status:data.status || "new",
+      source:data.source || "website message",
+      channel:data.channel || "website",
+      clientName:data.clientName || data.fullName || "Website visitor",
+      contactEmail:data.contactEmail || data.email || "",
+      contactPhone:data.contactPhone || data.phone || "",
+      subject:data.subject || data.topic || "Website message",
+      createdAt:data.createdAt || data.updatedAt || now,
+      updatedAt:data.updatedAt || now,
+      replies:Array.isArray(data.replies) ? data.replies : []
+    };
+  }
+
+  function notifyImportedMessages(messages){
+    if(!messages.length || !("Notification" in window) || Notification.permission !== "granted"){
+      return;
+    }
+
+    const first = messages[0];
+    const extra = messages.length > 1 ? " +" + (messages.length - 1) + " more" : "";
+
+    try{
+      new Notification("New NC Studio message" + extra, {
+        body:(first.clientName || "Website visitor") + ": " + (first.message || "").slice(0,120),
+        tag:"nc-studio-message"
+      });
+    }catch(error){
+      console.warn("NC Sync: notification failed", error);
+    }
+  }
+
+  async function importPublicMessages(){
+    const ready = await waitForSupabase();
+
+    if(!ready){
+      console.warn("NC Sync: Supabase not ready while loading website messages");
+      return false;
+    }
+
+    const response = await window.ncSupabase
+      .from(STORAGE_TABLE)
+      .select("app_key, data")
+      .like("app_key", PUBLIC_MESSAGE_PREFIX + "%");
+
+    if(response.error){
+      console.warn("NC Sync: website message load failed", response.error);
+      return false;
+    }
+
+    const rows = Array.isArray(response.data) ? response.data : [];
+    const incoming = rows
+      .map(normalisePublicMessage)
+      .filter(Boolean);
+
+    if(!incoming.length){
+      return false;
+    }
+
+    const messages = readLocal(MESSAGES_KEY);
+    const existingIds = new Set(messages.map(item => item && item.id).filter(Boolean));
+    const newMessages = incoming.filter(item => !existingIds.has(item.id));
+
+    if(newMessages.length){
+      writeLocal(MESSAGES_KEY, [...newMessages, ...messages]);
+      await saveKeyToSupabase(MESSAGES_KEY);
+      notifyImportedMessages(newMessages);
+      window.dispatchEvent(new CustomEvent("nc:messages-imported", { detail:{ messages:newMessages } }));
+    }
+
+    const importedKeys = rows
+      .map(row => row && row.app_key)
+      .filter(Boolean);
+
+    if(importedKeys.length){
+      const cleanup = await window.ncSupabase
+        .from(STORAGE_TABLE)
+        .delete()
+        .in("app_key", importedKeys);
+
+      if(cleanup.error){
+        console.warn("NC Sync: website message cleanup failed", cleanup.error);
+      }
+    }
+
+    return newMessages.length > 0;
+  }
+
   function patchStorage(){
     if(window.__ncStoragePatched) return;
     window.__ncStoragePatched = true;
@@ -268,6 +369,11 @@
       changed = true;
     }
 
+    const importedPublicMessages = await importPublicMessages();
+    if(importedPublicMessages){
+      changed = true;
+    }
+
     initialPullFinished = true;
     pendingSaves.clear();
 
@@ -294,6 +400,7 @@
     saveKeyToSupabase:saveKeyToSupabase,
     loadKeyFromSupabase:loadKeyFromSupabase,
     importPublicEnquiries:importPublicEnquiries,
+    importPublicMessages:importPublicMessages,
     pullAllFromSupabase:pullAllFromSupabase,
     pushAllLocalToSupabase:pushAllLocalToSupabase,
     flushPendingSaves:flushPendingSaves

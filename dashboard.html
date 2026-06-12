@@ -780,6 +780,7 @@ body::before{
   }
 }
 </style>
+<link rel="stylesheet" href="app-readable.css">
 </head>
 
 <body>
@@ -805,7 +806,7 @@ body::before{
 
 <section class="quick">
   <a href="bookings.html?status=enquiry">New enquiries</a>
-  <a href="finance.html">Add money</a>
+  <a href="messages.html">Messages</a>
 </section>
 
 <section class="stats">
@@ -979,15 +980,15 @@ body::before{
     </div>
   </a>
 
-  <a class="tile" href="templates.html">
+  <a class="tile" href="messages.html">
     <div>
-      <div class="icon">T</div>
-      <h3>Templates</h3>
-      <span class="tileMetric" id="templatesWidget">0</span>
-      <p>Saved replies, updates and client messages.</p>
+      <div class="icon">M</div>
+      <h3>Messages</h3>
+      <span class="tileMetric" id="messageTileWidget">0</span>
+      <p>Direct website messages and replies.</p>
     </div>
     <div class="tileFooter">
-      <span>Open</span>
+      <span>Reply</span>
       <span>›</span>
     </div>
   </a>
@@ -1009,8 +1010,8 @@ body::before{
 
 <nav class="bottomRow">
   <a href="shot-lists.html">Shots</a>
+  <a href="messages.html">Messages</a>
   <a href="lists.html">To Do</a>
-  <a href="buy-list.html">Buy</a>
   <a href="admin.html">Admin</a>
 </nav>
 
@@ -1063,6 +1064,7 @@ function countProjects(dataSets){
 
   (dataSets.bookings || []).forEach(item => addProjectName(names, item.clientName || item.eventName));
   (dataSets.clients || []).forEach(item => addProjectName(names, item.clientName));
+  (dataSets.messages || []).forEach(item => addProjectName(names, item.project || item.clientName || item.subject));
   (dataSets.delivery || []).forEach(item => addProjectName(names, item.projectName || item.client));
   (dataSets.shots || []).forEach(item => addProjectName(names, item.project));
   (dataSets.timeline || []).forEach(item => addProjectName(names, item.project));
@@ -1127,6 +1129,7 @@ function updateDashboardFromLocal(){
   const bookings = readData("ncstudios_bookings_v1");
   const clients = readData("ncstudios_clients_v1");
   const finance = readData("ncstudios_finance_v1");
+  const messages = readData("ncstudios_messages_v1");
   const shots = readData("ncstudios_shots_v1");
   const lists = readData("ncstudios_lists_v1");
   const delivery = readData("ncstudios_delivery_v1");
@@ -1147,9 +1150,11 @@ function updateDashboardFromLocal(){
   const income = finance
     .filter(item => item.type === "income" && item.status !== "unpaid")
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
 
   document.getElementById("incomeTotal").textContent = money(income);
   setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
+  setText("messageTileWidget", openMessages);
   document.getElementById("clientWidget").textContent = clients.length;
   document.getElementById("financeWidget").textContent = money(income);
   document.getElementById("deliveryWidget").textContent = delivery.length;
@@ -1164,7 +1169,7 @@ function updateDashboardFromLocal(){
   setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
-  setText("projectWidget", `${countProjects({bookings,clients,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
+  setText("projectWidget", `${countProjects({bookings,clients,messages,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
   updateShotPanel(shots);
 }
 
@@ -1182,6 +1187,7 @@ async function updateDashboardFromSupabase(){
       .in("app_key", [
         "ncstudios_bookings_v1",
         "ncstudios_finance_v1",
+        "ncstudios_messages_v1",
         "ncstudios_delivery_v1",
         "ncstudios_clients_v1",
         "ncstudios_shots_v1",
@@ -1204,6 +1210,7 @@ async function updateDashboardFromSupabase(){
 
       const bookings = map.ncstudios_bookings_v1 || readData("ncstudios_bookings_v1");
       const finance = map.ncstudios_finance_v1 || readData("ncstudios_finance_v1");
+      const messages = map.ncstudios_messages_v1 || readData("ncstudios_messages_v1");
       const delivery = map.ncstudios_delivery_v1 || readData("ncstudios_delivery_v1");
       const appStorageClients = map.ncstudios_clients_v1 || readData("ncstudios_clients_v1");
       const shots = map.ncstudios_shots_v1 || readData("ncstudios_shots_v1");
@@ -1223,10 +1230,12 @@ async function updateDashboardFromSupabase(){
       const income = finance
         .filter(item => item.type === "income" && item.status !== "unpaid")
         .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+      const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
 
       document.getElementById("incomeTotal").textContent = money(income);
       document.getElementById("clientsTotal").textContent = appStorageClients.length;
       setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
+      setText("messageTileWidget", openMessages);
       document.getElementById("financeWidget").textContent = money(income);
       document.getElementById("deliveryWidget").textContent = delivery.length;
       document.getElementById("shotsWidget").textContent = shots.length;
@@ -1240,7 +1249,7 @@ async function updateDashboardFromSupabase(){
       setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);
-      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
+      setText("projectWidget", `${countProjects({bookings,clients:appStorageClients,messages,delivery,shots,timeline,gear,settings,consultations,callSheets,capture})} live`);
       updateShotPanel(shots);
     }
 
