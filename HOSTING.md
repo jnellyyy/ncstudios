@@ -8,9 +8,11 @@ Domain: `ncstudiouk.co.uk`
 
 ## Credit-Safe Hosting Rule
 
-Use Netlify only for the public static website in `docs/`.
+Use Cloudflare or Netlify only for the public static website in `docs/`.
 
-Do not use Netlify for:
+Do not publish the repo root as the public website.
+
+Do not use the public website host for:
 
 - the private business app
 - Supabase sync logic
@@ -22,6 +24,27 @@ Do not use Netlify for:
 The enquiry form already sends straight to Supabase from the static website, so Netlify does not need to process forms or run backend code.
 
 To save credits, test with the local files first, then deploy grouped finished changes.
+
+## Cloudflare Static Setup
+
+Use these settings for Cloudflare Pages or Workers static assets:
+
+- Build command: leave blank
+- Build output directory / assets directory: `docs`
+- Public website folder: `docs`
+- Do not set the output directory to `.`
+
+This keeps the private business app pages out of the public website deployment.
+
+If deploying with Wrangler, `wrangler.jsonc` should point assets at:
+
+```json
+"assets": {
+  "directory": "./docs"
+}
+```
+
+The public redirects live in `docs/_redirects`.
 
 ## Netlify Static Setup
 
