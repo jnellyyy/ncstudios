@@ -7,7 +7,15 @@
 <style>
 @font-face{
   font-family:"NC Studio Brand";
-  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  src:url("assets/fonts/NC_Font_.ttf?v=brand-20260612b") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+@font-face{
+  font-family:"NC Studio Brand Lighter";
+  src:url("assets/fonts/NC_Font_Lighter.ttf?v=brand-20260612b") format("truetype");
   font-weight:400;
   font-style:normal;
   font-display:swap;
@@ -113,6 +121,19 @@ button{
   cursor:pointer;
 }
 
+.downloadLink{
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(216,183,110,0.34);
+  border-radius:8px;
+  padding:0 14px;
+  color:var(--text);
+  text-decoration:none;
+  background:rgba(255,255,255,0.08);
+}
+
 button.primary{
   background:linear-gradient(180deg,rgba(240,220,168,0.92),rgba(216,183,110,0.84));
   color:#11100d;
@@ -149,13 +170,13 @@ button:disabled{
 
   <footer class="controls">
     <div class="status" id="status">
-      <strong>NC watermark reveal</strong>
-      Transparent 1920 x 1080, 30fps Safari frame sequence for Premiere.
+      <strong>NC studios watermark reveal</strong>
+      Transparent 1920 x 1080, [nc studios] to [nc], 30fps PNG sequence for Premiere.
     </div>
     <div class="actions">
       <button type="button" id="previewBtn">preview again</button>
       <button type="button" class="primary" id="framesBtn">save Safari frames</button>
-      <button type="button" id="recordBtn">save video</button>
+      <a class="downloadLink" href="exports/nc-watermark-animation/nc-watermark-animation-png-sequence.zip" download>download ready sequence</a>
     </div>
   </footer>
 
@@ -165,18 +186,11 @@ button:disabled{
   const ctx = canvas.getContext("2d", { alpha: true });
   const previewBtn = document.getElementById("previewBtn");
   const framesBtn = document.getElementById("framesBtn");
-  const recordBtn = document.getElementById("recordBtn");
   const status = document.getElementById("status");
   const duration = 4;
-  const logo = new Image();
-  const markLogo = new Image();
   let startTime = performance.now();
   let rafId = 0;
-  let recording = false;
   let exportingFrames = false;
-
-  logo.src = "ncstudios-logo-transparent.png?v=brand-20260612";
-  markLogo.src = "ncstudios-logo-mark-transparent.png?v=brand-20260612";
 
   const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
   const easeOut = value => 1 - Math.pow(1 - clamp(value), 3);
@@ -281,276 +295,133 @@ button:disabled{
     endView.setUint16(10, entries.length, true);
     endView.setUint32(12, centralSize, true);
     endView.setUint32(16, offset, true);
-
     return new Blob([...localParts, ...centralParts, end], { type:"application/zip" });
   }
 
   function canvasPngBytes(){
     return new Promise((resolve, reject) => {
       canvas.toBlob(blob => {
-        if(!blob){
-          reject(new Error("Could not create PNG frame."));
-          return;
-        }
+        if(!blob){ reject(new Error("Could not create PNG frame.")); return; }
         blob.arrayBuffer().then(buffer => resolve(new Uint8Array(buffer))).catch(reject);
       }, "image/png");
     });
   }
 
-  function drawLogoImage(image, targetWidth, alpha, xOffset = 0, clipRight = 0, blur = 0){
-    if(!image.complete) return;
-    const ratio = image.height / image.width;
-    const width = targetWidth;
-    const height = width * ratio;
-    const x = (canvas.width - width) / 2 + xOffset;
-    const y = (canvas.height - height) / 2;
-
+  function drawCenteredText(text, size, family, alpha, options = {}){
+    const { xOffset = 0, clipRight = 0, blur = 0, scale = 1 } = options;
     ctx.save();
     ctx.globalAlpha = alpha;
     if(blur > 0) ctx.filter = `blur(${blur}px)`;
+    ctx.font = `${size}px ${family}`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const metrics = ctx.measureText(text);
+    const width = metrics.width * scale;
+    const height = size * 1.05 * scale;
+    const centerX = canvas.width / 2 + xOffset;
+    const centerY = canvas.height / 2;
     if(clipRight > 0){
       ctx.beginPath();
-      ctx.rect(x, y, width * (1 - clipRight), height);
+      ctx.rect(centerX - width / 2, centerY - height / 2, width * (1 - clipRight), height);
       ctx.clip();
     }
-    ctx.drawImage(image, x, y, width, height);
+    ctx.translate(centerX, centerY);
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#d8b76e";
+    ctx.shadowColor = "rgba(216,183,110,0.36)";
+    ctx.shadowBlur = 22;
+    ctx.fillText(text, 0, 0);
     ctx.restore();
   }
 
   function drawBeam(progress){
     if(progress <= 0 || progress >= 1) return;
-    const x = lerp(-260, canvas.width + 260, progress);
+    const x = lerp(-340, canvas.width + 340, progress);
     ctx.save();
     ctx.globalCompositeOperation = "screen";
     ctx.translate(x, canvas.height / 2);
     ctx.rotate(-0.075);
-
-    const beam = ctx.createLinearGradient(-80, 0, 80, 0);
+    const beam = ctx.createLinearGradient(-85, 0, 85, 0);
     beam.addColorStop(0, "rgba(255,248,222,0)");
-    beam.addColorStop(0.44, "rgba(255,248,222,0.54)");
+    beam.addColorStop(0.48, "rgba(255,248,222,0.56)");
     beam.addColorStop(0.5, "rgba(216,183,110,0.94)");
-    beam.addColorStop(0.56, "rgba(255,248,222,0.52)");
+    beam.addColorStop(0.52, "rgba(255,248,222,0.52)");
     beam.addColorStop(1, "rgba(255,248,222,0)");
     ctx.fillStyle = beam;
     ctx.filter = "blur(1px)";
     ctx.fillRect(-95, -310, 190, 620);
-
-    ctx.filter = "blur(0px)";
-    ctx.fillStyle = "rgba(255,248,222,0.85)";
-    ctx.fillRect(-2, -300, 4, 600);
-    ctx.restore();
-  }
-
-  function drawSparkles(time){
-    if(time < 1.42 || time > 2.18) return;
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    for(let i = 0; i < 5; i += 1){
-      const phase = (time * 3.2 + i * 0.37) % 1;
-      const x = canvas.width / 2 - 320 + 640 * phase;
-      const y = canvas.height / 2 - 120 + 240 * (((i * 37) % 100) / 100);
-      const alpha = Math.max(0, 1 - Math.abs(phase - 0.5) * 2) * 0.58;
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = "#fff8de";
-      ctx.beginPath();
-      ctx.arc(x, y, 2.4, 0, Math.PI * 2);
-      ctx.fill();
-    }
     ctx.restore();
   }
 
   function drawAtTime(time){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     const fullIn = easeOut(time / 0.45);
     const cut = easeInOut((time - 1.38) / 0.72);
     const fullFade = 1 - clamp((time - 1.55) / 0.48);
     const fullAlpha = fullIn * fullFade;
-    const fullWidth = lerp(980, 900, cut);
-
     if(fullAlpha > 0){
-      drawLogoImage(logo, fullWidth, fullAlpha * 0.28, -82 * cut, 0.58 * cut, 10);
-      drawLogoImage(logo, fullWidth, fullAlpha, -82 * cut, 0.58 * cut, cut * 1.2);
+      drawCenteredText("[nc studios]", 190, '"NC Studio Brand Lighter", "NC Studio Brand", sans-serif', fullAlpha * 0.3, { xOffset:-70 * cut, clipRight:0.58 * cut, blur:12 });
+      drawCenteredText("[nc studios]", 190, '"NC Studio Brand Lighter", "NC Studio Brand", sans-serif', fullAlpha, { xOffset:-70 * cut, clipRight:0.58 * cut, blur:cut * 0.9 });
     }
-
-    const markReveal = easeOut((time - 1.42) / 0.68);
-    const markFade = time < 3.45 ? 1 : 1 - clamp((time - 3.45) / 0.45);
-    const pulse = 1 + 0.045 * Math.sin(Math.max(0, time - 1.55) * Math.PI * 4.4) * Math.max(0, 1 - clamp((time - 1.55) / 1.4));
-    const markAlpha = markReveal * markFade;
-
-    if(markAlpha > 0){
-      const markWidth = 640 * lerp(0.88, 1, markReveal) * pulse;
-      drawLogoImage(markLogo, markWidth, markAlpha * 0.42, 0, 0, 12);
-      drawLogoImage(markLogo, markWidth, markAlpha, 0, 0, 0);
+    const shortReveal = easeOut((time - 1.42) / 0.68);
+    const shortFade = time < 3.45 ? 1 : 1 - clamp((time - 3.45) / 0.45);
+    const shortAlpha = shortReveal * shortFade;
+    if(shortAlpha > 0){
+      const pulse = 1 + 0.035 * Math.sin(Math.max(0, time - 1.55) * Math.PI * 4.4) * Math.max(0, 1 - clamp((time - 1.55) / 1.4));
+      const scale = (0.88 + 0.12 * shortReveal) * pulse;
+      drawCenteredText("[nc]", 270, '"NC Studio Brand", "NC Studio Brand Lighter", sans-serif', shortAlpha * 0.38, { blur:14, scale });
+      drawCenteredText("[nc]", 270, '"NC Studio Brand", "NC Studio Brand Lighter", sans-serif', shortAlpha, { scale });
     }
-
     drawBeam((time - 1.24) / 0.98);
-    drawSparkles(time);
   }
 
   function drawFrame(now){
-    if(exportingFrames){
-      rafId = requestAnimationFrame(drawFrame);
-      return;
-    }
+    if(exportingFrames){ rafId = requestAnimationFrame(drawFrame); return; }
     const elapsed = (now - startTime) / 1000;
-    const time = recording ? Math.min(elapsed, duration) : elapsed % duration;
-    drawAtTime(time);
+    drawAtTime(elapsed % duration);
     rafId = requestAnimationFrame(drawFrame);
   }
 
   function preview(){
     startTime = performance.now();
-    setStatus("NC watermark reveal", "Previewing the transparent full-logo-to-[nc] watermark animation.");
-  }
-
-  function pickMimeType(){
-    const types = [
-      "video/mp4;codecs=hvc1",
-      "video/mp4",
-      "video/webm;codecs=vp9",
-      "video/webm;codecs=vp8",
-      "video/webm"
-    ];
-    return types.find(type => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || "";
+    setStatus("NC studios watermark reveal", "Previewing [nc studios] cutting down to [nc].");
   }
 
   async function saveFrameSequence(){
     const frameRate = 30;
     const totalFrames = Math.round(duration * frameRate);
     const entries = [];
-
     exportingFrames = true;
-    recording = false;
     framesBtn.disabled = true;
-    recordBtn.disabled = true;
     previewBtn.disabled = true;
     framesBtn.textContent = "saving...";
-
     try{
       for(let frame = 0; frame < totalFrames; frame += 1){
-        const time = frame / frameRate;
-        drawAtTime(Math.min(time, duration));
-        entries.push({
-          name:`nc-studio-watermark-reveal/frame_${padNumber(frame + 1, 4)}.png`,
-          data:await canvasPngBytes()
-        });
-        if(frame % 10 === 0){
-          setStatus("Saving Safari frames", `${frame + 1} of ${totalFrames} transparent PNG frames.`);
-        }
+        drawAtTime(frame / frameRate);
+        entries.push({ name:`nc-studio-watermark-reveal/frame_${padNumber(frame + 1, 4)}.png`, data:await canvasPngBytes() });
+        if(frame % 10 === 0) setStatus("Saving frames", `${frame + 1} of ${totalFrames} transparent PNG frames.`);
       }
-
       downloadBlob(createZip(entries), "nc-studio-watermark-reveal-png-sequence.zip");
-      setStatus("Saved Safari frames", "Downloaded nc-studio-watermark-reveal-png-sequence.zip");
+      setStatus("Saved frames", "Downloaded nc-studio-watermark-reveal-png-sequence.zip");
     }catch(error){
-      setStatus("Frame export failed", "Safari could not finish the PNG sequence. Try saving a shorter export or screen record as a fallback.");
+      setStatus("Frame export failed", "Use the download ready sequence link instead.");
     }finally{
       exportingFrames = false;
       framesBtn.disabled = false;
-      recordBtn.disabled = false;
       previewBtn.disabled = false;
       framesBtn.textContent = "save Safari frames";
-      recordBtn.textContent = "save video";
       startTime = performance.now();
-    }
-  }
-
-  async function recordIntro(){
-    if(!window.MediaRecorder || !canvas.captureStream){
-      await saveFrameSequence();
-      return;
-    }
-
-    recording = true;
-    recordBtn.disabled = true;
-    framesBtn.disabled = true;
-    previewBtn.disabled = true;
-    recordBtn.textContent = "recording...";
-    const mimeType = pickMimeType();
-    if(!mimeType){
-      recordBtn.textContent = "save video";
-      await saveFrameSequence();
-      return;
-    }
-
-    try{
-      const extension = mimeType.includes("mp4") ? "mp4" : "webm";
-      const stream = canvas.captureStream(60);
-      const chunks = [];
-      const recorder = new MediaRecorder(stream, { mimeType });
-
-      recorder.ondataavailable = event => {
-        if(event.data && event.data.size) chunks.push(event.data);
-      };
-
-      recorder.onerror = () => {
-        stream.getTracks().forEach(track => track.stop());
-        recordBtn.disabled = false;
-        framesBtn.disabled = false;
-        previewBtn.disabled = false;
-        recordBtn.textContent = "save video";
-        recording = false;
-        setStatus("Recording failed", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
-      };
-
-      recorder.onstop = () => {
-        stream.getTracks().forEach(track => track.stop());
-        if(!chunks.length){
-          recordBtn.disabled = false;
-          framesBtn.disabled = false;
-          previewBtn.disabled = false;
-          recordBtn.textContent = "save video";
-          recording = false;
-          setStatus("No video created", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
-          return;
-        }
-
-        const blob = new Blob(chunks, { type:mimeType || "video/webm" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `nc-studio-watermark-reveal.${extension}`;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 4000);
-        recordBtn.disabled = false;
-        framesBtn.disabled = false;
-        previewBtn.disabled = false;
-        recordBtn.textContent = "save video";
-        recording = false;
-        setStatus("Saved", `Downloaded transparent nc-studio-watermark-reveal.${extension}`);
-      };
-
-      recorder.start(250);
-      startTime = performance.now();
-      setStatus("Recording transparent video", "Wait about 5 seconds. The download starts after the watermark reveal finishes.");
-      setTimeout(() => {
-        if(recording && recorder.state !== "inactive"){
-          recorder.requestData();
-          recorder.stop();
-        }
-      }, duration * 1000 + 220);
-    }catch(error){
-      recordBtn.disabled = false;
-      framesBtn.disabled = false;
-      previewBtn.disabled = false;
-      recordBtn.textContent = "save video";
-      recording = false;
-      setStatus("Recording failed", "If this browser cannot make a transparent video, use save Safari frames and import the PNG sequence into Premiere.");
     }
   }
 
   previewBtn.addEventListener("click", preview);
   framesBtn.addEventListener("click", saveFrameSequence);
-  recordBtn.addEventListener("click", recordIntro);
-  function maybePreview(){
-    if(logo.complete && markLogo.complete) preview();
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => { preview(); drawFrame(performance.now()); });
+  }else{
+    preview();
+    drawFrame(performance.now());
   }
-  logo.addEventListener("load", maybePreview, { once:true });
-  markLogo.addEventListener("load", maybePreview, { once:true });
-  maybePreview();
-  drawFrame(performance.now());
 })();
 </script>
 </body>

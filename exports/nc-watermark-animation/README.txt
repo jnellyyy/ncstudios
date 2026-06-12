@@ -8,8 +8,9 @@ Use in Premiere Pro:
 - APNG preview: nc-watermark-animation-transparent.apng.
 
 Website loading screen:
-- index.html and docs/index.html now use the same full-logo-to-[nc] reveal.
+- index.html and docs/index.html now use the same `[nc studios]` to `[nc]` reveal.
 
 Video note:
-- This machine does not have a working encoder that can turn the transparent sequence into MOV/WebM directly.
-- Open intro-export.html in Safari and try save video. If Safari refuses video, use save Safari frames and import the PNG sequence into Premiere.
+- This machine does not have a working encoder that can turn the transparent sequence into MP4/MOV directly.
+- For Premiere Pro, use the PNG sequence. It keeps transparency, unlike a normal MP4.
+- Open intro-export.html to preview it, or use the ready zip in this folder.
