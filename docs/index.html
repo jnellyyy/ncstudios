@@ -52,7 +52,7 @@
   --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   --hero-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
   --feature-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
-  --film-one-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
+  --film-one-media:url("assets/jason-roisin-engagement-card.jpg?v=engagement-20260614");
   --film-two-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
   --film-three-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
 }
@@ -1847,6 +1847,30 @@ textarea{
 .portraitPanel,
 .filmCard{
   background-color:#080704 !important;
+}
+
+.filmCard{
+  background:
+    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
+    var(--film-one-media) !important;
+  background-size:cover !important;
+  background-position:center !important;
+}
+
+.filmCard:nth-child(2){
+  background:
+    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
+    var(--film-two-media) !important;
+  background-size:cover !important;
+  background-position:55% center !important;
+}
+
+.filmCard:nth-child(3){
+  background:
+    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
+    var(--film-three-media) !important;
+  background-size:cover !important;
+  background-position:70% center !important;
 }
 
 .formPanel input,
