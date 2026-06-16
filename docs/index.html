@@ -12,6 +12,12 @@
 <link rel="icon" href="icon-32.png?v=brand-20260612">
 <meta name="theme-color" content="#050504">
 
+<script>
+if(new URLSearchParams(window.location.search).has("adminPreview")){
+  document.documentElement.classList.add("site-preview-mode");
+}
+</script>
+
 <style>
 @font-face{
   font-family:"NC Studio Brand";
@@ -103,6 +109,18 @@ body.is-loading .footer{
   opacity:0;
   transform:translateY(18px);
   filter:blur(10px);
+}
+
+html.site-preview-mode .introLoader{
+  display:none !important;
+}
+
+html.site-preview-mode body.is-loading main,
+html.site-preview-mode body.is-loading .footer,
+html.site-preview-mode body.is-loading .siteHeader{
+  opacity:1;
+  transform:none;
+  filter:none;
 }
 
 body.intro-done main,
@@ -2162,19 +2180,20 @@ textarea{
 <script>
 (function(){
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isAdminPreview = new URLSearchParams(window.location.search).has("adminPreview");
   const loader = document.querySelector(".introLoader");
 
-  function finishIntro(){
+  function finishIntro(removeImmediately){
     document.body.classList.remove("is-loading");
     document.body.classList.add("intro-done");
     if(loader){
       loader.setAttribute("aria-hidden","true");
-      setTimeout(() => loader.remove(),900);
+      setTimeout(() => loader.remove(),removeImmediately ? 0 : 900);
     }
   }
 
-  if(prefersReducedMotion){
-    finishIntro();
+  if(prefersReducedMotion || isAdminPreview){
+    finishIntro(isAdminPreview);
   }else{
     setTimeout(finishIntro,5100);
   }
@@ -2268,7 +2287,8 @@ textarea{
     return {
       ...safeConfig,
       fields,
-      media:safeConfig.media || {}
+      media:safeConfig.media || {},
+      mediaTypes:safeConfig.mediaTypes || {}
     };
   }
 
@@ -2304,14 +2324,16 @@ textarea{
     }
   }
 
-  function isVideo(value){
-    return /^data:video\//.test(value) || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
+  function isVideo(value,type){
+    return String(type || "").startsWith("video/")
+      || /^data:video\//.test(value)
+      || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
   }
 
-  function setMedia(target,value){
+  function setMedia(target,value,type){
     if(!value) return;
 
-    if(isVideo(value)){
+    if(isVideo(value,type)){
       setVideo(target,value);
       return;
     }
@@ -2335,8 +2357,23 @@ textarea{
   function applyConfig(config){
     const safeConfig = cleanConfig(config);
     Object.entries(safeConfig.fields || {}).forEach(([key,value]) => setFieldValue(key,value));
-    Object.entries(safeConfig.media || {}).forEach(([key,value]) => setMedia(key,value));
+    Object.entries(safeConfig.media || {}).forEach(([key,value]) => setMedia(key,value,safeConfig.mediaTypes?.[key]));
   }
+
+  window.NC_SITE_APPLY_CONTENT = applyConfig;
+
+  window.addEventListener("message",event => {
+    const data = event.data || {};
+    if(data.type !== "nc-site-preview"){
+      return;
+    }
+
+    applyConfig(data.config || {});
+
+    if(data.scrollTo){
+      document.querySelector(data.scrollTo)?.scrollIntoView({block:"start"});
+    }
+  });
 
   async function loadPublishedConfig(){
     try{

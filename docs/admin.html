@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NC Studios Admin Tracker</title>
+<title>NC Studio Admin Tracker</title>
 
 <style>
 @font-face{
@@ -559,40 +559,168 @@ textarea{
   line-height:1.35;
 }
 
-.websiteForm{
+.visualEditorShell{
   display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,0.85fr);
   gap:14px;
+  align-items:start;
 }
 
-.editorGroup{
+.sitePreviewPanel{
+  position:sticky;
+  top:14px;
+  overflow:hidden;
   border-radius:24px;
-  padding:14px;
+  background:rgba(0,0,0,0.28);
+  border:1px solid rgba(255,255,255,0.10);
+  min-height:690px;
+}
+
+.previewToolbar{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.09);
+  background:rgba(0,0,0,0.22);
+}
+
+.previewToolbar strong{
+  display:block;
+  font-size:0.9rem;
+}
+
+.previewToolbar span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:0.72rem;
+}
+
+.previewToolbarActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.sitePreviewFrame{
+  display:block;
+  width:100%;
+  height:720px;
+  border:0;
+  background:#050504;
+}
+
+.websiteForm{
+  display:grid;
+  gap:12px;
+}
+
+.editorIntro.compact{
+  display:grid;
+  gap:10px;
+  margin:0;
+}
+
+.editorIntro.compact .heroText{
+  font-size:0.9rem;
+}
+
+.editorIntro.compact .editorStatus{
+  width:100%;
+  min-width:0;
+}
+
+.mediaSlots{
+  display:grid;
+  gap:10px;
+}
+
+.mediaSlot{
+  border-radius:22px;
+  padding:12px;
   background:rgba(255,255,255,0.045);
   border:1px solid rgba(255,255,255,0.09);
 }
 
-.editorGroup h4{
-  margin:0 0 12px;
-  color:var(--gold);
-  font-size:0.82rem;
-  text-transform:uppercase;
-  letter-spacing:0.12em;
-}
-
-.editorGrid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+.mediaSlotHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:10px;
+  margin-bottom:10px;
 }
 
-.editorGrid .field.full{
-  grid-column:1 / -1;
+.mediaSlotTitle strong{
+  display:block;
+  font-size:0.94rem;
 }
 
-.mediaGrid{
+.mediaSlotTitle span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:0.74rem;
+  line-height:1.3;
+}
+
+.mediaSlotPreview{
+  height:128px;
+  border-radius:16px;
+  overflow:hidden;
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
+  place-items:center;
+  margin-bottom:10px;
+  background:
+    linear-gradient(135deg,rgba(216,183,110,0.14),rgba(255,255,255,0.04)),
+    rgba(0,0,0,0.25);
+  border:1px solid rgba(255,255,255,0.08);
+  color:rgba(248,247,244,0.46);
+  font-size:0.78rem;
+}
+
+.mediaSlotPreview.hasMedia{
+  background-size:cover;
+  background-position:center;
+}
+
+.mediaSlotPreview video,
+.mediaSlotPreview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.mediaSlotControls{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+}
+
+.mediaSlotControls input[type="file"]{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+}
+
+.uploadButton{
+  min-height:43px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:16px;
+  padding:0 13px;
+  cursor:pointer;
+  color:var(--text);
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.12);
+  white-space:nowrap;
 }
 
 .fieldHint{
@@ -607,6 +735,13 @@ textarea{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
+  position:sticky;
+  bottom:10px;
+  padding:10px;
+  border-radius:20px;
+  background:rgba(7,7,7,0.78);
+  border:1px solid rgba(255,255,255,0.09);
+  backdrop-filter:blur(18px);
 }
 
 .editorActions .btn{
@@ -648,9 +783,18 @@ textarea{
     width:100%;
   }
 
-  .editorGrid,
-  .mediaGrid{
+  .visualEditorShell{
     grid-template-columns:1fr;
+  }
+
+  .sitePreviewPanel{
+    position:relative;
+    top:auto;
+    min-height:520px;
+  }
+
+  .sitePreviewFrame{
+    height:560px;
   }
 }
 
@@ -693,9 +837,9 @@ textarea{
 
   <header class="topbar">
     <a href="dashboard.html" class="brand">
-      <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+      <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
       <div>
-        <h1>NC Studios</h1>
+        <h1>NC Studio</h1>
         <p>Admin Tracker</p>
       </div>
     </a>
@@ -746,194 +890,141 @@ textarea{
 
   <section class="panel websiteEditor" aria-labelledby="websiteEditorTitle">
     <div class="sectionTitle">
-      <h3 id="websiteEditorTitle">Website editor</h3>
-      <span>Live Supabase content</span>
+      <h3 id="websiteEditorTitle">Website media editor</h3>
+      <span>Preview and publish</span>
     </div>
 
-    <div class="editorIntro">
-      <p class="heroText">
-        Edit the homepage wording and media links here. Publishing saves it live, so the website updates without replacing files every time.
-      </p>
-      <p class="editorStatus" id="websiteEditorStatus" aria-live="polite">Ready to edit.</p>
+    <div class="visualEditorShell">
+      <div class="sitePreviewPanel">
+        <div class="previewToolbar">
+          <div>
+            <strong>Live site preview</strong>
+            <span>Updates here before you publish.</span>
+          </div>
+          <div class="previewToolbarActions">
+            <button class="btn small" type="button" data-preview-scroll="#home">top</button>
+            <button class="btn small" type="button" data-preview-scroll="#about">about</button>
+            <button class="btn small" type="button" data-preview-scroll="#films">work</button>
+          </div>
+        </div>
+        <iframe class="sitePreviewFrame" id="websitePreviewFrame" title="nc studio website preview" src="index.html?adminPreview=1"></iframe>
+      </div>
+
+      <form class="websiteForm mediaEditorForm" id="websiteContentForm">
+        <div class="editorIntro compact">
+          <p class="heroText">
+            Upload a file or paste a hosted media link. The preview on the left updates first, then publish when it looks right.
+          </p>
+          <p class="editorStatus" id="websiteEditorStatus" aria-live="polite">Ready to edit media.</p>
+        </div>
+
+        <div class="mediaSlots">
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>Hero background</strong>
+                <span>The first thing people see on the homepage.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#home">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="hero">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaHero" data-website-media="hero" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadHero">upload</label>
+              <input id="web_uploadHero" data-website-media-file="hero" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>About portrait</strong>
+                <span>Your “creative behind nc studio” image.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#about">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="portrait">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaPortrait" data-website-media="portrait" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadPortrait">upload</label>
+              <input id="web_uploadPortrait" data-website-media-file="portrait" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>Motion feature</strong>
+                <span>The wide film panel between about and work.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#motion-title">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="feature">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaFeature" data-website-media="feature" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadFeature">upload</label>
+              <input id="web_uploadFeature" data-website-media-file="feature" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>Work card 1</strong>
+                <span>Couple sessions / engagement work.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="filmOne">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaFilmOne" data-website-media="filmOne" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadFilmOne">upload</label>
+              <input id="web_uploadFilmOne" data-website-media-file="filmOne" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>Work card 2</strong>
+                <span>Wedding coverage.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="filmTwo">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaFilmTwo" data-website-media="filmTwo" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadFilmTwo">upload</label>
+              <input id="web_uploadFilmTwo" data-website-media-file="filmTwo" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+
+          <section class="mediaSlot">
+            <div class="mediaSlotHead">
+              <div class="mediaSlotTitle">
+                <strong>Work card 3</strong>
+                <span>Short edits, events and content.</span>
+              </div>
+              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+            </div>
+            <div class="mediaSlotPreview" data-media-preview="filmThree">no media set</div>
+            <div class="mediaSlotControls">
+              <input id="web_mediaFilmThree" data-website-media="filmThree" type="text" placeholder="paste image or video URL">
+              <label class="uploadButton" for="web_uploadFilmThree">upload</label>
+              <input id="web_uploadFilmThree" data-website-media-file="filmThree" type="file" accept="image/*,video/*">
+            </div>
+          </section>
+        </div>
+
+        <span class="fieldHint">Uploads use the Supabase site-media bucket. Drafts stay on this device until you publish.</span>
+
+        <div class="editorActions">
+          <button class="btn primary" type="button" data-website-publish>Publish media live</button>
+          <button class="btn" type="button" data-website-load>Load live media</button>
+          <button class="btn" type="button" data-website-draft>Save draft</button>
+        </div>
+      </form>
     </div>
-
-    <form class="websiteForm" id="websiteContentForm">
-      <div class="editorGroup">
-        <h4>Opening</h4>
-        <div class="editorGrid">
-          <div class="field">
-            <label for="web_heroEyebrow">small label</label>
-            <input id="web_heroEyebrow" data-website-field="heroEyebrow" type="text">
-          </div>
-          <div class="field">
-            <label for="web_heroLead">short line</label>
-            <input id="web_heroLead" data-website-field="heroLead" type="text">
-          </div>
-          <div class="field full">
-            <label for="web_heroTitle">main headline</label>
-            <textarea id="web_heroTitle" data-website-field="heroTitle"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="editorGroup">
-        <h4>About</h4>
-        <div class="editorGrid">
-          <div class="field">
-            <label for="web_aboutCaptionTitle">photo caption</label>
-            <input id="web_aboutCaptionTitle" data-website-field="aboutCaptionTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_aboutCaptionMeta">caption detail</label>
-            <input id="web_aboutCaptionMeta" data-website-field="aboutCaptionMeta" type="text">
-          </div>
-          <div class="field full">
-            <label for="web_aboutHeadline">intro line</label>
-            <textarea id="web_aboutHeadline" data-website-field="aboutHeadline"></textarea>
-          </div>
-          <div class="field full">
-            <label for="web_aboutBodyOne">bio line 1</label>
-            <textarea id="web_aboutBodyOne" data-website-field="aboutBodyOne"></textarea>
-          </div>
-          <div class="field full">
-            <label for="web_aboutBodyTwo">bio line 2</label>
-            <textarea id="web_aboutBodyTwo" data-website-field="aboutBodyTwo"></textarea>
-          </div>
-          <div class="field full">
-            <label for="web_aboutBodyThree">bio line 3</label>
-            <textarea id="web_aboutBodyThree" data-website-field="aboutBodyThree"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="editorGroup">
-        <h4>Sections</h4>
-        <div class="editorGrid">
-          <div class="field">
-            <label for="web_principlesTitle">approach title</label>
-            <input id="web_principlesTitle" data-website-field="principlesTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principlesLead">approach line</label>
-            <input id="web_principlesLead" data-website-field="principlesLead" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleOneTitle">approach card 1 title</label>
-            <input id="web_principleOneTitle" data-website-field="principleOneTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleOneText">approach card 1 copy</label>
-            <input id="web_principleOneText" data-website-field="principleOneText" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleTwoTitle">approach card 2 title</label>
-            <input id="web_principleTwoTitle" data-website-field="principleTwoTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleTwoText">approach card 2 copy</label>
-            <input id="web_principleTwoText" data-website-field="principleTwoText" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleThreeTitle">approach card 3 title</label>
-            <input id="web_principleThreeTitle" data-website-field="principleThreeTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_principleThreeText">approach card 3 copy</label>
-            <input id="web_principleThreeText" data-website-field="principleThreeText" type="text">
-          </div>
-          <div class="field">
-            <label for="web_featureTitle">film title</label>
-            <input id="web_featureTitle" data-website-field="featureTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_featureBody">film line</label>
-            <input id="web_featureBody" data-website-field="featureBody" type="text">
-          </div>
-          <div class="field">
-            <label for="web_workTitle">work title</label>
-            <input id="web_workTitle" data-website-field="workTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_workLead">work line</label>
-            <input id="web_workLead" data-website-field="workLead" type="text">
-          </div>
-        </div>
-      </div>
-
-      <div class="editorGroup">
-        <h4>Work cards</h4>
-        <div class="editorGrid">
-          <div class="field">
-            <label for="web_filmOneTitle">card 1 title</label>
-            <input id="web_filmOneTitle" data-website-field="filmOneTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_filmOneBody">card 1 line</label>
-            <input id="web_filmOneBody" data-website-field="filmOneBody" type="text">
-          </div>
-          <div class="field">
-            <label for="web_filmTwoTitle">card 2 title</label>
-            <input id="web_filmTwoTitle" data-website-field="filmTwoTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_filmTwoBody">card 2 line</label>
-            <input id="web_filmTwoBody" data-website-field="filmTwoBody" type="text">
-          </div>
-          <div class="field">
-            <label for="web_filmThreeTitle">card 3 title</label>
-            <input id="web_filmThreeTitle" data-website-field="filmThreeTitle" type="text">
-          </div>
-          <div class="field">
-            <label for="web_filmThreeBody">card 3 line</label>
-            <input id="web_filmThreeBody" data-website-field="filmThreeBody" type="text">
-          </div>
-        </div>
-      </div>
-
-      <div class="editorGroup">
-        <h4>Media</h4>
-        <div class="mediaGrid">
-          <div class="field">
-            <label for="web_mediaHero">hero image/video URL</label>
-            <input id="web_mediaHero" data-website-media="hero" type="text">
-            <input data-website-media-file="hero" type="file" accept="image/*,video/*">
-          </div>
-          <div class="field">
-            <label for="web_mediaPortrait">about portrait URL</label>
-            <input id="web_mediaPortrait" data-website-media="portrait" type="text">
-            <input data-website-media-file="portrait" type="file" accept="image/*,video/*">
-          </div>
-          <div class="field">
-            <label for="web_mediaFeature">motion feature URL</label>
-            <input id="web_mediaFeature" data-website-media="feature" type="text">
-            <input data-website-media-file="feature" type="file" accept="image/*,video/*">
-          </div>
-          <div class="field">
-            <label for="web_mediaFilmOne">work card 1 URL</label>
-            <input id="web_mediaFilmOne" data-website-media="filmOne" type="text">
-            <input data-website-media-file="filmOne" type="file" accept="image/*,video/*">
-          </div>
-          <div class="field">
-            <label for="web_mediaFilmTwo">work card 2 URL</label>
-            <input id="web_mediaFilmTwo" data-website-media="filmTwo" type="text">
-            <input data-website-media-file="filmTwo" type="file" accept="image/*,video/*">
-          </div>
-          <div class="field">
-            <label for="web_mediaFilmThree">work card 3 URL</label>
-            <input id="web_mediaFilmThree" data-website-media="filmThree" type="text">
-            <input data-website-media-file="filmThree" type="file" accept="image/*,video/*">
-          </div>
-        </div>
-        <span class="fieldHint">Use a hosted URL, or upload here once the Supabase site-media bucket has been created.</span>
-      </div>
-
-      <div class="editorActions">
-        <button class="btn primary" type="button" data-website-publish>Publish live</button>
-        <button class="btn" type="button" data-website-load>Load live version</button>
-        <button class="btn" type="button" data-website-draft>Save draft here</button>
-        <button class="btn" type="button" data-website-export>Export backup JSON</button>
-      </div>
-    </form>
   </section>
 
   <section class="layout">
@@ -1107,32 +1198,131 @@ function writeWebsiteDraft(config){
   localStorage.setItem(WEBSITE_DRAFT_KEY,JSON.stringify(config));
 }
 
-function fillWebsiteForm(config){
-  const safeConfig = cloneWebsiteConfig(config);
+let websiteEditorConfig = cloneWebsiteConfig(defaultWebsiteContent);
+let previewMediaOverrides = {};
+let previewMediaTypes = {};
+let previewFrameReady = false;
 
-  document.querySelectorAll("[data-website-field]").forEach(input => {
-    const key = input.dataset.websiteField;
-    input.value = safeConfig.fields?.[key] || "";
-  });
+function mergeWebsiteConfig(config){
+  const base = cloneWebsiteConfig(defaultWebsiteContent);
+  const safeConfig = config && typeof config === "object" ? config : {};
+
+  return {
+    ...base,
+    ...safeConfig,
+    fields:{
+      ...base.fields,
+      ...(safeConfig.fields || {})
+    },
+    media:{
+      ...base.media,
+      ...(safeConfig.media || {})
+    }
+  };
+}
+
+function fillWebsiteForm(config){
+  const safeConfig = mergeWebsiteConfig(config);
+  websiteEditorConfig = safeConfig;
+  previewMediaOverrides = {};
+  previewMediaTypes = {};
 
   document.querySelectorAll("[data-website-media]").forEach(input => {
     const key = input.dataset.websiteMedia;
     input.value = safeConfig.media?.[key] || "";
   });
+
+  sendWebsitePreview();
 }
 
 function collectWebsiteForm(){
-  const config = {fields:{},media:{},updatedAt:new Date().toISOString()};
-
-  document.querySelectorAll("[data-website-field]").forEach(input => {
-    config.fields[input.dataset.websiteField] = input.value.trim();
-  });
+  const config = mergeWebsiteConfig(websiteEditorConfig);
+  config.updatedAt = new Date().toISOString();
 
   document.querySelectorAll("[data-website-media]").forEach(input => {
     config.media[input.dataset.websiteMedia] = input.value.trim();
   });
 
   return config;
+}
+
+function getWebsitePreviewConfig(){
+  const config = collectWebsiteForm();
+  config.media = {
+    ...config.media,
+    ...previewMediaOverrides
+  };
+  config.mediaTypes = {
+    ...previewMediaTypes
+  };
+  return config;
+}
+
+function isWebsiteVideo(value,target){
+  if(previewMediaTypes[target]?.startsWith("video/")){
+    return true;
+  }
+
+  return /^data:video\//.test(value) || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
+}
+
+function clearMediaSlotPreview(node){
+  node.classList.remove("hasMedia");
+  node.style.backgroundImage = "";
+  node.textContent = "no media set";
+}
+
+function renderMediaSlots(config){
+  const safeConfig = config || getWebsitePreviewConfig();
+
+  document.querySelectorAll("[data-media-preview]").forEach(node => {
+    const target = node.dataset.mediaPreview;
+    const value = safeConfig.media?.[target] || "";
+
+    node.textContent = "";
+    node.innerHTML = "";
+    node.classList.remove("hasMedia");
+    node.style.backgroundImage = "";
+
+    if(!value){
+      clearMediaSlotPreview(node);
+      return;
+    }
+
+    node.classList.add("hasMedia");
+
+    if(isWebsiteVideo(value,target)){
+      const video = document.createElement("video");
+      video.src = value;
+      video.muted = true;
+      video.loop = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      node.appendChild(video);
+      return;
+    }
+
+    const image = document.createElement("img");
+    image.src = value;
+    image.alt = "";
+    node.appendChild(image);
+  });
+}
+
+function sendWebsitePreview(config,scrollTo){
+  const previewConfig = config || getWebsitePreviewConfig();
+  renderMediaSlots(previewConfig);
+
+  const frame = document.getElementById("websitePreviewFrame");
+  if(!frame || !frame.contentWindow){
+    return;
+  }
+
+  frame.contentWindow.postMessage({
+    type:"nc-site-preview",
+    config:previewConfig,
+    scrollTo:scrollTo || ""
+  },"*");
 }
 
 async function loadLiveWebsiteContent(){
@@ -1159,7 +1349,7 @@ async function publishWebsiteContent(){
 
   const config = collectWebsiteForm();
   writeWebsiteDraft(config);
-  setWebsiteStatus("Publishing live changes...");
+  setWebsiteStatus("Publishing media live...");
 
   const ready = await waitForWebsiteSupabase();
   if(!ready){
@@ -1181,21 +1371,9 @@ async function publishWebsiteContent(){
     throw response.error;
   }
 
-  setWebsiteStatus("Published. Refresh the website to see it live.","success");
-}
-
-function exportWebsiteConfig(){
-  const config = collectWebsiteForm();
-  writeWebsiteDraft(config);
-
-  const blob = new Blob([JSON.stringify(config,null,2)],{type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "site-content.json";
-  link.click();
-  URL.revokeObjectURL(url);
-  setWebsiteStatus("Backup JSON exported.","success");
+  websiteEditorConfig = mergeWebsiteConfig(config);
+  sendWebsitePreview(config);
+  setWebsiteStatus("Published. The website media is live.","success");
 }
 
 function safeFileName(name){
@@ -1236,7 +1414,12 @@ async function uploadWebsiteMedia(target,file){
     input.value = publicUrl;
   }
 
-  writeWebsiteDraft(collectWebsiteForm());
+  delete previewMediaOverrides[target];
+  delete previewMediaTypes[target];
+  const config = collectWebsiteForm();
+  websiteEditorConfig = mergeWebsiteConfig(config);
+  writeWebsiteDraft(config);
+  sendWebsitePreview(config);
   setWebsiteStatus("Media uploaded. Publish live when ready.","success");
 }
 
@@ -1246,6 +1429,7 @@ function initWebsiteEditor(){
 
   const draft = readWebsiteDraft();
   fillWebsiteForm(draft || defaultWebsiteContent);
+  renderMediaSlots();
 
   form.addEventListener("submit",event => {
     event.preventDefault();
@@ -1269,9 +1453,30 @@ function initWebsiteEditor(){
       }
     });
 
-  form.addEventListener("input",() => {
-    writeWebsiteDraft(collectWebsiteForm());
+  form.addEventListener("input",event => {
+    if(event.target?.matches("[data-website-media]")){
+      delete previewMediaOverrides[event.target.dataset.websiteMedia];
+      delete previewMediaTypes[event.target.dataset.websiteMedia];
+    }
+    const config = collectWebsiteForm();
+    websiteEditorConfig = mergeWebsiteConfig(config);
+    writeWebsiteDraft(config);
+    sendWebsitePreview(config);
     setWebsiteStatus("Draft saved on this device.");
+  });
+
+  const frame = document.getElementById("websitePreviewFrame");
+  if(frame){
+    frame.addEventListener("load",() => {
+      previewFrameReady = true;
+      sendWebsitePreview();
+    });
+  }
+
+  document.querySelectorAll("[data-preview-scroll]").forEach(button => {
+    button.addEventListener("click",() => {
+      sendWebsitePreview(getWebsitePreviewConfig(),button.dataset.previewScroll);
+    });
   });
 
   document.querySelectorAll("[data-website-media-file]").forEach(input => {
@@ -1279,11 +1484,18 @@ function initWebsiteEditor(){
       const file = input.files && input.files[0];
       if(!file) return;
 
+      const target = input.dataset.websiteMediaFile;
+      const previewUrl = URL.createObjectURL(file);
+      previewMediaOverrides[target] = previewUrl;
+      previewMediaTypes[target] = file.type || "";
+      sendWebsitePreview(getWebsitePreviewConfig());
+      setWebsiteStatus("Previewing selected media. Uploading to Supabase...");
+
       try{
-        await uploadWebsiteMedia(input.dataset.websiteMediaFile,file);
+        await uploadWebsiteMedia(target,file);
       }catch(error){
         console.warn("Could not upload website media",error);
-        setWebsiteStatus("Could not upload. Sign in and check the site-media bucket.","error");
+        setWebsiteStatus("Could not upload. Sign in and check the site-media bucket. The preview is not published.","error");
       }finally{
         input.value = "";
       }
@@ -1291,7 +1503,10 @@ function initWebsiteEditor(){
   });
 
   document.querySelector("[data-website-draft]")?.addEventListener("click",() => {
-    writeWebsiteDraft(collectWebsiteForm());
+    const config = collectWebsiteForm();
+    websiteEditorConfig = mergeWebsiteConfig(config);
+    writeWebsiteDraft(config);
+    sendWebsitePreview(config);
     setWebsiteStatus("Draft saved on this device.","success");
   });
 
@@ -1300,7 +1515,7 @@ function initWebsiteEditor(){
       setWebsiteStatus("Loading live website content...");
       const liveConfig = await loadLiveWebsiteContent();
       fillWebsiteForm(liveConfig || defaultWebsiteContent);
-      writeWebsiteDraft(liveConfig || defaultWebsiteContent);
+      writeWebsiteDraft(mergeWebsiteConfig(liveConfig || defaultWebsiteContent));
       setWebsiteStatus(liveConfig ? "Live content loaded." : "No live content yet. Fallback loaded.","success");
     }catch(error){
       console.warn("Could not load live website content",error);
@@ -1316,8 +1531,6 @@ function initWebsiteEditor(){
       setWebsiteStatus("Could not publish. Sign in, then check Supabase table access.","error");
     }
   });
-
-  document.querySelector("[data-website-export]")?.addEventListener("click",exportWebsiteConfig);
 }
 
 initWebsiteEditor();
