@@ -2267,6 +2267,8 @@ textarea{
     if(value === undefined || value === null) return value;
 
     let next = String(value);
+    if(next.trim() === "") return undefined;
+
     const replacements = copyReplacements[key] || {};
 
     if(Object.prototype.hasOwnProperty.call(replacements,next)){
@@ -2281,7 +2283,10 @@ textarea{
     const fields = {};
 
     Object.entries(safeConfig.fields || {}).forEach(([key,value]) => {
-      fields[key] = cleanText(key,value);
+      const cleanValue = cleanText(key,value);
+      if(cleanValue !== undefined && cleanValue !== null){
+        fields[key] = cleanValue;
+      }
     });
 
     return {
@@ -2318,6 +2323,13 @@ textarea{
     video.playsInline = true;
     video.setAttribute("data-generated-video",target);
 
+    if(target === "portrait"){
+      const image = document.querySelector('[data-media-image="portrait"]');
+      if(image){
+        image.style.opacity = "0";
+      }
+    }
+
     const mount = document.querySelector(`[data-media-target="${target}"]`) || document.querySelector(`[data-media-panel="${target}"]`);
     if(mount){
       mount.prepend(video);
@@ -2343,6 +2355,7 @@ textarea{
     if(target === "portrait"){
       const image = document.querySelector('[data-media-image="portrait"]');
       if(image){
+        image.style.opacity = "";
         image.src = value;
       }
       return;

@@ -1133,6 +1133,14 @@ const defaultWebsiteContent = {
     filmOne:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
     filmTwo:"",
     filmThree:""
+  },
+  mediaTypes:{
+    hero:"",
+    portrait:"image/jpeg",
+    feature:"",
+    filmOne:"image/jpeg",
+    filmTwo:"",
+    filmThree:""
   }
 };
 
@@ -1206,19 +1214,44 @@ let previewFrameReady = false;
 function mergeWebsiteConfig(config){
   const base = cloneWebsiteConfig(defaultWebsiteContent);
   const safeConfig = config && typeof config === "object" ? config : {};
+  const fields = {...base.fields};
+
+  Object.entries(safeConfig.fields || {}).forEach(([key,value]) => {
+    if(value === undefined || value === null) return;
+
+    const text = String(value);
+    if(text.trim() === "") return;
+
+    fields[key] = text;
+  });
 
   return {
     ...base,
     ...safeConfig,
-    fields:{
-      ...base.fields,
-      ...(safeConfig.fields || {})
-    },
+    fields,
     media:{
       ...base.media,
       ...(safeConfig.media || {})
+    },
+    mediaTypes:{
+      ...base.mediaTypes,
+      ...(safeConfig.mediaTypes || {})
     }
   };
+}
+
+function inferMediaType(value,fallback){
+  const source = String(value || "").split("?")[0].split("#")[0].toLowerCase();
+
+  if(/\.(mp4|m4v)$/.test(source)) return "video/mp4";
+  if(/\.mov$/.test(source)) return "video/quicktime";
+  if(/\.webm$/.test(source)) return "video/webm";
+  if(/\.(jpg|jpeg)$/.test(source)) return "image/jpeg";
+  if(/\.png$/.test(source)) return "image/png";
+  if(/\.webp$/.test(source)) return "image/webp";
+  if(/\.gif$/.test(source)) return "image/gif";
+
+  return fallback || "";
 }
 
 function fillWebsiteForm(config){
@@ -1240,7 +1273,10 @@ function collectWebsiteForm(){
   config.updatedAt = new Date().toISOString();
 
   document.querySelectorAll("[data-website-media]").forEach(input => {
-    config.media[input.dataset.websiteMedia] = input.value.trim();
+    const key = input.dataset.websiteMedia;
+    const value = input.value.trim();
+    config.media[key] = value;
+    config.mediaTypes[key] = inferMediaType(value,config.mediaTypes[key]);
   });
 
   return config;
@@ -1253,17 +1289,19 @@ function getWebsitePreviewConfig(){
     ...previewMediaOverrides
   };
   config.mediaTypes = {
+    ...config.mediaTypes,
     ...previewMediaTypes
   };
   return config;
 }
 
-function isWebsiteVideo(value,target){
-  if(previewMediaTypes[target]?.startsWith("video/")){
+function isWebsiteVideo(value,target,type){
+  if(String(type || previewMediaTypes[target] || "").startsWith("video/")){
     return true;
   }
 
-  return /^data:video\//.test(value) || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
+  const inferredType = inferMediaType(value,"");
+  return inferredType.startsWith("video/") || /^data:video\//.test(value);
 }
 
 function clearMediaSlotPreview(node){
@@ -1278,6 +1316,7 @@ function renderMediaSlots(config){
   document.querySelectorAll("[data-media-preview]").forEach(node => {
     const target = node.dataset.mediaPreview;
     const value = safeConfig.media?.[target] || "";
+    const type = safeConfig.mediaTypes?.[target] || previewMediaTypes[target] || "";
 
     node.textContent = "";
     node.innerHTML = "";
@@ -1291,7 +1330,7 @@ function renderMediaSlots(config){
 
     node.classList.add("hasMedia");
 
-    if(isWebsiteVideo(value,target)){
+    if(isWebsiteVideo(value,target,type)){
       const video = document.createElement("video");
       video.src = value;
       video.muted = true;
@@ -1396,6 +1435,7 @@ async function uploadWebsiteMedia(target,file){
     .from(WEBSITE_MEDIA_BUCKET)
     .upload(path,file,{
       cacheControl:"3600",
+      contentType:file.type || inferMediaType(file.name,"application/octet-stream"),
       upsert:false
     });
 
@@ -1413,6 +1453,11 @@ async function uploadWebsiteMedia(target,file){
   if(input){
     input.value = publicUrl;
   }
+
+  websiteEditorConfig.mediaTypes = {
+    ...(websiteEditorConfig.mediaTypes || {}),
+    [target]:file.type || inferMediaType(publicUrl,inferMediaType(file.name,""))
+  };
 
   delete previewMediaOverrides[target];
   delete previewMediaTypes[target];
