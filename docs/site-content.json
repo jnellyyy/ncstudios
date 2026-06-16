@@ -1,9 +1,20 @@
 {
   "fields": {
+    "heroLead": "weddings · couples · cinematic stories",
+    "aboutCaptionTitle": "the creative behind nc studio",
+    "aboutCaptionMeta": "",
     "aboutHeadline": "hi, i'm janelle.",
     "aboutBodyOne": "founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
     "aboutBodyTwo": "my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
-    "aboutBodyThree": "because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well."
+    "aboutBodyThree": "because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
+    "principleOneTitle": "story led",
+    "principleOneText": "your day is captured with feeling, not just as a checklist of moments.",
+    "principleTwoTitle": "calm direction",
+    "principleTwoText": "gentle guidance when needed, with space for natural moments to unfold.",
+    "principleThreeTitle": "cinematic finish",
+    "principleThreeText": "clean colours, soft movement and a timeless edit that feels true to the day.",
+    "workLead": "wedding photography, cinematic films and story led content.",
+    "filmTwoTitle": "wedding coverage"
   },
   "media": {
     "filmOne": "assets/jason-roisin-engagement-card.jpg?v=engagement-20260614"

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NC Studios Admin Tracker</title>
+<title>NC Studio Admin Tracker</title>
 
 <style>
 @font-face{
@@ -559,40 +559,168 @@ textarea{
   line-height:1.35;
 }
 
-.websiteForm{
+.visualEditorShell{
   display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,0.85fr);
   gap:14px;
+  align-items:start;
 }
 
-.editorGroup{
+.sitePreviewPanel{
+  position:sticky;
+  top:14px;
+  overflow:hidden;
   border-radius:24px;
-  padding:14px;
+  background:rgba(0,0,0,0.28);
+  border:1px solid rgba(255,255,255,0.10);
+  min-height:690px;
+}
+
+.previewToolbar{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.09);
+  background:rgba(0,0,0,0.22);
+}
+
+.previewToolbar strong{
+  display:block;
+  font-size:0.9rem;
+}
+
+.previewToolbar span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:0.72rem;
+}
+
+.previewToolbarActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.sitePreviewFrame{
+  display:block;
+  width:100%;
+  height:720px;
+  border:0;
+  background:#050504;
+}
+
+.websiteForm{
+  display:grid;
+  gap:12px;
+}
+
+.editorIntro.compact{
+  display:grid;
+  gap:10px;
+  margin:0;
+}
+
+.editorIntro.compact .heroText{
+  font-size:0.9rem;
+}
+
+.editorIntro.compact .editorStatus{
+  width:100%;
+  min-width:0;
+}
+
+.mediaSlots{
+  display:grid;
+  gap:10px;
+}
+
+.mediaSlot{
+  border-radius:22px;
+  padding:12px;
   background:rgba(255,255,255,0.045);
   border:1px solid rgba(255,255,255,0.09);
 }
 
-.editorGroup h4{
-  margin:0 0 12px;
-  color:var(--gold);
-  font-size:0.82rem;
-  text-transform:uppercase;
-  letter-spacing:0.12em;
-}
-
-.editorGrid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+.mediaSlotHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:10px;
+  margin-bottom:10px;
 }
 
-.editorGrid .field.full{
-  grid-column:1 / -1;
+.mediaSlotTitle strong{
+  display:block;
+  font-size:0.94rem;
 }
 
-.mediaGrid{
+.mediaSlotTitle span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:0.74rem;
+  line-height:1.3;
+}
+
+.mediaSlotPreview{
+  height:128px;
+  border-radius:16px;
+  overflow:hidden;
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
+  place-items:center;
+  margin-bottom:10px;
+  background:
+    linear-gradient(135deg,rgba(216,183,110,0.14),rgba(255,255,255,0.04)),
+    rgba(0,0,0,0.25);
+  border:1px solid rgba(255,255,255,0.08);
+  color:rgba(248,247,244,0.46);
+  font-size:0.78rem;
+}
+
+.mediaSlotPreview.hasMedia{
+  background-size:cover;
+  background-position:center;
+}
+
+.mediaSlotPreview video,
+.mediaSlotPreview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.mediaSlotControls{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+}
+
+.mediaSlotControls input[type="file"]{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+}
+
+.uploadButton{
+  min-height:43px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:16px;
+  padding:0 13px;
+  cursor:pointer;
+  color:var(--text);
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.12);
+  white-space:nowrap;
 }
 
 .fieldHint{
@@ -607,6 +735,13 @@ textarea{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
+  position:sticky;
+  bottom:10px;
+  padding:10px;
+  border-radius:20px;
+  background:rgba(7,7,7,0.78);
+  border:1px solid rgba(255,255,255,0.09);
+  backdrop-filter:blur(18px);
 }
 
 .editorActions .btn{
@@ -648,9 +783,18 @@ textarea{
     width:100%;
   }
 
-  .editorGrid,
-  .mediaGrid{
+  .visualEditorShell{
     grid-template-columns:1fr;
+  }
+
+  .sitePreviewPanel{
+    position:relative;
+    top:auto;
+    min-height:520px;
+  }
+
+  .sitePreviewFrame{
+    height:560px;
   }
 }
 
@@ -779,6 +923,14 @@ textarea{
       <div class="editorGroup">
         <h4>About</h4>
         <div class="editorGrid">
+          <div class="field">
+            <label for="web_aboutCaptionTitle">photo caption</label>
+            <input id="web_aboutCaptionTitle" data-website-field="aboutCaptionTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_aboutCaptionMeta">caption detail</label>
+            <input id="web_aboutCaptionMeta" data-website-field="aboutCaptionMeta" type="text">
+          </div>
           <div class="field full">
             <label for="web_aboutHeadline">intro line</label>
             <textarea id="web_aboutHeadline" data-website-field="aboutHeadline"></textarea>
@@ -808,6 +960,30 @@ textarea{
           <div class="field">
             <label for="web_principlesLead">approach line</label>
             <input id="web_principlesLead" data-website-field="principlesLead" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleOneTitle">approach card 1 title</label>
+            <input id="web_principleOneTitle" data-website-field="principleOneTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleOneText">approach card 1 copy</label>
+            <input id="web_principleOneText" data-website-field="principleOneText" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleTwoTitle">approach card 2 title</label>
+            <input id="web_principleTwoTitle" data-website-field="principleTwoTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleTwoText">approach card 2 copy</label>
+            <input id="web_principleTwoText" data-website-field="principleTwoText" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleThreeTitle">approach card 3 title</label>
+            <input id="web_principleThreeTitle" data-website-field="principleThreeTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleThreeText">approach card 3 copy</label>
+            <input id="web_principleThreeText" data-website-field="principleThreeText" type="text">
           </div>
           <div class="field">
             <label for="web_featureTitle">film title</label>
@@ -977,20 +1153,28 @@ const defaultWebsiteContent = {
   fields:{
     heroEyebrow:"photo + film",
     heroTitle:"real. cinematic. yours.",
-    heroLead:"weddings · couples · events",
+    heroLead:"weddings · couples · cinematic stories",
+    aboutCaptionTitle:"the creative behind nc studio",
+    aboutCaptionMeta:"",
     aboutHeadline:"hi, i'm janelle.",
     aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
     aboutBodyTwo:"my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
     aboutBodyThree:"because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
     principlesTitle:"approach.",
     principlesLead:"natural. calm. intentional.",
+    principleOneTitle:"story led",
+    principleOneText:"your day is captured with feeling, not just as a checklist of moments.",
+    principleTwoTitle:"calm direction",
+    principleTwoText:"gentle guidance when needed, with space for natural moments to unfold.",
+    principleThreeTitle:"cinematic finish",
+    principleThreeText:"clean colours, soft movement and a timeless edit that feels true to the day.",
     featureTitle:"movement. sound. feeling.",
     featureBody:"vows, speeches, reactions, atmosphere.",
     workTitle:"work.",
-    workLead:"photo, film and content.",
+    workLead:"wedding photography, cinematic films and story led content.",
     filmOneTitle:"couple sessions",
     filmOneBody:"couple sessions.",
-    filmTwoTitle:"photo or film",
+    filmTwoTitle:"wedding coverage",
     filmTwoBody:"weddings.",
     filmThreeTitle:"short edits that move",
     filmThreeBody:"reels and event edits."

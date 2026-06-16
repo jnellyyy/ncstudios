@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>nc studios | cinematic wedding films</title>
-<meta name="description" content="nc studios creates cinematic wedding films, photography and social content. check availability and send an enquiry online.">
+<title>nc studio | cinematic wedding films</title>
+<meta name="description" content="nc studio creates cinematic wedding films, photography and story led content. check availability and send an enquiry online.">
 
 <link rel="manifest" href="website.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png?v=brand-20260612">
@@ -1267,133 +1267,7 @@ body.message-open .messageWidget{
   filter:blur(0);
 }
 
-.meModeToggle{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:50;
-  min-height:44px;
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:999px;
-  padding:0 15px;
-  color:#fff;
-  color:#11100c;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  box-shadow:0 18px 44px rgba(216,183,110,0.30),0 0 26px rgba(240,220,168,0.14);
-  font-weight:950;
-  cursor:pointer;
-  display:none;
-}
 
-body.me-mode-ready .meModeToggle{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.mePanel{
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  width:min(430px,100%);
-  z-index:60;
-  background:rgba(9,10,14,0.96);
-  border-left:1px solid rgba(255,255,255,0.14);
-  box-shadow:-28px 0 80px rgba(0,0,0,0.45);
-  transform:translateX(104%);
-  transition:transform 260ms ease;
-  display:flex;
-  flex-direction:column;
-}
-
-body.me-panel-open .mePanel{
-  transform:translateX(0);
-}
-
-.mePanelHeader,
-.mePanelFooter{
-  padding:16px;
-  border-bottom:1px solid rgba(255,255,255,0.10);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.mePanelFooter{
-  border-top:1px solid rgba(255,255,255,0.10);
-  border-bottom:0;
-  flex-wrap:wrap;
-}
-
-.mePanelHeader h2{
-  font-size:20px;
-}
-
-.mePanelHeader p{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-}
-
-.meclose,
-.meMiniButton{
-  min-height:38px;
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:999px;
-  color:#fff;
-  background:rgba(255,255,255,0.08);
-  padding:0 12px;
-  font-weight:850;
-  cursor:pointer;
-}
-
-.mePanelBody{
-  overflow:auto;
-  padding:16px;
-  display:grid;
-  gap:14px;
-}
-
-.meGroup{
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:8px;
-  background:rgba(255,255,255,0.055);
-  padding:12px;
-  display:grid;
-  gap:10px;
-}
-
-.meGroup h3{
-  font-size:14px;
-  text-transform:lowercase;
-  letter-spacing:0.06em;
-  color:var(--gold);
-}
-
-.meField{
-  display:grid;
-  gap:6px;
-}
-
-.meField input,
-.meField textarea,
-.meField select{
-  border-radius:8px;
-  background:rgba(0,0,0,0.28);
-}
-
-.meField textarea{
-  min-height:82px;
-}
-
-.meHint{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.42;
-}
 
 
 /* NC Studio website type roles
@@ -1453,10 +1327,7 @@ label{
 .eyebrow,
 .scrollCue,
 .serviceMeta,
-.filmMeta span,
-.meModeToggle,
-.meMiniButton,
-.meclose{
+.filmMeta span{
   font-family:var(--font-brand-light);
   font-weight:400;
   letter-spacing:0;
@@ -1743,10 +1614,7 @@ body::after{
 .availabilityStrip span,
 .portraitCaption span,
 .formPanel label,
-.footer,
-.meModeToggle,
-.meMiniButton,
-.meclose{
+.footer{
   font-family:"SFMono-Regular","Menlo","Monaco","Courier New",monospace !important;
   font-weight:500 !important;
   letter-spacing:0 !important;
@@ -1865,10 +1733,7 @@ textarea{
 .submitButton,
 .carouselButton,
 .messageLauncher,
-.messageClose,
-.meModeToggle,
-.meMiniButton,
-.meclose{
+.messageClose{
   border-radius:0 !important;
   border:1px solid rgba(216,183,110,0.42) !important;
   box-shadow:none !important;
@@ -1888,10 +1753,7 @@ textarea{
 .button.secondary,
 .carouselButton,
 .messageLauncher,
-.messageClose,
-.meModeToggle,
-.meMiniButton,
-.meclose{
+.messageClose{
   color:var(--gold2) !important;
   background:rgba(5,5,4,0.72) !important;
 }
@@ -1903,7 +1765,6 @@ textarea{
 .serviceCard,
 .formPanel,
 .messageWidget,
-.mePanel,
 .availabilityStrip,
 .splitFeature{
   border:1px solid rgba(216,183,110,0.26) !important;
@@ -1981,10 +1842,7 @@ textarea{
 .formPanel select,
 .formPanel textarea,
 .messageWidget input,
-.messageWidget textarea,
-.meField input,
-.meField textarea,
-.meField select{
+.messageWidget textarea{
   border-radius:0 !important;
   border:1px solid rgba(216,183,110,0.28) !important;
   background:rgba(0,0,0,0.34) !important;
@@ -2078,8 +1936,8 @@ textarea{
 </div>
 
 <header class="siteHeader">
-  <a class="brand" href="#home" aria-label="nc studios home">
-    <img class="brandMark" src="ncstudios-logo-transparent.png?v=brand-20260612" alt="nc studios logo">
+  <a class="brand" href="#home" aria-label="nc studio home">
+    <img class="brandMark" src="ncstudios-logo-transparent.png?v=brand-20260612" alt="nc studio logo">
   </a>
 
   <nav class="nav" aria-label="site navigation">
@@ -2095,10 +1953,10 @@ textarea{
     <div class="heroInner">
       <p class="eyebrow" data-site-field="heroEyebrow">photo + film</p>
       <h1 id="hero-title" data-site-field="heroTitle">real. cinematic. yours.</h1>
-      <p class="heroLead" data-site-field="heroLead">weddings · couples · events</p>
+      <p class="heroLead" data-site-field="heroLead">weddings · couples · cinematic stories</p>
 
       <div class="heroActions">
-        <a class="button" href="#films">view the feel</a>
+        <a class="button" href="#films">view the work</a>
         <a class="button secondary" href="availability.html">check availability</a>
       </div>
 
@@ -2127,12 +1985,12 @@ textarea{
 
   <section class="section" id="about">
     <div class="sectionInner aboutLayout">
-      <div class="portraitPanel" aria-label="portrait of the nc studios creative" data-media-panel="portrait">
-        <img class="portraitImage" data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="portrait of the nc studios creative">
+      <div class="portraitPanel" aria-label="portrait of the nc studio creative" data-media-panel="portrait">
+        <img class="portraitImage" data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="portrait of the nc studio creative">
         <div class="portraitCaption">
           <div>
-            <strong data-site-field="aboutCaptionTitle">the eye behind nc studios</strong>
-            <span data-site-field="aboutCaptionMeta">photo or film</span>
+            <strong data-site-field="aboutCaptionTitle">the creative behind nc studio</strong>
+            <span data-site-field="aboutCaptionMeta"></span>
           </div>
           <span>uk</span>
         </div>
@@ -2160,25 +2018,25 @@ textarea{
         <article class="principle">
           <div>
             <span>01</span>
-            <h3>story with purpose</h3>
+            <h3 data-site-field="principleOneTitle">story led</h3>
           </div>
-          <p data-site-field="principleOneText">feeling first.</p>
+          <p data-site-field="principleOneText">your day is captured with feeling, not just as a checklist of moments.</p>
         </article>
 
         <article class="principle">
           <div>
             <span>02</span>
-            <h3>cinematic finish</h3>
+            <h3 data-site-field="principleTwoTitle">calm direction</h3>
           </div>
-          <p data-site-field="principleTwoText">clean finish.</p>
+          <p data-site-field="principleTwoText">gentle guidance when needed, with space for natural moments to unfold.</p>
         </article>
 
         <article class="principle">
           <div>
             <span>03</span>
-            <h3>client focused</h3>
+            <h3 data-site-field="principleThreeTitle">cinematic finish</h3>
           </div>
-          <p data-site-field="principleThreeText">clear process.</p>
+          <p data-site-field="principleThreeText">clean colours, soft movement and a timeless edit that feels true to the day.</p>
         </article>
       </div>
     </div>
@@ -2197,7 +2055,7 @@ textarea{
     <div class="sectionInner">
       <div class="sectionHead">
         <h2 data-site-field="workTitle">work.</h2>
-        <p data-site-field="workLead">photo, film and content.</p>
+        <p data-site-field="workLead">wedding photography, cinematic films and story led content.</p>
       </div>
 
       <div class="workCarousel" data-work-carousel>
@@ -2218,7 +2076,7 @@ textarea{
           <article class="filmCard" data-media-panel="filmTwo">
             <div>
               <span>weddings</span>
-              <h3 data-site-field="filmTwoTitle">photo or film</h3>
+              <h3 data-site-field="filmTwoTitle">wedding coverage</h3>
               <p data-site-field="filmTwoBody">weddings.</p>
             </div>
           </article>
@@ -2281,12 +2139,12 @@ textarea{
     </div>
 
     <div class="field">
-      <label for="directSubject">what is this about?</label>
+      <label for="directSubject">how can i help?</label>
       <select id="directSubject" name="directSubject">
-        <option>quick question</option>
-        <option>availability</option>
         <option>wedding booking</option>
-        <option>events</option>
+        <option>availability check</option>
+        <option>couple session</option>
+        <option>event coverage</option>
         <option>existing client</option>
       </select>
     </div>
@@ -2299,39 +2157,6 @@ textarea{
     <button class="submitButton" type="submit">send message</button>
     <p class="formStatus" data-message-status aria-live="polite"></p>
   </form>
-</aside>
-
-<button class="meModeToggle" type="button" data-me-open>me mode</button>
-
-<aside class="mePanel" aria-label="nc studios me mode editor" aria-hidden="true">
-  <div class="mePanelHeader">
-    <div>
-      <h2>me mode</h2>
-      <p>edit text and preview media. saves on this browser unless you export it.</p>
-    </div>
-    <button class="meclose" type="button" data-me-close>close</button>
-  </div>
-
-  <div class="mePanelBody">
-    <div class="meGroup">
-      <h3>page copy</h3>
-      <div data-me-fields></div>
-    </div>
-
-    <div class="meGroup">
-      <h3>media</h3>
-      <p class="meHint">use images freely. for big videos, upload them to your host or storage first, then paste the video url here.</p>
-      <div data-me-media></div>
-    </div>
-  </div>
-
-  <div class="mePanelFooter">
-    <button class="meMiniButton" type="button" data-me-save>save</button>
-    <button class="meMiniButton" type="button" data-me-export>export json</button>
-    <label class="meMiniButton" for="meImportFile">import json</label>
-    <input id="meImportFile" type="file" accept="application/json" hidden data-me-import>
-    <button class="meMiniButton" type="button" data-me-reset>reset</button>
-  </div>
 </aside>
 
 <script>
@@ -2394,51 +2219,8 @@ textarea{
 <script src="supabase-config.js?v=public-site-1"></script>
 <script>
 (function(){
-  const STORAGE_KEY = "ncstudios_site_editor_v1";
   const LIVE_CONTENT_TABLE = "app_storage";
   const LIVE_CONTENT_KEY = "website_content_live";
-  const params = new URLSearchParams(location.search);
-  const queryText = location.search.toLowerCase();
-  const hashText = location.hash.toLowerCase();
-  const pathText = location.pathname.toLowerCase();
-  const modeOn =
-    params.get("me") === "1" ||
-    params.get("mode") === "me" ||
-    params.get("edit") === "1" ||
-    params.has("me1") ||
-    queryText.includes("me1") ||
-    hashText.includes("me1") ||
-    hashText.includes("me=1") ||
-    pathText.endsWith("/me1");
-
-  const fields = [
-    ["heroEyebrow","hero eyebrow","input"],
-    ["heroTitle","hero title","textarea"],
-    ["heroLead","hero intro","textarea"],
-    ["aboutHeadline","about headline","textarea"],
-    ["aboutBodyOne","about paragraph 1","textarea"],
-    ["aboutBodyTwo","about paragraph 2","textarea"],
-    ["aboutBodyThree","about paragraph 3","textarea"],
-    ["workTitle","work title","input"],
-    ["workLead","work intro","textarea"],
-    ["filmOneTitle","work card 1 title","input"],
-    ["filmOneBody","work card 1 copy","textarea"],
-    ["filmTwoTitle","work card 2 title","input"],
-    ["filmTwoBody","work card 2 copy","textarea"],
-    ["filmThreeTitle","work card 3 title","input"],
-    ["filmThreeBody","work card 3 copy","textarea"],
-    ["enquiryTitle","enquiry title","input"],
-    ["enquiryLead","enquiry copy","textarea"]
-  ];
-
-  const mediaTargets = [
-    ["hero","hero background"],
-    ["portrait","about portrait"],
-    ["feature","motion feature"],
-    ["filmOne","work card 1"],
-    ["filmTwo","work card 2"],
-    ["filmThree","work card 3"]
-  ];
 
   const mediaVarMap = {
     hero:"--hero-media",
@@ -2448,22 +2230,46 @@ textarea{
     filmThree:"--film-three-media"
   };
 
-  function readConfig(){
-    try{
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return parsed && typeof parsed === "object" ? parsed : {fields:{},media:{}};
-    }catch(error){
-      return {fields:{},media:{}};
+  const copyReplacements = {
+    heroLead:{["weddings · couples · " + "events"]:"weddings · couples · cinematic stories"},
+    aboutCaptionTitle:{["the eye behind nc " + "studios"]:"the creative behind nc studio"},
+    aboutCaptionMeta:{["photo or " + "film"]:""},
+    principleOneTitle:{["story with " + "purpose"]:"story led"},
+    principleOneText:{["feeling " + "first."]:"your day is captured with feeling, not just as a checklist of moments."},
+    principleTwoTitle:{["cinematic " + "finish"]:"calm direction"},
+    principleTwoText:{["clean " + "finish."]:"gentle guidance when needed, with space for natural moments to unfold."},
+    principleThreeTitle:{["client " + "focused"]:"cinematic finish"},
+    principleThreeText:{["clear " + "process."]:"clean colours, soft movement and a timeless edit that feels true to the day."},
+    workLead:{["photo, " + "film and content."]:"wedding photography, cinematic films and story led content."},
+    filmTwoTitle:{["photo or " + "film"]:"wedding coverage"}
+  };
+
+  function cleanText(key,value){
+    if(value === undefined || value === null) return value;
+
+    let next = String(value);
+    const replacements = copyReplacements[key] || {};
+
+    if(Object.prototype.hasOwnProperty.call(replacements,next)){
+      next = replacements[next];
     }
+
+    return next.replaceAll("nc " + "studios","nc studio");
   }
 
-  function writeConfig(config){
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(config));
-  }
+  function cleanConfig(config){
+    const safeConfig = config && typeof config === "object" ? config : {fields:{},media:{}};
+    const fields = {};
 
-  function getFieldValue(key){
-    const node = document.querySelector(`[data-site-field="${key}"]`);
-    return node ? node.textContent.trim() : "";
+    Object.entries(safeConfig.fields || {}).forEach(([key,value]) => {
+      fields[key] = cleanText(key,value);
+    });
+
+    return {
+      ...safeConfig,
+      fields,
+      media:safeConfig.media || {}
+    };
   }
 
   function setFieldValue(key,value){
@@ -2473,17 +2279,8 @@ textarea{
     }
   }
 
-  function esc(value){
-    return String(value ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
   function cssUrl(value){
-    return `url("${String(value).replaceAll("\\\\","\\\\\\\\").replaceAll('"','\\"')}")`;
+    return `url("${String(value).replaceAll("\\","\\\\").replaceAll('"','\\"')}")`;
   }
 
   function clearVideo(target){
@@ -2536,8 +2333,9 @@ textarea{
   }
 
   function applyConfig(config){
-    Object.entries(config.fields || {}).forEach(([key,value]) => setFieldValue(key,value));
-    Object.entries(config.media || {}).forEach(([key,value]) => setMedia(key,value));
+    const safeConfig = cleanConfig(config);
+    Object.entries(safeConfig.fields || {}).forEach(([key,value]) => setFieldValue(key,value));
+    Object.entries(safeConfig.media || {}).forEach(([key,value]) => setMedia(key,value));
   }
 
   async function loadPublishedConfig(){
@@ -2585,171 +2383,19 @@ textarea{
     }
   }
 
-  function collectConfig(){
-    const config = readConfig();
-    config.fields = config.fields || {};
-    config.media = config.media || {};
-
-    fields.forEach(([key]) => {
-      const input = document.querySelector(`[data-me-input="${key}"]`);
-      if(input){
-        config.fields[key] = input.value.trim();
-      }
-    });
-
-    mediaTargets.forEach(([key]) => {
-      const input = document.querySelector(`[data-me-media-url="${key}"]`);
-      if(input && input.value.trim()){
-        config.media[key] = input.value.trim();
-      }
-    });
-
-    return config;
-  }
-
-  function renderEditor(config){
-    const fieldsWrap = document.querySelector("[data-me-fields]");
-    const mediaWrap = document.querySelector("[data-me-media]");
-    if(!fieldsWrap || !mediaWrap) return;
-
-    fieldsWrap.innerHTML = fields.map(([key,label,type]) => {
-      const value = (config.fields && config.fields[key]) || getFieldValue(key);
-      const control = type === "textarea"
-        ? `<textarea data-me-input="${esc(key)}">${esc(value)}</textarea>`
-        : `<input data-me-input="${esc(key)}" type="text" value="${esc(value)}">`;
-      return `<label class="meField"><span>${esc(label)}</span>${control}</label>`;
-    }).join("");
-
-    mediaWrap.innerHTML = mediaTargets.map(([key,label]) => `
-      <div class="meField">
-        <label for="media_${esc(key)}">${esc(label)}</label>
-        <input id="media_${esc(key)}" data-me-media-url="${esc(key)}" type="text" placeholder="paste image, video url or upload below" value="${esc((config.media && config.media[key]) || "")}">
-        <input data-me-media-file="${esc(key)}" type="file" accept="image/*,video/*">
-      </div>
-    `).join("");
-
-    mediaWrap.querySelectorAll("[data-me-media-file]").forEach(input => {
-      input.addEventListener("change",() => {
-        const file = input.files && input.files[0];
-        if(!file) return;
-
-        if(file.size > 4200000){
-          alert("that file is too large to save inside the page editor. upload it to your host or storage, then paste the url here.");
-          input.value = "";
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          const target = input.dataset.meMediaFile;
-          const urlInput = document.querySelector(`[data-me-media-url="${target}"]`);
-          if(urlInput){
-            urlInput.value = reader.result;
-          }
-          setMedia(target,reader.result);
-        };
-        reader.readAsDataURL(file);
-      });
-    });
-  }
-
-  function openPanel(){
-    document.body.classList.add("me-panel-open");
-    document.querySelector(".mePanel")?.setAttribute("aria-hidden","false");
-  }
-
-  function closePanel(){
-    document.body.classList.remove("me-panel-open");
-    document.querySelector(".mePanel")?.setAttribute("aria-hidden","true");
-  }
-
-  function exportConfig(){
-    const config = collectConfig();
-    writeConfig(config);
-    applyConfig(config);
-
-    const blob = new Blob([JSON.stringify(config,null,2)],{type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "site-content.json";
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-
-  async function initMeMode(){
-    const localConfig = readConfig();
-    const hasLocalConfig = Boolean(localStorage.getItem(STORAGE_KEY));
+  async function initSiteContent(){
     const liveConfig = await loadLiveConfig();
     const publishedConfig = liveConfig || await loadPublishedConfig();
-    const config = modeOn && hasLocalConfig ? localConfig : (publishedConfig || localConfig);
 
-    applyConfig(config);
-
-    if(!modeOn){
-      localStorage.removeItem("ncstudios_me_mode");
-      return;
+    if(publishedConfig){
+      applyConfig(publishedConfig);
     }
-
-    document.body.classList.add("me-mode-ready");
-    renderEditor(config);
-    openPanel();
-
-    document.querySelector("[data-me-open]")?.addEventListener("click",openPanel);
-    document.querySelector("[data-me-close]")?.addEventListener("click",closePanel);
-
-    document.querySelector("[data-me-save]")?.addEventListener("click",() => {
-      const nextConfig = collectConfig();
-      writeConfig(nextConfig);
-      applyConfig(nextConfig);
-      renderEditor(nextConfig);
-      alert("saved on this browser.");
-    });
-
-    document.querySelector("[data-me-export]")?.addEventListener("click",exportConfig);
-
-    document.querySelector("[data-me-reset]")?.addEventListener("click",() => {
-      if(confirm("reset local me mode edits on this browser?")){
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem("ncstudios_me_mode");
-        location.href = location.pathname + location.hash;
-      }
-    });
-
-    document.querySelector("[data-me-import]")?.addEventListener("change",event => {
-      const file = event.target.files && event.target.files[0];
-      if(!file) return;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        try{
-          const imported = JSON.parse(reader.result);
-          writeConfig(imported);
-          applyConfig(imported);
-          renderEditor(imported);
-          alert("imported.");
-        }catch(error){
-          alert("that json file could not be imported.");
-        }
-      };
-      reader.readAsText(file);
-    });
   }
 
-  window.addEventListener("hashchange",() => {
-    const nextHash = location.hash.toLowerCase();
-    if(nextHash.includes("me1") || nextHash.includes("me=1")){
-      const nextUrl = new URL(location.href);
-      nextUrl.searchParams.set("me","1");
-      nextUrl.hash = "";
-      location.href = nextUrl.toString();
-    }
-  });
-
   if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded",initMeMode);
+    document.addEventListener("DOMContentLoaded",initSiteContent);
   }else{
-    initMeMode();
+    initSiteContent();
   }
 })();
 </script>

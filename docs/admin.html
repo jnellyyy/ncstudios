@@ -779,6 +779,14 @@ textarea{
       <div class="editorGroup">
         <h4>About</h4>
         <div class="editorGrid">
+          <div class="field">
+            <label for="web_aboutCaptionTitle">photo caption</label>
+            <input id="web_aboutCaptionTitle" data-website-field="aboutCaptionTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_aboutCaptionMeta">caption detail</label>
+            <input id="web_aboutCaptionMeta" data-website-field="aboutCaptionMeta" type="text">
+          </div>
           <div class="field full">
             <label for="web_aboutHeadline">intro line</label>
             <textarea id="web_aboutHeadline" data-website-field="aboutHeadline"></textarea>
@@ -808,6 +816,30 @@ textarea{
           <div class="field">
             <label for="web_principlesLead">approach line</label>
             <input id="web_principlesLead" data-website-field="principlesLead" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleOneTitle">approach card 1 title</label>
+            <input id="web_principleOneTitle" data-website-field="principleOneTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleOneText">approach card 1 copy</label>
+            <input id="web_principleOneText" data-website-field="principleOneText" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleTwoTitle">approach card 2 title</label>
+            <input id="web_principleTwoTitle" data-website-field="principleTwoTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleTwoText">approach card 2 copy</label>
+            <input id="web_principleTwoText" data-website-field="principleTwoText" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleThreeTitle">approach card 3 title</label>
+            <input id="web_principleThreeTitle" data-website-field="principleThreeTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principleThreeText">approach card 3 copy</label>
+            <input id="web_principleThreeText" data-website-field="principleThreeText" type="text">
           </div>
           <div class="field">
             <label for="web_featureTitle">film title</label>
@@ -977,20 +1009,28 @@ const defaultWebsiteContent = {
   fields:{
     heroEyebrow:"photo + film",
     heroTitle:"real. cinematic. yours.",
-    heroLead:"weddings · couples · events",
+    heroLead:"weddings · couples · cinematic stories",
+    aboutCaptionTitle:"the creative behind nc studio",
+    aboutCaptionMeta:"",
     aboutHeadline:"hi, i'm janelle.",
     aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
     aboutBodyTwo:"my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
     aboutBodyThree:"because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
     principlesTitle:"approach.",
     principlesLead:"natural. calm. intentional.",
+    principleOneTitle:"story led",
+    principleOneText:"your day is captured with feeling, not just as a checklist of moments.",
+    principleTwoTitle:"calm direction",
+    principleTwoText:"gentle guidance when needed, with space for natural moments to unfold.",
+    principleThreeTitle:"cinematic finish",
+    principleThreeText:"clean colours, soft movement and a timeless edit that feels true to the day.",
     featureTitle:"movement. sound. feeling.",
     featureBody:"vows, speeches, reactions, atmosphere.",
     workTitle:"work.",
-    workLead:"photo, film and content.",
+    workLead:"wedding photography, cinematic films and story led content.",
     filmOneTitle:"couple sessions",
     filmOneBody:"couple sessions.",
-    filmTwoTitle:"photo or film",
+    filmTwoTitle:"wedding coverage",
     filmTwoBody:"weddings.",
     filmThreeTitle:"short edits that move",
     filmThreeBody:"reels and event edits."
