@@ -565,7 +565,7 @@ textarea:focus{
 </main>
 
 <footer class="footer">
-  <span>nc studios</span>
+  <span>&copy; ncstudiouk</span>
   <span>availability and enquiries</span>
 </footer>
 
@@ -644,8 +644,7 @@ textarea:focus{
 </script>
 <script>
 (function(){
-  const STORAGE_TABLE = "app_storage";
-  const ENQUIRY_PREFIX = "website_enquiry_";
+  const ENQUIRIES_TABLE = "website_enquiries";
 
   const form = document.getElementById("enquiryForm");
   const statusEl = document.querySelector("[data-form-status]");
@@ -739,15 +738,14 @@ textarea:focus{
     }
 
     const response = await window.ncSupabase
-      .from(STORAGE_TABLE)
-      .upsert(
+      .from(ENQUIRIES_TABLE)
+      .insert(
         {
-          app_key:ENQUIRY_PREFIX + booking.id,
+          id:booking.id,
           data:booking,
-          updated_at:new Date().toISOString()
-        },
-        {
-          onConflict:"app_key"
+          status:"new",
+          created_at:booking.createdAt,
+          updated_at:booking.updatedAt
         }
       );
 

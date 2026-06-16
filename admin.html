@@ -527,6 +527,96 @@ textarea{
   font-size:0.9rem;
 }
 
+.websiteEditor{
+  margin-bottom:16px;
+  padding:18px;
+}
+
+.websiteEditor .sectionTitle{
+  margin-bottom:8px;
+}
+
+.editorIntro{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.editorIntro .heroText{
+  margin:0;
+}
+
+.editorStatus{
+  min-width:190px;
+  border:1px solid rgba(231,200,115,0.20);
+  background:rgba(231,200,115,0.08);
+  color:var(--gold);
+  border-radius:18px;
+  padding:11px 12px;
+  font-size:0.78rem;
+  line-height:1.35;
+}
+
+.websiteForm{
+  display:grid;
+  gap:14px;
+}
+
+.editorGroup{
+  border-radius:24px;
+  padding:14px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.09);
+}
+
+.editorGroup h4{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:0.82rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+}
+
+.editorGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.editorGrid .field.full{
+  grid-column:1 / -1;
+}
+
+.mediaGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
+.fieldHint{
+  display:block;
+  margin:6px 0 0 2px;
+  color:rgba(248,247,244,0.42);
+  font-size:0.72rem;
+  line-height:1.35;
+}
+
+.editorActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.editorActions .btn{
+  width:auto;
+}
+
+.editorActions .btn.primary{
+  min-width:180px;
+}
+
 @media(max-width:900px){
   .topbar{
     align-items:flex-start;
@@ -547,6 +637,20 @@ textarea{
 
   .summaryGrid{
     grid-template-columns:1fr 1fr;
+  }
+
+  .editorIntro{
+    flex-direction:column;
+  }
+
+  .editorStatus{
+    min-width:0;
+    width:100%;
+  }
+
+  .editorGrid,
+  .mediaGrid{
+    grid-template-columns:1fr;
   }
 }
 
@@ -640,6 +744,166 @@ textarea{
     </div>
   </section>
 
+  <section class="panel websiteEditor" aria-labelledby="websiteEditorTitle">
+    <div class="sectionTitle">
+      <h3 id="websiteEditorTitle">Website editor</h3>
+      <span>Live Supabase content</span>
+    </div>
+
+    <div class="editorIntro">
+      <p class="heroText">
+        Edit the homepage wording and media links here. Publishing saves it live, so the website updates without replacing files every time.
+      </p>
+      <p class="editorStatus" id="websiteEditorStatus" aria-live="polite">Ready to edit.</p>
+    </div>
+
+    <form class="websiteForm" id="websiteContentForm">
+      <div class="editorGroup">
+        <h4>Opening</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_heroEyebrow">small label</label>
+            <input id="web_heroEyebrow" data-website-field="heroEyebrow" type="text">
+          </div>
+          <div class="field">
+            <label for="web_heroLead">short line</label>
+            <input id="web_heroLead" data-website-field="heroLead" type="text">
+          </div>
+          <div class="field full">
+            <label for="web_heroTitle">main headline</label>
+            <textarea id="web_heroTitle" data-website-field="heroTitle"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>About</h4>
+        <div class="editorGrid">
+          <div class="field full">
+            <label for="web_aboutHeadline">intro line</label>
+            <textarea id="web_aboutHeadline" data-website-field="aboutHeadline"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyOne">bio line 1</label>
+            <textarea id="web_aboutBodyOne" data-website-field="aboutBodyOne"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyTwo">bio line 2</label>
+            <textarea id="web_aboutBodyTwo" data-website-field="aboutBodyTwo"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyThree">bio line 3</label>
+            <textarea id="web_aboutBodyThree" data-website-field="aboutBodyThree"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Sections</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_principlesTitle">approach title</label>
+            <input id="web_principlesTitle" data-website-field="principlesTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principlesLead">approach line</label>
+            <input id="web_principlesLead" data-website-field="principlesLead" type="text">
+          </div>
+          <div class="field">
+            <label for="web_featureTitle">film title</label>
+            <input id="web_featureTitle" data-website-field="featureTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_featureBody">film line</label>
+            <input id="web_featureBody" data-website-field="featureBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_workTitle">work title</label>
+            <input id="web_workTitle" data-website-field="workTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_workLead">work line</label>
+            <input id="web_workLead" data-website-field="workLead" type="text">
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Work cards</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_filmOneTitle">card 1 title</label>
+            <input id="web_filmOneTitle" data-website-field="filmOneTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmOneBody">card 1 line</label>
+            <input id="web_filmOneBody" data-website-field="filmOneBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmTwoTitle">card 2 title</label>
+            <input id="web_filmTwoTitle" data-website-field="filmTwoTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmTwoBody">card 2 line</label>
+            <input id="web_filmTwoBody" data-website-field="filmTwoBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmThreeTitle">card 3 title</label>
+            <input id="web_filmThreeTitle" data-website-field="filmThreeTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmThreeBody">card 3 line</label>
+            <input id="web_filmThreeBody" data-website-field="filmThreeBody" type="text">
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Media</h4>
+        <div class="mediaGrid">
+          <div class="field">
+            <label for="web_mediaHero">hero image/video URL</label>
+            <input id="web_mediaHero" data-website-media="hero" type="text">
+            <input data-website-media-file="hero" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaPortrait">about portrait URL</label>
+            <input id="web_mediaPortrait" data-website-media="portrait" type="text">
+            <input data-website-media-file="portrait" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFeature">motion feature URL</label>
+            <input id="web_mediaFeature" data-website-media="feature" type="text">
+            <input data-website-media-file="feature" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmOne">work card 1 URL</label>
+            <input id="web_mediaFilmOne" data-website-media="filmOne" type="text">
+            <input data-website-media-file="filmOne" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmTwo">work card 2 URL</label>
+            <input id="web_mediaFilmTwo" data-website-media="filmTwo" type="text">
+            <input data-website-media-file="filmTwo" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmThree">work card 3 URL</label>
+            <input id="web_mediaFilmThree" data-website-media="filmThree" type="text">
+            <input data-website-media-file="filmThree" type="file" accept="image/*,video/*">
+          </div>
+        </div>
+        <span class="fieldHint">Use a hosted URL, or upload here once the Supabase site-media bucket has been created.</span>
+      </div>
+
+      <div class="editorActions">
+        <button class="btn primary" type="button" data-website-publish>Publish live</button>
+        <button class="btn" type="button" data-website-load>Load live version</button>
+        <button class="btn" type="button" data-website-draft>Save draft here</button>
+        <button class="btn" type="button" data-website-export>Export backup JSON</button>
+      </div>
+    </form>
+  </section>
+
   <section class="layout">
     <aside class="panel sidebar">
       <div class="sectionTitle">
@@ -700,10 +964,324 @@ textarea{
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
-<script src="nc-supabase-sync.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
 
 <script>
+const WEBSITE_STORAGE_TABLE = "app_storage";
+const WEBSITE_CONTENT_KEY = "website_content_live";
+const WEBSITE_DRAFT_KEY = "ncStudiosWebsiteContentDraftV1";
+const WEBSITE_MEDIA_BUCKET = "site-media";
+
+const defaultWebsiteContent = {
+  fields:{
+    heroEyebrow:"photo + film",
+    heroTitle:"real. cinematic. yours.",
+    heroLead:"weddings · couples · events",
+    aboutHeadline:"hi, i'm janelle.",
+    aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
+    aboutBodyTwo:"my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
+    aboutBodyThree:"because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
+    principlesTitle:"approach.",
+    principlesLead:"natural. calm. intentional.",
+    featureTitle:"movement. sound. feeling.",
+    featureBody:"vows, speeches, reactions, atmosphere.",
+    workTitle:"work.",
+    workLead:"photo, film and content.",
+    filmOneTitle:"couple sessions",
+    filmOneBody:"couple sessions.",
+    filmTwoTitle:"photo or film",
+    filmTwoBody:"weddings.",
+    filmThreeTitle:"short edits that move",
+    filmThreeBody:"reels and event edits."
+  },
+  media:{
+    hero:"",
+    portrait:"assets/nc-about-portrait.jpg",
+    feature:"",
+    filmOne:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
+    filmTwo:"",
+    filmThree:""
+  }
+};
+
+function cloneWebsiteConfig(config){
+  return JSON.parse(JSON.stringify(config || defaultWebsiteContent));
+}
+
+function websiteWait(ms){
+  return new Promise(resolve => setTimeout(resolve,ms));
+}
+
+async function waitForWebsiteSupabase(){
+  for(let attempt = 0; attempt < 50; attempt++){
+    if(window.ncSupabase){
+      return true;
+    }
+
+    await websiteWait(120);
+  }
+
+  return false;
+}
+
+async function getWebsiteSession(){
+  const ready = await waitForWebsiteSupabase();
+
+  if(!ready || !window.ncSupabase.auth){
+    return null;
+  }
+
+  const response = await window.ncSupabase.auth.getSession();
+  return response.data && response.data.session ? response.data.session : null;
+}
+
+async function requireWebsiteSession(){
+  const session = await getWebsiteSession();
+
+  if(!session){
+    throw new Error("Sign in to the studio app before publishing.");
+  }
+
+  return session;
+}
+
+function setWebsiteStatus(message,type){
+  const status = document.getElementById("websiteEditorStatus");
+  if(!status) return;
+
+  status.textContent = message;
+  status.style.color = type === "error" ? "var(--danger)" : type === "success" ? "var(--green)" : "var(--gold)";
+}
+
+function readWebsiteDraft(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(WEBSITE_DRAFT_KEY));
+    return parsed && typeof parsed === "object" ? parsed : null;
+  }catch(error){
+    return null;
+  }
+}
+
+function writeWebsiteDraft(config){
+  localStorage.setItem(WEBSITE_DRAFT_KEY,JSON.stringify(config));
+}
+
+function fillWebsiteForm(config){
+  const safeConfig = cloneWebsiteConfig(config);
+
+  document.querySelectorAll("[data-website-field]").forEach(input => {
+    const key = input.dataset.websiteField;
+    input.value = safeConfig.fields?.[key] || "";
+  });
+
+  document.querySelectorAll("[data-website-media]").forEach(input => {
+    const key = input.dataset.websiteMedia;
+    input.value = safeConfig.media?.[key] || "";
+  });
+}
+
+function collectWebsiteForm(){
+  const config = {fields:{},media:{},updatedAt:new Date().toISOString()};
+
+  document.querySelectorAll("[data-website-field]").forEach(input => {
+    config.fields[input.dataset.websiteField] = input.value.trim();
+  });
+
+  document.querySelectorAll("[data-website-media]").forEach(input => {
+    config.media[input.dataset.websiteMedia] = input.value.trim();
+  });
+
+  return config;
+}
+
+async function loadLiveWebsiteContent(){
+  const ready = await waitForWebsiteSupabase();
+  if(!ready){
+    throw new Error("Supabase is not ready.");
+  }
+
+  const response = await window.ncSupabase
+    .from(WEBSITE_STORAGE_TABLE)
+    .select("data")
+    .eq("app_key",WEBSITE_CONTENT_KEY)
+    .maybeSingle();
+
+  if(response.error){
+    throw response.error;
+  }
+
+  return response.data?.data || null;
+}
+
+async function publishWebsiteContent(){
+  await requireWebsiteSession();
+
+  const config = collectWebsiteForm();
+  writeWebsiteDraft(config);
+  setWebsiteStatus("Publishing live changes...");
+
+  const ready = await waitForWebsiteSupabase();
+  if(!ready){
+    throw new Error("Supabase is not ready.");
+  }
+
+  const response = await window.ncSupabase
+    .from(WEBSITE_STORAGE_TABLE)
+    .upsert(
+      {
+        app_key:WEBSITE_CONTENT_KEY,
+        data:config,
+        updated_at:new Date().toISOString()
+      },
+      {onConflict:"app_key"}
+    );
+
+  if(response.error){
+    throw response.error;
+  }
+
+  setWebsiteStatus("Published. Refresh the website to see it live.","success");
+}
+
+function exportWebsiteConfig(){
+  const config = collectWebsiteForm();
+  writeWebsiteDraft(config);
+
+  const blob = new Blob([JSON.stringify(config,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "site-content.json";
+  link.click();
+  URL.revokeObjectURL(url);
+  setWebsiteStatus("Backup JSON exported.","success");
+}
+
+function safeFileName(name){
+  return String(name || "media")
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .slice(0,80) || "media";
+}
+
+async function uploadWebsiteMedia(target,file){
+  await requireWebsiteSession();
+
+  const extensionName = safeFileName(file.name);
+  const path = "website/" + target + "/" + Date.now() + "-" + extensionName;
+
+  setWebsiteStatus("Uploading " + target + " media...");
+
+  const upload = await window.ncSupabase.storage
+    .from(WEBSITE_MEDIA_BUCKET)
+    .upload(path,file,{
+      cacheControl:"3600",
+      upsert:false
+    });
+
+  if(upload.error){
+    throw upload.error;
+  }
+
+  const publicUrl = window.ncSupabase.storage
+    .from(WEBSITE_MEDIA_BUCKET)
+    .getPublicUrl(path)
+    .data
+    .publicUrl;
+
+  const input = document.querySelector(`[data-website-media="${target}"]`);
+  if(input){
+    input.value = publicUrl;
+  }
+
+  writeWebsiteDraft(collectWebsiteForm());
+  setWebsiteStatus("Media uploaded. Publish live when ready.","success");
+}
+
+function initWebsiteEditor(){
+  const form = document.getElementById("websiteContentForm");
+  if(!form) return;
+
+  const draft = readWebsiteDraft();
+  fillWebsiteForm(draft || defaultWebsiteContent);
+
+  form.addEventListener("submit",event => {
+    event.preventDefault();
+  });
+
+  if(draft){
+    setWebsiteStatus("Draft loaded from this device.");
+  }
+
+  loadLiveWebsiteContent()
+    .then(liveConfig => {
+      if(liveConfig && !readWebsiteDraft()){
+        fillWebsiteForm(liveConfig);
+        setWebsiteStatus("Live website content loaded.","success");
+      }
+    })
+    .catch(error => {
+      console.warn("Could not load live website content",error);
+      if(!draft){
+        setWebsiteStatus("Using fallback content. Live load is not available yet.");
+      }
+    });
+
+  form.addEventListener("input",() => {
+    writeWebsiteDraft(collectWebsiteForm());
+    setWebsiteStatus("Draft saved on this device.");
+  });
+
+  document.querySelectorAll("[data-website-media-file]").forEach(input => {
+    input.addEventListener("change",async () => {
+      const file = input.files && input.files[0];
+      if(!file) return;
+
+      try{
+        await uploadWebsiteMedia(input.dataset.websiteMediaFile,file);
+      }catch(error){
+        console.warn("Could not upload website media",error);
+        setWebsiteStatus("Could not upload. Sign in and check the site-media bucket.","error");
+      }finally{
+        input.value = "";
+      }
+    });
+  });
+
+  document.querySelector("[data-website-draft]")?.addEventListener("click",() => {
+    writeWebsiteDraft(collectWebsiteForm());
+    setWebsiteStatus("Draft saved on this device.","success");
+  });
+
+  document.querySelector("[data-website-load]")?.addEventListener("click",async () => {
+    try{
+      setWebsiteStatus("Loading live website content...");
+      const liveConfig = await loadLiveWebsiteContent();
+      fillWebsiteForm(liveConfig || defaultWebsiteContent);
+      writeWebsiteDraft(liveConfig || defaultWebsiteContent);
+      setWebsiteStatus(liveConfig ? "Live content loaded." : "No live content yet. Fallback loaded.","success");
+    }catch(error){
+      console.warn("Could not load live website content",error);
+      setWebsiteStatus("Could not load live content. Check Supabase connection.","error");
+    }
+  });
+
+  document.querySelector("[data-website-publish]")?.addEventListener("click",async () => {
+    try{
+      await publishWebsiteContent();
+    }catch(error){
+      console.warn("Could not publish website content",error);
+      setWebsiteStatus("Could not publish. Sign in, then check Supabase table access.","error");
+    }
+  });
+
+  document.querySelector("[data-website-export]")?.addEventListener("click",exportWebsiteConfig);
+}
+
+initWebsiteEditor();
+
 const STORAGE_KEY = "ncStudiosAdminTrackerV1";
 
 const checklistTemplate = [

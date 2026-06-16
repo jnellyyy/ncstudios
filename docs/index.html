@@ -2139,11 +2139,11 @@ textarea{
       </div>
 
       <div class="aboutCopy">
-        <p data-site-field="aboutHeadline">for the moments that stay.</p>
+        <p data-site-field="aboutHeadline">hi, i'm janelle.</p>
         <div class="smallCopy">
-          <p data-site-field="aboutBodyOne">weddings, couples, events and content.</p>
-          <p data-site-field="aboutBodyTwo">calm direction. clean delivery.</p>
-          <p data-site-field="aboutBodyThree">one clear plan.</p>
+          <p data-site-field="aboutBodyOne">founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.</p>
+          <p data-site-field="aboutBodyTwo">my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.</p>
+          <p data-site-field="aboutBodyThree">because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.</p>
         </div>
       </div>
     </div>
@@ -2244,8 +2244,8 @@ textarea{
 </main>
 
 <footer class="footer">
-  <span>nc studios</span>
-  <span>cinematic wedding films, events and content</span>
+  <span>&copy; ncstudiouk</span>
+  <span>nc studio</span>
 </footer>
 
 <button class="messageLauncher" type="button" data-message-open>message nc</button>
@@ -2395,6 +2395,8 @@ textarea{
 <script>
 (function(){
   const STORAGE_KEY = "ncstudios_site_editor_v1";
+  const LIVE_CONTENT_TABLE = "app_storage";
+  const LIVE_CONTENT_KEY = "website_content_live";
   const params = new URLSearchParams(location.search);
   const queryText = location.search.toLowerCase();
   const hashText = location.hash.toLowerCase();
@@ -2548,6 +2550,41 @@ textarea{
     }
   }
 
+  function wait(ms){
+    return new Promise(resolve => setTimeout(resolve,ms));
+  }
+
+  async function waitForSupabase(){
+    for(let attempt = 0; attempt < 50; attempt++){
+      if(window.ncSupabase){
+        return true;
+      }
+
+      await wait(120);
+    }
+
+    return false;
+  }
+
+  async function loadLiveConfig(){
+    try{
+      const ready = await waitForSupabase();
+      if(!ready) return null;
+
+      const response = await window.ncSupabase
+        .from(LIVE_CONTENT_TABLE)
+        .select("data")
+        .eq("app_key",LIVE_CONTENT_KEY)
+        .maybeSingle();
+
+      if(response.error) throw response.error;
+      return response.data?.data || null;
+    }catch(error){
+      console.warn("Could not load live site content",error);
+      return null;
+    }
+  }
+
   function collectConfig(){
     const config = readConfig();
     config.fields = config.fields || {};
@@ -2643,7 +2680,8 @@ textarea{
   async function initMeMode(){
     const localConfig = readConfig();
     const hasLocalConfig = Boolean(localStorage.getItem(STORAGE_KEY));
-    const publishedConfig = await loadPublishedConfig();
+    const liveConfig = await loadLiveConfig();
+    const publishedConfig = liveConfig || await loadPublishedConfig();
     const config = modeOn && hasLocalConfig ? localConfig : (publishedConfig || localConfig);
 
     applyConfig(config);
@@ -2792,8 +2830,7 @@ textarea{
 </script>
 <script>
 (function(){
-  const STORAGE_TABLE = "app_storage";
-  const ENQUIRY_PREFIX = "website_enquiry_";
+  const ENQUIRIES_TABLE = "website_enquiries";
 
   const form = document.getElementById("enquiryForm");
   const statusEl = document.querySelector("[data-form-status]");
@@ -2887,15 +2924,14 @@ textarea{
     }
 
     const response = await window.ncSupabase
-      .from(STORAGE_TABLE)
-      .upsert(
+      .from(ENQUIRIES_TABLE)
+      .insert(
         {
-          app_key:ENQUIRY_PREFIX + booking.id,
+          id:booking.id,
           data:booking,
-          updated_at:new Date().toISOString()
-        },
-        {
-          onConflict:"app_key"
+          status:"new",
+          created_at:booking.createdAt,
+          updated_at:booking.updatedAt
         }
       );
 
@@ -2960,8 +2996,7 @@ textarea{
 </script>
 <script>
 (function(){
-  const STORAGE_TABLE = "app_storage";
-  const MESSAGE_PREFIX = "website_message_";
+  const MESSAGES_TABLE = "website_messages";
 
   const form = document.getElementById("directMessageForm");
   const openButton = document.querySelector("[data-message-open]");
@@ -3030,15 +3065,14 @@ textarea{
     }
 
     const response = await window.ncSupabase
-      .from(STORAGE_TABLE)
-      .upsert(
+      .from(MESSAGES_TABLE)
+      .insert(
         {
-          app_key:MESSAGE_PREFIX + message.id,
+          id:message.id,
           data:message,
-          updated_at:new Date().toISOString()
-        },
-        {
-          onConflict:"app_key"
+          status:"new",
+          created_at:message.createdAt,
+          updated_at:message.updatedAt
         }
       );
 

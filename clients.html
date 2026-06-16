@@ -673,6 +673,7 @@ select option{
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=ncclients3"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
 
 <script>
 const STORAGE_KEY = "ncstudios_clients_v1";
@@ -747,6 +748,15 @@ async function initClientsPage(){
   if(!window.ncSupabase){
     setStatus("supabase-config.js loaded incorrectly. window.ncSupabase was not created.", "bad");
     return;
+  }
+
+  if(window.NCSync){
+    const signedIn = await window.NCSync.ensureSignedIn(true);
+
+    if(!signedIn){
+      setStatus("Sign in to sync clients. This page is local-only until then.", "warn");
+      return;
+    }
   }
 
   databaseReady = true;
