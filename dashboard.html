@@ -896,7 +896,7 @@ body::before{
 
       <a class="liveAction" href="buy-list.html">
         <span>Buy</span>
-        <strong id="buyWidget">0 needed</strong>
+        <strong id="buyWidget">0 active</strong>
       </a>
     </div>
   </section>
@@ -1045,6 +1045,12 @@ function setText(id, value){
   if(element) element.textContent = value;
 }
 
+function activeBuyCount(buyList){
+  return (Array.isArray(buyList) ? buyList : [])
+    .filter(item => !["bought","skip","later"].includes(item.status))
+    .length;
+}
+
 function sectionLabel(value){
   const labels = {
     prep:"Prep",
@@ -1188,10 +1194,10 @@ function updateDashboardFromLocal(){
   setText("listsWidget", lists.filter(item => item.status !== "done").length);
   setText("templatesWidget", templates.length);
   setText("adminWidget", adminClients.length);
-  setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
+  setText("buyTileWidget", activeBuyCount(buyList));
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
-  setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);
+  setText("buyWidget", `${activeBuyCount(buyList)} active`);
   setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
@@ -1270,10 +1276,10 @@ async function updateDashboardFromSupabase(){
       setText("listsWidget", lists.filter(item => item.status !== "done").length);
       setText("templatesWidget", templates.length);
       setText("clientWidget", appStorageClients.length);
-      setText("buyTileWidget", buyList.filter(item => !["bought","skip"].includes(item.status)).length);
+      setText("buyTileWidget", activeBuyCount(buyList));
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
-      setText("buyWidget", `${buyList.filter(item => !["bought","skip"].includes(item.status)).length} needed`);
+      setText("buyWidget", `${activeBuyCount(buyList)} active`);
       setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);

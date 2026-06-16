@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NC Studios Admin Tracker</title>
+
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+:root{
+  --bg:#070707;
+  --bg2:#111111;
+  --card:rgba(255,255,255,0.08);
+  --card2:rgba(255,255,255,0.12);
+  --line:rgba(255,255,255,0.14);
+  --text:#f8f7f4;
+  --muted:rgba(248,247,244,0.62);
+  --red:#a32024;
+  --red2:#d8b76e;
+  --gold:#e7c873;
+  --green:#4ade80;
+  --danger:#fb7185;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+  --radius:28px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(123,17,19,0.42), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(231,200,115,0.13), transparent 30%),
+    linear-gradient(145deg, var(--bg), var(--bg2));
+  color:var(--text);
+  font-family:"NC Studio Brand",sans-serif;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+.app{
+  width:min(1180px, 94vw);
+  margin:0 auto;
+  padding:24px 0 38px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg, rgba(123,17,19,0.95), rgba(216,183,110,0.45));
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:var(--shadow);
+  font-weight:800;
+  letter-spacing:0.04em;
+}
+
+.brand h1{
+  margin:0;
+  font-size:1.05rem;
+  letter-spacing:0.01em;
+}
+
+.brand p{
+  margin:2px 0 0;
+  color:var(--muted);
+  font-size:0.84rem;
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.nav a{
+  padding:10px 13px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.10);
+  color:rgba(248,247,244,0.82);
+  font-size:0.86rem;
+}
+
+.nav a.active{
+  background:rgba(123,17,19,0.55);
+  border-color:rgba(231,200,115,0.25);
+  color:var(--text);
+}
+
+.hero{
+  display:grid;
+  grid-template-columns:1.3fr 0.7fr;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.panel{
+  background:linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(22px);
+}
+
+.heroMain{
+  padding:24px;
+  min-height:184px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.kicker{
+  color:var(--gold);
+  font-size:0.78rem;
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  margin-bottom:10px;
+}
+
+.hero h2{
+  margin:0;
+  font-size:clamp(2rem, 4vw, 4.2rem);
+  line-height:0.92;
+  letter-spacing:0;
+}
+
+.heroText{
+  margin:14px 0 0;
+  color:var(--muted);
+  max-width:620px;
+  font-size:0.98rem;
+}
+
+.stats{
+  padding:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.stat{
+  min-height:82px;
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+}
+
+.stat strong{
+  display:block;
+  font-size:1.7rem;
+  letter-spacing:0;
+}
+
+.stat span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:0.82rem;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:350px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.sidebar{
+  padding:16px;
+}
+
+.sectionTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.sectionTitle h3{
+  margin:0;
+  font-size:1rem;
+  letter-spacing:0;
+}
+
+.sectionTitle span{
+  color:var(--muted);
+  font-size:0.8rem;
+}
+
+.addBox{
+  border-radius:24px;
+  padding:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  margin-bottom:14px;
+}
+
+.field{
+  margin-bottom:10px;
+}
+
+label{
+  display:block;
+  font-size:0.76rem;
+  color:var(--muted);
+  margin:0 0 6px 2px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.24);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 12px;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(231,200,115,0.42);
+  box-shadow:0 0 0 4px rgba(231,200,115,0.08);
+}
+
+textarea{
+  resize:vertical;
+  min-height:82px;
+}
+
+.btn{
+  border:0;
+  cursor:pointer;
+  border-radius:16px;
+  padding:11px 13px;
+  color:var(--text);
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.btn.primary{
+  width:100%;
+  background:linear-gradient(145deg, rgba(123,17,19,0.98), rgba(216,183,110,0.72));
+  border-color:rgba(231,200,115,0.22);
+  font-weight:700;
+}
+
+.btn.small{
+  padding:9px 11px;
+  font-size:0.82rem;
+}
+
+.btn.danger{
+  background:rgba(251,113,133,0.12);
+  border-color:rgba(251,113,133,0.25);
+  color:#fecdd3;
+}
+
+.clientList{
+  display:grid;
+  gap:10px;
+}
+
+.clientCard{
+  width:100%;
+  text-align:left;
+  cursor:pointer;
+  border-radius:22px;
+  padding:13px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--text);
+}
+
+.clientCard.active{
+  background:rgba(123,17,19,0.34);
+  border-color:rgba(231,200,115,0.26);
+}
+
+.clientTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.clientName{
+  font-weight:750;
+  letter-spacing:0;
+}
+
+.clientMeta{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:0.78rem;
+  line-height:1.35;
+}
+
+.progressBar{
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.10);
+  margin-top:12px;
+}
+
+.progressFill{
+  height:100%;
+  border-radius:999px;
+  width:0%;
+  background:linear-gradient(90deg, var(--red2), var(--gold));
+}
+
+.progressText{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:0.75rem;
+}
+
+.main{
+  padding:16px;
+  min-height:650px;
+}
+
+.empty{
+  min-height:470px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+}
+
+.empty h3{
+  color:var(--text);
+  margin:0 0 8px;
+}
+
+.clientHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:14px;
+}
+
+.clientHeader h2{
+  margin:0;
+  font-size:1.9rem;
+  letter-spacing:0;
+}
+
+.clientHeader p{
+  margin:6px 0 0;
+  color:var(--muted);
+}
+
+.headerActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.summaryGrid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.summaryCard{
+  border-radius:22px;
+  padding:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+}
+
+.summaryCard strong{
+  display:block;
+  font-size:1.4rem;
+  letter-spacing:0;
+}
+
+.summaryCard span{
+  display:block;
+  color:var(--muted);
+  font-size:0.78rem;
+  margin-top:4px;
+}
+
+.checkSections{
+  display:grid;
+  gap:12px;
+}
+
+.checkSection{
+  border-radius:24px;
+  background:rgba(255,255,255,0.055);
+  border:1px solid rgba(255,255,255,0.10);
+  overflow:hidden;
+}
+
+.checkHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px 15px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.checkHead h3{
+  margin:0;
+  font-size:0.98rem;
+  letter-spacing:0;
+}
+
+.checkHead span{
+  color:var(--muted);
+  font-size:0.76rem;
+}
+
+.checkList{
+  padding:8px;
+  display:grid;
+  gap:6px;
+}
+
+.checkItem{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border-radius:16px;
+  background:rgba(0,0,0,0.12);
+}
+
+.checkItem input{
+  width:20px;
+  height:20px;
+  accent-color:var(--red2);
+}
+
+.checkItem label{
+  margin:0;
+  color:rgba(248,247,244,0.88);
+  font-size:0.9rem;
+  cursor:pointer;
+  flex:1;
+}
+
+.checkItem.done label{
+  color:rgba(248,247,244,0.45);
+  text-decoration:line-through;
+}
+
+.notesBox{
+  margin-top:14px;
+  padding:14px;
+  border-radius:24px;
+  background:rgba(255,255,255,0.055);
+  border:1px solid rgba(255,255,255,0.10);
+}
+
+.notesBox h3{
+  margin:0 0 10px;
+  font-size:0.98rem;
+}
+
+.archivedWrap{
+  margin-top:16px;
+}
+
+.archivedWrap details{
+  border-radius:24px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:12px;
+}
+
+.archivedWrap summary{
+  cursor:pointer;
+  color:var(--muted);
+  font-size:0.9rem;
+}
+
+.websiteEditor{
+  margin-bottom:16px;
+  padding:18px;
+}
+
+.websiteEditor .sectionTitle{
+  margin-bottom:8px;
+}
+
+.editorIntro{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.editorIntro .heroText{
+  margin:0;
+}
+
+.editorStatus{
+  min-width:190px;
+  border:1px solid rgba(231,200,115,0.20);
+  background:rgba(231,200,115,0.08);
+  color:var(--gold);
+  border-radius:18px;
+  padding:11px 12px;
+  font-size:0.78rem;
+  line-height:1.35;
+}
+
+.websiteForm{
+  display:grid;
+  gap:14px;
+}
+
+.editorGroup{
+  border-radius:24px;
+  padding:14px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.09);
+}
+
+.editorGroup h4{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-size:0.82rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+}
+
+.editorGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.editorGrid .field.full{
+  grid-column:1 / -1;
+}
+
+.mediaGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
+.fieldHint{
+  display:block;
+  margin:6px 0 0 2px;
+  color:rgba(248,247,244,0.42);
+  font-size:0.72rem;
+  line-height:1.35;
+}
+
+.editorActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.editorActions .btn{
+  width:auto;
+}
+
+.editorActions .btn.primary{
+  min-width:180px;
+}
+
+@media(max-width:900px){
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .nav{
+    justify-content:flex-start;
+  }
+
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .summaryGrid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .editorIntro{
+    flex-direction:column;
+  }
+
+  .editorStatus{
+    min-width:0;
+    width:100%;
+  }
+
+  .editorGrid,
+  .mediaGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    width:min(100% - 22px, 1180px);
+    padding-top:14px;
+  }
+
+  .heroMain{
+    padding:19px;
+  }
+
+  .hero h2{
+    font-size:2.4rem;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .summaryGrid{
+    grid-template-columns:1fr;
+  }
+
+  .clientHeader{
+    flex-direction:column;
+  }
+
+  .headerActions{
+    justify-content:flex-start;
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+</head>
+
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <a href="dashboard.html" class="brand">
+      <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+      <div>
+        <h1>NC Studios</h1>
+        <p>Admin Tracker</p>
+      </div>
+    </a>
+
+    <nav class="nav">
+      <a href="dashboard.html">Home</a>
+      <a href="bookings.html">Bookings</a>
+      <a href="clients.html">Clients</a>
+      <a href="finance.html">Finance</a>
+      <a href="shot-lists.html">Shots</a>
+      <a href="lists.html">Lists</a>
+      <a class="active" href="admin.html">Admin</a>
+      <a href="delivery.html">Delivery</a>
+      <a href="templates.html">Templates</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="panel heroMain">
+      <div>
+        <div class="kicker">Client admin command centre</div>
+        <h2>Nothing falls through.</h2>
+        <p class="heroText">
+          Add every client, tick off the admin steps, track what is still outstanding, and archive the client when everything is complete.
+        </p>
+      </div>
+    </div>
+
+    <div class="panel stats">
+      <div class="stat">
+        <strong id="activeCount">0</strong>
+        <span>Active clients</span>
+      </div>
+      <div class="stat">
+        <strong id="archivedCount">0</strong>
+        <span>Archived clients</span>
+      </div>
+      <div class="stat">
+        <strong id="averageProgress">0%</strong>
+        <span>Average progress</span>
+      </div>
+      <div class="stat">
+        <strong id="openTasks">0</strong>
+        <span>Open tasks</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel websiteEditor" aria-labelledby="websiteEditorTitle">
+    <div class="sectionTitle">
+      <h3 id="websiteEditorTitle">Website editor</h3>
+      <span>Live Supabase content</span>
+    </div>
+
+    <div class="editorIntro">
+      <p class="heroText">
+        Edit the homepage wording and media links here. Publishing saves it live, so the website updates without replacing files every time.
+      </p>
+      <p class="editorStatus" id="websiteEditorStatus" aria-live="polite">Ready to edit.</p>
+    </div>
+
+    <form class="websiteForm" id="websiteContentForm">
+      <div class="editorGroup">
+        <h4>Opening</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_heroEyebrow">small label</label>
+            <input id="web_heroEyebrow" data-website-field="heroEyebrow" type="text">
+          </div>
+          <div class="field">
+            <label for="web_heroLead">short line</label>
+            <input id="web_heroLead" data-website-field="heroLead" type="text">
+          </div>
+          <div class="field full">
+            <label for="web_heroTitle">main headline</label>
+            <textarea id="web_heroTitle" data-website-field="heroTitle"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>About</h4>
+        <div class="editorGrid">
+          <div class="field full">
+            <label for="web_aboutHeadline">intro line</label>
+            <textarea id="web_aboutHeadline" data-website-field="aboutHeadline"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyOne">bio line 1</label>
+            <textarea id="web_aboutBodyOne" data-website-field="aboutBodyOne"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyTwo">bio line 2</label>
+            <textarea id="web_aboutBodyTwo" data-website-field="aboutBodyTwo"></textarea>
+          </div>
+          <div class="field full">
+            <label for="web_aboutBodyThree">bio line 3</label>
+            <textarea id="web_aboutBodyThree" data-website-field="aboutBodyThree"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Sections</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_principlesTitle">approach title</label>
+            <input id="web_principlesTitle" data-website-field="principlesTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_principlesLead">approach line</label>
+            <input id="web_principlesLead" data-website-field="principlesLead" type="text">
+          </div>
+          <div class="field">
+            <label for="web_featureTitle">film title</label>
+            <input id="web_featureTitle" data-website-field="featureTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_featureBody">film line</label>
+            <input id="web_featureBody" data-website-field="featureBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_workTitle">work title</label>
+            <input id="web_workTitle" data-website-field="workTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_workLead">work line</label>
+            <input id="web_workLead" data-website-field="workLead" type="text">
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Work cards</h4>
+        <div class="editorGrid">
+          <div class="field">
+            <label for="web_filmOneTitle">card 1 title</label>
+            <input id="web_filmOneTitle" data-website-field="filmOneTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmOneBody">card 1 line</label>
+            <input id="web_filmOneBody" data-website-field="filmOneBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmTwoTitle">card 2 title</label>
+            <input id="web_filmTwoTitle" data-website-field="filmTwoTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmTwoBody">card 2 line</label>
+            <input id="web_filmTwoBody" data-website-field="filmTwoBody" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmThreeTitle">card 3 title</label>
+            <input id="web_filmThreeTitle" data-website-field="filmThreeTitle" type="text">
+          </div>
+          <div class="field">
+            <label for="web_filmThreeBody">card 3 line</label>
+            <input id="web_filmThreeBody" data-website-field="filmThreeBody" type="text">
+          </div>
+        </div>
+      </div>
+
+      <div class="editorGroup">
+        <h4>Media</h4>
+        <div class="mediaGrid">
+          <div class="field">
+            <label for="web_mediaHero">hero image/video URL</label>
+            <input id="web_mediaHero" data-website-media="hero" type="text">
+            <input data-website-media-file="hero" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaPortrait">about portrait URL</label>
+            <input id="web_mediaPortrait" data-website-media="portrait" type="text">
+            <input data-website-media-file="portrait" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFeature">motion feature URL</label>
+            <input id="web_mediaFeature" data-website-media="feature" type="text">
+            <input data-website-media-file="feature" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmOne">work card 1 URL</label>
+            <input id="web_mediaFilmOne" data-website-media="filmOne" type="text">
+            <input data-website-media-file="filmOne" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmTwo">work card 2 URL</label>
+            <input id="web_mediaFilmTwo" data-website-media="filmTwo" type="text">
+            <input data-website-media-file="filmTwo" type="file" accept="image/*,video/*">
+          </div>
+          <div class="field">
+            <label for="web_mediaFilmThree">work card 3 URL</label>
+            <input id="web_mediaFilmThree" data-website-media="filmThree" type="text">
+            <input data-website-media-file="filmThree" type="file" accept="image/*,video/*">
+          </div>
+        </div>
+        <span class="fieldHint">Use a hosted URL, or upload here once the Supabase site-media bucket has been created.</span>
+      </div>
+
+      <div class="editorActions">
+        <button class="btn primary" type="button" data-website-publish>Publish live</button>
+        <button class="btn" type="button" data-website-load>Load live version</button>
+        <button class="btn" type="button" data-website-draft>Save draft here</button>
+        <button class="btn" type="button" data-website-export>Export backup JSON</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="layout">
+    <aside class="panel sidebar">
+      <div class="sectionTitle">
+        <h3>Add client</h3>
+        <span>Saved on this device</span>
+      </div>
+
+      <form class="addBox" id="clientForm">
+        <div class="field">
+          <label for="clientName">Client name</label>
+          <input id="clientName" placeholder="e.g. Marvin and Blessing" required />
+        </div>
+
+        <div class="field">
+          <label for="weddingDate">Wedding date</label>
+          <input id="weddingDate" type="date" />
+        </div>
+
+        <div class="field">
+          <label for="clientPackage">Package</label>
+          <select id="clientPackage">
+            <option>Full Day Wedding Film</option>
+            <option>Photography</option>
+            <option>Videography</option>
+            <option>Photography and Videography</option>
+            <option>Coordination</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="clientNotes">Quick note</label>
+          <textarea id="clientNotes" placeholder="e.g. Balance due after wedding, no footage until paid"></textarea>
+        </div>
+
+        <button class="btn primary" type="submit">Add client</button>
+      </form>
+
+      <div class="sectionTitle">
+        <h3>Active clients</h3>
+        <span id="clientCountLabel">0 clients</span>
+      </div>
+
+      <div class="clientList" id="clientList"></div>
+
+      <div class="archivedWrap">
+        <details>
+          <summary>Archived clients</summary>
+          <div class="clientList" id="archivedList" style="margin-top:10px;"></div>
+        </details>
+      </div>
+    </aside>
+
+    <main class="panel main" id="mainPanel"></main>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const WEBSITE_STORAGE_TABLE = "app_storage";
+const WEBSITE_CONTENT_KEY = "website_content_live";
+const WEBSITE_DRAFT_KEY = "ncStudiosWebsiteContentDraftV1";
+const WEBSITE_MEDIA_BUCKET = "site-media";
+
+const defaultWebsiteContent = {
+  fields:{
+    heroEyebrow:"photo + film",
+    heroTitle:"real. cinematic. yours.",
+    heroLead:"weddings · couples · events",
+    aboutHeadline:"hi, i'm janelle.",
+    aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
+    aboutBodyTwo:"my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
+    aboutBodyThree:"because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
+    principlesTitle:"approach.",
+    principlesLead:"natural. calm. intentional.",
+    featureTitle:"movement. sound. feeling.",
+    featureBody:"vows, speeches, reactions, atmosphere.",
+    workTitle:"work.",
+    workLead:"photo, film and content.",
+    filmOneTitle:"couple sessions",
+    filmOneBody:"couple sessions.",
+    filmTwoTitle:"photo or film",
+    filmTwoBody:"weddings.",
+    filmThreeTitle:"short edits that move",
+    filmThreeBody:"reels and event edits."
+  },
+  media:{
+    hero:"",
+    portrait:"assets/nc-about-portrait.jpg",
+    feature:"",
+    filmOne:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
+    filmTwo:"",
+    filmThree:""
+  }
+};
+
+function cloneWebsiteConfig(config){
+  return JSON.parse(JSON.stringify(config || defaultWebsiteContent));
+}
+
+function websiteWait(ms){
+  return new Promise(resolve => setTimeout(resolve,ms));
+}
+
+async function waitForWebsiteSupabase(){
+  for(let attempt = 0; attempt < 50; attempt++){
+    if(window.ncSupabase){
+      return true;
+    }
+
+    await websiteWait(120);
+  }
+
+  return false;
+}
+
+async function getWebsiteSession(){
+  const ready = await waitForWebsiteSupabase();
+
+  if(!ready || !window.ncSupabase.auth){
+    return null;
+  }
+
+  const response = await window.ncSupabase.auth.getSession();
+  return response.data && response.data.session ? response.data.session : null;
+}
+
+async function requireWebsiteSession(){
+  const session = await getWebsiteSession();
+
+  if(!session){
+    throw new Error("Sign in to the studio app before publishing.");
+  }
+
+  return session;
+}
+
+function setWebsiteStatus(message,type){
+  const status = document.getElementById("websiteEditorStatus");
+  if(!status) return;
+
+  status.textContent = message;
+  status.style.color = type === "error" ? "var(--danger)" : type === "success" ? "var(--green)" : "var(--gold)";
+}
+
+function readWebsiteDraft(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(WEBSITE_DRAFT_KEY));
+    return parsed && typeof parsed === "object" ? parsed : null;
+  }catch(error){
+    return null;
+  }
+}
+
+function writeWebsiteDraft(config){
+  localStorage.setItem(WEBSITE_DRAFT_KEY,JSON.stringify(config));
+}
+
+function fillWebsiteForm(config){
+  const safeConfig = cloneWebsiteConfig(config);
+
+  document.querySelectorAll("[data-website-field]").forEach(input => {
+    const key = input.dataset.websiteField;
+    input.value = safeConfig.fields?.[key] || "";
+  });
+
+  document.querySelectorAll("[data-website-media]").forEach(input => {
+    const key = input.dataset.websiteMedia;
+    input.value = safeConfig.media?.[key] || "";
+  });
+}
+
+function collectWebsiteForm(){
+  const config = {fields:{},media:{},updatedAt:new Date().toISOString()};
+
+  document.querySelectorAll("[data-website-field]").forEach(input => {
+    config.fields[input.dataset.websiteField] = input.value.trim();
+  });
+
+  document.querySelectorAll("[data-website-media]").forEach(input => {
+    config.media[input.dataset.websiteMedia] = input.value.trim();
+  });
+
+  return config;
+}
+
+async function loadLiveWebsiteContent(){
+  const ready = await waitForWebsiteSupabase();
+  if(!ready){
+    throw new Error("Supabase is not ready.");
+  }
+
+  const response = await window.ncSupabase
+    .from(WEBSITE_STORAGE_TABLE)
+    .select("data")
+    .eq("app_key",WEBSITE_CONTENT_KEY)
+    .maybeSingle();
+
+  if(response.error){
+    throw response.error;
+  }
+
+  return response.data?.data || null;
+}
+
+async function publishWebsiteContent(){
+  await requireWebsiteSession();
+
+  const config = collectWebsiteForm();
+  writeWebsiteDraft(config);
+  setWebsiteStatus("Publishing live changes...");
+
+  const ready = await waitForWebsiteSupabase();
+  if(!ready){
+    throw new Error("Supabase is not ready.");
+  }
+
+  const response = await window.ncSupabase
+    .from(WEBSITE_STORAGE_TABLE)
+    .upsert(
+      {
+        app_key:WEBSITE_CONTENT_KEY,
+        data:config,
+        updated_at:new Date().toISOString()
+      },
+      {onConflict:"app_key"}
+    );
+
+  if(response.error){
+    throw response.error;
+  }
+
+  setWebsiteStatus("Published. Refresh the website to see it live.","success");
+}
+
+function exportWebsiteConfig(){
+  const config = collectWebsiteForm();
+  writeWebsiteDraft(config);
+
+  const blob = new Blob([JSON.stringify(config,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "site-content.json";
+  link.click();
+  URL.revokeObjectURL(url);
+  setWebsiteStatus("Backup JSON exported.","success");
+}
+
+function safeFileName(name){
+  return String(name || "media")
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .slice(0,80) || "media";
+}
+
+async function uploadWebsiteMedia(target,file){
+  await requireWebsiteSession();
+
+  const extensionName = safeFileName(file.name);
+  const path = "website/" + target + "/" + Date.now() + "-" + extensionName;
+
+  setWebsiteStatus("Uploading " + target + " media...");
+
+  const upload = await window.ncSupabase.storage
+    .from(WEBSITE_MEDIA_BUCKET)
+    .upload(path,file,{
+      cacheControl:"3600",
+      upsert:false
+    });
+
+  if(upload.error){
+    throw upload.error;
+  }
+
+  const publicUrl = window.ncSupabase.storage
+    .from(WEBSITE_MEDIA_BUCKET)
+    .getPublicUrl(path)
+    .data
+    .publicUrl;
+
+  const input = document.querySelector(`[data-website-media="${target}"]`);
+  if(input){
+    input.value = publicUrl;
+  }
+
+  writeWebsiteDraft(collectWebsiteForm());
+  setWebsiteStatus("Media uploaded. Publish live when ready.","success");
+}
+
+function initWebsiteEditor(){
+  const form = document.getElementById("websiteContentForm");
+  if(!form) return;
+
+  const draft = readWebsiteDraft();
+  fillWebsiteForm(draft || defaultWebsiteContent);
+
+  form.addEventListener("submit",event => {
+    event.preventDefault();
+  });
+
+  if(draft){
+    setWebsiteStatus("Draft loaded from this device.");
+  }
+
+  loadLiveWebsiteContent()
+    .then(liveConfig => {
+      if(liveConfig && !readWebsiteDraft()){
+        fillWebsiteForm(liveConfig);
+        setWebsiteStatus("Live website content loaded.","success");
+      }
+    })
+    .catch(error => {
+      console.warn("Could not load live website content",error);
+      if(!draft){
+        setWebsiteStatus("Using fallback content. Live load is not available yet.");
+      }
+    });
+
+  form.addEventListener("input",() => {
+    writeWebsiteDraft(collectWebsiteForm());
+    setWebsiteStatus("Draft saved on this device.");
+  });
+
+  document.querySelectorAll("[data-website-media-file]").forEach(input => {
+    input.addEventListener("change",async () => {
+      const file = input.files && input.files[0];
+      if(!file) return;
+
+      try{
+        await uploadWebsiteMedia(input.dataset.websiteMediaFile,file);
+      }catch(error){
+        console.warn("Could not upload website media",error);
+        setWebsiteStatus("Could not upload. Sign in and check the site-media bucket.","error");
+      }finally{
+        input.value = "";
+      }
+    });
+  });
+
+  document.querySelector("[data-website-draft]")?.addEventListener("click",() => {
+    writeWebsiteDraft(collectWebsiteForm());
+    setWebsiteStatus("Draft saved on this device.","success");
+  });
+
+  document.querySelector("[data-website-load]")?.addEventListener("click",async () => {
+    try{
+      setWebsiteStatus("Loading live website content...");
+      const liveConfig = await loadLiveWebsiteContent();
+      fillWebsiteForm(liveConfig || defaultWebsiteContent);
+      writeWebsiteDraft(liveConfig || defaultWebsiteContent);
+      setWebsiteStatus(liveConfig ? "Live content loaded." : "No live content yet. Fallback loaded.","success");
+    }catch(error){
+      console.warn("Could not load live website content",error);
+      setWebsiteStatus("Could not load live content. Check Supabase connection.","error");
+    }
+  });
+
+  document.querySelector("[data-website-publish]")?.addEventListener("click",async () => {
+    try{
+      await publishWebsiteContent();
+    }catch(error){
+      console.warn("Could not publish website content",error);
+      setWebsiteStatus("Could not publish. Sign in, then check Supabase table access.","error");
+    }
+  });
+
+  document.querySelector("[data-website-export]")?.addEventListener("click",exportWebsiteConfig);
+}
+
+initWebsiteEditor();
+
+const STORAGE_KEY = "ncStudiosAdminTrackerV1";
+
+const checklistTemplate = [
+  {
+    title:"Booking admin",
+    tasks:[
+      "Enquiry received",
+      "Client details saved",
+      "Consultation completed",
+      "Package confirmed",
+      "Quote sent",
+      "Booking confirmed"
+    ]
+  },
+  {
+    title:"Contracts and finance",
+    tasks:[
+      "Contract created",
+      "Contract sent",
+      "Contract signed",
+      "Deposit invoice sent",
+      "Deposit paid",
+      "Final balance date confirmed",
+      "Payment notes saved"
+    ]
+  },
+  {
+    title:"Client folder",
+    tasks:[
+      "Google Drive folder created",
+      "Contract saved in client folder",
+      "Invoice saved in client folder",
+      "Planning form saved",
+      "Client references saved",
+      "Folder checked and organised"
+    ]
+  },
+  {
+    title:"Planning admin",
+    tasks:[
+      "Planning form sent",
+      "Planning form completed",
+      "WhatsApp group created",
+      "Timeline requested",
+      "Timeline received",
+      "Venue details saved",
+      "Supplier details saved",
+      "Shot list prepared"
+    ]
+  },
+  {
+    title:"Shoot prep",
+    tasks:[
+      "Gear list prepared",
+      "Camera batteries charged",
+      "Audio batteries charged",
+      "SD cards formatted",
+      "Travel route checked",
+      "Parking checked",
+      "Emergency contact saved",
+      "Final confirmation message sent"
+    ]
+  },
+  {
+    title:"Post wedding delivery",
+    tasks:[
+      "Footage backed up",
+      "Editing folder created",
+      "Highlight film edited",
+      "Full film edited",
+      "Exports checked",
+      "Delivery link created",
+      "Final payment received",
+      "Delivery link sent"
+    ]
+  },
+  {
+    title:"Aftercare",
+    tasks:[
+      "Client feedback requested",
+      "Review requested",
+      "Social media permission confirmed",
+      "Testimonial saved",
+      "Client archived"
+    ]
+  }
+];
+
+let clients = loadClients();
+let selectedId = clients.find(c => !c.archived)?.id || clients[0]?.id || null;
+
+function loadClients(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(!saved) return [];
+  try{
+    return JSON.parse(saved);
+  }catch{
+    return [];
+  }
+}
+
+function saveClients(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+}
+
+function createChecklist(){
+  const checklist = {};
+  checklistTemplate.forEach(section => {
+    section.tasks.forEach(task => {
+      checklist[task] = false;
+    });
+  });
+  return checklist;
+}
+
+function uid(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function getClient(id){
+  return clients.find(client => client.id === id);
+}
+
+function getTotals(client){
+  const total = checklistTemplate.reduce((sum, section) => sum + section.tasks.length, 0);
+  const done = Object.values(client.checklist || {}).filter(Boolean).length;
+  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+  return { total, done, percent, open: total - done };
+}
+
+function formatDate(value){
+  if(!value) return "No date set";
+  const date = new Date(value + "T12:00:00");
+  return date.toLocaleDateString("en-GB", {
+    weekday:"short",
+    day:"numeric",
+    month:"short",
+    year:"numeric"
+  });
+}
+
+function render(){
+  renderStats();
+  renderLists();
+  renderMain();
+}
+
+function renderStats(){
+  const active = clients.filter(c => !c.archived);
+  const archived = clients.filter(c => c.archived);
+
+  const allProgress = active.map(client => getTotals(client).percent);
+  const average = allProgress.length
+    ? Math.round(allProgress.reduce((a,b) => a + b, 0) / allProgress.length)
+    : 0;
+
+  const open = active.reduce((sum, client) => sum + getTotals(client).open, 0);
+
+  document.getElementById("activeCount").textContent = active.length;
+  document.getElementById("archivedCount").textContent = archived.length;
+  document.getElementById("averageProgress").textContent = average + "%";
+  document.getElementById("openTasks").textContent = open;
+  document.getElementById("clientCountLabel").textContent = active.length === 1 ? "1 client" : active.length + " clients";
+}
+
+function clientButton(client){
+  const totals = getTotals(client);
+  const button = document.createElement("button");
+  button.className = "clientCard" + (client.id === selectedId ? " active" : "");
+  button.type = "button";
+
+  button.innerHTML = `
+    <div class="clientTop">
+      <div>
+        <div class="clientName">${escapeHtml(client.name)}</div>
+        <div class="clientMeta">
+          ${escapeHtml(client.package || "No package")}<br>
+          ${escapeHtml(formatDate(client.date))}
+        </div>
+      </div>
+      <div class="progressText">${totals.percent}%</div>
+    </div>
+    <div class="progressBar">
+      <div class="progressFill" style="width:${totals.percent}%"></div>
+    </div>
+    <div class="progressText">${totals.done} of ${totals.total} complete</div>
+  `;
+
+  button.addEventListener("click", () => {
+    selectedId = client.id;
+    render();
+  });
+
+  return button;
+}
+
+function renderLists(){
+  const activeList = document.getElementById("clientList");
+  const archivedList = document.getElementById("archivedList");
+  activeList.innerHTML = "";
+  archivedList.innerHTML = "";
+
+  const active = clients.filter(c => !c.archived);
+  const archived = clients.filter(c => c.archived);
+
+  if(active.length === 0){
+    activeList.innerHTML = `<div class="clientMeta">No active clients yet. Add one above.</div>`;
+  }else{
+    active.forEach(client => activeList.appendChild(clientButton(client)));
+  }
+
+  if(archived.length === 0){
+    archivedList.innerHTML = `<div class="clientMeta">No archived clients yet.</div>`;
+  }else{
+    archived.forEach(client => archivedList.appendChild(clientButton(client)));
+  }
+}
+
+function renderMain(){
+  const panel = document.getElementById("mainPanel");
+  const client = getClient(selectedId);
+
+  if(!client){
+    panel.innerHTML = `
+      <div class="empty">
+        <div>
+          <h3>No client selected</h3>
+          <p>Add your first client to start tracking the admin.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const totals = getTotals(client);
+
+  panel.innerHTML = `
+    <div class="clientHeader">
+      <div>
+        <h2>${escapeHtml(client.name)}</h2>
+        <p>${escapeHtml(client.package || "No package")} • ${escapeHtml(formatDate(client.date))}</p>
+      </div>
+
+      <div class="headerActions">
+        <button class="btn small" id="archiveBtn">${client.archived ? "Move to active" : "Archive"}</button>
+        <button class="btn small danger" id="deleteBtn">Delete</button>
+      </div>
+    </div>
+
+    <div class="summaryGrid">
+      <div class="summaryCard">
+        <strong>${totals.percent}%</strong>
+        <span>Admin complete</span>
+      </div>
+      <div class="summaryCard">
+        <strong>${totals.done}</strong>
+        <span>Tasks done</span>
+      </div>
+      <div class="summaryCard">
+        <strong>${totals.open}</strong>
+        <span>Tasks left</span>
+      </div>
+      <div class="summaryCard">
+        <strong>${client.archived ? "Archived" : "Active"}</strong>
+        <span>Client status</span>
+      </div>
+    </div>
+
+    <div class="checkSections" id="checkSections"></div>
+
+    <div class="notesBox">
+      <h3>Client notes</h3>
+      <textarea id="notesArea">${escapeHtml(client.notes || "")}</textarea>
+    </div>
+  `;
+
+  document.getElementById("archiveBtn").addEventListener("click", () => {
+    client.archived = !client.archived;
+    saveClients();
+
+    if(!client.archived){
+      selectedId = client.id;
+    }else{
+      selectedId = clients.find(c => !c.archived)?.id || client.id;
+    }
+
+    render();
+  });
+
+  document.getElementById("deleteBtn").addEventListener("click", () => {
+    const confirmed = confirm("Delete this client and their checklist from this device?");
+    if(!confirmed) return;
+
+    clients = clients.filter(c => c.id !== client.id);
+    selectedId = clients.find(c => !c.archived)?.id || clients[0]?.id || null;
+    saveClients();
+    render();
+  });
+
+  document.getElementById("notesArea").addEventListener("input", event => {
+    client.notes = event.target.value;
+    saveClients();
+  });
+
+  renderCheckSections(client);
+}
+
+function renderCheckSections(client){
+  const wrap = document.getElementById("checkSections");
+
+  checklistTemplate.forEach(section => {
+    const total = section.tasks.length;
+    const done = section.tasks.filter(task => client.checklist?.[task]).length;
+
+    const sectionEl = document.createElement("section");
+    sectionEl.className = "checkSection";
+
+    sectionEl.innerHTML = `
+      <div class="checkHead">
+        <h3>${escapeHtml(section.title)}</h3>
+        <span>${done} of ${total} complete</span>
+      </div>
+      <div class="checkList"></div>
+    `;
+
+    const list = sectionEl.querySelector(".checkList");
+
+    section.tasks.forEach(task => {
+      if(client.checklist[task] === undefined){
+        client.checklist[task] = false;
+      }
+
+      const row = document.createElement("div");
+      row.className = "checkItem" + (client.checklist[task] ? " done" : "");
+
+      const id = "task_" + task.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "") + "_" + client.id;
+
+      row.innerHTML = `
+        <input type="checkbox" id="${id}" ${client.checklist[task] ? "checked" : ""}>
+        <label for="${id}">${escapeHtml(task)}</label>
+      `;
+
+      row.querySelector("input").addEventListener("change", event => {
+        client.checklist[task] = event.target.checked;
+        saveClients();
+        render();
+      });
+
+      list.appendChild(row);
+    });
+
+    wrap.appendChild(sectionEl);
+  });
+
+  saveClients();
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+document.getElementById("clientForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = document.getElementById("clientName").value.trim();
+  const date = document.getElementById("weddingDate").value;
+  const packageName = document.getElementById("clientPackage").value;
+  const notes = document.getElementById("clientNotes").value.trim();
+
+  if(!name) return;
+
+  const client = {
+    id:uid(),
+    name,
+    date,
+    package:packageName,
+    notes,
+    archived:false,
+    createdAt:new Date().toISOString(),
+    checklist:createChecklist()
+  };
+
+  clients.unshift(client);
+  selectedId = client.id;
+  saveClients();
+
+  event.target.reset();
+  document.getElementById("clientPackage").value = "Full Day Wedding Film";
+
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
