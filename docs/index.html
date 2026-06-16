@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>nc studios | cinematic wedding films</title>
-<meta name="description" content="nc studios creates cinematic wedding films, event coverage and social content. check availability and send an enquiry online.">
+<meta name="description" content="nc studios creates cinematic wedding films, photography and social content. check availability and send an enquiry online.">
 
 <link rel="manifest" href="website.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png?v=brand-20260612">
@@ -802,6 +802,69 @@ p{
   gap:12px;
 }
 
+.workCarousel{
+  display:grid;
+  gap:14px;
+}
+
+.workCarousel .filmGrid{
+  display:flex;
+  grid-template-columns:none;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  padding-bottom:2px;
+}
+
+.workCarousel .filmGrid::-webkit-scrollbar{
+  display:none;
+}
+
+.carouselControls{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.carouselButton{
+  min-width:88px;
+  min-height:42px;
+  border:1px solid rgba(216,183,110,0.36);
+  border-radius:999px;
+  background:rgba(247,239,227,0.07);
+  color:var(--ink);
+  font-family:var(--font-brand-light);
+  font-size:13px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.carouselButton:disabled{
+  opacity:0.38;
+  cursor:default;
+}
+
+.carouselDots{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.carouselDots span{
+  display:block;
+  width:34px;
+  height:2px;
+  background:rgba(247,239,227,0.22);
+  transition:background 180ms ease, width 180ms ease;
+}
+
+.carouselDots span.is-active{
+  width:48px;
+  background:var(--gold);
+}
+
 .filmCard{
   position:relative;
   min-height:430px;
@@ -818,6 +881,11 @@ p{
   align-items:end;
   overflow:hidden;
   transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease, filter 260ms ease;
+}
+
+.workCarousel .filmCard{
+  flex:0 0 min(78vw,520px);
+  scroll-snap-align:start;
 }
 
 .filmCard:nth-child(2){
@@ -878,15 +946,26 @@ p{
 .availabilityStrip{
   margin-top:28px;
   border-top:1px solid rgba(217,182,111,0.48);
-  padding-top:22px;
+  padding:0;
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;
+  gap:0;
+  overflow:hidden;
+}
+
+.availabilityStrip > div{
+  min-width:0;
+  padding:clamp(18px,2.4vw,28px);
+}
+
+.availabilityStrip > div + div{
+  border-left:1px solid rgba(216,183,110,0.20);
 }
 
 .availabilityStrip strong{
   display:block;
   font-size:18px;
+  line-height:1.08;
 }
 
 .availabilityStrip span{
@@ -895,6 +974,7 @@ p{
   color:var(--muted);
   line-height:1.5;
   font-size:14px;
+  max-width:34ch;
 }
 
 .enquiry{
@@ -1500,6 +1580,11 @@ label{
     grid-template-columns:1fr;
   }
 
+  .availabilityStrip > div + div{
+    border-left:0;
+    border-top:1px solid rgba(216,183,110,0.20);
+  }
+
   .heroDeck{
     grid-template-columns:1fr;
   }
@@ -1512,6 +1597,10 @@ label{
   .portraitPanel,
   .featureImage{
     min-height:420px;
+  }
+
+  .workCarousel .filmCard{
+    flex-basis:82vw;
   }
 
   .enquiryIntro{
@@ -1554,6 +1643,19 @@ label{
 
   .heroActions{
     display:grid;
+  }
+
+  .carouselControls{
+    justify-content:space-between;
+  }
+
+  .carouselButton{
+    flex:1;
+  }
+
+  .workCarousel .filmCard{
+    flex-basis:calc(100vw - 32px);
+    min-height:420px;
   }
 
   .button{
@@ -1761,6 +1863,7 @@ textarea{
 
 .button,
 .submitButton,
+.carouselButton,
 .messageLauncher,
 .messageClose,
 .meModeToggle,
@@ -1783,6 +1886,7 @@ textarea{
 }
 
 .button.secondary,
+.carouselButton,
 .messageLauncher,
 .messageClose,
 .meModeToggle,
@@ -1954,6 +2058,7 @@ textarea{
     padding:56px 16px !important;
   }
 }
+
 </style>
 </head>
 
@@ -1980,8 +2085,7 @@ textarea{
   <nav class="nav" aria-label="site navigation">
     <a href="#about">about</a>
     <a href="#films">work</a>
-    <a href="#services">services</a>
-    <a class="navCta" href="#availability">availability</a>
+    <a class="navCta" href="availability.html">availability</a>
   </nav>
 </header>
 
@@ -1989,39 +2093,35 @@ textarea{
   <section class="hero" aria-labelledby="hero-title">
     <div class="mediaMount" data-media-target="hero"></div>
     <div class="heroInner">
-      <p class="eyebrow" data-site-field="heroEyebrow">photography or videography for weddings, events and content</p>
-      <h1 id="hero-title" data-site-field="heroTitle">turning your moments into stories you can feel.</h1>
-      <p class="heroLead" data-site-field="heroLead">nc studios captures real moments through photography or videography, from the quiet details to the loud, joy-filled parts you never want to forget.</p>
+      <p class="eyebrow" data-site-field="heroEyebrow">photo + film</p>
+      <h1 id="hero-title" data-site-field="heroTitle">real. cinematic. yours.</h1>
+      <p class="heroLead" data-site-field="heroLead">weddings · couples · events</p>
 
       <div class="heroActions">
         <a class="button" href="#films">view the feel</a>
-        <a class="button secondary" href="#availability">check availability</a>
+        <a class="button secondary" href="availability.html">check availability</a>
       </div>
 
       <div class="heroDeck" aria-label="nc studio process">
         <a href="#about">
           <strong>01</strong>
-          <span>overview</span>
-          <em>the feeling</em>
+          <span>about</span>
         </a>
         <a href="#principles">
           <strong>02</strong>
           <span>process</span>
-          <em>how we work</em>
         </a>
-        <a href="#services">
+        <a href="#films">
           <strong>03</strong>
-          <span>services</span>
-          <em>what fits</em>
+          <span>work</span>
         </a>
-        <a href="#availability">
+        <a href="availability.html">
           <strong>04</strong>
-          <span>next step</span>
-          <em>send details</em>
+          <span>enquire</span>
         </a>
       </div>
 
-      <p class="scrollCue" data-site-field="scrollCue">scroll for the story</p>
+      <p class="scrollCue" data-site-field="scrollCue">explore</p>
     </div>
   </section>
 
@@ -2032,18 +2132,18 @@ textarea{
         <div class="portraitCaption">
           <div>
             <strong data-site-field="aboutCaptionTitle">the eye behind nc studios</strong>
-            <span data-site-field="aboutCaptionMeta">photo or film coverage</span>
+            <span data-site-field="aboutCaptionMeta">photo or film</span>
           </div>
           <span>uk</span>
         </div>
       </div>
 
       <div class="aboutCopy">
-        <p data-site-field="aboutHeadline">not just coverage. i capture the way a moment looks, sounds and feels, so you can come back to it properly.</p>
+        <p data-site-field="aboutHeadline">for the moments that stay.</p>
         <div class="smallCopy">
-          <p data-site-field="aboutBodyOne">nc studios is run with a relaxed, story-first approach. i shoot photography or videography for engagements, weddings, events and content sessions, with each booking focused on one clear coverage style for the day.</p>
-          <p data-site-field="aboutBodyTwo">the wedding film portfolio is being built as new work is edited, so the site leads with the feeling, the process and the visual style. engagement images, couple sessions and event coverage can still show the direction clearly while the next wedding film is being finished.</p>
-          <p data-site-field="aboutBodyThree">from first enquiry to final delivery, everything feeds into the studio workflow so dates, plans, shot notes and next steps stay organised behind the scenes.</p>
+          <p data-site-field="aboutBodyOne">weddings, couples, events and content.</p>
+          <p data-site-field="aboutBodyTwo">calm direction. clean delivery.</p>
+          <p data-site-field="aboutBodyThree">one clear plan.</p>
         </div>
       </div>
     </div>
@@ -2052,8 +2152,8 @@ textarea{
   <section class="section principles" id="principles">
     <div class="sectionInner">
       <div class="sectionHead">
-        <h2 data-site-field="principlesTitle">guided by the real moments.</h2>
-        <p data-site-field="principlesLead">the flow is simple: understand the couple, capture the atmosphere, then create a film that feels personal rather than generic.</p>
+        <h2 data-site-field="principlesTitle">approach.</h2>
+        <p data-site-field="principlesLead">natural. calm. intentional.</p>
       </div>
 
       <div class="principleGrid">
@@ -2062,7 +2162,7 @@ textarea{
             <span>01</span>
             <h3>story with purpose</h3>
           </div>
-          <p data-site-field="principleOneText">every film starts with the people, the energy and the moments that matter most, not a template.</p>
+          <p data-site-field="principleOneText">feeling first.</p>
         </article>
 
         <article class="principle">
@@ -2070,7 +2170,7 @@ textarea{
             <span>02</span>
             <h3>cinematic finish</h3>
           </div>
-          <p data-site-field="principleTwoText">clean camera movement, considered pacing, colour and audio come together to make the day feel alive again.</p>
+          <p data-site-field="principleTwoText">clean finish.</p>
         </article>
 
         <article class="principle">
@@ -2078,7 +2178,7 @@ textarea{
             <span>03</span>
             <h3>client focused</h3>
           </div>
-          <p data-site-field="principleThreeText">the process is calm, clear and collaborative so you know what is happening before, during and after the shoot.</p>
+          <p data-site-field="principleThreeText">clear process.</p>
         </article>
       </div>
     </div>
@@ -2087,190 +2187,60 @@ textarea{
   <section class="splitFeature" aria-labelledby="motion-title">
     <div class="featureImage" aria-hidden="true" data-media-panel="feature"></div>
     <div class="featureCopy">
-      <p class="eyebrow" data-site-field="featureEyebrow">where emotion meets motion</p>
-      <h2 id="motion-title" data-site-field="featureTitle">made for the moments that need motion.</h2>
-      <p data-site-field="featureBody">the laughter in a speech, the music in the room, the small reactions, the big entrances and the moments you missed while living it. that is where film earns its place.</p>
+      <p class="eyebrow" data-site-field="featureEyebrow">film</p>
+      <h2 id="motion-title" data-site-field="featureTitle">movement. sound. feeling.</h2>
+      <p data-site-field="featureBody">vows, speeches, reactions, atmosphere.</p>
     </div>
   </section>
 
   <section class="section" id="films">
     <div class="sectionInner">
       <div class="sectionHead">
-        <h2 data-site-field="workTitle">stories through stills or motion.</h2>
-        <p data-site-field="workLead">a portfolio-style look at what nc studios can create across engagements, weddings, celebrations and social content.</p>
+        <h2 data-site-field="workTitle">work.</h2>
+        <p data-site-field="workLead">photo, film and content.</p>
       </div>
 
-      <div class="filmGrid">
-        <article class="filmCard" data-media-panel="filmOne">
-          <div>
-            <span>engagements</span>
-            <h3 data-site-field="filmOneTitle">couple sessions</h3>
-            <p data-site-field="filmOneBody">warm, polished images for proposals, engagements, anniversaries and couple portraits.</p>
-          </div>
-        </article>
-
-        <article class="filmCard" data-media-panel="filmTwo">
-          <div>
-            <span>weddings</span>
-            <h3 data-site-field="filmTwoTitle">photo or film</h3>
-            <p data-site-field="filmTwoBody">wedding photography or videography shaped around emotion, details, movement and the moments that matter most.</p>
-          </div>
-        </article>
-
-        <article class="filmCard" data-media-panel="filmThree">
-          <div>
-            <span>events and content</span>
-            <h3 data-site-field="filmThreeTitle">short edits that move</h3>
-            <p data-site-field="filmThreeBody">event photography, vertical reels and teaser clips made for sharing quickly after the moment.</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section services" id="services">
-    <div class="sectionInner">
-      <div class="sectionHead">
-        <h2 data-site-field="servicesTitle">services and experience.</h2>
-        <p data-site-field="servicesLead">choose the coverage style that matches the day. if you are unsure, enquire and nc studios can guide you into either photography or videography.</p>
-      </div>
-
-      <div class="serviceGrid">
-        <article class="serviceCard">
-          <span>wedding coverage</span>
-          <h3>photo or film</h3>
-          <p data-site-field="serviceOneBody">wedding coverage for key moments, atmosphere and emotional details, booked as photography or videography for the date.</p>
-        </article>
-
-        <article class="serviceCard">
-          <span>engagement sessions</span>
-          <h3>couples and proposals</h3>
-          <p data-site-field="serviceTwoBody">engagement photography and couple sessions with a warm, editorial feel that can sit proudly on the site now.</p>
-        </article>
-
-        <article class="serviceCard">
-          <span>events and content</span>
-          <h3>ready for socials</h3>
-          <p data-site-field="serviceThreeBody">photography, short-form edits, teasers and vertical content for instagram, tiktok and client previews.</p>
-        </article>
-      </div>
-
-      <div class="availabilityStrip">
-        <div>
-          <strong>limited date coverage</strong>
-          <span>each date needs planning space, so availability is checked before confirming a booking.</span>
+      <div class="workCarousel" data-work-carousel>
+        <div class="carouselControls" aria-label="work carousel controls">
+          <button class="carouselButton" type="button" data-carousel-prev aria-label="previous work">prev</button>
+          <button class="carouselButton" type="button" data-carousel-next aria-label="next work">next</button>
         </div>
-        <div>
-          <strong>planning support</strong>
-          <span>shot priorities, timings, venue details and notes stay organised inside the studio app.</span>
+
+        <div class="filmGrid" data-carousel-track tabindex="0" aria-label="work carousel">
+          <article class="filmCard" data-media-panel="filmOne">
+            <div>
+              <span>engagements</span>
+              <h3 data-site-field="filmOneTitle">couple sessions</h3>
+              <p data-site-field="filmOneBody">couple sessions.</p>
+            </div>
+          </article>
+
+          <article class="filmCard" data-media-panel="filmTwo">
+            <div>
+              <span>weddings</span>
+              <h3 data-site-field="filmTwoTitle">photo or film</h3>
+              <p data-site-field="filmTwoBody">weddings.</p>
+            </div>
+          </article>
+
+          <article class="filmCard" data-media-panel="filmThree">
+            <div>
+              <span>events and content</span>
+              <h3 data-site-field="filmThreeTitle">short edits that move</h3>
+              <p data-site-field="filmThreeBody">reels and event edits.</p>
+            </div>
+          </article>
         </div>
-        <div>
-          <strong>clear next steps</strong>
-          <span>once you enquire, your request lands in the booking pipeline for follow up.</span>
+
+        <div class="carouselDots" aria-hidden="true">
+          <span class="is-active"></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section enquiry" id="availability">
-    <div class="sectionInner enquiryLayout">
-      <div class="enquiryIntro">
-        <p class="eyebrow">availability</p>
-        <h2 data-site-field="enquiryTitle">tell nc studios about your date.</h2>
-        <p data-site-field="enquiryLead">complete the form and your enquiry will feed into the nc studios booking app as a new enquiry, ready for follow up.</p>
-      </div>
-
-      <form class="formPanel" id="enquiryForm">
-        <div class="hiddenField" aria-hidden="true">
-          <label for="companyWebsite">company website</label>
-          <input id="companyWebsite" name="companyWebsite" type="text" tabindex="-1" autocomplete="off">
-        </div>
-
-        <div class="formGrid">
-          <div class="field">
-            <label for="fullName">full name</label>
-            <input id="fullName" name="fullName" type="text" autocomplete="name" required placeholder="your name">
-          </div>
-
-          <div class="field">
-            <label for="partnerName">partner or client name</label>
-            <input id="partnerName" name="partnerName" type="text" placeholder="optional">
-          </div>
-
-          <div class="field">
-            <label for="email">email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-          </div>
-
-          <div class="field">
-            <label for="phone">phone</label>
-            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="your number">
-          </div>
-
-          <div class="field">
-            <label for="eventType">event type</label>
-            <select id="eventType" name="eventType" required>
-              <option value="">select one</option>
-              <option>wedding</option>
-              <option>engagement</option>
-              <option>birthday</option>
-              <option>brand content</option>
-              <option>church event</option>
-              <option>other event</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="eventDate">event date</label>
-            <input id="eventDate" name="eventDate" type="date">
-          </div>
-
-          <div class="field wide">
-            <label for="venue">venue or location</label>
-            <input id="venue" name="venue" type="text" placeholder="venue, city or postcode">
-          </div>
-
-          <div class="field">
-            <label for="guestCount">guest count</label>
-            <input id="guestCount" name="guestCount" type="number" min="0" step="1" placeholder="approximate">
-          </div>
-
-          <div class="field">
-            <label for="packageInterest">package interest</label>
-            <select id="packageInterest" name="packageInterest">
-              <option>not sure yet</option>
-              <option>wedding highlight film</option>
-              <option>full wedding film</option>
-              <option>event coverage</option>
-              <option>social content clips</option>
-              <option>photography</option>
-              <option>videography</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="budget">budget</label>
-            <input id="budget" name="budget" type="text" placeholder="optional">
-          </div>
-
-          <div class="field">
-            <label for="instagram">instagram</label>
-            <input id="instagram" name="instagram" type="text" placeholder="@username">
-          </div>
-
-          <div class="field wide">
-            <label for="message">what would you like captured?</label>
-            <textarea id="message" name="message" required placeholder="tell us about the day, timings, style, important moments, or any questions."></textarea>
-          </div>
-        </div>
-
-        <div class="formFooter">
-          <button class="submitButton" type="submit">send enquiry</button>
-          <p class="formStatus" data-form-status aria-live="polite"></p>
-        </div>
-      </form>
-    </div>
-  </section>
 </main>
 
 <footer class="footer">
@@ -2316,7 +2286,7 @@ textarea{
         <option>quick question</option>
         <option>availability</option>
         <option>wedding booking</option>
-        <option>event coverage</option>
+        <option>events</option>
         <option>existing client</option>
       </select>
     </div>
@@ -2455,7 +2425,6 @@ textarea{
     ["filmTwoBody","work card 2 copy","textarea"],
     ["filmThreeTitle","work card 3 title","input"],
     ["filmThreeBody","work card 3 copy","textarea"],
-    ["servicesLead","services intro","textarea"],
     ["enquiryTitle","enquiry title","input"],
     ["enquiryLead","enquiry copy","textarea"]
   ];
@@ -2748,11 +2717,89 @@ textarea{
 </script>
 <script>
 (function(){
+  const carousel = document.querySelector("[data-work-carousel]");
+  if(!carousel){
+    return;
+  }
+
+  const track = carousel.querySelector("[data-carousel-track]");
+  const slides = Array.from(carousel.querySelectorAll(".filmCard"));
+  const prev = carousel.querySelector("[data-carousel-prev]");
+  const next = carousel.querySelector("[data-carousel-next]");
+  const dots = Array.from(carousel.querySelectorAll(".carouselDots span"));
+  let activeIndex = 0;
+  let ticking = false;
+
+  function updateState(){
+    const trackLeft = track.scrollLeft;
+    let nearest = 0;
+    let distance = Infinity;
+
+    slides.forEach(function(slide,index){
+      const slideDistance = Math.abs(slide.offsetLeft - trackLeft);
+      if(slideDistance < distance){
+        distance = slideDistance;
+        nearest = index;
+      }
+    });
+
+    activeIndex = nearest;
+    dots.forEach(function(dot,index){
+      dot.classList.toggle("is-active",index === activeIndex);
+    });
+
+    if(prev){
+      prev.disabled = activeIndex === 0;
+    }
+
+    if(next){
+      next.disabled = activeIndex === slides.length - 1;
+    }
+  }
+
+  function goTo(index){
+    const nextIndex = Math.max(0,Math.min(slides.length - 1,index));
+    slides[nextIndex].scrollIntoView({
+      behavior:"smooth",
+      inline:"start",
+      block:"nearest"
+    });
+  }
+
+  prev?.addEventListener("click",function(){
+    goTo(activeIndex - 1);
+  });
+
+  next?.addEventListener("click",function(){
+    goTo(activeIndex + 1);
+  });
+
+  track.addEventListener("scroll",function(){
+    if(ticking){
+      return;
+    }
+
+    ticking = true;
+    window.requestAnimationFrame(function(){
+      updateState();
+      ticking = false;
+    });
+  },{passive:true});
+
+  window.addEventListener("resize",updateState);
+  updateState();
+})();
+</script>
+<script>
+(function(){
   const STORAGE_TABLE = "app_storage";
   const ENQUIRY_PREFIX = "website_enquiry_";
 
   const form = document.getElementById("enquiryForm");
   const statusEl = document.querySelector("[data-form-status]");
+  if(!form || !statusEl){
+    return;
+  }
   const submitButton = form.querySelector("[type='submit']");
 
   function setStatus(message,type){
