@@ -1275,8 +1275,11 @@ function collectWebsiteForm(){
   document.querySelectorAll("[data-website-media]").forEach(input => {
     const key = input.dataset.websiteMedia;
     const value = input.value.trim();
-    config.media[key] = value;
-    config.mediaTypes[key] = inferMediaType(value,config.mediaTypes[key]);
+
+    if(value){
+      config.media[key] = value;
+      config.mediaTypes[key] = inferMediaType(value,config.mediaTypes[key]);
+    }
   });
 
   return config;
@@ -1385,6 +1388,11 @@ async function loadLiveWebsiteContent(){
 
 async function publishWebsiteContent(){
   await requireWebsiteSession();
+
+  const localOnlyTargets = Object.keys(previewMediaOverrides);
+  if(localOnlyTargets.length){
+    throw new Error("Wait for upload to finish before publishing: " + localOnlyTargets.join(", "));
+  }
 
   const config = collectWebsiteForm();
   writeWebsiteDraft(config);
@@ -1573,7 +1581,7 @@ function initWebsiteEditor(){
       await publishWebsiteContent();
     }catch(error){
       console.warn("Could not publish website content",error);
-      setWebsiteStatus("Could not publish. Sign in, then check Supabase table access.","error");
+      setWebsiteStatus(error.message || "Could not publish. Sign in, then check Supabase table access.","error");
     }
   });
 }
