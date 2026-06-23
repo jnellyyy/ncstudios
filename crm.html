@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NC Studios CRM</title>
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<meta name="theme-color" content="#050504">
+
+<style>
+.crm-layout{
+  display:grid;
+  grid-template-columns:minmax(280px,360px) minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+}
+
+.crm-actions{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.crm-actions a{
+  min-height:42px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  border-radius:16px;
+  color:var(--text);
+  text-decoration:none;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:850;
+  text-align:center;
+}
+
+.crm-queue{
+  display:grid;
+  gap:10px;
+}
+
+.queue-item{
+  display:block;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);
+  color:var(--text);
+  text-decoration:none;
+  border-radius:18px;
+  padding:12px;
+}
+
+.queue-item strong{
+  display:block;
+  font-size:14px;
+  line-height:1.2;
+}
+
+.queue-item span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  margin-top:4px;
+}
+
+.crm-list{
+  display:grid;
+  gap:12px;
+}
+
+.crm-card{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.065);
+  border-radius:24px;
+  padding:16px;
+}
+
+.crm-card.priority{
+  border-color:rgba(216,183,110,0.34);
+  background:rgba(216,183,110,0.10);
+}
+
+.crm-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.crm-name{
+  font-size:19px;
+  font-weight:850;
+  line-height:1.12;
+}
+
+.crm-sub{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  margin-top:5px;
+}
+
+.crm-badge{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:11px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.crm-badge.hot{
+  border-color:rgba(216,183,110,0.42);
+  background:rgba(216,183,110,0.16);
+}
+
+.crm-badge.good{
+  border-color:rgba(49,208,127,0.32);
+  background:rgba(49,208,127,0.11);
+}
+
+.crm-badge.cool{
+  border-color:rgba(122,167,255,0.32);
+  background:rgba(122,167,255,0.11);
+}
+
+.crm-badge.done{
+  opacity:0.72;
+}
+
+.crm-next{
+  margin-top:14px;
+  border:1px solid rgba(216,183,110,0.28);
+  background:rgba(216,183,110,0.10);
+  border-radius:18px;
+  padding:12px;
+}
+
+.crm-next span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+.crm-next strong{
+  display:block;
+  margin-top:5px;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.crm-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.crm-fact{
+  border:1px solid var(--line);
+  background:rgba(0,0,0,0.16);
+  border-radius:16px;
+  padding:10px;
+  min-width:0;
+}
+
+.crm-fact span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.2;
+}
+
+.crm-fact strong{
+  display:block;
+  color:var(--text);
+  font-size:13px;
+  line-height:1.25;
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+
+.crm-columns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.crm-panel{
+  border-top:1px solid var(--line);
+  padding-top:10px;
+}
+
+.crm-panel h3{
+  font-size:13px;
+  margin-bottom:8px;
+}
+
+.crm-line{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  padding:6px 0;
+  border-top:1px solid rgba(255,255,255,0.07);
+}
+
+.crm-line:first-of-type{
+  border-top:0;
+}
+
+.crm-line b{
+  color:var(--text);
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+.crm-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+
+.crm-links a,
+.crm-links button{
+  min-height:36px;
+  border-radius:13px;
+  padding:9px 11px;
+  font-size:12px;
+}
+
+.crm-empty{
+  border:1px dashed var(--line);
+  border-radius:22px;
+  padding:24px;
+  color:var(--muted);
+  line-height:1.45;
+  text-align:center;
+}
+
+@media(max-width:980px){
+  .crm-layout,
+  .crm-columns{
+    grid-template-columns:1fr;
+  }
+
+  .crm-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:560px){
+  .crm-top{
+    flex-direction:column;
+  }
+
+  .crm-actions,
+  .crm-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo">
+    <div class="brand-text">
+      <p class="kicker">Client command</p>
+      <h2>CRM</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="bookings.html">Bookings</a>
+    <a class="pill" href="clients.html">Clients</a>
+    <a class="pill" href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a class="active" href="crm.html">CRM</a>
+  <a href="bookings.html?status=enquiry">Enquiries</a>
+  <a href="consultations.html">Consult</a>
+  <a href="clients.html">Clients</a>
+  <a href="finance.html">Finance</a>
+  <a href="delivery.html">Delivery</a>
+  <a href="messages.html">Messages</a>
+  <a href="lists.html">To Do</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">One client view</p>
+      <h1>Client CRM</h1>
+      <p class="subtext">See who needs chasing, what is unpaid, what admin is missing, what is in delivery and where to jump next.</p>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn" href="bookings.html">Add booking</a>
+      <a class="ghost-btn" href="consultations.html">Call notes</a>
+      <a class="ghost-btn" href="admin.html">Admin tracker</a>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Client records</span>
+    <strong id="statRecords">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Need chase</span>
+    <strong id="statChase">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Outstanding</span>
+    <strong id="statOutstanding">&pound;0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>In delivery</span>
+    <strong id="statDelivery">0</strong>
+  </article>
+</section>
+
+<main class="crm-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Today first</h2>
+        <p>The shortest list of who to chase or update next.</p>
+      </div>
+    </div>
+
+    <div id="chaseList" class="crm-queue"></div>
+
+    <div class="crm-actions">
+      <a href="messages.html">Reply messages</a>
+      <a href="finance.html">Check money</a>
+      <a href="delivery.html">Delivery jobs</a>
+      <a href="lists.html">Follow-ups</a>
+      <a href="bookings.html">Bookings</a>
+      <a href="clients.html">Clients</a>
+    </div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Client command centre</h2>
+        <p>Each card pulls the best available information from the app.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="crmSearch" type="search" placeholder="Search client, project, email, note or action">
+      </div>
+
+      <div class="buy-controls">
+        <select id="crmFilter">
+          <option value="action">Needs action</option>
+          <option value="all">All clients</option>
+          <option value="enquiry">Enquiries</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="unpaid">Money due</option>
+          <option value="delivery">In delivery</option>
+          <option value="admin">Admin missing</option>
+          <option value="complete">Complete</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="crmList" class="crm-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios client CRM</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+
+<script>
+const STORE = {
+  bookings:"ncstudios_bookings_v1",
+  clients:"ncstudios_clients_v1",
+  finance:"ncstudios_finance_v1",
+  delivery:"ncstudios_delivery_v1",
+  messages:"ncstudios_messages_v1",
+  consultations:"ncstudios_consultations_v1",
+  tasks:"ncstudios_lists_v1",
+  admin:"ncStudiosAdminTrackerV1"
+};
+
+let crmRecords = [];
+
+document.getElementById("crmSearch").addEventListener("input", renderCrm);
+document.getElementById("crmFilter").addEventListener("change", renderCrm);
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function loadData(){
+  return {
+    bookings:readData(STORE.bookings),
+    clients:readData(STORE.clients),
+    finance:readData(STORE.finance),
+    delivery:readData(STORE.delivery),
+    messages:readData(STORE.messages),
+    consultations:readData(STORE.consultations),
+    tasks:readData(STORE.tasks),
+    admin:readData(STORE.admin)
+  };
+}
+
+function buildRecords(){
+  const data = loadData();
+  const records = new Map();
+
+  function ensure(name){
+    const clean = displayName(name);
+    const key = recordKey(clean);
+    if(!key) return null;
+
+    if(!records.has(key)){
+      records.set(key, {
+        key,
+        name:clean,
+        bookings:[],
+        clients:[],
+        finance:[],
+        delivery:[],
+        messages:[],
+        consultations:[],
+        tasks:[],
+        admin:[]
+      });
+    }
+
+    const record = records.get(key);
+    if(clean.length > record.name.length && clean.length < 44){
+      record.name = clean;
+    }
+    return record;
+  }
+
+  data.bookings.forEach(item => addToRecord(ensure(item.clientName || item.eventName), "bookings", item));
+  data.clients.forEach(item => addToRecord(ensure(item.clientName || item.name), "clients", item));
+  data.finance.forEach(item => addToRecord(ensure(item.client), "finance", item));
+  data.delivery.forEach(item => addToRecord(ensure(item.client || item.projectName), "delivery", item));
+  data.messages.forEach(item => addToRecord(ensure(item.clientName || item.contactEmail || item.subject), "messages", item));
+  data.consultations.forEach(item => addToRecord(ensure(item.project || item.contactName), "consultations", item));
+  data.tasks.forEach(item => addToRecord(ensure(item.project && item.project !== "business" ? item.project : ""), "tasks", item));
+  data.admin.forEach(item => addToRecord(ensure(item.name), "admin", item));
+
+  return [...records.values()]
+    .map(enrichRecord)
+    .sort((a,b) => scoreRecord(b) - scoreRecord(a) || a.name.localeCompare(b.name));
+}
+
+function addToRecord(record,type,item){
+  if(record) record[type].push(item);
+}
+
+function enrichRecord(record){
+  record.booking = newest(record.bookings, ["updatedAt","eventDate","createdAt"]);
+  record.client = newest(record.clients, ["updatedAt","eventDate","createdAt"]);
+  record.consultation = newest(record.consultations, ["updatedAt","callDate","weddingDate","createdAt"]);
+  record.deliveryJob = activeFirst(record.delivery, "stage", "delivered");
+  record.latestMessage = newest(record.messages, ["createdAt","updatedAt"]);
+  record.adminClient = activeFirst(record.admin, "archived", true);
+  record.openTasks = record.tasks.filter(item => item.status !== "done");
+  record.activeMessages = record.messages.filter(item => !["replied","archived"].includes(item.status));
+  record.outstanding = outstandingMoney(record);
+  record.adminTotals = adminTotals(record.adminClient);
+  record.nextMove = nextMove(record);
+  record.status = recordStatus(record);
+  record.searchText = JSON.stringify(record).toLowerCase();
+  return record;
+}
+
+function newest(items,fields){
+  return [...items].sort((a,b) => latestValue(b,fields).localeCompare(latestValue(a,fields)))[0] || null;
+}
+
+function activeFirst(items,field,completeValue){
+  return [...items].sort((a,b) => {
+    const aDone = a[field] === completeValue;
+    const bDone = b[field] === completeValue;
+    if(aDone !== bDone) return aDone ? 1 : -1;
+    return String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || ""));
+  })[0] || null;
+}
+
+function latestValue(item,fields){
+  for(const field of fields){
+    if(item && item[field]) return String(item[field]);
+  }
+  return "";
+}
+
+function outstandingMoney(record){
+  const financeDue = record.finance
+    .filter(item => item.type === "income" && item.status !== "paid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+  const bookingDue = record.booking
+    ? Math.max(Number(record.booking.packagePrice || 0) - Number(record.booking.depositPaid || 0), 0)
+    : 0;
+
+  return Math.max(financeDue, bookingDue);
+}
+
+function adminTotals(client){
+  if(!client || !client.checklist){
+    return {done:0,total:0,open:0,percent:0};
+  }
+
+  const values = Object.values(client.checklist);
+  const total = values.length;
+  const done = values.filter(Boolean).length;
+  return {
+    done,
+    total,
+    open:Math.max(total - done, 0),
+    percent:total ? Math.round((done / total) * 100) : 0
+  };
+}
+
+function nextMove(record){
+  if(record.activeMessages.length){
+    return `${record.activeMessages.length} message${record.activeMessages.length === 1 ? "" : "s"} need a reply or update.`;
+  }
+
+  if(record.booking?.nextAction){
+    return record.booking.nextAction;
+  }
+
+  if(record.consultation?.nextStep){
+    return record.consultation.nextStep;
+  }
+
+  if(record.consultation?.status === "follow-up"){
+    return "Follow up after consultation and move them toward deposit.";
+  }
+
+  if(record.outstanding > 0){
+    return `${money(record.outstanding)} still needs chasing or confirming.`;
+  }
+
+  if(record.adminTotals.open > 0){
+    return `${record.adminTotals.open} admin item${record.adminTotals.open === 1 ? "" : "s"} still open.`;
+  }
+
+  if(record.deliveryJob && record.deliveryJob.stage !== "delivered"){
+    return record.deliveryJob.nextAction || "Move delivery forward.";
+  }
+
+  if(record.openTasks.length){
+    return `${record.openTasks.length} to-do item${record.openTasks.length === 1 ? "" : "s"} still open.`;
+  }
+
+  return "No chase showing. Keep warm or archive when complete.";
+}
+
+function recordStatus(record){
+  if(record.activeMessages.length || record.booking?.status === "enquiry") return {label:"Needs reply", tone:"hot"};
+  if(record.consultation?.status === "follow-up") return {label:"Follow up", tone:"hot"};
+  if(record.outstanding > 0) return {label:"Money due", tone:"hot"};
+  if(record.deliveryJob && record.deliveryJob.stage !== "delivered") return {label:"Delivery", tone:"cool"};
+  if(record.booking?.status === "confirmed" || record.client?.status === "active") return {label:"Active", tone:"good"};
+  if(record.booking?.status === "completed" || record.client?.status === "complete") return {label:"Complete", tone:"done"};
+  if(record.consultation?.status === "secured") return {label:"Secured", tone:"good"};
+  return {label:"Lead", tone:"cool"};
+}
+
+function scoreRecord(record){
+  let score = 0;
+  if(record.activeMessages.length) score += 80;
+  if(record.booking?.status === "enquiry") score += 65;
+  if(record.consultation?.status === "follow-up") score += 55;
+  if(record.outstanding > 0) score += 45;
+  if(record.adminTotals.open > 0) score += 25;
+  if(record.deliveryJob && record.deliveryJob.stage !== "delivered") score += 20;
+  if(record.openTasks.length) score += 15;
+  if(record.booking?.status === "completed" || record.client?.status === "complete") score -= 60;
+  return score;
+}
+
+function needsAction(record){
+  return scoreRecord(record) > 0 && record.status.label !== "Complete";
+}
+
+function renderCrm(){
+  crmRecords = buildRecords();
+
+  const search = document.getElementById("crmSearch").value.trim().toLowerCase();
+  const filter = document.getElementById("crmFilter").value;
+
+  const visible = crmRecords.filter(record => {
+    const filterMatch =
+      filter === "all" ||
+      (filter === "action" && needsAction(record)) ||
+      (filter === "enquiry" && record.booking?.status === "enquiry") ||
+      (filter === "confirmed" && record.booking?.status === "confirmed") ||
+      (filter === "unpaid" && record.outstanding > 0) ||
+      (filter === "delivery" && record.deliveryJob && record.deliveryJob.stage !== "delivered") ||
+      (filter === "admin" && record.adminTotals.open > 0) ||
+      (filter === "complete" && record.status.label === "Complete");
+
+    return filterMatch && (!search || record.searchText.includes(search));
+  });
+
+  updateStats();
+  renderQueue();
+  renderList(visible);
+}
+
+function updateStats(){
+  const chase = crmRecords.filter(needsAction);
+  const outstanding = crmRecords.reduce((sum,record) => sum + record.outstanding, 0);
+  const delivery = crmRecords.filter(record => record.deliveryJob && record.deliveryJob.stage !== "delivered").length;
+
+  setText("statRecords", crmRecords.length);
+  setText("statChase", chase.length);
+  setText("statOutstanding", money(outstanding));
+  setText("statDelivery", delivery);
+}
+
+function renderQueue(){
+  const list = document.getElementById("chaseList");
+  const chase = crmRecords.filter(needsAction).slice(0,8);
+
+  if(!chase.length){
+    list.innerHTML = `<div class="crm-empty">No obvious chase list right now. Check all clients or add more details to bookings, admin and finance.</div>`;
+    return;
+  }
+
+  list.innerHTML = chase.map(record => `
+    <a class="queue-item" href="#client-${escapeAttribute(record.key)}">
+      <strong>${escapeHTML(record.name)}</strong>
+      <span>${escapeHTML(record.nextMove)}</span>
+    </a>
+  `).join("");
+}
+
+function renderList(records){
+  const list = document.getElementById("crmList");
+
+  if(!records.length){
+    list.innerHTML = `
+      <div class="crm-empty">
+        No CRM records match this view yet. Add a booking, client, consultation or admin client and it will appear here.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = records.map(renderRecord).join("");
+}
+
+function renderRecord(record){
+  const date = firstValue([
+    record.booking?.eventDate,
+    record.client?.eventDate,
+    record.consultation?.weddingDate,
+    record.deliveryJob?.dueDate,
+    record.adminClient?.date
+  ]);
+  const email = firstValue([record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
+  const phone = firstValue([record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
+  const location = firstValue([record.booking?.location, record.client?.location, record.consultation?.ceremonyLocation, record.deliveryJob?.projectName]);
+  const packageName = firstValue([record.adminClient?.package, record.deliveryJob?.packageType, packageLabel(record.consultation?.recommendedPackage), record.booking?.eventName]);
+  const deliveryLabel = record.deliveryJob ? `${stageLabel(record.deliveryJob.stage)} ${Number(record.deliveryJob.progress || 0)}%` : "No delivery";
+  const adminLabel = record.adminTotals.total ? `${record.adminTotals.percent}% complete` : "No admin";
+  const moneyLabel = record.outstanding > 0 ? `${money(record.outstanding)} due` : "Clear";
+
+  return `
+    <article class="crm-card ${needsAction(record) ? "priority" : ""}" id="client-${escapeAttribute(record.key)}">
+      <div class="crm-top">
+        <div>
+          <div class="crm-name">${escapeHTML(record.name)}</div>
+          <div class="crm-sub">${escapeHTML(packageName || "No package")} | ${escapeHTML(niceDate(date))}</div>
+        </div>
+        <span class="crm-badge ${escapeAttribute(record.status.tone)}">${escapeHTML(record.status.label)}</span>
+      </div>
+
+      <div class="crm-next">
+        <span>Next move</span>
+        <strong>${escapeHTML(record.nextMove)}</strong>
+      </div>
+
+      <div class="crm-grid">
+        <div class="crm-fact"><span>Email</span><strong>${escapeHTML(email || "Missing")}</strong></div>
+        <div class="crm-fact"><span>Phone</span><strong>${escapeHTML(phone || "Missing")}</strong></div>
+        <div class="crm-fact"><span>Location</span><strong>${escapeHTML(location || "Missing")}</strong></div>
+        <div class="crm-fact"><span>Money</span><strong>${escapeHTML(moneyLabel)}</strong></div>
+        <div class="crm-fact"><span>Admin</span><strong>${escapeHTML(adminLabel)}</strong></div>
+      </div>
+
+      <div class="crm-columns">
+        <section class="crm-panel">
+          <h3>Client flow</h3>
+          <div class="crm-line"><span>Booking</span><b>${escapeHTML(statusLabel(record.booking?.status, "No booking"))}</b></div>
+          <div class="crm-line"><span>Consultation</span><b>${escapeHTML(statusLabel(record.consultation?.status, "No call"))}</b></div>
+          <div class="crm-line"><span>Messages</span><b>${record.activeMessages.length} active</b></div>
+          <div class="crm-line"><span>Open tasks</span><b>${record.openTasks.length}</b></div>
+        </section>
+
+        <section class="crm-panel">
+          <h3>Production</h3>
+          <div class="crm-line"><span>Delivery</span><b>${escapeHTML(deliveryLabel)}</b></div>
+          <div class="crm-line"><span>Delivery action</span><b>${escapeHTML(record.deliveryJob?.nextAction || "None set")}</b></div>
+          <div class="crm-line"><span>Latest message</span><b>${escapeHTML(record.latestMessage?.subject || "None")}</b></div>
+          <div class="crm-line"><span>Budget</span><b>${escapeHTML(budgetLabel(record.consultation?.budgetResponse))}</b></div>
+        </section>
+      </div>
+
+      <div class="crm-links">
+        <a class="ghost-btn" href="bookings.html">Bookings</a>
+        <a class="ghost-btn" href="clients.html">Clients</a>
+        <a class="ghost-btn" href="consultations.html">Consult</a>
+        <a class="ghost-btn" href="admin.html">Admin</a>
+        <a class="ghost-btn" href="finance.html">Money</a>
+        <a class="ghost-btn" href="delivery.html">Delivery</a>
+        <a class="ghost-btn" href="messages.html">Messages</a>
+        <button class="btn" type="button" onclick="copyClientSummary('${escapeAttribute(record.key)}')">Copy summary</button>
+      </div>
+    </article>
+  `;
+}
+
+function copyClientSummary(key){
+  const record = crmRecords.find(item => item.key === key);
+  if(!record) return;
+
+  const text = clientSummary(record);
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => alert("CRM summary copied."));
+    return;
+  }
+
+  const box = document.createElement("textarea");
+  box.value = text;
+  document.body.appendChild(box);
+  box.select();
+  document.execCommand("copy");
+  box.remove();
+  alert("CRM summary copied.");
+}
+
+function clientSummary(record){
+  const date = firstValue([record.booking?.eventDate, record.client?.eventDate, record.consultation?.weddingDate, record.deliveryJob?.dueDate]);
+  const email = firstValue([record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
+  const phone = firstValue([record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
+
+  return [
+    `NC Studios CRM - ${record.name}`,
+    `Status: ${record.status.label}`,
+    `Date: ${niceDate(date)}`,
+    `Next move: ${record.nextMove}`,
+    `Money: ${record.outstanding > 0 ? money(record.outstanding) + " due" : "No outstanding balance showing"}`,
+    `Admin: ${record.adminTotals.total ? record.adminTotals.percent + "% complete" : "No admin tracker yet"}`,
+    `Delivery: ${record.deliveryJob ? stageLabel(record.deliveryJob.stage) + " " + Number(record.deliveryJob.progress || 0) + "%" : "No delivery job yet"}`,
+    `Contact: ${email || "no email"} / ${phone || "no phone"}`
+  ].join("\\n");
+}
+
+function setText(id,value){
+  const element = document.getElementById(id);
+  if(element) element.textContent = value;
+}
+
+function firstValue(values){
+  return values.find(value => value !== undefined && value !== null && String(value).trim() !== "") || "";
+}
+
+function displayName(value){
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b(wedding|project|client)\b$/i, "")
+    .trim();
+}
+
+function recordKey(value){
+  const noise = new Set(["and","the","of","for","wedding","film","films","video","videography","photography","shoot","project","couple","client"]);
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !noise.has(word))
+    .join(" ");
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "No date";
+  const date = new Date(String(value).includes("T") ? value : value + "T12:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", {day:"2-digit", month:"short", year:"numeric"});
+}
+
+function statusLabel(value,fallback){
+  const labels = {
+    enquiry:"Enquiry",
+    consultation:"Consultation",
+    confirmed:"Confirmed",
+    postponed:"Postponed",
+    completed:"Completed",
+    lead:"Lead",
+    active:"Active",
+    complete:"Complete",
+    open:"Open",
+    "follow-up":"Follow up",
+    secured:"Secured",
+    "not-booking":"Not booking",
+    new:"New",
+    replied:"Replied",
+    archived:"Archived",
+    paid:"Paid",
+    waiting:"Waiting",
+    hold:"Hold",
+    unpaid:"Unpaid"
+  };
+
+  return labels[value] || fallback || value || "Not set";
+}
+
+function stageLabel(value){
+  const labels = {
+    "not-started":"Not started",
+    editing:"Editing",
+    review:"Review",
+    delivered:"Delivered"
+  };
+
+  return labels[value] || "Not started";
+}
+
+function packageLabel(value){
+  const labels = {
+    "full-day":"Full day video",
+    "half-day":"Half day video",
+    custom:"Custom"
+  };
+
+  return labels[value] || "";
+}
+
+function budgetLabel(value){
+  const labels = {
+    "within-budget":"Within budget",
+    "needs-thinking":"Needs thinking",
+    "above-budget":"Above budget",
+    "follow-up-needed":"Follow-up needed"
+  };
+
+  return labels[value] || "Not noted";
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+renderCrm();
+</script>
+
+</body>
+</html>

@@ -189,7 +189,7 @@ body::before{
 
 .quick{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:8px;
 }
 
@@ -489,7 +489,7 @@ body::before{
 
 .bottomRow{
   display:none;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:8px;
 }
 
@@ -806,6 +806,7 @@ body::before{
 
 <section class="quick">
   <a href="bookings.html?status=enquiry">New enquiries</a>
+  <a href="crm.html">CRM</a>
   <a href="messages.html">Messages</a>
 </section>
 
@@ -928,6 +929,19 @@ body::before{
     </div>
   </a>
 
+  <a class="tile" href="crm.html">
+    <div>
+      <div class="icon">R</div>
+      <h3>CRM</h3>
+      <span class="tileMetric" id="crmWidget">0</span>
+      <p>One-page client view for chase, money, admin and delivery.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+
   <a class="tile" href="finance.html">
     <div>
       <div class="icon">£</div>
@@ -1022,6 +1036,7 @@ body::before{
 </main>
 
 <nav class="bottomRow">
+  <a href="crm.html">CRM</a>
   <a href="shot-lists.html">Shots</a>
   <a href="messages.html">Messages</a>
   <a href="lists.html">To Do</a>
@@ -1196,11 +1211,25 @@ function updateDashboardFromLocal(){
     .filter(item => item.type === "income" && item.status !== "unpaid")
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
   const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+  const crmTotal = countProjects({
+    bookings,
+    clients,
+    messages,
+    delivery,
+    shots,
+    timeline,
+    gear,
+    settings,
+    callSheets,
+    consultations,
+    capture
+  });
 
   setText("incomeTotal", money(income));
   setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
   setText("messageTileWidget", openMessages);
   setText("clientWidget", clients.length);
+  setText("crmWidget", crmTotal);
   setText("financeWidget", money(income));
   setText("deliveryWidget", delivery.length);
   setText("shotsWidget", shots.length);
@@ -1278,11 +1307,25 @@ async function updateDashboardFromSupabase(){
         .filter(item => item.type === "income" && item.status !== "unpaid")
         .reduce((sum,item) => sum + Number(item.amount || 0), 0);
       const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+      const crmTotal = countProjects({
+        bookings,
+        clients:appStorageClients,
+        messages,
+        delivery,
+        shots,
+        timeline,
+        gear,
+        settings,
+        callSheets,
+        consultations,
+        capture
+      });
 
       setText("incomeTotal", money(income));
       setText("clientsTotal", appStorageClients.length);
       setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
       setText("messageTileWidget", openMessages);
+      setText("crmWidget", crmTotal);
       setText("financeWidget", money(income));
       setText("deliveryWidget", delivery.length);
       setText("shotsWidget", shots.length);
