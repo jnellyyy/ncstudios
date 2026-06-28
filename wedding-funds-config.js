@@ -7,7 +7,7 @@
   roadmap data.
 */
 window.NC_WEDDING_FUNDS_DEFAULTS = {
-  dataVersion:1,
+  dataVersion:2,
   currency:"GBP",
   rentalTarget:300,
   rentalWarningAt:300,
@@ -37,9 +37,11 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
       amount:595,
       expectedDate:"2026-07-04",
       weddingDate:"",
-      purpose:"Core kit, storage, basic monitor support and rental pot.",
+      weddingStatus:"completed",
+      noCostsRemaining:true,
+      purpose:"Remaining wedding balance. No wedding costs remain to be paid.",
       status:"pending",
-      notes:"Protect the rental pot before buying optional kit."
+      notes:"Wedding complete. Waiting for the final £595 balance; leave it unallocated until it is received."
     },
     {
       id:"simi-kiefah-august",
@@ -55,82 +57,6 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
 
   // EDIT ALLOCATION ESTIMATES, PRIORITIES, NOTES AND STARTING STATUSES HERE.
   allocations:[
-    {
-      id:"july-rental-pot",
-      paymentId:"marvin-blessing-july",
-      name:"Rental pot",
-      category:"Protected rental money",
-      priority:"essential",
-      estimatedCost:300,
-      status:"planned",
-      notes:"Do not use this money for extra kit.",
-      protected:true
-    },
-    {
-      id:"july-emergency-travel",
-      paymentId:"marvin-blessing-july",
-      name:"Emergency and travel buffer",
-      category:"Buffer",
-      priority:"essential",
-      estimatedCost:75,
-      status:"planned",
-      notes:"Keep available for travel or unexpected wedding costs.",
-      buffer:true
-    },
-    {
-      id:"july-ssd",
-      paymentId:"marvin-blessing-july",
-      name:"1TB SSD",
-      category:"Storage",
-      priority:"high",
-      estimatedCost:70,
-      status:"planned",
-      notes:"Buy storage before the August wedding.",
-      buyListId:"ssd-1tb"
-    },
-    {
-      id:"july-battery",
-      paymentId:"marvin-blessing-july",
-      name:"Second NP F550 battery",
-      category:"Monitor support",
-      priority:"high",
-      estimatedCost:15,
-      status:"planned",
-      notes:"Removes the single-battery risk.",
-      buyListId:"np-f550-second"
-    },
-    {
-      id:"july-hdmi",
-      paymentId:"marvin-blessing-july",
-      name:"Short flexible HDMI cable",
-      category:"Monitor support",
-      priority:"medium",
-      estimatedCost:15,
-      status:"planned",
-      notes:"Only buy after confirming the current cable is unsuitable.",
-      buyListId:"short-hdmi"
-    },
-    {
-      id:"july-rig-bit",
-      paymentId:"marvin-blessing-july",
-      name:"Monitor arm or missing rig bit",
-      category:"Rig support",
-      priority:"medium",
-      estimatedCost:30,
-      status:"planned",
-      notes:"Use for the exact missing support part after a rig test.",
-      buyListId:"monitor-arm"
-    },
-    {
-      id:"july-flexible",
-      paymentId:"marvin-blessing-july",
-      name:"Remaining flexible balance",
-      category:"Flexible",
-      priority:"hold",
-      estimatedCost:90,
-      status:"planned",
-      notes:"Leave untouched until rentals, storage and battery support are safe."
-    },
     {
       id:"august-rental-balance",
       paymentId:"simi-kiefah-august",

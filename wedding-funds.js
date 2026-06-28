@@ -13,7 +13,7 @@
   }
 
   const PAYMENT_STATUSES = [
-    ["pending","Pending"],
+    ["pending","Waiting for payment"],
     ["received","Received"],
     ["allocated","Allocated"]
   ];
@@ -70,7 +70,8 @@
 
   function loadState(){
     const raw = readJSON(STORAGE_KEY,[]);
-    const saved = Array.isArray(raw) ? raw[0] : raw;
+    const stored = Array.isArray(raw) ? raw[0] : raw;
+    const saved = migrateState(stored);
     if(!saved || typeof saved !== "object") return clone(defaults);
 
     const merged = {...clone(defaults),...saved};
@@ -84,6 +85,29 @@
     });
     merged.nextWedding = {...clone(defaults.nextWedding),...(saved.nextWedding || {})};
     return merged;
+  }
+
+  function migrateState(saved){
+    if(!saved || typeof saved !== "object") return saved;
+    const migrated = clone(saved);
+    const version = Number(migrated.dataVersion || 1);
+
+    if(version < 2){
+      const payment = (migrated.payments || []).find(item => item.id === "marvin-blessing-july");
+      const configured = defaults.payments.find(item => item.id === "marvin-blessing-july");
+      if(payment && configured){
+        payment.status = "pending";
+        payment.weddingStatus = "completed";
+        payment.noCostsRemaining = true;
+        payment.purpose = configured.purpose;
+        payment.notes = configured.notes;
+      }
+      migrated.allocations = (migrated.allocations || []).filter(item => item.paymentId !== "marvin-blessing-july");
+      migrated.dataVersion = 2;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
+    }
+
+    return migrated;
   }
 
   function saveState(){
@@ -233,8 +257,8 @@
     const rentalConfirmed = state.rentals.length > 0 && state.rentals.every(item => ["reserved","received","returned"].includes(item.status));
     const weddingDays = daysUntil(state.nextWedding.date);
     const battery = state.ownedKit.find(item => item.id === "np-f550");
-    const ssd = state.allocations.find(item => item.id === "july-ssd");
-    const ssdBought = ssd && effectiveAllocationStatus(ssd) === "bought";
+    const ssd = state.buyList.find(item => item.id === "ssd-1tb");
+    const ssdBought = ssd && effectiveBuyStatus(ssd) === "bought";
 
     if(totals.rentalSaved < state.rentalWarningAt){
       warnings.push({title:`Rental pot is ${money(state.rentalWarningAt - totals.rentalSaved)} short`,copy:`Keep ${money(state.rentalWarningAt)} protected before optional kit.`});
@@ -283,7 +307,7 @@
       .map(payment => `
         <article class="payment-card">
           <div class="payment-top">
-            <div><h3>${escapeHTML(payment.client)}</h3><div class="payment-meta"><span class="meta-chip">Due ${escapeHTML(shortDate(payment.expectedDate))}</span>${payment.weddingDate ? `<span class="meta-chip">Wedding ${escapeHTML(shortDate(payment.weddingDate))}</span>` : ""}</div></div>
+            <div><h3>${escapeHTML(payment.client)}</h3><div class="payment-meta"><span class="meta-chip">Due ${escapeHTML(shortDate(payment.expectedDate))}</span>${payment.weddingStatus === "completed" ? `<span class="meta-chip complete">Wedding complete</span>` : payment.weddingDate ? `<span class="meta-chip">Wedding ${escapeHTML(shortDate(payment.weddingDate))}</span>` : ""}</div></div>
             <strong class="payment-amount">${money(payment.amount)}</strong>
           </div>
           <p class="payment-purpose">${escapeHTML(payment.purpose || payment.notes || "No purpose added.")}</p>
@@ -303,8 +327,8 @@
       return `
         <section class="allocation-group">
           <div class="allocation-group-heading"><div><span>${escapeHTML(shortDate(payment.expectedDate))} funds</span><h3>${escapeHTML(payment.client)}</h3></div><strong>${money(payment.amount)}</strong></div>
-          <div class="allocation-list">${items.map(renderAllocationCard).join("")}</div>
-          <div class="allocation-summary"><span>Active plan</span><strong>${money(activeTotal)}${difference === 0 ? " · fully assigned" : difference > 0 ? ` · ${money(difference)} open` : ` · ${money(Math.abs(difference))} over`}</strong></div>
+          <div class="allocation-list">${items.length ? items.map(renderAllocationCard).join("") : `<div class="allocation-empty"><strong>No wedding costs remaining</strong><span>${escapeHTML(payment.client)}'s wedding is complete. The balance stays unallocated until it is received.</span></div>`}</div>
+          <div class="allocation-summary"><span>${payment.noCostsRemaining ? "Wedding costs" : "Active plan"}</span><strong>${payment.noCostsRemaining ? `${money(0)} · ${money(payment.amount)} pending balance` : `${money(activeTotal)}${difference === 0 ? " · fully assigned" : difference > 0 ? ` · ${money(difference)} open` : ` · ${money(Math.abs(difference))} over`}`}</strong></div>
         </section>
       `;
     }).join("");
