@@ -1,8 +1,8 @@
 {
   "name": "NC Studios App",
   "short_name": "NC App",
-  "description": "NC Studios business dashboard for bookings, clients, finance, shot lists, gear, buying and delivery.",
-  "start_url": "./dashboard.html?v=sync-fixed-1",
+  "description": "NC Studio mobile business assistant and CRM for enquiries, bookings, clients, finance, production and delivery.",
+  "start_url": "./dashboard.html?v=assistant-1",
   "scope": "./",
   "display": "standalone",
   "background_color": "#050504",

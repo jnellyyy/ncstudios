@@ -10,7 +10,27 @@ Domain: `ncstudiouk.co.uk`
 - `dashboard.html` is the private studio app entry point.
 - `bookings.html` is where website enquiries appear as new booking enquiries.
 - `buy-list.html` tracks things to buy, rent, research or leave for later.
+- `studio-assistant.html` is the operational home for priorities, automations, pipeline, calendar and package suggestions.
+- `crm.html` combines every couple and now includes the complete editable client profile.
+- `content.html` tracks posting permission, portfolio selections, reel ideas, captions and post dates.
+- `wedding-funds.html` protects rental money and assigns incoming wedding payments.
 - `docs/` is the safe public deployment folder for the live website.
+
+## Run the private app locally
+
+From the repository folder, start a local static server:
+
+```bash
+python3 -m http.server 4173 --bind 127.0.0.1
+```
+
+Open `http://127.0.0.1:4173/dashboard.html`. The app saves on the device immediately. Sign in when prompted to sync the private records through Supabase, or choose **Use this device only** for local use.
+
+## Private database setup
+
+Run `supabase-secure-setup.sql` in the Supabase SQL editor after creating the NC Studio login user. It creates the admin-only CRM tables, packages, add-ons, tasks, reminders, payments, contracts, consultations, timelines, editing projects, templates, content plans and file links with row-level security.
+
+Do not put the Supabase service-role key in browser files. The browser uses the public project URL and anonymous key; access to private records is controlled by authentication and the admin policies in the SQL setup.
 
 ## Website enquiries
 

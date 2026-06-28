@@ -16,6 +16,9 @@
     "ncstudios_callsheets_v1",
     "ncstudios_messages_v1",
     "ncstudios_templates_v1",
+    "ncstudios_content_v1",
+    "ncstudios_crm_profiles_v1",
+    "ncstudios_wedding_funds_v1",
     "ncStudiosAdminTrackerV1"
   ];
 
@@ -102,6 +105,7 @@
       }
       .ncSyncAuth input{background:rgba(255,255,255,0.08);color:#f8f7f4;}
       .ncSyncAuth button{cursor:pointer;background:#d8b76e;color:#080806;font-weight:700;}
+      .ncSyncAuth .ncSyncLocalOnly{grid-column:1/-1;background:transparent;color:#f0dca8;border-color:rgba(216,183,110,0.34);}
       .ncSyncAuth .ncSyncAuthStatus{margin-top:8px;color:#f0a79e;font-size:12px;}
       @media(max-width:640px){
         .ncSyncAuth form{grid-template-columns:1fr;}
@@ -111,6 +115,10 @@
   }
 
   function showAuthPrompt(message){
+    if(sessionStorage.getItem("nc_sync_use_local_only") === "yes"){
+      return;
+    }
+
     injectAuthStyles();
 
     let panel = document.getElementById("ncSyncAuth");
@@ -125,6 +133,7 @@
           <input id="ncSyncEmail" type="email" autocomplete="email" placeholder="email" required>
           <input id="ncSyncPassword" type="password" autocomplete="current-password" placeholder="password" required>
           <button type="submit">Sign in</button>
+          <button class="ncSyncLocalOnly" type="button">Use this device only</button>
         </form>
         <div class="ncSyncAuthStatus" id="ncSyncAuthStatus"></div>
       `;
@@ -156,6 +165,11 @@
           console.warn("NC Sync: sign in failed", error);
           status.textContent = "Sign in failed. Check the email/password user in Supabase Auth.";
         }
+      });
+
+      panel.querySelector(".ncSyncLocalOnly").addEventListener("click", function(){
+        sessionStorage.setItem("nc_sync_use_local_only", "yes");
+        panel.hidden = true;
       });
     }
 

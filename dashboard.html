@@ -189,7 +189,7 @@ body::before{
 
 .quick{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:8px;
 }
 
@@ -489,7 +489,7 @@ body::before{
 
 .bottomRow{
   display:none;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:8px;
 }
 
@@ -780,7 +780,7 @@ body::before{
   }
 }
 </style>
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-2">
 </head>
 
 <body>
@@ -805,8 +805,10 @@ body::before{
 </section>
 
 <section class="quick">
+  <a href="studio-assistant.html">Studio assistant</a>
   <a href="bookings.html?status=enquiry">New enquiries</a>
   <a href="crm.html">CRM</a>
+  <a href="wedding-funds.html">Funds roadmap</a>
   <a href="messages.html">Messages</a>
 </section>
 
@@ -898,6 +900,16 @@ body::before{
       <a class="liveAction" href="buy-list.html">
         <span>Buy</span>
         <strong id="buyWidget">0 active</strong>
+      </a>
+
+      <a class="liveAction" href="wedding-funds.html">
+        <span>Funds</span>
+        <strong id="fundsActionWidget">£0 safe</strong>
+      </a>
+
+      <a class="liveAction" href="studio-assistant.html">
+        <span>Assistant</span>
+        <strong id="assistantActionWidget">0 urgent</strong>
       </a>
     </div>
   </section>
@@ -1032,14 +1044,48 @@ body::before{
       <span>›</span>
     </div>
   </a>
+
+  <a class="tile" href="wedding-funds.html">
+    <div>
+      <div class="icon">F</div>
+      <h3>Funds Roadmap</h3>
+      <span class="tileMetric" id="fundsWidget">£0 safe</span>
+      <p>Protect rentals, allocate client payments and plan kit spending.</p>
+    </div>
+    <div class="tileFooter">
+      <span>Open</span>
+      <span>›</span>
+    </div>
+  </a>
+
+  <a class="tile" href="studio-assistant.html">
+    <div>
+      <div class="icon">A</div>
+      <h3>Studio Assistant</h3>
+      <span class="tileMetric" id="assistantWidget">0 urgent</span>
+      <p>Your replies, money, contracts, deadlines and next actions in order.</p>
+    </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="content.html">
+    <div>
+      <div class="icon">P</div>
+      <h3>Content</h3>
+      <span class="tileMetric" id="contentWidget">0 ready</span>
+      <p>Posting permission, portfolio selects, reel ideas and captions.</p>
+    </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
+  </a>
   </section>
 </main>
 
 <nav class="bottomRow">
   <a href="crm.html">CRM</a>
-  <a href="shot-lists.html">Shots</a>
+  <a href="wedding-funds.html">Funds</a>
+  <a href="studio-assistant.html">Assistant</a>
   <a href="messages.html">Messages</a>
-  <a href="lists.html">To Do</a>
+  <a href="lists.html">Tasks</a>
   <a href="admin.html">Admin</a>
 </nav>
 
@@ -1079,6 +1125,32 @@ function activeBuyCount(buyList){
     .length;
 }
 
+function roadmapRentalSaved(roadmapRows){
+  const roadmap = Array.isArray(roadmapRows) ? roadmapRows[0] : null;
+  if(!roadmap) return {saved:0,target:300};
+
+  const allocatedPayments = new Set(
+    (roadmap.payments || [])
+      .filter(item => item.status === "allocated")
+      .map(item => item.id)
+  );
+
+  const saved = (roadmap.allocations || [])
+    .filter(item => item.protected && allocatedPayments.has(item.paymentId) && !["skipped","moved-later"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.estimatedCost || 0),0);
+
+  return {saved,target:Number(roadmap.rentalTarget || 300)};
+}
+
+function assistantUrgentCount(tasks,messages,finance,delivery){
+  const today = new Date().toISOString().slice(0,10);
+  const taskCount = (tasks || []).filter(item => item.status !== "done" && (item.priority === "high" || (item.dueDate && item.dueDate <= today))).length;
+  const messageCount = (messages || []).filter(item => !["replied","archived"].includes(item.status)).length;
+  const paymentCount = (finance || []).filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status) && item.date && item.date < today).length;
+  const deliveryCount = (delivery || []).filter(item => !["delivered","completed"].includes(item.stage) && item.dueDate && item.dueDate < today).length;
+  return taskCount + messageCount + paymentCount + deliveryCount;
+}
+
 function sectionLabel(value){
   const labels = {
     prep:"Prep",
@@ -1105,7 +1177,11 @@ function projectStageMap(projectStages){
 }
 
 function projectStageFor(map,project){
-  return map.get(normaliseProjectKey(project)) || "not-live";
+  const key = normaliseProjectKey(project);
+  if(map.has(key)) return map.get(key);
+
+  const similarKey = [...map.keys()].find(savedKey => projectKeysMatch(savedKey, key));
+  return similarKey ? map.get(similarKey) : "not-live";
 }
 
 function liveProjectCount(projectStages){
@@ -1115,7 +1191,7 @@ function liveProjectCount(projectStages){
 }
 
 function countProjects(dataSets){
-  const names = new Set();
+  const names = [];
 
   (dataSets.bookings || []).forEach(item => addProjectName(names, item.clientName || item.eventName));
   (dataSets.clients || []).forEach(item => addProjectName(names, item.clientName));
@@ -1129,12 +1205,14 @@ function countProjects(dataSets){
   (dataSets.consultations || []).forEach(item => addProjectName(names, item.project));
   (dataSets.capture || []).forEach(item => addProjectName(names, item.project));
 
-  return names.size;
+  return names.length;
 }
 
-function addProjectName(set,value){
+function addProjectName(list,value){
   const name = normaliseProjectKey(value);
-  if(name) set.add(name);
+  if(name && !list.some(savedName => projectKeysMatch(savedName, name))){
+    list.push(name);
+  }
 }
 
 function normaliseProjectKey(value){
@@ -1146,8 +1224,71 @@ function normaliseProjectKey(value){
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
     .split(/\s+/)
-    .filter(word => word && !noiseWords.has(word))
+    .filter(word => word && !noiseWords.has(word) && !/^\d{2,4}$/.test(word))
+    .sort()
     .join(" ");
+}
+
+function projectKeysMatch(left,right){
+  if(left === right) return true;
+
+  const leftTokens = String(left || "").split(/\s+/).filter(Boolean);
+  const rightTokens = String(right || "").split(/\s+/).filter(Boolean);
+  if(!leftTokens.length || !rightTokens.length) return false;
+
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && projectTokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  if(shorter.length === 1 && longer.length > 1){
+    return matches === 1 && shorter[0].length >= 4;
+  }
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function projectTokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+
+  const limit = Math.max(left.length, right.length) >= 7 ? 2 : 1;
+  return projectEditDistance(left, right, limit) <= limit;
+}
+
+function projectEditDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return limit + 1;
+
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(
+        previous[col] + 1,
+        current[col - 1] + 1,
+        previous[col - 1] + cost
+      );
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return limit + 1;
+    previous = current;
+  }
+
+  return previous[right.length];
 }
 
 function updateShotPanel(shots,projectStages){
@@ -1202,6 +1343,8 @@ function updateDashboardFromLocal(){
   const capture = readData("ncstudios_capture_v1");
   const callSheets = readData("ncstudios_callsheets_v1");
   const adminClients = readData("ncStudiosAdminTrackerV1");
+  const roadmap = readData("ncstudios_wedding_funds_v1");
+  const content = readData("ncstudios_content_v1");
 
   setText("bookingsTotal", bookings.length);
   setText("clientsTotal", clients.length);
@@ -1211,6 +1354,8 @@ function updateDashboardFromLocal(){
     .filter(item => item.type === "income" && item.status !== "unpaid")
     .reduce((sum,item) => sum + Number(item.amount || 0), 0);
   const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+  const rentalFunds = roadmapRentalSaved(roadmap);
+  const urgent = assistantUrgentCount(lists,messages,finance,delivery);
   const crmTotal = countProjects({
     bookings,
     clients,
@@ -1240,6 +1385,11 @@ function updateDashboardFromLocal(){
   setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
   setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
   setText("buyWidget", `${activeBuyCount(buyList)} active`);
+  setText("fundsWidget", `${money(rentalFunds.saved)} safe`);
+  setText("fundsActionWidget", `${money(rentalFunds.saved)} / ${money(rentalFunds.target)}`);
+  setText("assistantWidget", `${urgent} urgent`);
+  setText("assistantActionWidget", `${urgent} urgent`);
+  setText("contentWidget", `${content.filter(item => item.status === "ready").length} ready`);
   setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
   setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
   setText("callSheetWidget", `${callSheets.length} sheets`);
@@ -1274,7 +1424,9 @@ async function updateDashboardFromSupabase(){
         "ncstudios_project_status_v1",
         "ncstudios_consultations_v1",
         "ncstudios_capture_v1",
-        "ncstudios_callsheets_v1"
+        "ncstudios_callsheets_v1",
+        "ncstudios_content_v1",
+        "ncstudios_wedding_funds_v1"
       ]);
 
     if(!storageResponse.error && Array.isArray(storageResponse.data)){
@@ -1299,6 +1451,8 @@ async function updateDashboardFromSupabase(){
       const consultations = map.ncstudios_consultations_v1 || readData("ncstudios_consultations_v1");
       const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
       const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
+      const roadmap = map.ncstudios_wedding_funds_v1 || readData("ncstudios_wedding_funds_v1");
+      const content = map.ncstudios_content_v1 || readData("ncstudios_content_v1");
 
       setText("bookingsTotal", bookings.length);
       setText("deliveryTotal", delivery.length);
@@ -1307,6 +1461,8 @@ async function updateDashboardFromSupabase(){
         .filter(item => item.type === "income" && item.status !== "unpaid")
         .reduce((sum,item) => sum + Number(item.amount || 0), 0);
       const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+      const rentalFunds = roadmapRentalSaved(roadmap);
+      const urgent = assistantUrgentCount(lists,messages,finance,delivery);
       const crmTotal = countProjects({
         bookings,
         clients:appStorageClients,
@@ -1336,6 +1492,11 @@ async function updateDashboardFromSupabase(){
       setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
       setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
       setText("buyWidget", `${activeBuyCount(buyList)} active`);
+      setText("fundsWidget", `${money(rentalFunds.saved)} safe`);
+      setText("fundsActionWidget", `${money(rentalFunds.saved)} / ${money(rentalFunds.target)}`);
+      setText("assistantWidget", `${urgent} urgent`);
+      setText("assistantActionWidget", `${urgent} urgent`);
+      setText("contentWidget", `${content.filter(item => item.status === "ready").length} ready`);
       setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
       setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
       setText("callSheetWidget", `${callSheets.length} sheets`);

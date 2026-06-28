@@ -628,9 +628,15 @@ textarea{
               Stage
             <select id="stage" onchange="syncProgressFromStage()">
               <option value="not-started">Not started</option>
+              <option value="culling">Culling</option>
               <option value="editing">Editing</option>
+              <option value="colour-grading">Colour grading</option>
+              <option value="exporting">Exporting</option>
+              <option value="uploading">Uploading</option>
               <option value="review">Review</option>
               <option value="delivered">Delivered</option>
+              <option value="revision-requested">Revision requested</option>
+              <option value="completed">Completed</option>
             </select>
           </label>
         </div>
@@ -669,9 +675,15 @@ textarea{
       <select id="filter" onchange="renderDelivery()">
         <option value="all">All</option>
         <option value="not-started">Not started</option>
+        <option value="culling">Culling</option>
         <option value="editing">Editing</option>
+        <option value="colour-grading">Colour grading</option>
+        <option value="exporting">Exporting</option>
+        <option value="uploading">Uploading</option>
         <option value="review">Review</option>
         <option value="delivered">Delivered</option>
+        <option value="revision-requested">Revision requested</option>
+        <option value="completed">Completed</option>
       </select>
     </div>
 
@@ -812,9 +824,9 @@ function renderDelivery(){
 
 function updateStats(){
   document.getElementById("totalStat").textContent = delivery.length;
-  document.getElementById("editingStat").textContent = delivery.filter(item => item.stage === "editing").length;
+  document.getElementById("editingStat").textContent = delivery.filter(item => ["culling","editing","colour-grading","exporting","uploading","revision-requested"].includes(item.stage)).length;
   document.getElementById("reviewStat").textContent = delivery.filter(item => item.stage === "review").length;
-  document.getElementById("deliveredStat").textContent = delivery.filter(item => item.stage === "delivered").length;
+  document.getElementById("deliveredStat").textContent = delivery.filter(item => ["delivered","completed"].includes(item.stage)).length;
 }
 
 function editDelivery(id){
@@ -878,9 +890,15 @@ function syncProgressFromStage(){
   const stage = document.getElementById("stage").value;
   const progressMap = {
     "not-started":0,
+    culling:15,
     editing:40,
+    "colour-grading":65,
+    exporting:75,
+    uploading:90,
     review:80,
-    delivered:100
+    delivered:100,
+    "revision-requested":85,
+    completed:100
   };
   document.getElementById("progress").value = progressMap[stage] ?? 0;
   updateProgressLabel();
@@ -910,9 +928,15 @@ function exportDelivery(){
 function stageLabel(value){
   const labels = {
     "not-started":"Not started",
+    culling:"Culling",
     editing:"Editing",
+    "colour-grading":"Colour grading",
+    exporting:"Exporting",
+    uploading:"Uploading",
     review:"Review",
-    delivered:"Delivered"
+    delivered:"Delivered",
+    "revision-requested":"Revision requested",
+    completed:"Completed"
   };
 
   return labels[value] || "Not started";

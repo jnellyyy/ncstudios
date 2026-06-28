@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Wedding Funds Roadmap | NC Studio</title>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<link rel="stylesheet" href="wedding-funds.css?v=1">
+<meta name="theme-color" content="#050504">
+</head>
+<body class="funds-page">
+<div class="app-shell funds-shell">
+  <header class="topbar funds-topbar">
+    <a class="brand-row" href="dashboard.html" aria-label="NC Studio dashboard">
+      <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
+      <div class="brand-text">
+        <p class="kicker">Studio finance</p>
+        <h2>Wedding Funds</h2>
+      </div>
+    </a>
+
+    <nav class="nav-pill" aria-label="Primary">
+      <a class="pill" href="dashboard.html">Home</a>
+      <a class="pill" href="finance.html">Finance</a>
+      <a class="pill" href="buy-list.html">Buy List</a>
+    </nav>
+  </header>
+
+  <nav class="ops-nav funds-nav" aria-label="Studio tools">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="wedding-funds.html">Funds Roadmap</a>
+    <a href="finance.html">Finance</a>
+    <a href="buy-list.html">Buy List</a>
+    <a href="crm.html">CRM</a>
+    <a href="projects.html">Projects</a>
+  </nav>
+
+  <main>
+    <section class="funds-hero" aria-labelledby="pageTitle">
+      <div class="hero-copy">
+        <p class="kicker">Money in, purpose clear</p>
+        <h1 id="pageTitle">Wedding Funds Roadmap</h1>
+        <p>See what is coming in, protect wedding costs first, then buy the right kit in the right order.</p>
+      </div>
+      <div class="protection-callout">
+        <span>Current priority</span>
+        <strong id="heroPriority">Protect rental money first</strong>
+        <div class="progress-track" aria-hidden="true"><span id="heroRentalBar"></span></div>
+        <small id="heroRentalCopy">£0 of £300 rental pot protected</small>
+      </div>
+    </section>
+
+    <nav class="section-jumps" aria-label="Roadmap sections">
+      <a href="#overview">Overview</a>
+      <a href="#payments">Payments</a>
+      <a href="#allocations">Allocate</a>
+      <a href="#rentals">Rentals</a>
+      <a href="#buy-order">Buy order</a>
+      <a href="#wedding-week">Wedding week</a>
+    </nav>
+
+    <section id="overview" class="roadmap-section">
+      <div class="section-heading">
+        <div><p class="kicker">At a glance</p><h2>Overview</h2></div>
+        <p>Targets update as payments and allocations change.</p>
+      </div>
+      <div id="overviewCards" class="overview-grid"></div>
+    </section>
+
+    <section id="warningSection" class="roadmap-section warning-section" aria-labelledby="warningTitle">
+      <div class="section-heading compact-heading">
+        <div><p class="kicker">Needs attention</p><h2 id="warningTitle">Safeguards</h2></div>
+      </div>
+      <div id="warningList" class="warning-list" aria-live="polite"></div>
+    </section>
+
+    <section class="roadmap-section" aria-labelledby="progressTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Live totals</p><h2 id="progressTitle">Progress</h2></div>
+        <p>Received is money in. Allocated is money with a job. Spent is completed purchases.</p>
+      </div>
+      <div id="progressGrid" class="progress-grid"></div>
+    </section>
+
+    <section id="payments" class="roadmap-section" aria-labelledby="paymentsTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Incoming money</p><h2 id="paymentsTitle">Payment timeline</h2></div>
+        <a class="ghost-btn" href="finance.html">Open Finance</a>
+      </div>
+      <div id="paymentTimeline" class="payment-timeline"></div>
+    </section>
+
+    <section id="allocations" class="roadmap-section" aria-labelledby="allocationsTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Give every pound a job</p><h2 id="allocationsTitle">Allocation plans</h2></div>
+        <p>Use the status menu on each row. “Moved later” keeps optional kit outside the active budget.</p>
+      </div>
+      <div id="allocationPlans" class="allocation-plans"></div>
+    </section>
+
+    <section id="rentals" class="roadmap-section" aria-labelledby="rentalsTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Simi and Kiefah · 22 August</p><h2 id="rentalsTitle">Rental checklist</h2></div>
+        <div class="target-label"><span>Target</span><strong>£250–£300</strong></div>
+      </div>
+      <div class="protect-note"><strong>Keep £300 protected.</strong> Rental costs can include VAT, damage waiver and delivery.</div>
+      <div id="rentalList" class="rental-list"></div>
+    </section>
+
+    <section id="buy-order" class="roadmap-section" aria-labelledby="buyTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Only after rentals are protected</p><h2 id="buyTitle">Buy order</h2></div>
+        <div class="section-actions">
+          <button class="ghost-btn" id="syncBuyList" type="button">Sync to Buy List</button>
+          <a class="ghost-btn" href="buy-list.html">Open Buy List</a>
+        </div>
+      </div>
+      <div id="buyOrder" class="buy-order"></div>
+    </section>
+
+    <section class="roadmap-section" aria-labelledby="ownedTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Already covered</p><h2 id="ownedTitle">Owned kit</h2></div>
+      </div>
+      <div id="ownedKit" class="owned-grid"></div>
+    </section>
+
+    <section id="wedding-week" class="roadmap-section" aria-labelledby="weekTitle">
+      <div class="section-heading">
+        <div><p class="kicker">18–22 August</p><h2 id="weekTitle">Wedding week</h2></div>
+        <div id="weekProgress" class="target-label"></div>
+      </div>
+      <div id="weekChecklist" class="week-checklist"></div>
+    </section>
+
+    <section class="roadmap-tools" aria-label="Roadmap data tools">
+      <button class="ghost-btn" id="exportRoadmap" type="button">Export roadmap</button>
+      <button class="danger-btn" id="resetRoadmap" type="button">Reset from roadmap plan</button>
+      <span>Saved automatically on this device and included in studio sync.</span>
+    </section>
+  </main>
+
+  <nav class="funds-bottom-nav" aria-label="Mobile navigation">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="wedding-funds.html">Funds</a>
+    <a href="finance.html">Finance</a>
+    <a href="buy-list.html">Buy List</a>
+  </nav>
+</div>
+
+<dialog id="editDialog" class="edit-dialog">
+  <form id="editForm" method="dialog">
+    <div class="dialog-heading">
+      <div><p class="kicker">Update roadmap</p><h2 id="editTitle">Edit item</h2></div>
+      <button class="close-button" type="button" id="closeDialog" aria-label="Close">×</button>
+    </div>
+    <input id="editKind" type="hidden">
+    <input id="editId" type="hidden">
+    <div class="edit-grid">
+      <label class="edit-field"><span>Name</span><input id="editName" type="text" required></label>
+      <label class="edit-field"><span>Amount or estimate</span><input id="editAmount" type="number" min="0" step="0.01"></label>
+      <label class="edit-field" id="editMaxField"><span>Maximum estimate</span><input id="editMax" type="number" min="0" step="0.01"></label>
+      <label class="edit-field" id="editDateField"><span>Expected date</span><input id="editDate" type="date"></label>
+      <label class="edit-field" id="editWeddingField"><span>Wedding date</span><input id="editWeddingDate" type="date"></label>
+      <label class="edit-field" id="editCategoryField"><span>Category</span><input id="editCategory" type="text"></label>
+      <label class="edit-field" id="editPriorityField"><span>Priority</span><input id="editPriority" type="text"></label>
+      <label class="edit-field wide"><span>Notes</span><textarea id="editNotes"></textarea></label>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn" type="submit">Save changes</button>
+      <button class="ghost-btn" type="button" id="cancelDialog">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="fundsToast" class="funds-toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="wedding-funds-config.js?v=1"></script>
+<script src="wedding-funds.js?v=1"></script>
+</body>
+</html>

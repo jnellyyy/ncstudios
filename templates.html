@@ -622,33 +622,31 @@ function saveTemplates(){
 }
 
 function seedTemplates(){
-  if(templates.length > 0) return;
-
-  templates = [
-    {
-      id:crypto.randomUUID(),
-      title:"Booking confirmation",
-      category:"whatsapp",
-      body:"Hi lovely, thank you again for booking NC Studios. I’m so excited to capture your day. Your date is now noted on my side. Please send over any key details, timings or links when you have them, and I’ll keep everything organised from here.",
-      updatedAt:new Date().toISOString()
-    },
-    {
-      id:crypto.randomUUID(),
-      title:"Planning form reminder",
-      category:"follow up",
-      body:"Hi lovely, just a gentle reminder to complete the planning form when you get a chance. It helps me prepare properly for your day and make sure I don’t miss any important moments.",
-      updatedAt:new Date().toISOString()
-    },
-    {
-      id:crypto.randomUUID(),
-      title:"Delivery update",
-      category:"delivery",
-      body:"Hi lovely, just updating you that your film is currently in progress. I’m taking care with the edit so it feels polished and true to the day. I’ll update you again once it moves into final review.",
-      updatedAt:new Date().toISOString()
-    }
-  ];
-
+  const existingTitles = new Set(templates.map(item => String(item.title || "").toLowerCase().trim()));
+  const missing = defaultTemplates().filter(item => !existingTitles.has(item.title.toLowerCase()));
+  if(!missing.length) return;
+  templates = templates.concat(missing);
   saveTemplates();
+}
+
+function defaultTemplates(){
+  const now = new Date().toISOString();
+  return [
+    {id:"template-new-enquiry",title:"New enquiry reply",category:"email",body:"Hi [Name], thank you for getting in touch with NC Studio and for sharing a little about your wedding. I’d love to check the date properly for you. Please send over the ceremony location, reception location and the kind of coverage you have in mind, and I’ll guide you toward the best fit.",updatedAt:now},
+    {id:"template-availability",title:"Availability confirmation",category:"email",body:"Hi [Name], I’m pleased to confirm that [Date] is currently available. Based on what you’ve shared, the next step is to choose the coverage that fits your day, then the date can be secured with the signed agreement and deposit.",updatedAt:now},
+    {id:"template-package-options",title:"Package options",category:"email",body:"Hi [Name], thank you for the details. I’ve selected the options that make the most sense for your timings rather than overwhelming you with every possibility. [Package options]. Once you’ve chosen your preferred coverage, I can send the booking form, agreement and deposit details.",updatedAt:now},
+    {id:"template-deposit",title:"Deposit reminder",category:"follow up",body:"Hi [Name], just a quick reminder that the booking deposit is still outstanding. The date is secured once the deposit and agreement are complete. Let me know if you need the payment details sent again.",updatedAt:now},
+    {id:"template-contract",title:"Contract reminder",category:"follow up",body:"Hi [Name], just checking in on the agreement I sent over. Please review and sign it when you can so everything is formally in place for [Date]. I’m happy to clarify anything before you sign.",updatedAt:now},
+    {id:"template-final-consultation",title:"Final consultation reminder",category:"client care",body:"Hi [Name], your wedding is getting close, so it’s time to arrange our final consultation. We’ll lock in the timeline, locations, key people, family photos and any moments that matter most to you. Please send over a few suitable times for the call.",updatedAt:now},
+    {id:"template-balance",title:"Balance reminder",category:"invoice",body:"Hi [Name], a quick reminder that the remaining balance of [Balance] is due on [Due date]. Please let me know once it has been sent, or if you need the invoice or payment details again.",updatedAt:now},
+    {id:"template-late-payment",title:"Late payment reminder",category:"invoice",body:"Hi [Name], the remaining balance of [Balance] is now overdue. Please arrange payment as soon as possible so the booking can continue as planned. If there is an issue I need to know about, please reply today so we can address it clearly.",updatedAt:now},
+    {id:"template-wedding-week",title:"Wedding week message",category:"client care",body:"Hi [Name], it’s wedding week. I have the timeline and locations saved and I’m completing the final kit checks now. If there are any last-minute access, parking or timing changes, please send them over. Otherwise, I’ll see you on [Date] and I’m looking forward to capturing the day.",updatedAt:now},
+    {id:"template-after-wedding",title:"After wedding thank you",category:"client care",body:"Hi [Name], thank you for having NC Studio capture your wedding. It was a pleasure being part of the day. Everything is safely backed up and the editing process is underway. I’ll keep you updated as the work moves toward delivery.",updatedAt:now},
+    {id:"template-gallery-delivery",title:"Gallery delivery",category:"delivery",body:"Hi [Name], your wedding gallery is ready. You can view and download it here: [Gallery link]. I hope the images bring the day back beautifully. Please download a full copy and keep the link somewhere safe.",updatedAt:now},
+    {id:"template-film-delivery",title:"Film delivery",category:"delivery",body:"Hi [Name], your wedding films are ready. You can watch and download them here: [Film link]. I hope they let you relive the emotion, people and atmosphere of the day for years to come.",updatedAt:now},
+    {id:"template-review",title:"Review request",category:"follow up",body:"Hi [Name], I hope you’re enjoying everything. If you have a moment, I’d really appreciate an honest review of your experience with NC Studio. It helps future couples feel confident when choosing who to trust with their day. [Review link]",updatedAt:now},
+    {id:"template-posting-permission",title:"Permission to post",category:"follow up",body:"Hi [Name], I’d love to share a small selection from your wedding in the NC Studio portfolio and on social media. Are you happy for me to post selected images or short clips? There is no pressure at all, and I will respect any people or moments you would prefer to keep private.",updatedAt:now}
+  ];
 }
 
 function renderTemplates(){

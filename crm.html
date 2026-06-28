@@ -255,6 +255,27 @@
   text-align:center;
 }
 
+.profile-dialog{
+  width:min(920px,calc(100% - 28px));
+  max-height:calc(100svh - 28px);
+  padding:0;
+  border:1px solid rgba(216,183,110,0.36);
+  color:#f7efe3;
+  background:#11100c;
+}
+
+.profile-dialog::backdrop{background:rgba(0,0,0,0.78)}
+.profile-form{padding:20px}
+.profile-head{display:flex;justify-content:space-between;align-items:start;gap:14px;margin-bottom:16px}
+.profile-head h2{margin:5px 0 0}
+.profile-close{width:42px;min-width:42px;min-height:42px !important;padding:0 !important;font-size:25px !important}
+.profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.profile-field{display:grid;gap:6px}
+.profile-field.wide{grid-column:1/-1}
+.profile-field span{color:#f0dca8;font:500 10px/1.2 var(--nc-font-mono);text-transform:uppercase}
+.profile-group{grid-column:1/-1;margin:9px 0 0;padding-top:13px;border-top:1px solid rgba(216,183,110,0.24);font-size:20px !important}
+.profile-actions{display:flex;gap:8px;margin-top:16px}
+
 @media(max-width:980px){
   .crm-layout,
   .crm-columns{
@@ -275,6 +296,10 @@
   .crm-grid{
     grid-template-columns:1fr;
   }
+
+  .profile-form{padding:15px}
+  .profile-grid{grid-template-columns:1fr}
+  .profile-field.wide,.profile-group{grid-column:auto}
 }
 </style>
 </head>
@@ -301,11 +326,13 @@
 
 <nav class="ops-nav">
   <a href="dashboard.html">Home</a>
+  <a href="studio-assistant.html">Assistant</a>
   <a class="active" href="crm.html">CRM</a>
   <a href="bookings.html?status=enquiry">Enquiries</a>
   <a href="consultations.html">Consult</a>
   <a href="clients.html">Clients</a>
   <a href="finance.html">Finance</a>
+  <a href="wedding-funds.html">Funds Roadmap</a>
   <a href="delivery.html">Delivery</a>
   <a href="messages.html">Messages</a>
   <a href="lists.html">To Do</a>
@@ -405,6 +432,50 @@
 <p class="footer-note">NC Studios client CRM</p>
 </div>
 
+<dialog id="profileDialog" class="profile-dialog">
+  <form id="profileForm" class="profile-form">
+    <div class="profile-head">
+      <div><p class="kicker">Complete client record</p><h2>Edit CRM profile</h2></div>
+      <button id="profileClose" class="ghost-btn profile-close" type="button" aria-label="Close">×</button>
+    </div>
+    <input id="profileId" type="hidden">
+    <div class="profile-grid">
+      <h3 class="profile-group">Client and wedding</h3>
+      <label class="profile-field"><span>Couple names</span><input id="profileClientName" type="text" required></label>
+      <label class="profile-field"><span>Email</span><input id="profileEmail" type="email"></label>
+      <label class="profile-field"><span>Phone</span><input id="profilePhone" type="tel"></label>
+      <label class="profile-field"><span>Wedding date</span><input id="profileWeddingDate" type="date"></label>
+      <label class="profile-field"><span>Ceremony location</span><input id="profileCeremonyLocation" type="text"></label>
+      <label class="profile-field"><span>Reception location</span><input id="profileReceptionLocation" type="text"></label>
+
+      <h3 class="profile-group">Package, payment and admin</h3>
+      <label class="profile-field"><span>Service</span><select id="profileServiceType"><option value="videography">Videography</option><option value="photography">Photography</option><option value="both">Photography + videography</option></select></label>
+      <label class="profile-field"><span>Package chosen</span><input id="profilePackageName" type="text"></label>
+      <label class="profile-field"><span>Total price</span><input id="profileTotalPrice" type="number" min="0" step="0.01"></label>
+      <label class="profile-field"><span>Deposit paid</span><input id="profileDepositPaid" type="number" min="0" step="0.01"></label>
+      <label class="profile-field"><span>Balance due</span><input id="profileBalanceDue" type="number" min="0" step="0.01"></label>
+      <label class="profile-field"><span>Payment status</span><select id="profilePaymentStatus"><option>Not requested</option><option>Deposit requested</option><option>Deposit paid</option><option>Part paid</option><option>Balance due</option><option>Paid in full</option><option>Overdue</option><option>Late fee applied</option></select></label>
+      <label class="profile-field"><span>Contract status</span><select id="profileContractStatus"><option>Not sent</option><option>Sent</option><option>Pending</option><option>Signed</option><option>Needs chasing</option></select></label>
+      <label class="profile-field"><span>Questionnaire status</span><select id="profileQuestionnaireStatus"><option>Not sent</option><option>Sent</option><option>In progress</option><option>Complete</option><option>Needs chasing</option></select></label>
+      <label class="profile-field"><span>Delivery status</span><select id="profileDeliveryStatus"><option>Not started</option><option>Culling</option><option>Editing</option><option>Colour grading</option><option>Exporting</option><option>Uploading</option><option>Delivered</option><option>Revision requested</option><option>Completed</option></select></label>
+
+      <h3 class="profile-group">Consultations and planning</h3>
+      <label class="profile-field"><span>Consultation date</span><input id="profileConsultationDate" type="date"></label>
+      <label class="profile-field"><span>Final consultation date</span><input id="profileFinalConsultationDate" type="date"></label>
+      <label class="profile-field"><span>Posting permission</span><select id="profilePostingPermission"><option>Waiting</option><option>Yes</option><option>No</option></select></label>
+      <label class="profile-field wide"><span>Timeline notes</span><textarea id="profileTimelineNotes"></textarea></label>
+      <label class="profile-field wide"><span>Important notes</span><textarea id="profileImportantNotes"></textarea></label>
+      <label class="profile-field wide"><span>Shot list notes</span><textarea id="profileShotListNotes"></textarea></label>
+      <label class="profile-field wide"><span>Travel notes</span><textarea id="profileTravelNotes"></textarea></label>
+      <label class="profile-field wide"><span>Supplier notes</span><textarea id="profileSupplierNotes"></textarea></label>
+      <label class="profile-field wide"><span>Communication history</span><textarea id="profileCommunicationHistory"></textarea></label>
+      <label class="profile-field wide"><span>Attachments and links</span><textarea id="profileAttachments" placeholder="One link or file note per line"></textarea></label>
+      <label class="profile-field wide"><span>Internal notes</span><textarea id="profileInternalNotes"></textarea></label>
+    </div>
+    <div class="profile-actions"><button class="btn" type="submit">Save profile</button><button id="profileCancel" class="ghost-btn" type="button">Cancel</button></div>
+  </form>
+</dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
 <script src="nc-supabase-sync.js?v=nc-secure-1"></script>
@@ -419,13 +490,17 @@ const STORE = {
   messages:"ncstudios_messages_v1",
   consultations:"ncstudios_consultations_v1",
   tasks:"ncstudios_lists_v1",
-  admin:"ncStudiosAdminTrackerV1"
+  admin:"ncStudiosAdminTrackerV1",
+  profiles:"ncstudios_crm_profiles_v1"
 };
 
 let crmRecords = [];
 
 document.getElementById("crmSearch").addEventListener("input", renderCrm);
 document.getElementById("crmFilter").addEventListener("change", renderCrm);
+document.getElementById("profileForm").addEventListener("submit", saveProfile);
+document.getElementById("profileClose").addEventListener("click", closeProfile);
+document.getElementById("profileCancel").addEventListener("click", closeProfile);
 
 function readData(key){
   try{
@@ -445,7 +520,8 @@ function loadData(){
     messages:readData(STORE.messages),
     consultations:readData(STORE.consultations),
     tasks:readData(STORE.tasks),
-    admin:readData(STORE.admin)
+    admin:readData(STORE.admin),
+    profiles:readData(STORE.profiles)
   };
 }
 
@@ -457,10 +533,11 @@ function buildRecords(){
     const clean = displayName(name);
     const key = recordKey(clean);
     if(!key) return null;
+    const matchedKey = similarRecordKey(records, key) || key;
 
-    if(!records.has(key)){
-      records.set(key, {
-        key,
+    if(!records.has(matchedKey)){
+      records.set(matchedKey, {
+        key:matchedKey,
         name:clean,
         bookings:[],
         clients:[],
@@ -469,11 +546,12 @@ function buildRecords(){
         messages:[],
         consultations:[],
         tasks:[],
-        admin:[]
+        admin:[],
+        profiles:[]
       });
     }
 
-    const record = records.get(key);
+    const record = records.get(matchedKey);
     if(clean.length > record.name.length && clean.length < 44){
       record.name = clean;
     }
@@ -488,6 +566,7 @@ function buildRecords(){
   data.consultations.forEach(item => addToRecord(ensure(item.project || item.contactName), "consultations", item));
   data.tasks.forEach(item => addToRecord(ensure(item.project && item.project !== "business" ? item.project : ""), "tasks", item));
   data.admin.forEach(item => addToRecord(ensure(item.name), "admin", item));
+  data.profiles.forEach(item => addToRecord(ensure(item.clientName), "profiles", item));
 
   return [...records.values()]
     .map(enrichRecord)
@@ -502,9 +581,15 @@ function enrichRecord(record){
   record.booking = newest(record.bookings, ["updatedAt","eventDate","createdAt"]);
   record.client = newest(record.clients, ["updatedAt","eventDate","createdAt"]);
   record.consultation = newest(record.consultations, ["updatedAt","callDate","weddingDate","createdAt"]);
-  record.deliveryJob = activeFirst(record.delivery, "stage", "delivered");
+  record.deliveryJob = [...record.delivery].sort((a,b) => {
+    const aDone = ["delivered","completed"].includes(a.stage);
+    const bDone = ["delivered","completed"].includes(b.stage);
+    if(aDone !== bDone) return aDone ? 1 : -1;
+    return String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || ""));
+  })[0] || null;
   record.latestMessage = newest(record.messages, ["createdAt","updatedAt"]);
   record.adminClient = activeFirst(record.admin, "archived", true);
+  record.profile = newest(record.profiles, ["updatedAt","weddingDate","createdAt"]);
   record.openTasks = record.tasks.filter(item => item.status !== "done");
   record.activeMessages = record.messages.filter(item => !["replied","archived"].includes(item.status));
   record.outstanding = outstandingMoney(record);
@@ -544,7 +629,9 @@ function outstandingMoney(record){
     ? Math.max(Number(record.booking.packagePrice || 0) - Number(record.booking.depositPaid || 0), 0)
     : 0;
 
-  return Math.max(financeDue, bookingDue);
+  const profileDue = Number(record.profile?.balanceDue || 0);
+
+  return Math.max(financeDue, bookingDue, profileDue);
 }
 
 function adminTotals(client){
@@ -588,7 +675,7 @@ function nextMove(record){
     return `${record.adminTotals.open} admin item${record.adminTotals.open === 1 ? "" : "s"} still open.`;
   }
 
-  if(record.deliveryJob && record.deliveryJob.stage !== "delivered"){
+  if(record.deliveryJob && !["delivered","completed"].includes(record.deliveryJob.stage)){
     return record.deliveryJob.nextAction || "Move delivery forward.";
   }
 
@@ -603,7 +690,7 @@ function recordStatus(record){
   if(record.activeMessages.length || record.booking?.status === "enquiry") return {label:"Needs reply", tone:"hot"};
   if(record.consultation?.status === "follow-up") return {label:"Follow up", tone:"hot"};
   if(record.outstanding > 0) return {label:"Money due", tone:"hot"};
-  if(record.deliveryJob && record.deliveryJob.stage !== "delivered") return {label:"Delivery", tone:"cool"};
+  if(record.deliveryJob && !["delivered","completed"].includes(record.deliveryJob.stage)) return {label:"Delivery", tone:"cool"};
   if(record.booking?.status === "confirmed" || record.client?.status === "active") return {label:"Active", tone:"good"};
   if(record.booking?.status === "completed" || record.client?.status === "complete") return {label:"Complete", tone:"done"};
   if(record.consultation?.status === "secured") return {label:"Secured", tone:"good"};
@@ -617,7 +704,7 @@ function scoreRecord(record){
   if(record.consultation?.status === "follow-up") score += 55;
   if(record.outstanding > 0) score += 45;
   if(record.adminTotals.open > 0) score += 25;
-  if(record.deliveryJob && record.deliveryJob.stage !== "delivered") score += 20;
+  if(record.deliveryJob && !["delivered","completed"].includes(record.deliveryJob.stage)) score += 20;
   if(record.openTasks.length) score += 15;
   if(record.booking?.status === "completed" || record.client?.status === "complete") score -= 60;
   return score;
@@ -640,7 +727,7 @@ function renderCrm(){
       (filter === "enquiry" && record.booking?.status === "enquiry") ||
       (filter === "confirmed" && record.booking?.status === "confirmed") ||
       (filter === "unpaid" && record.outstanding > 0) ||
-      (filter === "delivery" && record.deliveryJob && record.deliveryJob.stage !== "delivered") ||
+      (filter === "delivery" && record.deliveryJob && !["delivered","completed"].includes(record.deliveryJob.stage)) ||
       (filter === "admin" && record.adminTotals.open > 0) ||
       (filter === "complete" && record.status.label === "Complete");
 
@@ -655,7 +742,7 @@ function renderCrm(){
 function updateStats(){
   const chase = crmRecords.filter(needsAction);
   const outstanding = crmRecords.reduce((sum,record) => sum + record.outstanding, 0);
-  const delivery = crmRecords.filter(record => record.deliveryJob && record.deliveryJob.stage !== "delivered").length;
+  const delivery = crmRecords.filter(record => record.deliveryJob && !["delivered","completed"].includes(record.deliveryJob.stage)).length;
 
   setText("statRecords", crmRecords.length);
   setText("statChase", chase.length);
@@ -697,16 +784,17 @@ function renderList(records){
 
 function renderRecord(record){
   const date = firstValue([
+    record.profile?.weddingDate,
     record.booking?.eventDate,
     record.client?.eventDate,
     record.consultation?.weddingDate,
     record.deliveryJob?.dueDate,
     record.adminClient?.date
   ]);
-  const email = firstValue([record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
-  const phone = firstValue([record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
-  const location = firstValue([record.booking?.location, record.client?.location, record.consultation?.ceremonyLocation, record.deliveryJob?.projectName]);
-  const packageName = firstValue([record.adminClient?.package, record.deliveryJob?.packageType, packageLabel(record.consultation?.recommendedPackage), record.booking?.eventName]);
+  const email = firstValue([record.profile?.email, record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
+  const phone = firstValue([record.profile?.phone, record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
+  const location = firstValue([record.profile?.ceremonyLocation, record.profile?.receptionLocation, record.booking?.location, record.client?.location, record.consultation?.ceremonyLocation, record.deliveryJob?.projectName]);
+  const packageName = firstValue([record.profile?.packageName, record.adminClient?.package, record.deliveryJob?.packageType, packageLabel(record.consultation?.recommendedPackage), record.booking?.eventName]);
   const deliveryLabel = record.deliveryJob ? `${stageLabel(record.deliveryJob.stage)} ${Number(record.deliveryJob.progress || 0)}%` : "No delivery";
   const adminLabel = record.adminTotals.total ? `${record.adminTotals.percent}% complete` : "No admin";
   const moneyLabel = record.outstanding > 0 ? `${money(record.outstanding)} due` : "Clear";
@@ -738,6 +826,9 @@ function renderRecord(record){
         <section class="crm-panel">
           <h3>Client flow</h3>
           <div class="crm-line"><span>Booking</span><b>${escapeHTML(statusLabel(record.booking?.status, "No booking"))}</b></div>
+          <div class="crm-line"><span>Payment</span><b>${escapeHTML(record.profile?.paymentStatus || moneyLabel)}</b></div>
+          <div class="crm-line"><span>Contract</span><b>${escapeHTML(record.profile?.contractStatus || "Not set")}</b></div>
+          <div class="crm-line"><span>Questionnaire</span><b>${escapeHTML(record.profile?.questionnaireStatus || "Not set")}</b></div>
           <div class="crm-line"><span>Consultation</span><b>${escapeHTML(statusLabel(record.consultation?.status, "No call"))}</b></div>
           <div class="crm-line"><span>Messages</span><b>${record.activeMessages.length} active</b></div>
           <div class="crm-line"><span>Open tasks</span><b>${record.openTasks.length}</b></div>
@@ -745,7 +836,9 @@ function renderRecord(record){
 
         <section class="crm-panel">
           <h3>Production</h3>
-          <div class="crm-line"><span>Delivery</span><b>${escapeHTML(deliveryLabel)}</b></div>
+          <div class="crm-line"><span>Delivery</span><b>${escapeHTML(record.profile?.deliveryStatus || deliveryLabel)}</b></div>
+          <div class="crm-line"><span>Final consultation</span><b>${escapeHTML(niceDate(record.profile?.finalConsultationDate))}</b></div>
+          <div class="crm-line"><span>Posting</span><b>${escapeHTML(record.profile?.postingPermission || "Waiting")}</b></div>
           <div class="crm-line"><span>Delivery action</span><b>${escapeHTML(record.deliveryJob?.nextAction || "None set")}</b></div>
           <div class="crm-line"><span>Latest message</span><b>${escapeHTML(record.latestMessage?.subject || "None")}</b></div>
           <div class="crm-line"><span>Budget</span><b>${escapeHTML(budgetLabel(record.consultation?.budgetResponse))}</b></div>
@@ -760,10 +853,113 @@ function renderRecord(record){
         <a class="ghost-btn" href="finance.html">Money</a>
         <a class="ghost-btn" href="delivery.html">Delivery</a>
         <a class="ghost-btn" href="messages.html">Messages</a>
+        <button class="ghost-btn" type="button" onclick="openProfile('${escapeAttribute(record.key)}')">Edit profile</button>
         <button class="btn" type="button" onclick="copyClientSummary('${escapeAttribute(record.key)}')">Copy summary</button>
       </div>
     </article>
   `;
+}
+
+function openProfile(key){
+  const record = crmRecords.find(item => item.key === key);
+  if(!record) return;
+  const profile = record.profile || {};
+  const booking = record.booking || {};
+  const client = record.client || {};
+
+  setProfileValue("profileId", profile.id || "");
+  setProfileValue("profileClientName", profile.clientName || record.name);
+  setProfileValue("profileEmail", profile.email || client.email || booking.contactEmail || record.latestMessage?.contactEmail || "");
+  setProfileValue("profilePhone", profile.phone || client.phone || booking.contactPhone || record.latestMessage?.contactPhone || "");
+  setProfileValue("profileWeddingDate", profile.weddingDate || booking.eventDate || client.eventDate || record.consultation?.weddingDate || "");
+  setProfileValue("profileCeremonyLocation", profile.ceremonyLocation || record.consultation?.ceremonyLocation || booking.location || client.location || "");
+  setProfileValue("profileReceptionLocation", profile.receptionLocation || record.consultation?.receptionLocation || "");
+  setProfileValue("profileServiceType", profile.serviceType || "videography");
+  setProfileValue("profilePackageName", profile.packageName || record.adminClient?.package || booking.eventName || "");
+  setProfileValue("profileTotalPrice", profile.totalPrice || booking.packagePrice || "");
+  setProfileValue("profileDepositPaid", profile.depositPaid || booking.depositPaid || "");
+  setProfileValue("profileBalanceDue", profile.balanceDue || record.outstanding || "");
+  setProfileValue("profilePaymentStatus", profile.paymentStatus || (record.outstanding > 0 ? "Balance due" : "Not requested"));
+  setProfileValue("profileContractStatus", profile.contractStatus || "Not sent");
+  setProfileValue("profileQuestionnaireStatus", profile.questionnaireStatus || "Not sent");
+  setProfileValue("profileDeliveryStatus", profile.deliveryStatus || stageLabel(record.deliveryJob?.stage));
+  setProfileValue("profileConsultationDate", profile.consultationDate || record.consultation?.callDate || "");
+  setProfileValue("profileFinalConsultationDate", profile.finalConsultationDate || "");
+  setProfileValue("profilePostingPermission", profile.postingPermission || "Waiting");
+  ["timelineNotes","importantNotes","shotListNotes","travelNotes","supplierNotes","communicationHistory","attachments","internalNotes"].forEach(field => setProfileValue(`profile${field[0].toUpperCase()}${field.slice(1)}`, profile[field] || ""));
+
+  const dialog = document.getElementById("profileDialog");
+  if(typeof dialog.showModal === "function") dialog.showModal();
+  else dialog.setAttribute("open","");
+}
+
+function saveProfile(event){
+  event.preventDefault();
+  const profiles = readData(STORE.profiles);
+  const id = profileValue("profileId") || (window.crypto?.randomUUID ? crypto.randomUUID() : `profile_${Date.now()}`);
+  const existing = profiles.find(item => item.id === id) || {};
+  const totalPrice = Number(profileValue("profileTotalPrice") || 0);
+  const depositPaid = Number(profileValue("profileDepositPaid") || 0);
+  const enteredBalance = profileValue("profileBalanceDue");
+  const profile = {
+    ...existing,
+    id,
+    clientName:profileValue("profileClientName"),
+    email:profileValue("profileEmail"),
+    phone:profileValue("profilePhone"),
+    weddingDate:profileValue("profileWeddingDate"),
+    ceremonyLocation:profileValue("profileCeremonyLocation"),
+    receptionLocation:profileValue("profileReceptionLocation"),
+    serviceType:profileValue("profileServiceType"),
+    packageName:profileValue("profilePackageName"),
+    totalPrice,
+    depositPaid,
+    balanceDue:enteredBalance === "" ? Math.max(totalPrice - depositPaid,0) : Number(enteredBalance),
+    paymentStatus:profileValue("profilePaymentStatus"),
+    contractStatus:profileValue("profileContractStatus"),
+    questionnaireStatus:profileValue("profileQuestionnaireStatus"),
+    deliveryStatus:profileValue("profileDeliveryStatus"),
+    consultationDate:profileValue("profileConsultationDate"),
+    finalConsultationDate:profileValue("profileFinalConsultationDate"),
+    postingPermission:profileValue("profilePostingPermission"),
+    timelineNotes:profileValue("profileTimelineNotes"),
+    importantNotes:profileValue("profileImportantNotes"),
+    shotListNotes:profileValue("profileShotListNotes"),
+    travelNotes:profileValue("profileTravelNotes"),
+    supplierNotes:profileValue("profileSupplierNotes"),
+    communicationHistory:profileValue("profileCommunicationHistory"),
+    attachments:profileValue("profileAttachments"),
+    internalNotes:profileValue("profileInternalNotes"),
+    createdAt:existing.createdAt || new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!profile.clientName){
+    alert("Add the couple names first.");
+    return;
+  }
+
+  const index = profiles.findIndex(item => item.id === id);
+  if(index >= 0) profiles[index] = profile;
+  else profiles.unshift(profile);
+  localStorage.setItem(STORE.profiles,JSON.stringify(profiles));
+  closeProfile();
+  renderCrm();
+}
+
+function closeProfile(){
+  const dialog = document.getElementById("profileDialog");
+  if(typeof dialog.close === "function") dialog.close();
+  else dialog.removeAttribute("open");
+}
+
+function profileValue(id){
+  return String(document.getElementById(id).value || "").trim();
+}
+
+function setProfileValue(id,value){
+  const element = document.getElementById(id);
+  if(element) element.value = value == null ? "" : value;
 }
 
 function copyClientSummary(key){
@@ -787,9 +983,9 @@ function copyClientSummary(key){
 }
 
 function clientSummary(record){
-  const date = firstValue([record.booking?.eventDate, record.client?.eventDate, record.consultation?.weddingDate, record.deliveryJob?.dueDate]);
-  const email = firstValue([record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
-  const phone = firstValue([record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
+  const date = firstValue([record.profile?.weddingDate, record.booking?.eventDate, record.client?.eventDate, record.consultation?.weddingDate, record.deliveryJob?.dueDate]);
+  const email = firstValue([record.profile?.email, record.client?.email, record.booking?.contactEmail, record.latestMessage?.contactEmail]);
+  const phone = firstValue([record.profile?.phone, record.client?.phone, record.booking?.contactPhone, record.latestMessage?.contactPhone]);
 
   return [
     `NC Studios CRM - ${record.name}`,
@@ -799,7 +995,10 @@ function clientSummary(record){
     `Money: ${record.outstanding > 0 ? money(record.outstanding) + " due" : "No outstanding balance showing"}`,
     `Admin: ${record.adminTotals.total ? record.adminTotals.percent + "% complete" : "No admin tracker yet"}`,
     `Delivery: ${record.deliveryJob ? stageLabel(record.deliveryJob.stage) + " " + Number(record.deliveryJob.progress || 0) + "%" : "No delivery job yet"}`,
-    `Contact: ${email || "no email"} / ${phone || "no phone"}`
+    `Contact: ${email || "no email"} / ${phone || "no phone"}`,
+    `Contract: ${record.profile?.contractStatus || "not set"}`,
+    `Questionnaire: ${record.profile?.questionnaireStatus || "not set"}`,
+    `Internal notes: ${record.profile?.internalNotes || "none"}`
   ].join("\\n");
 }
 
@@ -821,6 +1020,10 @@ function displayName(value){
 }
 
 function recordKey(value){
+  return keyTokens(value).join(" ");
+}
+
+function keyTokens(value){
   const noise = new Set(["and","the","of","for","wedding","film","films","video","videography","photography","shoot","project","couple","client"]);
   return String(value || "")
     .toLowerCase()
@@ -828,8 +1031,77 @@ function recordKey(value){
     .replace(/[^a-z0-9]+/g, " ")
     .trim()
     .split(/\s+/)
-    .filter(word => word && !noise.has(word))
-    .join(" ");
+    .filter(word => word && !noise.has(word) && !/^\d{2,4}$/.test(word))
+    .sort();
+}
+
+function similarRecordKey(records,key){
+  for(const existingKey of records.keys()){
+    if(recordKeysMatch(existingKey, key)) return existingKey;
+  }
+  return "";
+}
+
+function recordKeysMatch(left,right){
+  if(left === right) return true;
+
+  const leftTokens = left.split(/\s+/).filter(Boolean);
+  const rightTokens = right.split(/\s+/).filter(Boolean);
+  if(!leftTokens.length || !rightTokens.length) return false;
+
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && tokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  if(shorter.length === 1 && longer.length > 1){
+    return matches === 1 && shorter[0].length >= 4;
+  }
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function tokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+
+  const limit = Math.max(left.length, right.length) >= 7 ? 2 : 1;
+  return editDistance(left, right, limit) <= limit;
+}
+
+function editDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return limit + 1;
+
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(
+        previous[col] + 1,
+        current[col - 1] + 1,
+        previous[col - 1] + cost
+      );
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return limit + 1;
+    previous = current;
+  }
+
+  return previous[right.length];
 }
 
 function money(value){
@@ -876,9 +1148,15 @@ function statusLabel(value,fallback){
 function stageLabel(value){
   const labels = {
     "not-started":"Not started",
+    culling:"Culling",
     editing:"Editing",
+    "colour-grading":"Colour grading",
+    exporting:"Exporting",
+    uploading:"Uploading",
     review:"Review",
-    delivered:"Delivered"
+    delivered:"Delivered",
+    "revision-requested":"Revision requested",
+    completed:"Completed"
   };
 
   return labels[value] || "Not started";

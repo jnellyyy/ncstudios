@@ -2,9 +2,14 @@ const NC = (() => {
   const prefix = "nc_";
 
   const modules = [
+    { href:"studio-assistant.html", title:"Studio Assistant", copy:"Priorities, automations, pipeline, calendar and package guidance." },
+    { href:"crm.html", title:"CRM", copy:"One complete record for every couple, booking and follow-up." },
     { href:"bookings.html", title:"Bookings", copy:"Enquiries, dates, deposits and balances." },
     { href:"clients.html", title:"Clients", copy:"Couple details, contacts and notes." },
+    { href:"consultations.html", title:"Consultations", copy:"Call structure, notes, actions and booking follow-up." },
+    { href:"messages.html", title:"Messages", copy:"Client replies, communication history and follow-ups." },
     { href:"finance.html", title:"Finance", copy:"Income, expenses, payment status and profit." },
+    { href:"wedding-funds.html", title:"Funds Roadmap", copy:"Protect rentals, assign client payments and plan kit spending." },
     { href:"quick-capture.html", title:"Quick Capture", copy:"Fast inbox for notes, ideas, money and changes." },
     { href:"projects.html", title:"Projects", copy:"One couple hub across the whole app." },
     { href:"call-sheet.html", title:"Call Sheet", copy:"Shoot day contacts, venue and key names." },
@@ -15,7 +20,8 @@ const NC = (() => {
     { href:"shoot-settings.html", title:"Shoot Settings", copy:"Camera settings for C1, C2 and C3." },
     { href:"lists.html", title:"To Do", copy:"Business tasks, reminders and follow-ups." },
     { href:"delivery.html", title:"Delivery", copy:"Editing stages, deadlines and handover." },
-    { href:"templates.html", title:"Templates", copy:"Reusable messages, emails and client replies." }
+    { href:"templates.html", title:"Templates", copy:"Reusable messages, emails and client replies." },
+    { href:"content.html", title:"Content", copy:"Posting permission, portfolio selects, reels and captions." }
   ];
 
   function key(name){
