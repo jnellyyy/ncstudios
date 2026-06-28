@@ -130,3 +130,24 @@ When you are happy:
 4. Redeploy the site.
 
 Images can be uploaded into Me Mode for quick previews. For large videos, upload the video file to your host or storage first, then paste the video URL into Me Mode.
+
+## Deploying The Private App
+
+Keep the app on a separate host and subdomain from the public website. The recommended address is:
+
+```text
+app.ncstudiouk.co.uk
+```
+
+The repository includes `scripts/build-private-app.sh`. It creates a small `dist-app/` folder containing only the operational app, required fonts, logos and browser files. It does not publish the public website, exports, source documents or the secure SQL setup file.
+
+For Cloudflare Pages:
+
+1. Create a separate Pages project and connect the `jnellyyy/ncstudios` GitHub repository.
+2. Set the production branch to `main`.
+3. Set the build command to `sh scripts/build-private-app.sh`.
+4. Set the build output directory to `dist-app`.
+5. Deploy, then open the generated `.pages.dev` address and confirm the dashboard loads.
+6. Add `app.ncstudiouk.co.uk` under the Pages project's custom domains.
+
+Before entering real client information, create the NC Studio Auth user and run `supabase-secure-setup.sql` in the Supabase SQL editor. The app can then use the same secure login and database sync on the Mac and phone.

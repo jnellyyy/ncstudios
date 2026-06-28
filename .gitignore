@@ -7,3 +7,6 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# Generated private app deployment bundle
+dist-app/
