@@ -46,9 +46,10 @@ restriction on plain local HTTP connections.
 ## First use
 
 1. Choose **Connect helper folder** and select this project's `runtime` folder.
-2. Select one to four reference clips in Premiere’s Project/Bin panel and choose
-   **Use selected Premiere clip(s)**, then choose **Analyse selected source**.
-   A Finder folder remains available as an alternative.
+2. Select one to four reference clips, a bin containing them, or a clip on the
+   active timeline. Choose **Use selected clip(s) or bin**, then choose
+   **Analyse selected source**. A Finder folder remains available as an
+   alternative. Offline clips are skipped; attached proxies are accepted.
 3. Open the sequence you want to edit and describe the change.
 4. Review every proposed action and uncheck anything you do not want.
 5. Choose **Apply checked changes to a copy**.

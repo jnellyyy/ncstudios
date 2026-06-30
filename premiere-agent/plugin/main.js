@@ -207,37 +207,84 @@ async function chooseInspo() {
   updateButtons();
 }
 
+async function collectClipProjectItems(projectItems, limit = 4) {
+  const queue = [...projectItems];
+  const clips = [];
+  const visited = new Set();
+  while (queue.length > 0 && clips.length < limit) {
+    const item = queue.shift();
+    if (!item) continue;
+    const itemKey = String(item.guid || item.name || queue.length);
+    if (visited.has(itemKey)) continue;
+    visited.add(itemKey);
+
+    let clipItem = null;
+    try {
+      clipItem = ppro.ClipProjectItem.cast(item);
+    } catch (error) {
+      clipItem = null;
+    }
+    if (clipItem) {
+      clips.push(clipItem);
+      continue;
+    }
+
+    let folderItem = null;
+    try {
+      folderItem = ppro.FolderItem.cast(item);
+    } catch (error) {
+      folderItem = null;
+    }
+    if (folderItem) {
+      const children = await folderItem.getItems();
+      queue.push(...children);
+    }
+  }
+  return clips;
+}
+
+async function getTimelineSelectedProjectItems(project) {
+  const sequence = await project.getActiveSequence();
+  if (!sequence) return [];
+  const timelineSelection = await sequence.getSelection();
+  const trackItems = await timelineSelection.getTrackItems();
+  const projectItems = [];
+  for (const trackItem of trackItems) {
+    const projectItem = await trackItem.getProjectItem();
+    if (projectItem) projectItems.push(projectItem);
+  }
+  return projectItems;
+}
+
 async function useSelectedPremiereInspo() {
   await runBusy("Reading selected Inspo clips from Premiere…", async () => {
     const project = await ppro.Project.getActiveProject();
     if (!project) throw new Error("Open a Premiere project first.");
     const selection = await ppro.ProjectUtils.getSelection(project);
-    const items = await selection.getItems();
+    let items = await selection.getItems();
+    if (!items || items.length === 0) items = await getTimelineSelectedProjectItems(project);
     if (!items || items.length === 0) {
-      throw new Error("Select an Inspo video in Premiere’s Project/Bin panel first.");
+      throw new Error("Select the Inspo video, its bin, or its clip on the timeline first.");
     }
-    if (items.length > 4) {
-      throw new Error("Select no more than four Inspo clips at once.");
-    }
+
+    const clipItems = await collectClipProjectItems(items, 4);
+    console.log(`[NC Edit Agent] Found ${clipItems.length} clip candidate(s) from ${items.length} selected item(s).`);
 
     const filePaths = [];
     const names = [];
-    for (const item of items) {
-      let clipItem;
-      try {
-        clipItem = ppro.ClipProjectItem.cast(item);
-      } catch (error) {
-        clipItem = null;
-      }
-      if (!clipItem || await clipItem.isSequence()) continue;
+    for (const clipItem of clipItems) {
+      if (await clipItem.isSequence()) continue;
       if (await clipItem.isOffline()) continue;
-      const mediaPath = await clipItem.getMediaFilePath();
+      let mediaPath = await clipItem.getMediaFilePath();
+      if (!mediaPath && await clipItem.hasProxy()) mediaPath = await clipItem.getProxyPath();
       if (!mediaPath) continue;
-      filePaths.push(mediaPath);
-      names.push(clipItem.name || item.name || "Inspo clip");
+      if (!filePaths.includes(mediaPath)) {
+        filePaths.push(mediaPath);
+        names.push(clipItem.name || "Inspo clip");
+      }
     }
     if (filePaths.length === 0) {
-      throw new Error("The selection contains no online video files. Select the video clip itself, not its bin.");
+      throw new Error("Premiere found the selection, but it has no online source or proxy file to analyse.");
     }
 
     inspoSource = {
@@ -247,7 +294,7 @@ async function useSelectedPremiereInspo() {
     };
     localStorage.setItem(INSPO_SOURCE_KEY, JSON.stringify(inspoSource));
     byId("inspo-path").textContent = `Premiere: ${inspoSource.label}`;
-    setStatus(`${filePaths.length} Premiere Inspo clip(s) selected. Ready to analyse.`);
+    setStatus(`${filePaths.length} Premiere Inspo clip(s) ready. Now click Analyse selected source.`);
   });
 }
 
