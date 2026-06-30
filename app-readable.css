@@ -952,14 +952,6 @@ hr,
     z-index:20 !important;
     padding:6px !important;
     padding-bottom:max(6px, env(safe-area-inset-bottom)) !important;
-    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
-  }
-
-  .bottomRow a{
-    min-width:0 !important;
-    padding:8px 2px !important;
-    font-size:9px !important;
-    overflow-wrap:anywhere !important;
   }
 
   .nav-pill,

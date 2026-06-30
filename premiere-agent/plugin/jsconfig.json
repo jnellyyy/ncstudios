@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "lib": ["ES2022", "DOM"],
+    "types": ["@adobe/cc-ext-uxp-types", "@adobe/premierepro"],
+    "skipLibCheck": true,
+    "strict": false
+  },
+  "include": ["main.js", "host-modules.d.ts"]
+}

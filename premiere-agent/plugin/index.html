@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NC Edit Agent</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">NC STUDIOS</p>
+          <h1>Edit Agent</h1>
+        </div>
+        <span id="helper-indicator" class="indicator" title="Helper status"></span>
+      </header>
+
+      <section class="card setup-card">
+        <div class="section-heading">
+          <span class="step">1</span>
+          <div>
+            <h2>Connect</h2>
+            <p>Choose the helper’s runtime folder once.</p>
+          </div>
+        </div>
+        <button id="connect-helper" class="button secondary">Connect helper folder</button>
+        <p id="helper-path" class="path-label">Not connected</p>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <span class="step">2</span>
+          <div>
+            <h2>Learn the look</h2>
+            <p>Select Inspo clips in Premiere’s Project/Bin panel, then use them directly.</p>
+          </div>
+        </div>
+        <button id="use-selected-inspo" class="button full no-top-margin">Use selected Premiere clip(s)</button>
+        <div class="source-divider"><span>or</span></div>
+        <div class="button-row">
+          <button id="choose-inspo" class="button secondary">Choose Finder folder</button>
+          <button id="analyse-inspo" class="button" disabled>Analyse selected source</button>
+        </div>
+        <p id="inspo-path" class="path-label">No Inspo source selected</p>
+        <div id="style-profile" class="profile empty">Your learned style profile will appear here.</div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <span class="step">3</span>
+          <div>
+            <h2>Direct the edit</h2>
+            <p>The agent reads your active sequence before planning.</p>
+          </div>
+        </div>
+        <label for="edit-request">Editing request</label>
+        <textarea id="edit-request" rows="5" placeholder="Tighten the pacing using my Inspo style. Remove weak pauses, keep the emotional moments, and avoid flashy transitions."></textarea>
+        <button id="create-plan" class="button full" disabled>Create edit plan</button>
+      </section>
+
+      <section id="plan-card" class="card hidden">
+        <div class="section-heading compact">
+          <span class="step">4</span>
+          <div>
+            <h2>Review changes</h2>
+            <p id="plan-summary"></p>
+          </div>
+        </div>
+        <div id="plan-warnings" class="warnings hidden"></div>
+        <div id="plan-changes" class="changes"></div>
+        <button id="apply-plan" class="button full danger-safe">Apply checked changes to a copy</button>
+        <p class="safety-note">The original sequence remains untouched. Premiere’s Undo also remains available.</p>
+      </section>
+
+      <footer>
+        <p id="status" role="status">Ready to connect.</p>
+      </footer>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
