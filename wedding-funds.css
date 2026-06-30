@@ -187,6 +187,34 @@
 .progress-top strong{color:var(--funds-ink) !important;font-size:17px !important}
 .progress-item small{display:block;margin-top:7px;color:var(--funds-muted);font-size:11px}
 
+.money-map-card{padding:18px;border:1px solid var(--funds-line);background:var(--funds-surface)}
+.money-map-summary{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:15px}
+.money-map-summary strong{display:block;color:var(--funds-ink) !important;font:400 34px/1 var(--nc-font-display) !important}
+.money-map-summary span{display:block;margin-top:6px;color:var(--funds-muted);font-size:12px}
+.money-map-summary b{color:var(--funds-gold-light);font:500 12px/1.3 var(--nc-font-mono);text-align:right;text-transform:uppercase}
+.money-map-bar{display:flex;width:100%;height:34px;overflow:hidden;border:1px solid var(--funds-line);background:#050504}
+.money-map-segment{height:100%;min-width:2px;transition:width .25s ease}
+.money-map-segment.rentals,.money-swatch.rentals{background:#d8b76e}
+.money-map-segment.travel,.money-swatch.travel{background:#7aa7ff}
+.money-map-segment.buffer,.money-swatch.buffer{background:#7fd69b}
+.money-map-segment.purchase,.money-swatch.purchase{background:#e99b8f}
+.money-map-segment.other,.money-swatch.other{background:#c5a7e8}
+.money-map-segment.unallocated,.money-swatch.unallocated{background:#373027}
+.money-map-legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.money-legend-item{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px;border:1px solid rgba(216,183,110,.16)}
+.money-swatch{width:10px;height:10px}
+.money-legend-item span{min-width:0;color:var(--funds-muted);font-size:11px;overflow-wrap:anywhere}
+.money-legend-item strong{color:var(--funds-ink) !important;font-size:12px !important;white-space:nowrap}
+.money-payment-list{display:grid;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid var(--funds-line)}
+.money-payment-row{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(220px,1.3fr);gap:16px;align-items:center}
+.money-payment-copy{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.money-payment-copy strong{color:var(--funds-ink) !important;font-size:13px !important}
+.money-payment-copy span{color:var(--funds-gold);font:500 12px/1 var(--nc-font-mono)}
+.money-payment-track{height:12px;overflow:hidden;border:1px solid var(--funds-line);background:#211c16}
+.money-payment-track span{display:block;height:100%;background:var(--funds-gold)}
+.money-payment-detail{display:flex;justify-content:space-between;gap:10px;margin-top:5px;color:var(--funds-muted);font-size:10px}
+.roadmap-empty{padding:18px;border:1px dashed var(--funds-line);color:var(--funds-muted);font-size:12px;line-height:1.45}
+
 .payment-timeline{position:relative;display:grid;gap:12px;padding-left:20px}
 .payment-timeline::before{content:"";position:absolute;left:4px;top:16px;bottom:16px;width:1px;background:var(--funds-line)}
 .payment-card{position:relative;padding:18px}
@@ -277,6 +305,7 @@
 .edit-field > span{color:var(--funds-gold-light);font:500 10px/1.2 var(--nc-font-mono);text-transform:uppercase}
 .edit-field[hidden]{display:none}
 .dialog-actions{display:flex;gap:8px;margin-top:16px}
+.dialog-actions .delete-entry{margin-left:auto}
 
 .funds-toast{position:fixed;left:50%;bottom:24px;z-index:50;max-width:calc(100% - 28px);padding:11px 14px;border:1px solid var(--funds-line);color:var(--funds-ink);background:#11100c;box-shadow:0 16px 50px rgba(0,0,0,.55);font-size:13px;transform:translate(-50%,130px);transition:transform .2s ease}
 .funds-toast.show{transform:translate(-50%,0)}
@@ -304,6 +333,10 @@
   .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .overview-card:last-child{grid-column:1/-1}
   .warning-list,.progress-grid,.week-checklist{grid-template-columns:1fr}
+  .money-map-summary{align-items:start;flex-direction:column}
+  .money-map-summary b{text-align:left}
+  .money-map-legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .money-payment-row{grid-template-columns:1fr;gap:7px}
   .payment-card{padding:15px}
   .payment-top{align-items:start}
   .payment-amount{font-size:27px !important}
@@ -320,6 +353,8 @@
   .edit-grid{grid-template-columns:1fr}
   .edit-field.wide{grid-column:auto}
   .edit-dialog form{padding:16px}
+  .dialog-actions{display:grid;grid-template-columns:1fr 1fr}
+  .dialog-actions .delete-entry{grid-column:1/-1;margin-left:0}
 }
 
 @media(max-width:380px){
@@ -331,5 +366,5 @@
 }
 
 @media(prefers-reduced-motion:reduce){
-  .progress-track span,.funds-toast{transition:none}
+  .progress-track span,.money-map-segment,.funds-toast{transition:none}
 }

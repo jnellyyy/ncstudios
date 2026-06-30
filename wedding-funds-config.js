@@ -7,10 +7,10 @@
   roadmap data.
 */
 window.NC_WEDDING_FUNDS_DEFAULTS = {
-  dataVersion:2,
+  dataVersion:4,
   currency:"GBP",
-  rentalTarget:300,
-  rentalWarningAt:300,
+  rentalTarget:90,
+  rentalWarningAt:90,
   emergencyTarget:100,
   emergencyWarningAt:75,
   currentPriority:"Protect rental money first",
@@ -18,6 +18,9 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     client:"Simi and Kiefah",
     date:"2026-08-22"
   },
+
+  // Deleted roadmap entries are tracked here so they stay deleted after reload.
+  deletedItems:{payments:[],allocations:[],rentals:[],buyList:[]},
 
   ownedKit:[
     {id:"samyang-35",name:"Samyang 35mm lens",quantity:1,status:"owned"},
@@ -60,13 +63,13 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {
       id:"august-rental-balance",
       paymentId:"simi-kiefah-august",
-      name:"Rental balance",
+      name:"Rental total",
       category:"Protected rental money",
       priority:"essential",
-      estimatedCost:250,
-      estimatedMax:250,
+      estimatedCost:90,
+      estimatedMax:90,
       status:"planned",
-      notes:"Up to £250. Keep the full amount available until the final rental invoice is known.",
+      notes:"Rental total confirmed at £90 flat.",
       protected:true
     },
     {
@@ -125,7 +128,7 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
 
   // EDIT THE AFTER-RENTALS BUYING ORDER AND ESTIMATES HERE.
   buyList:[
-    {id:"ssd-1tb",rank:1,name:"1TB SSD",category:"Storage + backup",priority:"urgent",status:"needed",estimate:70,notes:"Buy after the £300 rental pot is protected."},
+    {id:"ssd-1tb",rank:1,name:"1TB SSD",category:"Storage + backup",priority:"urgent",status:"needed",estimate:70,notes:"Buy after the £90 rental total is protected."},
     {id:"np-f550-second",rank:2,name:"Second NP F550 battery",category:"Camera + filming",priority:"urgent",status:"needed",estimate:15,notes:"Required because only one is currently owned."},
     {id:"short-hdmi",rank:3,name:"Short flexible HDMI cable",category:"Camera + filming",priority:"soon",status:"research",estimate:15,notes:"Buy only if the rig test confirms it is needed."},
     {id:"monitor-arm",rank:4,name:"Monitor arm",category:"Camera + filming",priority:"soon",status:"research",estimate:30,notes:"Buy only if the current rig is missing support."},

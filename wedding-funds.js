@@ -75,12 +75,17 @@
     if(!saved || typeof saved !== "object") return clone(defaults);
 
     const merged = {...clone(defaults),...saved};
+    const deletedItems = normaliseDeletedItems(saved.deletedItems);
+    merged.deletedItems = deletedItems;
     ["ownedKit","payments","allocations","rentals","buyList","weddingWeek"].forEach(key => {
       const savedItems = Array.isArray(saved[key]) ? saved[key] : [];
       const savedMap = new Map(savedItems.map(item => [item.id,item]));
       const defaultIds = new Set((defaults[key] || []).map(item => item.id));
-      const configured = (defaults[key] || []).map(item => ({...clone(item),...(savedMap.get(item.id) || {})}));
-      const custom = savedItems.filter(item => item.id && !defaultIds.has(item.id));
+      const deleted = new Set(deletedItems[key] || []);
+      const configured = (defaults[key] || [])
+        .filter(item => !deleted.has(item.id))
+        .map(item => ({...clone(item),...(savedMap.get(item.id) || {})}));
+      const custom = savedItems.filter(item => item.id && !defaultIds.has(item.id) && !deleted.has(item.id));
       merged[key] = configured.concat(custom);
     });
     merged.nextWedding = {...clone(defaults.nextWedding),...(saved.nextWedding || {})};
@@ -91,6 +96,7 @@
     if(!saved || typeof saved !== "object") return saved;
     const migrated = clone(saved);
     const version = Number(migrated.dataVersion || 1);
+    let changed = false;
 
     if(version < 2){
       const payment = (migrated.payments || []).find(item => item.id === "marvin-blessing-july");
@@ -103,11 +109,42 @@
         payment.notes = configured.notes;
       }
       migrated.allocations = (migrated.allocations || []).filter(item => item.paymentId !== "marvin-blessing-july");
-      migrated.dataVersion = 2;
-      localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
+      changed = true;
     }
 
+    if(version < 3){
+      migrated.deletedItems = normaliseDeletedItems(migrated.deletedItems);
+      changed = true;
+    }
+
+    if(version < 4){
+      migrated.rentalTarget = defaults.rentalTarget;
+      migrated.rentalWarningAt = defaults.rentalWarningAt;
+
+      const savedRental = (migrated.allocations || []).find(item => item.id === "august-rental-balance");
+      const defaultRental = defaults.allocations.find(item => item.id === "august-rental-balance");
+      if(savedRental && defaultRental){
+        savedRental.estimatedCost = defaultRental.estimatedCost;
+        savedRental.estimatedMax = defaultRental.estimatedMax;
+        savedRental.notes = defaultRental.notes;
+      }
+      changed = true;
+    }
+
+    migrated.dataVersion = 4;
+    if(changed) localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
+
     return migrated;
+  }
+
+  function normaliseDeletedItems(value){
+    const source = value && typeof value === "object" ? value : {};
+    return {
+      payments:Array.isArray(source.payments) ? source.payments : [],
+      allocations:Array.isArray(source.allocations) ? source.allocations : [],
+      rentals:Array.isArray(source.rentals) ? source.rentals : [],
+      buyList:Array.isArray(source.buyList) ? source.buyList : []
+    };
   }
 
   function saveState(){
@@ -189,6 +226,7 @@
     document.getElementById("exportRoadmap").addEventListener("click",exportRoadmap);
     document.getElementById("resetRoadmap").addEventListener("click",resetRoadmap);
     document.getElementById("editForm").addEventListener("submit",saveEdit);
+    document.getElementById("deleteEntry").addEventListener("click",deleteCurrentEntry);
     document.getElementById("closeDialog").addEventListener("click",closeEditDialog);
     document.getElementById("cancelDialog").addEventListener("click",closeEditDialog);
 
@@ -207,6 +245,7 @@
     renderOverview(totals);
     renderWarnings(totals);
     renderProgress(totals);
+    renderMoneyMap(totals);
     renderPayments();
     renderAllocations();
     renderRentals();
@@ -231,14 +270,14 @@
 
   function renderHero(totals){
     setText("heroPriority",state.currentPriority);
-    setText("heroRentalCopy",`${money(totals.rentalSaved)} of ${money(state.rentalTarget)} rental pot protected`);
+    setText("heroRentalCopy",`${money(totals.rentalSaved)} of ${money(state.rentalTarget)} rental total protected`);
     document.getElementById("heroRentalBar").style.width = percent(totals.rentalSaved,state.rentalTarget) + "%";
   }
 
   function renderOverview(totals){
     const cards = [
       {label:"Total incoming funds",value:money(totals.totalIncoming),note:`${state.payments.length} client payments`},
-      {label:"Rental pot target",value:money(state.rentalTarget),note:"Protect before extra kit"},
+      {label:"Rental total",value:money(state.rentalTarget),note:"£90 flat · protect before extra kit"},
       {label:"Emergency + travel target",value:money(state.emergencyTarget),note:`Warning below ${money(state.emergencyWarningAt)}`},
       {label:"Next wedding",value:state.nextWedding.client,note:niceDate(state.nextWedding.date),priority:true},
       {label:"Current priority",value:state.currentPriority,note:"Rentals before upgrades",priority:true}
@@ -254,26 +293,26 @@
 
   function renderWarnings(totals){
     const warnings = [];
-    const rentalConfirmed = state.rentals.length > 0 && state.rentals.every(item => ["reserved","received","returned"].includes(item.status));
+    const rentalConfirmed = state.rentals.length === 0 || state.rentals.every(item => ["reserved","received","returned"].includes(item.status));
     const weddingDays = daysUntil(state.nextWedding.date);
     const battery = state.ownedKit.find(item => item.id === "np-f550");
     const ssd = state.buyList.find(item => item.id === "ssd-1tb");
     const ssdBought = ssd && effectiveBuyStatus(ssd) === "bought";
 
     if(totals.rentalSaved < state.rentalWarningAt){
-      warnings.push({title:`Rental pot is ${money(state.rentalWarningAt - totals.rentalSaved)} short`,copy:`Keep ${money(state.rentalWarningAt)} protected before optional kit.`});
+      warnings.push({title:`Rental money is ${money(state.rentalWarningAt - totals.rentalSaved)} short`,copy:`Keep the ${money(state.rentalWarningAt)} flat rental total protected before optional kit.`});
     }
     if(totals.emergencySaved < state.emergencyWarningAt){
       warnings.push({title:"Emergency buffer is below the safe minimum",copy:`Protect at least ${money(state.emergencyWarningAt)} for travel and wedding-day surprises.`});
     }
     if(weddingDays >= 0 && weddingDays <= 14 && !rentalConfirmed){
-      warnings.push({title:"Wedding is within 14 days and rentals are not confirmed",copy:"Reserve all three rental items now and check the final VAT, waiver and delivery total."});
+      warnings.push({title:"Wedding is within 14 days and rentals are not confirmed",copy:"Reserve all three rental items and confirm the £90 booking."});
     }
-    if(!ssdBought){
+    if(!ssdBought && !state.deletedItems.buyList.includes("ssd-1tb")){
       warnings.push({title:"Wedding storage is not marked bought",copy:"The 1TB SSD is still needed before the August wedding."});
     }
-    if(Number(battery?.quantity || 0) <= 1){
-      warnings.push({title:"Only one NP F550 battery is owned",copy:"Keep the second battery high on the list after the rental pot is protected."});
+    if(Number(battery?.quantity || 0) <= 1 && !state.deletedItems.buyList.includes("np-f550-second")){
+      warnings.push({title:"Only one NP F550 battery is owned",copy:"Keep the second battery high on the list after the £90 rental total is protected."});
     }
 
     const wrap = document.getElementById("warningList");
@@ -287,7 +326,7 @@
       {label:"Total received",value:totals.received,target:totals.totalIncoming},
       {label:"Total allocated",value:totals.allocated,target:totals.totalIncoming},
       {label:"Total spent",value:totals.spent,target:totals.totalIncoming},
-      {label:"Rental pot saved",value:totals.rentalSaved,target:state.rentalTarget},
+      {label:"Rental money saved",value:totals.rentalSaved,target:state.rentalTarget},
       {label:"Emergency buffer saved",value:totals.emergencySaved,target:state.emergencyTarget},
       {label:"Flexible balance",value:totals.flexible,target:totals.received || totals.totalIncoming,noOf:true}
     ];
@@ -300,8 +339,66 @@
     `).join("");
   }
 
+  function renderMoneyMap(totals){
+    const groups = new Map();
+    const active = state.allocations.filter(item => !["skipped","moved-later"].includes(effectiveAllocationStatus(item)));
+
+    active.forEach(item => {
+      const group = allocationGroup(item);
+      const current = groups.get(group.key) || {...group,amount:0};
+      current.amount += Number(item.estimatedCost || 0);
+      groups.set(group.key,current);
+    });
+
+    const planned = sum([...groups.values()],item => item.amount);
+    const unallocated = Math.max(0,totals.totalIncoming - planned);
+    const over = Math.max(0,planned - totals.totalIncoming);
+    const chartTotal = Math.max(totals.totalIncoming,planned,1);
+    const order = ["rentals","travel","buffer","purchase","other"];
+    const segments = order.map(key => groups.get(key)).filter(item => item && item.amount > 0);
+    if(unallocated > 0) segments.push({key:"unallocated",label:"Unallocated",amount:unallocated});
+
+    document.getElementById("moneyMapSummary").innerHTML = `
+      <div><strong>${money(totals.totalIncoming)}</strong><span>Full expected amount</span></div>
+      <b>${money(planned)} planned · ${money(unallocated)} unallocated${over ? ` · ${money(over)} over plan` : ""}</b>
+    `;
+
+    const bar = document.getElementById("moneyMapBar");
+    bar.setAttribute("aria-label",`${money(totals.totalIncoming)} expected. ${money(planned)} planned and ${money(unallocated)} unallocated.`);
+    bar.innerHTML = segments.length ? segments.map(item => `
+      <span class="money-map-segment ${escapeAttribute(item.key)}" style="width:${item.amount / chartTotal * 100}%" title="${escapeAttribute(item.label)}: ${escapeAttribute(money(item.amount))}"></span>
+    `).join("") : `<span class="money-map-segment unallocated" style="width:100%"></span>`;
+
+    document.getElementById("moneyMapLegend").innerHTML = segments.length ? segments.map(item => `
+      <div class="money-legend-item"><i class="money-swatch ${escapeAttribute(item.key)}" aria-hidden="true"></i><span>${escapeHTML(item.label)}</span><strong>${money(item.amount)}</strong></div>
+    `).join("") : `<div class="roadmap-empty">Add a payment to start the allocation map.</div>`;
+
+    document.getElementById("moneyMapPayments").innerHTML = state.payments.length ? state.payments.map(payment => {
+      const items = active.filter(item => item.paymentId === payment.id);
+      const paymentPlanned = sum(items,item => item.estimatedCost);
+      const open = Math.max(0,Number(payment.amount || 0) - paymentPlanned);
+      const paymentOver = Math.max(0,paymentPlanned - Number(payment.amount || 0));
+      return `
+        <article class="money-payment-row">
+          <div class="money-payment-copy"><strong>${escapeHTML(payment.client)}</strong><span>${money(payment.amount)}</span></div>
+          <div><div class="money-payment-track"><span style="width:${percent(paymentPlanned,payment.amount)}%"></span></div><div class="money-payment-detail"><span>${payment.noCostsRemaining ? "No wedding costs" : `${money(paymentPlanned)} planned`}</span><span>${paymentOver ? `${money(paymentOver)} over` : `${money(open)} unallocated`}</span></div></div>
+        </article>
+      `;
+    }).join("") : `<div class="roadmap-empty">No incoming payments are currently tracked.</div>`;
+  }
+
+  function allocationGroup(item){
+    const category = String(item.category || "").toLowerCase();
+    const name = String(item.name || "").toLowerCase();
+    if(item.protected || category.includes("rental")) return {key:"rentals",label:"Rentals"};
+    if(category.includes("travel") || name.includes("travel") || name.includes("parking")) return {key:"travel",label:"Travel + parking"};
+    if(item.buffer || category.includes("buffer") || name.includes("emergency")) return {key:"buffer",label:"Emergency buffer"};
+    if(item.buyListId || ["storage","audio","media","monitor support","rig support"].some(value => category.includes(value))) return {key:"purchase",label:"Equipment + storage"};
+    return {key:"other",label:"Other planned money"};
+  }
+
   function renderPayments(){
-    document.getElementById("paymentTimeline").innerHTML = state.payments
+    const html = state.payments
       .slice()
       .sort((a,b) => String(a.expectedDate).localeCompare(String(b.expectedDate)))
       .map(payment => `
@@ -317,21 +414,23 @@
           </div>
         </article>
       `).join("");
+    document.getElementById("paymentTimeline").innerHTML = html || `<div class="roadmap-empty">No payment entries. Reset the roadmap to restore the original plan.</div>`;
   }
 
   function renderAllocations(){
-    document.getElementById("allocationPlans").innerHTML = state.payments.map(payment => {
+    const html = state.payments.map(payment => {
       const items = state.allocations.filter(item => item.paymentId === payment.id);
       const activeTotal = sum(items,item => ["skipped","moved-later"].includes(effectiveAllocationStatus(item)) ? 0 : item.estimatedCost);
       const difference = Number(payment.amount || 0) - activeTotal;
       return `
         <section class="allocation-group">
           <div class="allocation-group-heading"><div><span>${escapeHTML(shortDate(payment.expectedDate))} funds</span><h3>${escapeHTML(payment.client)}</h3></div><strong>${money(payment.amount)}</strong></div>
-          <div class="allocation-list">${items.length ? items.map(renderAllocationCard).join("") : `<div class="allocation-empty"><strong>No wedding costs remaining</strong><span>${escapeHTML(payment.client)}'s wedding is complete. The balance stays unallocated until it is received.</span></div>`}</div>
+          <div class="allocation-list">${items.length ? items.map(renderAllocationCard).join("") : payment.noCostsRemaining ? `<div class="allocation-empty"><strong>No wedding costs remaining</strong><span>${escapeHTML(payment.client)}'s wedding is complete. The balance stays unallocated until it is received.</span></div>` : `<div class="allocation-empty"><strong>No allocations planned</strong><span>This payment is currently fully unallocated.</span></div>`}</div>
           <div class="allocation-summary"><span>${payment.noCostsRemaining ? "Wedding costs" : "Active plan"}</span><strong>${payment.noCostsRemaining ? `${money(0)} · ${money(payment.amount)} pending balance` : `${money(activeTotal)}${difference === 0 ? " · fully assigned" : difference > 0 ? ` · ${money(difference)} open` : ` · ${money(Math.abs(difference))} over`}`}</strong></div>
         </section>
       `;
     }).join("");
+    document.getElementById("allocationPlans").innerHTML = html || `<div class="roadmap-empty">No allocation plans are currently attached to a payment.</div>`;
   }
 
   function renderAllocationCard(item){
@@ -353,7 +452,7 @@
   }
 
   function renderRentals(){
-    document.getElementById("rentalList").innerHTML = state.rentals.map(rental => `
+    const html = state.rentals.map(rental => `
       <article class="rental-card">
         <div class="rental-top"><h3>${escapeHTML(rental.name)}</h3><span class="status-badge">${escapeHTML(labelFor(RENTAL_STATUSES,rental.status))}</span></div>
         <p>${escapeHTML(rental.notes || "No notes.")}</p>
@@ -363,10 +462,11 @@
         </div>
       </article>
     `).join("");
+    document.getElementById("rentalList").innerHTML = html || `<div class="roadmap-empty">No rental entries are currently needed.</div>`;
   }
 
   function renderBuyOrder(){
-    document.getElementById("buyOrder").innerHTML = state.buyList
+    const html = state.buyList
       .slice()
       .sort((a,b) => Number(a.rank || 999) - Number(b.rank || 999))
       .map(item => {
@@ -382,6 +482,7 @@
           </article>
         `;
       }).join("");
+    document.getElementById("buyOrder").innerHTML = html || `<div class="roadmap-empty">No equipment or storage purchases are currently planned.</div>`;
   }
 
   function renderOwnedKit(){
@@ -418,6 +519,7 @@
     document.getElementById("editCategory").value = isPayment ? item.purpose || "" : item.category || "";
     document.getElementById("editPriority").value = item.priority || "";
     document.getElementById("editNotes").value = item.notes || "";
+    document.getElementById("deleteEntry").textContent = `Delete ${kindLabel(kind)}`;
 
     toggleField("editAmount",isPayment || isAllocation || isBuy);
     toggleField("editMaxField",isAllocation || isBuy,true);
@@ -483,12 +585,76 @@
     else dialog.removeAttribute("open");
   }
 
+  function deleteCurrentEntry(){
+    const kind = document.getElementById("editKind").value;
+    const id = document.getElementById("editId").value;
+    const item = collectionFor(kind).find(entry => entry.id === id);
+    if(!item) return;
+
+    const name = kind === "payment" ? item.client : item.name;
+    const extra = kind === "payment" ? " Its linked allocations will also be removed." : kind === "buy" ? " Its linked allocation and Buy List copy will also be removed." : "";
+    if(!confirm(`Delete ${name}?${extra} You can restore the original plan with Reset from roadmap plan.`)) return;
+
+    state.deletedItems = normaliseDeletedItems(state.deletedItems);
+    markDeleted(kind,id);
+
+    if(kind === "payment"){
+      const linked = state.allocations.filter(entry => entry.paymentId === id);
+      linked.forEach(entry => markDeleted("allocation",entry.id));
+      state.allocations = state.allocations.filter(entry => entry.paymentId !== id);
+      state.payments = state.payments.filter(entry => entry.id !== id);
+      removePaymentFromFinance(id);
+    }
+
+    if(kind === "allocation") state.allocations = state.allocations.filter(entry => entry.id !== id);
+    if(kind === "rental") state.rentals = state.rentals.filter(entry => entry.id !== id);
+
+    if(kind === "buy"){
+      const linked = state.allocations.filter(entry => entry.buyListId === id);
+      linked.forEach(entry => markDeleted("allocation",entry.id));
+      state.allocations = state.allocations.filter(entry => entry.buyListId !== id);
+      state.buyList = state.buyList.filter(entry => entry.id !== id);
+      removeBuyListCopy(id);
+    }
+
+    saveState();
+    closeEditDialog();
+    renderAll();
+    showToast(`${name} deleted from the roadmap.`);
+  }
+
+  function markDeleted(kind,id){
+    const key = collectionKeyFor(kind);
+    if(!key || !id) return;
+    if(!state.deletedItems[key].includes(id)) state.deletedItems[key].push(id);
+  }
+
+  function collectionKeyFor(kind){
+    return {payment:"payments",allocation:"allocations",rental:"rentals",buy:"buyList"}[kind] || "";
+  }
+
+  function kindLabel(kind){
+    return {payment:"payment",allocation:"allocation",rental:"rental",buy:"buy item"}[kind] || "entry";
+  }
+
   function collectionFor(kind){
     if(kind === "payment") return state.payments;
     if(kind === "allocation") return state.allocations;
     if(kind === "rental") return state.rentals;
     if(kind === "buy") return state.buyList;
     return [];
+  }
+
+  function removePaymentFromFinance(paymentId){
+    const finance = readArray(FINANCE_KEY);
+    const next = finance.filter(item => item.roadmapPaymentId !== paymentId);
+    if(next.length !== finance.length) localStorage.setItem(FINANCE_KEY,JSON.stringify(next));
+  }
+
+  function removeBuyListCopy(buyId){
+    const buyList = readArray(BUY_LIST_KEY);
+    const next = buyList.filter(item => item.roadmapBuyId !== buyId);
+    if(next.length !== buyList.length) localStorage.setItem(BUY_LIST_KEY,JSON.stringify(next));
   }
 
   function syncPaymentToFinance(payment){
