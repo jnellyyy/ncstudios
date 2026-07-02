@@ -1,2 +1,4 @@
 /me1 /index.html?me=1 302
 /me1/ /index.html?me=1 302
+/portfolio /portfolio.html 200
+/portfolio/ /portfolio.html 200

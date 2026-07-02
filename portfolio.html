@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080806">
+  <meta name="description" content="Janelle Lamptey's multidisciplinary portfolio: product design, UX research, creative direction, photography and motion.">
+  <title>Janelle Lamptey — Product Designer &amp; Creative Director</title>
+  <link rel="icon" href="icon-32.png">
+  <style>
+    @font-face {
+      font-family: "NC Brand";
+      src: url("assets/fonts/NC_Font_Lighter.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --black: #080806;
+      --black-2: #12110e;
+      --cream: #f1e7d7;
+      --paper: #f8f2e9;
+      --gold: #d7b66c;
+      --gold-light: #f1dda9;
+      --ink: #181713;
+      --muted: #726d63;
+      --line: rgba(22, 21, 18, .14);
+      --glass: rgba(247, 240, 229, .92);
+      --shadow: 0 34px 90px rgba(0, 0, 0, .38), 0 3px 14px rgba(0, 0, 0, .16);
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { width: 100%; min-height: 100%; }
+
+    html { background: var(--black); }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--black);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, a { font: inherit; }
+    button { color: inherit; }
+    img, video { display: block; max-width: 100%; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+    .boot {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 50% 80%, rgba(215, 182, 108, .18), transparent 35%),
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        #080806;
+      background-size: 100% 100%, 42px 42px, 42px 42px, 100% 100%;
+      transition: opacity .65s ease, visibility .65s ease;
+    }
+
+    .boot::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: linear-gradient(105deg, transparent 42%, rgba(241, 221, 169, .14), transparent 58%);
+      transform: translateX(-45%);
+      animation: bootSweep 2.1s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .desktop-ready .boot { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .boot-inner {
+      position: relative;
+      width: min(620px, calc(100vw - 40px));
+      text-align: center;
+    }
+
+    .boot-mark {
+      width: clamp(108px, 18vw, 152px);
+      margin: 0 auto 30px;
+      filter: drop-shadow(0 12px 30px rgba(215, 182, 108, .18));
+      animation: markIn .9s cubic-bezier(.2,.85,.2,1) both;
+    }
+
+    .boot-kicker,
+    .boot-status,
+    .menu-left,
+    .menu-right,
+    .eyebrow,
+    .meta,
+    .tag,
+    .dock-tip {
+      font-family: var(--mono);
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .boot-kicker { margin: 0 0 10px; color: var(--gold-light); font-size: 11px; }
+
+    .boot h1 {
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 520;
+      line-height: .95;
+      letter-spacing: -.065em;
+    }
+
+    .boot h1 em { color: var(--gold); font-family: Georgia, serif; font-weight: 400; }
+
+    .boot-progress {
+      width: min(360px, 80vw);
+      height: 3px;
+      margin: 34px auto 12px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+    }
+
+    .boot-progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      box-shadow: 0 0 22px var(--gold);
+      transition: width .16s ease;
+    }
+
+    .boot-status { min-height: 18px; margin: 0; color: #a8a093; font-size: 9px; }
+
+    .enter-button {
+      min-width: 210px;
+      margin-top: 28px;
+      padding: 14px 20px;
+      border: 1px solid rgba(241, 221, 169, .55);
+      border-radius: 999px;
+      opacity: 0;
+      color: var(--black);
+      background: var(--gold-light);
+      font-weight: 700;
+      cursor: pointer;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .4s ease, transform .4s ease, background .2s ease;
+    }
+
+    .boot.is-ready .enter-button { opacity: 1; transform: none; pointer-events: auto; }
+    .enter-button:hover { background: #fff2cf; }
+
+    .desktop {
+      position: fixed;
+      inset: 0;
+      isolation: isolate;
+      overflow: hidden;
+      opacity: 0;
+      transform: scale(1.025);
+      transition: opacity .8s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .1s;
+    }
+
+    .desktop-ready .desktop { opacity: 1; transform: none; }
+
+    .wallpaper {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: var(--cream);
+      background:
+        linear-gradient(100deg, rgba(8,8,6,.98) 0 37%, rgba(8,8,6,.74) 55%, rgba(8,8,6,.16) 100%),
+        radial-gradient(circle at 78% 45%, rgba(215,182,108,.28), transparent 30%),
+        #15120e;
+    }
+
+    .wallpaper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: .19;
+      mix-blend-mode: overlay;
+      background-image: url("exports/nc-watermark-animation/nc-watermark-animation-preview.png");
+      background-size: 300px;
+    }
+
+    .wallpaper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent 0 63%, rgba(215,182,108,.45) 63% calc(63% + 1px), transparent calc(63% + 1px));
+    }
+
+    .wallpaper-portrait {
+      position: absolute;
+      inset: -9% -2% -7% auto;
+      z-index: 1;
+      width: min(62vw, 920px);
+      height: 116%;
+      object-fit: cover;
+      object-position: 50% 42%;
+      filter: sepia(.08) contrast(1.07);
+    }
+
+    .wallpaper-copy {
+      position: absolute;
+      left: clamp(22px, 4vw, 74px);
+      top: 50%;
+      z-index: 4;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .wallpaper-copy p { margin: 0 0 14px; color: var(--gold-light); font: 10px/1.2 var(--mono); letter-spacing: .22em; text-transform: uppercase; }
+
+    .wallpaper-copy strong {
+      display: block;
+      max-width: 680px;
+      color: var(--cream);
+      font-size: clamp(50px, 9.5vw, 144px);
+      font-weight: 650;
+      line-height: .76;
+      letter-spacing: -.09em;
+      text-transform: uppercase;
+    }
+
+    .wallpaper-copy strong span { display: block; margin-left: .45em; color: transparent; -webkit-text-stroke: 1px rgba(241,231,215,.72); }
+
+    .menu-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+      color: #f7efe3;
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      background: rgba(10,9,7,.72);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      font-size: 10px;
+    }
+
+    .menu-left, .menu-right { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+    .menu-left strong { color: var(--gold-light); }
+    .menu-mark { width: 22px; height: 22px; object-fit: contain; }
+
+    .desktop-icons {
+      position: absolute;
+      top: 58px;
+      right: 26px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: repeat(2, 94px);
+      gap: 20px 14px;
+    }
+
+    .desktop-icon {
+      width: 94px;
+      min-height: 94px;
+      padding: 0;
+      border: 0;
+      color: #fff;
+      background: transparent;
+      text-align: center;
+      cursor: pointer;
+      text-shadow: 0 2px 8px rgba(0,0,0,.8);
+    }
+
+    .desktop-icon .icon-art {
+      position: relative;
+      width: 62px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 7px;
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 13px;
+      color: var(--cream);
+      background: linear-gradient(150deg, rgba(241,221,169,.26), rgba(8,8,6,.9));
+      box-shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.3);
+      font: 700 22px/1 var(--mono);
+      transition: transform .18s ease, border-color .18s ease;
+    }
+
+    .desktop-icon:nth-child(2n) .icon-art { background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(113,86,35,.88)); }
+    .desktop-icon:hover .icon-art { transform: translateY(-4px) scale(1.04); border-color: var(--gold-light); }
+    .desktop-icon small { display: block; font-size: 11px; line-height: 1.15; }
+
+    .window {
+      --x: 12vw;
+      --y: 10vh;
+      --w: 680px;
+      --h: 620px;
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 100;
+      width: min(var(--w), calc(100vw - 34px));
+      height: min(var(--h), calc(100vh - 110px));
+      min-width: 340px;
+      min-height: 250px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.48);
+      border-radius: 15px;
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(28px) saturate(1.08);
+      -webkit-backdrop-filter: blur(28px) saturate(1.08);
+      animation: windowOpen .34s cubic-bezier(.2,.85,.25,1) both;
+      resize: both;
+    }
+
+    .window[hidden], .window.is-minimized { display: none; }
+    .window.is-maximized { inset: 40px 12px 76px !important; width: auto !important; height: auto !important; resize: none; }
+
+    .window-bar {
+      height: 42px;
+      display: grid;
+      grid-template-columns: 82px 1fr 82px;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(21,20,17,.12);
+      background: rgba(239,232,220,.86);
+      user-select: none;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .window-bar:active { cursor: grabbing; }
+    .window-controls { display: flex; gap: 8px; }
+    .window-control { width: 13px; height: 13px; padding: 0; border: 1px solid rgba(0,0,0,.13); border-radius: 50%; cursor: pointer; }
+    .window-control.close { background: #ed6b5f; }
+    .window-control.minimize { background: #f3bd4e; }
+    .window-control.maximize { background: #62c554; }
+    .window-title { overflow: hidden; font-size: 12px; font-weight: 650; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+    .window-title span { color: #867d6e; font-weight: 450; }
+
+    .window-body {
+      height: calc(100% - 42px);
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: rgba(248,242,233,.72);
+      scrollbar-color: #b9ad9b transparent;
+    }
+
+    .window-hero {
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      padding: clamp(26px, 5vw, 58px);
+      overflow: hidden;
+      color: var(--cream);
+      background: #11100d;
+    }
+
+    .window-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,8,6,.9), transparent 70%); }
+    .window-hero > * { position: relative; z-index: 2; }
+    .eyebrow { margin: 0 0 10px; color: var(--gold-light); font-size: 9px; }
+    .window-hero h2 { max-width: 760px; margin: 0; font-size: clamp(38px, 6vw, 72px); line-height: .93; letter-spacing: -.055em; }
+    .window-hero p:not(.eyebrow) { max-width: 620px; margin: 18px 0 0; color: #d6ccbd; line-height: 1.6; }
+
+    .content { padding: clamp(24px, 5vw, 58px); }
+    .content h2, .content h3, .content p { margin-top: 0; }
+    .content h2 { font-size: clamp(30px, 5vw, 56px); line-height: .98; letter-spacing: -.045em; }
+    .content h3 { margin-bottom: 10px; font-size: 20px; letter-spacing: -.02em; }
+    .content p { color: #565148; font-size: 15px; line-height: 1.7; }
+    .content p.lead { max-width: 760px; color: #27241f; font-size: clamp(18px, 2.4vw, 25px); line-height: 1.45; }
+    .meta { color: #7c7467; font-size: 9px; line-height: 1.6; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; }
+    .tag { padding: 7px 9px; border: 1px solid #c8bdad; border-radius: 999px; color: #574f44; background: rgba(255,255,255,.5); font-size: 8px; }
+
+    .finder-layout { display: grid; grid-template-columns: 170px 1fr; min-height: 100%; }
+    .finder-sidebar { padding: 24px 14px; border-right: 1px solid var(--line); background: rgba(223,214,200,.45); }
+    .finder-sidebar strong { display: block; margin: 0 8px 12px; color: #797063; font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .finder-sidebar button { width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 0; border-radius: 7px; background: transparent; text-align: left; cursor: pointer; }
+    .finder-sidebar button:hover { background: rgba(105,94,76,.12); }
+    .finder-main { padding: 30px; }
+    .finder-main h2 { margin: 0; font-size: clamp(36px, 6vw, 64px); line-height: .9; letter-spacing: -.06em; }
+    .finder-main .intro { max-width: 620px; margin: 18px 0 28px; color: #625b50; font-size: 15px; line-height: 1.65; }
+    .finder-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .finder-card { min-height: 144px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.64); cursor: pointer; text-align: left; }
+    .finder-card:hover { border-color: #a98d52; background: #fff; }
+    .finder-card span { display: block; margin-bottom: 24px; color: #ad8a3f; font: 700 18px var(--mono); }
+    .finder-card strong { display: block; font-size: 15px; }
+    .finder-card small { display: block; margin-top: 5px; color: #766f64; line-height: 1.3; }
+
+    .case-summary { display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(20px, 5vw, 70px); align-items: start; }
+    .case-facts { display: grid; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 13px; background: rgba(255,255,255,.66); }
+    .case-facts div { display: grid; gap: 5px; }
+    .case-facts span { color: #8a8174; font: 8px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .case-facts strong { font-size: 13px; line-height: 1.4; }
+    .case-gallery { display: grid; gap: 20px; padding: 0 clamp(18px, 4vw, 44px) 50px; }
+    .case-gallery figure { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .case-gallery img { width: 100%; height: auto; }
+    .case-gallery figcaption { display: flex; justify-content: space-between; gap: 20px; padding: 13px 15px; color: #696156; font-size: 11px; }
+    .case-gallery .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .studio-hero { min-height: 380px; background-image: linear-gradient(90deg, rgba(7,7,5,.9), rgba(7,7,5,.2)), url("assets/jason-roisin-engagement-card.jpg"); background-size: cover; background-position: center 36%; }
+    .studio-hero .studio-logo { width: min(330px, 65vw); margin-bottom: 14px; }
+    .split { display: grid; grid-template-columns: .78fr 1.22fr; gap: 28px; align-items: stretch; }
+    .split img { width: 100%; height: 100%; min-height: 390px; object-fit: cover; border-radius: 12px; }
+    .split-copy { padding: clamp(8px, 3vw, 30px) 0; }
+    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 24px; }
+    .principles-grid div { min-height: 130px; padding: 17px; border: 1px solid var(--line); border-radius: 10px; }
+    .principles-grid span { color: #a4823e; font: 10px var(--mono); }
+    .principles-grid strong { display: block; margin-top: 30px; font-size: 14px; }
+
+    .media-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .media-card { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #111; }
+    .media-card:first-child { grid-column: 1 / -1; }
+    .media-card video, .media-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+    .media-card-copy { padding: 15px; color: #f2e9dc; }
+    .media-card-copy strong { display: block; margin-bottom: 5px; }
+    .media-card-copy small { color: #b7ad9e; line-height: 1.4; }
+
+    .poster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .poster-grid figure { margin: 0; }
+    .poster-grid img { width: 100%; border-radius: 10px; box-shadow: 0 12px 34px rgba(0,0,0,.16); }
+    .poster-grid figcaption { padding: 11px 2px; color: #71695e; font-size: 11px; }
+
+    .about-layout { display: grid; grid-template-columns: minmax(220px,.8fr) 1.2fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+    .about-layout img { width: 100%; max-height: 570px; object-fit: cover; border-radius: 12px; }
+    .skills { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px 20px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .skills span { color: #5b554c; font-size: 12px; }
+
+    .contact-window .window-body { color: var(--cream); background: #0d0c09; }
+    .contact-panel { min-height: 100%; display: grid; place-items: center; padding: clamp(30px, 7vw, 82px); text-align: center; background: radial-gradient(circle at 50% 0, rgba(215,182,108,.18), transparent 45%); }
+    .contact-panel h2 { max-width: 720px; margin: 0; font-size: clamp(48px, 8vw, 96px); line-height: .85; letter-spacing: -.075em; }
+    .contact-panel p { max-width: 560px; margin: 25px auto; color: #bdb3a5; line-height: 1.65; }
+    .button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border: 1px solid var(--gold); border-radius: 999px; color: #100f0c; background: var(--gold-light); font-weight: 700; text-decoration: none; }
+    .button.secondary { color: var(--cream); background: transparent; }
+    .button:hover { filter: brightness(1.08); }
+
+    .dock-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 9500;
+      transform: translateX(-50%);
+    }
+
+    .dock {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 18px;
+      background: rgba(24,22,18,.62);
+      box-shadow: 0 15px 50px rgba(0,0,0,.3);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    }
+
+    .dock-button {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 12px;
+      color: var(--cream);
+      background: linear-gradient(145deg, #4b402a, #12110e);
+      box-shadow: inset 0 1px rgba(255,255,255,.2);
+      font: 700 14px var(--mono);
+      cursor: pointer;
+      transition: transform .18s ease;
+    }
+
+    .dock-button:hover { transform: translateY(-8px) scale(1.13); }
+    .dock-button.is-open::after { content: ""; position: absolute; bottom: -6px; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+    .dock-tip { position: absolute; left: 50%; bottom: calc(100% + 8px); padding: 6px 7px; border-radius: 5px; opacity: 0; color: #eee5d8; background: rgba(8,8,6,.9); font-size: 7px; white-space: nowrap; transform: translate(-50%,5px); pointer-events: none; transition: .15s ease; }
+    .dock-button:hover .dock-tip { opacity: 1; transform: translate(-50%,0); }
+    .dock-divider { width: 1px; height: 43px; margin: 0 2px; background: rgba(255,255,255,.22); }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes bootSweep { 0% { transform: translateX(-45%); } 100% { transform: translateX(45%); } }
+    @keyframes markIn { from { opacity: 0; transform: scale(.78); filter: blur(9px); } to { opacity: 1; transform: none; filter: none; } }
+    @keyframes windowOpen { from { opacity: 0; transform: translateY(22px) scale(.94); } to { opacity: 1; transform: none; } }
+
+    @media (max-width: 900px) {
+      .desktop-icons { grid-template-columns: 88px; }
+      .case-summary, .split, .about-layout { grid-template-columns: 1fr; }
+      .split img { max-height: 520px; }
+    }
+
+    @media (max-width: 700px) {
+      .menu-left span, .menu-right span:first-child { display: none; }
+      .wallpaper-portrait { right: -36%; width: 118vw; opacity: .74; }
+      .wallpaper-copy { top: 43%; }
+      .wallpaper-copy strong { font-size: clamp(54px, 20vw, 94px); }
+      .desktop-icons { top: 54px; right: 10px; left: 10px; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px 4px; }
+      .desktop-icon { width: 100%; min-height: 84px; }
+      .desktop-icon .icon-art { width: 54px; height: 50px; }
+      .window { position: fixed; inset: 32px 0 74px !important; width: auto !important; height: auto !important; min-width: 0; min-height: 0; border: 0; border-radius: 0; resize: none; }
+      .window.is-maximized { inset: 32px 0 74px !important; }
+      .window-bar { grid-template-columns: 75px 1fr 75px; }
+      .finder-layout { grid-template-columns: 1fr; }
+      .finder-sidebar { display: none; }
+      .finder-main { padding: 24px 18px 34px; }
+      .finder-grid { grid-template-columns: 1fr; }
+      .case-gallery .pair, .media-grid, .poster-grid, .principles-grid { grid-template-columns: 1fr; }
+      .media-card:first-child { grid-column: auto; }
+      .poster-grid { gap: 28px; }
+      .about-layout { display: block; }
+      .about-layout img { max-height: 410px; margin-bottom: 25px; object-position: 50% 35%; }
+      .dock-wrap { width: calc(100vw - 12px); }
+      .dock { justify-content: start; gap: 6px; overflow-x: auto; border-radius: 15px; }
+      .dock-button { flex: 0 0 43px; width: 43px; height: 43px; }
+      .dock-tip { display: none; }
+      .window-hero { min-height: 250px; }
+    }
+
+    @media (max-width: 390px) {
+      .skills { grid-template-columns: 1fr; }
+      .content { padding-inline: 18px; }
+      .contact-panel { padding-inline: 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="boot" aria-labelledby="boot-title">
+    <div class="boot-inner">
+      <img class="boot-mark" src="ncstudios-logo-mark-transparent.png" alt="NC mark">
+      <p class="boot-kicker">Janelle's creative archive · v.26</p>
+      <h1 id="boot-title">Ideas, made <em>visible.</em></h1>
+      <div class="boot-progress" aria-hidden="true"><span data-progress-bar></span></div>
+      <p class="boot-status" aria-live="polite" data-boot-status>indexing stories...</p>
+      <button class="enter-button" type="button" data-enter>enter Janelle's desktop <span aria-hidden="true">↗</span></button>
+    </div>
+  </section>
+
+  <main class="desktop" aria-label="Janelle Lamptey's portfolio desktop" data-desktop>
+    <div class="wallpaper" aria-hidden="true">
+      <img class="wallpaper-portrait" src="assets/nc-about-portrait.jpg" alt="">
+      <div class="wallpaper-copy">
+        <p>Product design · Creative direction · Film</p>
+        <strong>Janelle <span>Lamptey</span></strong>
+      </div>
+    </div>
+
+    <header class="menu-bar">
+      <div class="menu-left">
+        <img class="menu-mark" src="ncstudios-logo-mark-transparent.png" alt="">
+        <strong>Janelle's Portfolio</strong>
+        <span>File</span><span>View</span><span>Work</span>
+      </div>
+      <div class="menu-right"><span>UK · multidisciplinary designer</span><time data-clock>09:41</time></div>
+    </header>
+
+    <nav class="desktop-icons" aria-label="Portfolio folders">
+      <button class="desktop-icon" type="button" data-open="ux" aria-label="Open product design case study">
+        <span class="icon-art" aria-hidden="true">UX</span><small>Product design</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="studio" aria-label="Open NC Studio project">
+        <span class="icon-art" aria-hidden="true">[nc]</span><small>NC Studio</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="motion" aria-label="Open motion lab">
+        <span class="icon-art" aria-hidden="true">▶</span><small>Motion lab</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="visual" aria-label="Open visual design work">
+        <span class="icon-art" aria-hidden="true">Aa</span><small>Visual design</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="about" aria-label="Open about Janelle">
+        <span class="icon-art" aria-hidden="true">JL</span><small>About me</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="contact" aria-label="Open work together window">
+        <span class="icon-art" aria-hidden="true">↗</span><small>Work together</small>
+      </button>
+    </nav>
+
+    <section class="window" style="--x:10vw;--y:9vh;--w:720px;--h:650px" data-window="finder" role="dialog" aria-label="Welcome to Janelle's portfolio" aria-hidden="false">
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Janelle's Portfolio <span>— start here</span></div><span></span>
+      </header>
+      <div class="window-body finder-layout">
+        <aside class="finder-sidebar">
+          <strong>Favourites</strong>
+          <button type="button" data-open="ux"><span>⌘</span> Product design</button>
+          <button type="button" data-open="studio"><span>✦</span> NC Studio</button>
+          <button type="button" data-open="motion"><span>▶</span> Motion lab</button>
+          <button type="button" data-open="about"><span>●</span> About Janelle</button>
+        </aside>
+        <div class="finder-main">
+          <p class="eyebrow">Welcome to my desktop</p>
+          <h2>I make complex things feel clear—and stories feel alive.</h2>
+          <p class="intro">I’m Janelle Lamptey, a product designer and creative director working across research, digital experiences, film and visual identity. Open a folder or use the dock to explore.</p>
+          <div class="finder-grid">
+            <button class="finder-card" type="button" data-open="ux"><span>01</span><strong>Product design</strong><small>Navigation, payment journeys and research synthesis.</small></button>
+            <button class="finder-card" type="button" data-open="studio"><span>02</span><strong>NC Studio</strong><small>A cinematic photography and film brand.</small></button>
+            <button class="finder-card" type="button" data-open="motion"><span>03</span><strong>Motion lab</strong><small>Titles, transitions and production assets.</small></button>
+            <button class="finder-card" type="button" data-open="visual"><span>04</span><strong>Visual design</strong><small>Campaign art and community communications.</small></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:7vw;--y:6vh;--w:980px;--h:760px" data-window="ux" role="dialog" aria-label="Product design case study" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Product Design <span>— navigation &amp; payments</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="window-hero">
+          <p class="eyebrow">Selected case study · Product design</p>
+          <h2>Making digital banking easier to navigate.</h2>
+          <p>A research-led redesign that turned a deep, inconsistent information architecture into a clearer, task-based experience.</p>
+        </div>
+        <div class="content case-summary">
+          <div>
+            <p class="meta">The brief</p>
+            <h2>From findability problems to evidence-based direction.</h2>
+            <p class="lead">The work combined navigation auditing, desk research, generative research, tree testing and terminology studies to understand where people hesitated—and what a more intuitive structure should do differently.</p>
+            <div class="tag-row"><span class="tag">UX research</span><span class="tag">Information architecture</span><span class="tag">Tree testing</span><span class="tag">Synthesis</span><span class="tag">Product strategy</span></div>
+          </div>
+          <aside class="case-facts">
+            <div><span>Role</span><strong>Product designer</strong></div>
+            <div><span>Focus</span><strong>Navigation, terminology and payment journeys</strong></div>
+            <div><span>Approach</span><strong>Audit → understand → define → design → validate</strong></div>
+            <div><span>Outcome</span><strong>Clearer labels, shallower structure and prioritised opportunity areas</strong></div>
+          </aside>
+        </div>
+        <div class="case-gallery">
+          <figure><img src="assets/portfolio/navigation-original.png" alt="Diagram of the original navigation structure" loading="lazy"><figcaption><span>01 · Audit</span><strong>Mapping the original navigation</strong></figcaption></figure>
+          <div class="pair">
+            <figure><img src="assets/portfolio/navigation-tree-test.png" alt="Tree testing process for navigation" loading="lazy"><figcaption><span>02 · Research</span><strong>Testing findability</strong></figcaption></figure>
+            <figure><img src="assets/portfolio/label-testing.png" alt="Terminology testing process" loading="lazy"><figcaption><span>03 · Language</span><strong>Testing labels for clarity</strong></figcaption></figure>
+          </div>
+          <figure><img src="assets/portfolio/navigation-outcome.png" alt="Before, research and redesigned banking navigation" loading="lazy"><figcaption><span>04 · Direction</span><strong>A task-based navigation model</strong></figcaption></figure>
+          <figure><img src="assets/portfolio/payment-opportunities.png" alt="Payment journey research and opportunity areas" loading="lazy"><figcaption><span>05 · Discovery</span><strong>Exploring the payment journey</strong></figcaption></figure>
+          <figure><img src="assets/portfolio/research-to-opportunity.png" alt="Research themes translated into opportunity areas" loading="lazy"><figcaption><span>06 · Synthesis</span><strong>Turning themes into opportunities</strong></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:15vw;--y:8vh;--w:900px;--h:720px" data-window="studio" role="dialog" aria-label="NC Studio brand project" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">NC Studio <span>— brand &amp; creative direction</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="window-hero studio-hero">
+          <img class="studio-logo" src="ncstudios-logo-transparent.png" alt="NC Studio">
+          <p>Brand strategy, art direction, photography, film and a full client-facing digital experience.</p>
+        </div>
+        <div class="content split">
+          <img src="assets/nc-about-portrait.jpg" alt="Janelle holding a camera in a black and white film-frame portrait" loading="lazy">
+          <div class="split-copy">
+            <p class="meta">Founder-led creative practice · UK</p>
+            <h2>Real moments. Cinematic finish.</h2>
+            <p class="lead">NC Studio is the creative practice I built around honest storytelling. The identity pairs an editorial black-and-gold system with calm direction, analogue texture and modern production.</p>
+            <p>I shaped the brand from end to end: identity, positioning, photography, moving image, portfolio experience, enquiries and the operational tools behind the client journey.</p>
+            <div class="principles-grid">
+              <div><span>01</span><strong>Story led</strong></div>
+              <div><span>02</span><strong>Calm direction</strong></div>
+              <div><span>03</span><strong>Cinematic finish</strong></div>
+            </div>
+            <div class="button-row" style="justify-content:flex-start;margin-top:24px"><a class="button" href="index.html">visit NC Studio</a><a class="button secondary" style="color:#29251e;border-color:#9b7d42" href="availability.html">check availability</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:13vw;--y:10vh;--w:860px;--h:690px" data-window="motion" role="dialog" aria-label="Motion design work" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Motion Lab <span>— title design &amp; production assets</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content">
+          <p class="eyebrow" style="color:#886820">Motion &amp; visual systems</p>
+          <h2>Small details that make an edit feel authored.</h2>
+          <p class="lead">A selection of title sequences, animated callouts and NC Studio production tools designed to bring rhythm, clarity and brand consistency to moving image.</p>
+          <div class="tag-row" style="margin-bottom:28px"><span class="tag">Art direction</span><span class="tag">After Effects</span><span class="tag">Premiere Pro</span><span class="tag">Motion systems</span><span class="tag">Sound cues</span></div>
+          <div class="media-grid">
+            <article class="media-card">
+              <video controls muted loop playsinline preload="metadata" poster="exports/first-love-birmingham-micd-up-intro/first-love-micd-up-contact-sheet.jpg">
+                <source src="exports/first-love-birmingham-micd-up-intro/first-love-birmingham-ministries-micd-up-preview.mp4" type="video/mp4">
+              </video>
+              <div class="media-card-copy"><strong>Ministries Mic’d Up</strong><small>Four-second programme opener with staged typography and broadcast-safe deliverables.</small></div>
+            </article>
+            <article class="media-card">
+              <video controls muted loop playsinline preload="metadata" poster="exports/donald-arrow-callout/donald-arrow-callout-contact-sheet.jpg">
+                <source src="exports/donald-arrow-callout/donald-red-arrow-callout-preview-with-ding.mp4" type="video/mp4">
+              </video>
+              <div class="media-card-copy"><strong>Editorial callout</strong><small>Animated red-arrow cue with a timed sound accent.</small></div>
+            </article>
+            <article class="media-card">
+              <video controls muted loop playsinline preload="metadata" poster="exports/nc-watermark-animation/nc-watermark-bracket-blink-static-nc-gold-preview.png">
+                <source src="exports/nc-transition-pack/nc-transition-gold-signal-break-upright-green-key.mp4" type="video/mp4">
+              </video>
+              <div class="media-card-copy"><strong>NC transition system</strong><small>Signal-break transition for vertical film and social edits.</small></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:18vw;--y:7vh;--w:800px;--h:730px" data-window="visual" role="dialog" aria-label="Visual design portfolio" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Visual Design <span>— community campaigns</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content">
+          <p class="eyebrow" style="color:#886820">Selected graphic work</p>
+          <h2>Energy, hierarchy and a reason to look twice.</h2>
+          <p class="lead">Campaign artwork created for community events—combining expressive type, documentary photography and tactile texture for fast, memorable communication.</p>
+          <div class="poster-grid">
+            <figure><img src="assets/portfolio/freshers-sunday.png" alt="Five Days to Go event poster" loading="lazy"><figcaption>Freshers campaign · countdown artwork</figcaption></figure>
+            <figure><img src="assets/portfolio/bible-fellowship.png" alt="Bible Fellowship event poster" loading="lazy"><figcaption>Community event · social poster</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:16vw;--y:8vh;--w:820px;--h:690px" data-window="about" role="dialog" aria-label="About Janelle Lamptey" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">About Janelle <span>— read me</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content about-layout">
+          <img src="assets/nc-about-portrait.jpg" alt="Janelle Lamptey with a camera" loading="lazy">
+          <div>
+            <p class="eyebrow" style="color:#886820">Janelle Lamptey · UK</p>
+            <h2>Designer by discipline. Storyteller by instinct.</h2>
+            <p class="lead">I move between product thinking and visual craft: understanding the problem, finding the human truth inside it, then giving the answer a clear and memorable form.</p>
+            <p>My work spans research-led digital experiences, information architecture, creative direction, photography, film and motion. Across each discipline, the standard is the same: intentional decisions, clean execution and work that feels human.</p>
+            <div class="skills" aria-label="Capabilities">
+              <span>Product design</span><span>UX research</span><span>Information architecture</span><span>Creative direction</span><span>Photography</span><span>Film &amp; editing</span><span>Motion design</span><span>Brand systems</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window contact-window" style="--x:22vw;--y:13vh;--w:700px;--h:540px" data-window="contact" role="dialog" aria-label="Work with Janelle" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Work Together <span>— new project</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="contact-panel">
+          <div>
+            <p class="eyebrow">Have a project in mind?</p>
+            <h2>Let’s make it unmistakable.</h2>
+            <p>For product design, creative direction, photography or film enquiries, use the studio enquiry flow and tell me what you’re building.</p>
+            <div class="button-row"><a class="button" href="availability.html">start a project ↗</a><a class="button secondary" href="index.html">visit NC Studio</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="dock-wrap">
+      <nav class="dock" aria-label="Portfolio dock">
+        <button class="dock-button is-open" type="button" data-open="finder"><span aria-hidden="true">⌂</span><span class="dock-tip">Start here</span></button>
+        <button class="dock-button" type="button" data-open="ux"><span aria-hidden="true">UX</span><span class="dock-tip">Product design</span></button>
+        <button class="dock-button" type="button" data-open="studio"><span aria-hidden="true">[n]</span><span class="dock-tip">NC Studio</span></button>
+        <button class="dock-button" type="button" data-open="motion"><span aria-hidden="true">▶</span><span class="dock-tip">Motion lab</span></button>
+        <button class="dock-button" type="button" data-open="visual"><span aria-hidden="true">Aa</span><span class="dock-tip">Visual design</span></button>
+        <button class="dock-button" type="button" data-open="about"><span aria-hidden="true">JL</span><span class="dock-tip">About me</span></button>
+        <span class="dock-divider" aria-hidden="true"></span>
+        <button class="dock-button" type="button" data-open="contact"><span aria-hidden="true">↗</span><span class="dock-tip">Work together</span></button>
+      </nav>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const body = document.body;
+      const boot = document.querySelector('.boot');
+      const progressBar = document.querySelector('[data-progress-bar]');
+      const status = document.querySelector('[data-boot-status]');
+      const enter = document.querySelector('[data-enter]');
+      const desktop = document.querySelector('[data-desktop]');
+      const windows = [...document.querySelectorAll('[data-window]')];
+      let topZ = 200;
+      let progress = 0;
+      const statusCopy = ['indexing stories...', 'mounting product work...', 'loading motion lab...', 'desktop ready.'];
+
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const tick = setInterval(() => {
+        progress = Math.min(100, progress + (progress < 72 ? 9 : 4));
+        progressBar.style.width = progress + '%';
+        status.textContent = statusCopy[Math.min(3, Math.floor(progress / 27))];
+        if (progress >= 100) {
+          clearInterval(tick);
+          boot.classList.add('is-ready');
+          enter.focus({ preventScroll: true });
+        }
+      }, reducedMotion ? 10 : 115);
+
+      enter.addEventListener('click', () => {
+        body.classList.add('desktop-ready');
+        setTimeout(() => desktop.focus?.(), 500);
+      });
+
+      const windowFor = (name) => document.querySelector(`[data-window="${name}"]`);
+
+      function syncDock(name, open) {
+        document.querySelectorAll(`[data-open="${name}"].dock-button`).forEach(button => button.classList.toggle('is-open', open));
+      }
+
+      function focusWindow(win) {
+        topZ += 1;
+        win.style.zIndex = topZ;
+        windows.forEach(item => item.classList.toggle('is-active', item === win));
+      }
+
+      function openWindow(name) {
+        const win = windowFor(name);
+        if (!win) return;
+        win.hidden = false;
+        win.classList.remove('is-minimized');
+        win.setAttribute('aria-hidden', 'false');
+        focusWindow(win);
+        syncDock(name, true);
+        const title = win.querySelector('.window-title');
+        if (title) title.setAttribute('tabindex', '-1');
+        title?.focus({ preventScroll: true });
+        win.querySelectorAll('video').forEach(video => video.play().catch(() => {}));
+      }
+
+      function closeWindow(win) {
+        const name = win.dataset.window;
+        win.hidden = true;
+        win.classList.remove('is-minimized', 'is-maximized');
+        win.setAttribute('aria-hidden', 'true');
+        syncDock(name, false);
+        win.querySelectorAll('video').forEach(video => video.pause());
+      }
+
+      document.addEventListener('click', event => {
+        const opener = event.target.closest('[data-open]');
+        if (opener) {
+          openWindow(opener.dataset.open);
+          return;
+        }
+
+        const win = event.target.closest('[data-window]');
+        if (!win) return;
+        focusWindow(win);
+        if (event.target.closest('[data-close]')) closeWindow(win);
+        if (event.target.closest('[data-minimize]')) {
+          win.classList.add('is-minimized');
+          win.setAttribute('aria-hidden', 'true');
+        }
+        if (event.target.closest('[data-maximize]')) win.classList.toggle('is-maximized');
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        const active = windows.filter(win => !win.hidden && !win.classList.contains('is-minimized')).sort((a,b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+        if (active) closeWindow(active);
+      });
+
+      document.querySelectorAll('[data-drag-handle]').forEach(handle => {
+        handle.addEventListener('pointerdown', event => {
+          if (event.target.closest('button') || innerWidth <= 700) return;
+          const win = handle.closest('[data-window]');
+          if (win.classList.contains('is-maximized')) return;
+          focusWindow(win);
+          const rect = win.getBoundingClientRect();
+          const offsetX = event.clientX - rect.left;
+          const offsetY = event.clientY - rect.top;
+          handle.setPointerCapture(event.pointerId);
+
+          const move = moveEvent => {
+            const maxLeft = innerWidth - Math.min(120, rect.width);
+            const maxTop = innerHeight - 110;
+            win.style.left = Math.max(-rect.width + 120, Math.min(maxLeft, moveEvent.clientX - offsetX)) + 'px';
+            win.style.top = Math.max(32, Math.min(maxTop, moveEvent.clientY - offsetY)) + 'px';
+          };
+
+          const stop = () => {
+            handle.removeEventListener('pointermove', move);
+            handle.removeEventListener('pointerup', stop);
+            handle.removeEventListener('pointercancel', stop);
+          };
+
+          handle.addEventListener('pointermove', move);
+          handle.addEventListener('pointerup', stop);
+          handle.addEventListener('pointercancel', stop);
+        });
+      });
+
+      function updateClock() {
+        const clock = document.querySelector('[data-clock]');
+        if (!clock) return;
+        const now = new Date();
+        clock.dateTime = now.toISOString();
+        clock.textContent = new Intl.DateTimeFormat('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(now);
+      }
+
+      updateClock();
+      setInterval(updateClock, 30000);
+      focusWindow(windowFor('finder'));
+    })();
+  </script>
+</body>
+</html>
