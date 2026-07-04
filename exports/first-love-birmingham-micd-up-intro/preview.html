@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>First Love Birmingham Ministries — MIC'D UP</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #08080b; }
+    body { display: grid; place-items: center; min-height: 100vh; padding: 24px; }
+    .frame {
+      position: relative;
+      width: min(1200px, 100%);
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 16% 88%, rgba(225, 28, 72, .48), transparent 34%),
+        radial-gradient(circle at 85% 10%, rgba(60, 114, 255, .48), transparent 34%),
+        linear-gradient(135deg, #131a32, #2a1421 58%, #0e121e);
+      box-shadow: 0 28px 100px rgba(0,0,0,.6);
+    }
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.09) 48%, transparent 61%);
+      animation: drift 6s linear infinite;
+    }
+    video { position: absolute; inset: 0; width: 100%; height: 100%; }
+    @keyframes drift { to { transform: translateX(38%); } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <video autoplay loop muted playsinline src="first-love-birmingham-ministries-micd-up-transparent.webm"></video>
+  </div>
+</body>
+</html>
