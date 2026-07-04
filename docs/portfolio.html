@@ -491,11 +491,11 @@
       background-position: center 36%;
     }
 
-    .couples-hero {
+    .live-hero {
       min-height: 400px;
-      background-image: linear-gradient(90deg, rgba(7,7,5,.87), rgba(7,7,5,.1)), url("assets/portfolio/couple-walk.jpg");
+      background-image: linear-gradient(90deg, rgba(7,7,5,.87), rgba(7,7,5,.1)), url("assets/portfolio/live-worship-dance.jpg");
       background-size: cover;
-      background-position: center 43%;
+      background-position: center 48%;
     }
 
     .photo-wall {
@@ -518,6 +518,7 @@
 
     .photo-wall figure.wide { grid-column: span 8; }
     .photo-wall figure.narrow { grid-column: span 4; }
+    .photo-wall figure.tall { min-height: 500px; }
     .photo-wall figure.full { grid-column: 1 / -1; min-height: 420px; }
     .photo-wall img { width: 100%; height: 100%; min-height: inherit; object-fit: cover; transition: transform .6s ease; }
     .photo-wall figure:hover img { transform: scale(1.025); }
@@ -612,6 +613,7 @@
       .case-gallery .pair, .media-grid, .poster-grid, .principles-grid { grid-template-columns: 1fr; }
       .photo-wall { grid-template-columns: 1fr; }
       .photo-wall figure, .photo-wall figure.wide, .photo-wall figure.narrow, .photo-wall figure.full { grid-column: 1; min-height: 330px; }
+      .photo-wall figure.tall { min-height: 440px; }
       .media-card:first-child, .media-card.is-featured { grid-column: auto; }
       .poster-grid { gap: 28px; }
       .about-layout { display: block; }
@@ -655,9 +657,9 @@
 
   <main class="desktop" aria-label="Janelle Lamptey's portfolio desktop" data-desktop>
     <div class="wallpaper" aria-hidden="true">
-      <img class="wallpaper-portrait" src="assets/portfolio/couple-walk.jpg" alt="">
+      <img class="wallpaper-portrait" src="assets/portfolio/live-worship-dance.jpg" alt="">
       <div class="wallpaper-copy">
-        <p>Events · Weddings · Families · Film</p>
+        <p>Events · Live · Families · Film</p>
         <strong>Janelle <span>Lamptey</span></strong>
       </div>
     </div>
@@ -675,8 +677,8 @@
       <button class="desktop-icon" type="button" data-open="events" aria-label="Open event photography">
         <span class="icon-art" aria-hidden="true">EV</span><small>Events</small>
       </button>
-      <button class="desktop-icon" type="button" data-open="couples" aria-label="Open weddings and couples photography">
-        <span class="icon-art" aria-hidden="true">♡</span><small>Weddings + couples</small>
+      <button class="desktop-icon" type="button" data-open="live" aria-label="Open live event and worship photography">
+        <span class="icon-art" aria-hidden="true">✦</span><small>Live + worship</small>
       </button>
       <button class="desktop-icon" type="button" data-open="films" aria-label="Open films">
         <span class="icon-art" aria-hidden="true">▶</span><small>Films</small>
@@ -705,7 +707,7 @@
         <aside class="finder-sidebar">
           <strong>Favourites</strong>
           <button type="button" data-open="events"><span>●</span> Events</button>
-          <button type="button" data-open="couples"><span>♡</span> Weddings + couples</button>
+          <button type="button" data-open="live"><span>✦</span> Live + worship</button>
           <button type="button" data-open="films"><span>▶</span> Films</button>
           <button type="button" data-open="milestones"><span>●</span> Portraits + family</button>
           <button type="button" data-open="about"><span>●</span> About Janelle</button>
@@ -713,10 +715,10 @@
         <div class="finder-main">
           <p class="eyebrow">Welcome to my desktop</p>
           <h2>I photograph the feeling—not just the schedule.</h2>
-          <p class="intro">I’m Janelle Lamptey, the photographer and filmmaker behind NC Studio. I document birthdays, celebrations, weddings, families and life milestones with honest direction and a cinematic finish. Open a folder or use the dock to explore.</p>
+          <p class="intro">I’m Janelle Lamptey, the photographer and filmmaker behind NC Studio. I document birthdays, celebrations, live events, families and life milestones with honest direction and a cinematic finish. Open a folder or use the dock to explore.</p>
           <div class="finder-grid">
             <button class="finder-card" type="button" data-open="events"><span>01</span><strong>Events</strong><small>Birthdays, celebrations and the energy between poses.</small></button>
-            <button class="finder-card" type="button" data-open="couples"><span>02</span><strong>Weddings + couples</strong><small>Warm, natural and story-led photography.</small></button>
+            <button class="finder-card" type="button" data-open="live"><span>02</span><strong>Live + worship</strong><small>Movement, music, crowd energy and the moments between.</small></button>
             <button class="finder-card" type="button" data-open="films"><span>03</span><strong>Films</strong><small>Testimony films, documentary portraits and story-led edits.</small></button>
             <button class="finder-card" type="button" data-open="milestones"><span>04</span><strong>Portraits + family</strong><small>Maternity, baby milestones, graduations and life at home.</small></button>
           </div>
@@ -756,39 +758,38 @@
       </div>
     </section>
 
-    <section class="window" style="--x:12vw;--y:7vh;--w:940px;--h:730px" data-window="couples" role="dialog" aria-label="Weddings and couples photography" aria-hidden="true" hidden>
+    <section class="window" style="--x:12vw;--y:7vh;--w:940px;--h:730px" data-window="live" role="dialog" aria-label="Live event and worship photography" aria-hidden="true" hidden>
       <header class="window-bar" data-drag-handle>
         <div class="window-controls">
           <button class="window-control close" type="button" data-close aria-label="Close window"></button>
           <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
           <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
         </div>
-        <div class="window-title">Weddings + Couples <span>— story-led photography</span></div><span></span>
+        <div class="window-title">Live + Worship <span>— movement, music &amp; people</span></div><span></span>
       </header>
       <div class="window-body">
-        <div class="window-hero couples-hero">
-          <p class="eyebrow">Couples · engagements · weddings</p>
-          <h2>Connection over performance.</h2>
-          <p>Gentle direction, natural movement and photographs that keep the personality of the people inside them.</p>
+        <div class="window-hero live-hero">
+          <p class="eyebrow">Live events · worship · performance</p>
+          <h2>Photographing the room at full volume.</h2>
+          <p>Movement, music and honest crowd reactions—photographed from inside the energy rather than at the edge of it.</p>
         </div>
         <div class="content">
-          <p class="meta">The approach</p>
-          <h2>Warm, observant and true to you.</h2>
-          <p class="lead">The best images usually happen once you stop thinking about the camera. I give enough direction to make you feel comfortable, then leave room for the real expressions, movement and laughter.</p>
+          <p class="meta">Live coverage · selected work</p>
+          <h2>Big atmosphere, human moments.</h2>
+          <p class="lead">I look for the full story of a live room: the performance, the people responding, the laughter between moments and the details that make the event feel alive again.</p>
           <div class="principles-grid">
-            <div><span>01</span><strong>Story led</strong></div>
-            <div><span>02</span><strong>Calm direction</strong></div>
-            <div><span>03</span><strong>Cinematic finish</strong></div>
+            <div><span>01</span><strong>Movement</strong></div>
+            <div><span>02</span><strong>Atmosphere</strong></div>
+            <div><span>03</span><strong>Real reactions</strong></div>
           </div>
         </div>
         <div class="photo-wall">
-          <figure class="full"><img src="assets/portfolio/couple-walk.jpg" alt="Couple laughing together outside a glasshouse" loading="lazy"><figcaption>D&amp;A · couple session</figcaption></figure>
-          <figure class="narrow"><img src="assets/portfolio/couple-garden.jpg" alt="Couple walking through a tropical garden" loading="lazy"><figcaption>Quiet movement</figcaption></figure>
-          <figure class="wide"><img src="assets/jason-roisin-engagement-card.jpg" alt="Engaged couple laughing beneath blossom trees" loading="lazy"><figcaption>Jason + Roisin · engagement</figcaption></figure>
-          <figure class="wide"><img src="assets/portfolio/couple-portrait.jpg" alt="Couple smiling together in a garden" loading="lazy"><figcaption>Natural portrait</figcaption></figure>
-          <figure class="narrow"><img src="assets/portfolio/couple-dance.jpg" alt="Couple dancing in front of a glasshouse" loading="lazy"><figcaption>A moment in motion</figcaption></figure>
-          <figure class="narrow"><img src="assets/portfolio/couple-run.jpg" alt="Couple running hand in hand through a park" loading="lazy"><figcaption>Playful direction</figcaption></figure>
-          <figure class="wide"><img src="assets/portfolio/couple-railway.jpg" alt="Couple laughing together beside railway tracks" loading="lazy"><figcaption>Archive · honest connection</figcaption></figure>
+          <figure class="full"><img src="assets/portfolio/live-worship-dance.jpg" alt="Dance group performing under purple event lighting" loading="lazy"><figcaption>Worship dance · movement together</figcaption></figure>
+          <figure class="wide"><img src="assets/portfolio/live-worship-crowd.jpg" alt="A lively crowd singing and responding during an event" loading="lazy"><figcaption>The room · full of energy</figcaption></figure>
+          <figure class="narrow"><img src="assets/portfolio/live-worship-movement.jpg" alt="Speaker moving through a laughing crowd" loading="lazy"><figcaption>In the crowd · joy</figcaption></figure>
+          <figure class="narrow"><img src="assets/portfolio/live-worship-reaction.jpg" alt="Audience members reacting during a live gathering" loading="lazy"><figcaption>Audience · in the moment</figcaption></figure>
+          <figure class="wide"><img src="assets/portfolio/live-worship-stage.jpg" alt="Singer and dancers performing under blue stage lights" loading="lazy"><figcaption>Performance · light and motion</figcaption></figure>
+          <figure class="full"><img src="assets/portfolio/live-worship-speaker.jpg" alt="Speaker addressing a live audience under purple lighting" loading="lazy"><figcaption>On stage · live address</figcaption></figure>
         </div>
       </div>
     </section>
@@ -852,9 +853,16 @@
           <figure class="narrow"><img src="assets/portfolio/maternity-laugh.jpg" alt="Expectant parents laughing together during a maternity session" loading="lazy"><figcaption>Maternity · real connection</figcaption></figure>
           <figure class="wide"><img src="assets/portfolio/maternity-portrait.jpg" alt="Expectant parents posing together in a neutral studio portrait" loading="lazy"><figcaption>Maternity · quiet portrait</figcaption></figure>
           <figure class="full"><img src="assets/portfolio/family-at-home.jpg" alt="Family of four laughing together at home" loading="lazy"><figcaption>Family at home · the in-between</figcaption></figure>
-          <figure class="wide"><img src="assets/portfolio/graduation-portrait.jpg" alt="Graduate smiling with her degree scroll" loading="lazy"><figcaption>Graduation · portrait</figcaption></figure>
-          <figure class="narrow"><img src="assets/portfolio/graduation-outdoor.jpg" alt="Graduate sitting outdoors with flowers" loading="lazy"><figcaption>Graduation · editorial</figcaption></figure>
-          <figure class="full"><img src="assets/portfolio/baby-cake.jpg" alt="Baby looking over a first birthday cake" loading="lazy"><figcaption>Half birthday · a new milestone</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/grad-portrait.jpg" alt="Graduate smiling in her cap and gown" loading="lazy"><figcaption>Graduation · the portrait</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/grad-documentary-bw.jpg" alt="Black and white candid portrait of a graduate" loading="lazy"><figcaption>Graduation · between frames</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/grad-selfie.jpg" alt="Graduates celebrating together with a selfie" loading="lazy"><figcaption>Graduation · with your people</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/grad-flowers.jpg" alt="Graduate holding flowers in a blue dress" loading="lazy"><figcaption>Graduation · editorial portrait</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/grad-hat-toss.jpg" alt="Graduate throwing her cap into the air" loading="lazy"><figcaption>Graduation · the release</figcaption></figure>
+          <figure class="narrow tall"><img src="assets/portfolio/newborn-smile.jpg" alt="Newborn smiling during a studio portrait" loading="lazy"><figcaption>Newborn · a tiny expression</figcaption></figure>
+          <figure class="wide"><img src="assets/portfolio/newborn-close.jpg" alt="Sleeping newborn wrapped on a soft cream blanket" loading="lazy"><figcaption>Newborn · quiet details</figcaption></figure>
+          <figure class="narrow"><img src="assets/portfolio/baby-laugh.jpg" alt="Baby laughing during a family session" loading="lazy"><figcaption>Baby portrait · all personality</figcaption></figure>
+          <figure class="narrow"><img src="assets/portfolio/newborn-wrap.jpg" alt="Newborn wrapped in brown during a studio session" loading="lazy"><figcaption>Newborn · warm portrait</figcaption></figure>
+          <figure class="wide"><img src="assets/portfolio/baby-community.jpg" alt="Family gathered around a baby learning to stand" loading="lazy"><figcaption>Family · surrounded by love</figcaption></figure>
         </div>
       </div>
     </section>
@@ -875,7 +883,7 @@
             <p class="eyebrow" style="color:#886820">Janelle Lamptey · UK</p>
             <h2>Photographer by practice. Storyteller by instinct.</h2>
             <p class="lead">I’m Janelle, the creative behind NC Studio. I photograph people in a way that feels relaxed, intentional and recognisably them.</p>
-            <p>My work covers events, birthdays, celebrations, couples and weddings across the UK. I also create films and motion-led edits, so stills and moving image can feel like one complete story.</p>
+            <p>My work covers events, birthdays, live celebrations, couples and weddings across the UK. I also create films and motion-led edits, so stills and moving image can feel like one complete story.</p>
             <div class="skills" aria-label="Services">
               <span>Event photography</span><span>Wedding photography</span><span>Couple sessions</span><span>Birthday coverage</span><span>Maternity</span><span>Family portraits</span><span>Graduations</span><span>Event films</span><span>Testimony films</span><span>Editing</span>
             </div>
@@ -909,7 +917,7 @@
       <nav class="dock" aria-label="Portfolio dock">
         <button class="dock-button is-open" type="button" data-open="finder"><span aria-hidden="true">⌂</span><span class="dock-tip">Start here</span></button>
         <button class="dock-button" type="button" data-open="events"><span aria-hidden="true">EV</span><span class="dock-tip">Events</span></button>
-        <button class="dock-button" type="button" data-open="couples"><span aria-hidden="true">♡</span><span class="dock-tip">Weddings + couples</span></button>
+        <button class="dock-button" type="button" data-open="live"><span aria-hidden="true">✦</span><span class="dock-tip">Live + worship</span></button>
         <button class="dock-button" type="button" data-open="films"><span aria-hidden="true">▶</span><span class="dock-tip">Films</span></button>
         <button class="dock-button" type="button" data-open="milestones"><span aria-hidden="true">PF</span><span class="dock-tip">Portraits + family</span></button>
         <button class="dock-button" type="button" data-open="about"><span aria-hidden="true">JL</span><span class="dock-tip">About me</span></button>
