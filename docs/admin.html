@@ -1095,12 +1095,14 @@ const WEBSITE_STORAGE_TABLE = "app_storage";
 const WEBSITE_CONTENT_KEY = "website_content_live";
 const WEBSITE_DRAFT_KEY = "ncStudiosWebsiteContentDraftV1";
 const WEBSITE_MEDIA_BUCKET = "site-media";
+const WEBSITE_SITE_VERSION = "wedding-v2";
 
 const defaultWebsiteContent = {
+  siteVersion:WEBSITE_SITE_VERSION,
   fields:{
     heroEyebrow:"photo + film",
     heroTitle:"real. cinematic. yours.",
-    heroLead:"weddings · couples · cinematic stories",
+    heroLead:"weddings · engagements · cinematic films",
     aboutCaptionTitle:"the creative behind nc studio",
     aboutCaptionMeta:"",
     aboutHeadline:"hi, i'm janelle.",
@@ -1119,27 +1121,27 @@ const defaultWebsiteContent = {
     featureBody:"vows, speeches, reactions, atmosphere.",
     workTitle:"work.",
     workLead:"wedding photography, cinematic films and story led content.",
-    filmOneTitle:"couple sessions",
-    filmOneBody:"couple sessions.",
-    filmTwoTitle:"wedding coverage",
-    filmTwoBody:"weddings.",
-    filmThreeTitle:"short edits that move",
-    filmThreeBody:"reels and event edits."
+    filmOneTitle:"Marvin + Blessing · Film I",
+    filmOneBody:"wedding morning · groom preparations.",
+    filmTwoTitle:"Marvin + Blessing · Film II",
+    filmTwoBody:"wedding morning · bridal details.",
+    filmThreeTitle:"wedding day stories",
+    filmThreeBody:"additional wedding film previews."
   },
   media:{
-    hero:"",
+    hero:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
     portrait:"assets/nc-about-portrait.jpg",
-    feature:"",
-    filmOne:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
-    filmTwo:"",
+    feature:"assets/weddings/marvin-blessing-wedding-film-02.mp4",
+    filmOne:"assets/weddings/marvin-blessing-wedding-film-01.mp4",
+    filmTwo:"assets/weddings/marvin-blessing-wedding-film-02.mp4",
     filmThree:""
   },
   mediaTypes:{
-    hero:"",
+    hero:"image/jpeg",
     portrait:"image/jpeg",
-    feature:"",
-    filmOne:"image/jpeg",
-    filmTwo:"",
+    feature:"video/mp4",
+    filmOne:"video/mp4",
+    filmTwo:"video/mp4",
     filmThree:""
   }
 };
@@ -1214,6 +1216,7 @@ let previewFrameReady = false;
 function mergeWebsiteConfig(config){
   const base = cloneWebsiteConfig(defaultWebsiteContent);
   const safeConfig = config && typeof config === "object" ? config : {};
+  const hasCurrentMedia = safeConfig.siteVersion === WEBSITE_SITE_VERSION;
   const fields = {...base.fields};
 
   Object.entries(safeConfig.fields || {}).forEach(([key,value]) => {
@@ -1228,14 +1231,15 @@ function mergeWebsiteConfig(config){
   return {
     ...base,
     ...safeConfig,
+    siteVersion:WEBSITE_SITE_VERSION,
     fields,
     media:{
       ...base.media,
-      ...(safeConfig.media || {})
+      ...(hasCurrentMedia ? (safeConfig.media || {}) : {})
     },
     mediaTypes:{
       ...base.mediaTypes,
-      ...(safeConfig.mediaTypes || {})
+      ...(hasCurrentMedia ? (safeConfig.mediaTypes || {}) : {})
     }
   };
 }
@@ -1270,6 +1274,7 @@ function fillWebsiteForm(config){
 
 function collectWebsiteForm(){
   const config = mergeWebsiteConfig(websiteEditorConfig);
+  config.siteVersion = WEBSITE_SITE_VERSION;
   config.updatedAt = new Date().toISOString();
 
   document.querySelectorAll("[data-website-media]").forEach(input => {

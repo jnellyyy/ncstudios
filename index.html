@@ -1,2853 +1,1380 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>nc studio | cinematic wedding films</title>
-<meta name="description" content="nc studio creates cinematic wedding films, photography and story led content. check availability and send an enquiry online.">
-
-<link rel="manifest" href="website.webmanifest">
-<link rel="apple-touch-icon" href="icon-180.png?v=brand-20260612">
-<link rel="icon" href="icon-32.png?v=brand-20260612">
-<meta name="theme-color" content="#050504">
-
-<script>
-if(new URLSearchParams(window.location.search).has("adminPreview")){
-  document.documentElement.classList.add("site-preview-mode");
-}
-</script>
-
-<style>
-@font-face{
-  font-family:"NC Studio Brand";
-  src:url("assets/fonts/NC_Font_.ttf?v=brand-20260612b") format("truetype");
-  font-weight:400;
-  font-style:normal;
-  font-display:swap;
-}
-@font-face{
-  font-family:"NC Studio Brand Lighter";
-  src:url("assets/fonts/NC_Font_Lighter.ttf?v=brand-20260612b") format("truetype");
-  font-weight:400;
-  font-style:normal;
-  font-display:swap;
-}
-
-
-:root{
-  --bg:#050504;
-  --bg2:#11100c;
-  --ink:#f7efe3;
-  --paper:#efe1cc;
-  --muted:#b8ac9a;
-  --soft:#8f8678;
-  --line:rgba(247,239,227,0.14);
-  --panel:rgba(247,239,227,0.07);
-  --panel2:rgba(247,239,227,0.11);
-  --beam:#d8b76e;
-  --beam2:#f0dca8;
-  --beamDeep:#8f6f2f;
-  --gold:#d8b76e;
-  --gold2:#f0dca8;
-  --green:#39d27d;
-  --shadow:0 28px 80px rgba(0,0,0,0.42);
-  --font-brand:"NC Studio Brand",Impact,sans-serif;
-  --font-brand-light:"NC Studio Brand Lighter","NC Studio Brand",Impact,sans-serif;
-  --font-heading:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
-  --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
-  --hero-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
-  --feature-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
-  --film-one-media:url("assets/jason-roisin-engagement-card.jpg?v=engagement-20260614");
-  --film-two-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
-  --film-three-media:url("ncstudios-logo-transparent.png?v=brand-20260612");
-}
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html{
-  scroll-behavior:smooth;
-  background:var(--bg);
-}
-
-body{
-  margin:0;
-  color:var(--ink);
-  background:
-    linear-gradient(rgba(216,183,110,0.042) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(216,183,110,0.042) 1px, transparent 1px),
-    linear-gradient(145deg,var(--bg),var(--bg2));
-  background-size:48px 48px,48px 48px,100% 100%;
-  font-family:var(--font-body);
-  animation:pageWake 900ms ease both;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:clamp(10px,3vw,42px);
-  border:1px solid rgba(216,183,110,0.20);
-  pointer-events:none;
-  z-index:2;
-  opacity:0.58;
-}
-
-body.is-loading{
-  overflow:hidden;
-}
-
-main,
-.footer{
-  transition:opacity 820ms ease, transform 820ms cubic-bezier(.2,.8,.2,1), filter 820ms ease;
-}
-
-body.is-loading main,
-body.is-loading .footer{
-  opacity:0;
-  transform:translateY(18px);
-  filter:blur(10px);
-}
-
-html.site-preview-mode .introLoader{
-  display:none !important;
-}
-
-html.site-preview-mode body.is-loading main,
-html.site-preview-mode body.is-loading .footer,
-html.site-preview-mode body.is-loading .siteHeader{
-  opacity:1;
-  transform:none;
-  filter:none;
-}
-
-body.intro-done main,
-body.intro-done .footer{
-  opacity:1;
-  transform:none;
-  filter:none;
-}
-
-.siteHeader{
-  transition:opacity 520ms ease;
-}
-
-body.intro-done .siteHeader{
-  opacity:1;
-}
-
-a{
-  color:inherit;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-h1,
-h2,
-h3,
-p{
-  margin:0;
-}
-
-.introLoader{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 50% 54%,rgba(240,220,168,0.22),transparent 29%),
-    radial-gradient(circle at 50% 112%,rgba(216,183,110,0.28),transparent 38%),
-    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,0.035) 1px, transparent 1px),
-    #050507;
-  background-size:100% 100%,100% 100%,42px 42px,42px 42px,100% 100%;
-  animation:introLeave 820ms cubic-bezier(.72,0,.2,1) 4500ms forwards;
-}
-
-.introLoader::before,
-.introLoader::after{
-  content:"";
-  position:absolute;
-  inset:-12%;
-  pointer-events:none;
-}
-
-.introLoader::before{
-  background:linear-gradient(100deg,transparent 18%,rgba(216,183,110,0.12),rgba(255,248,222,0.42),rgba(216,183,110,0.16),transparent 82%);
-  transform:translateX(-118%) skewX(-14deg);
-  animation:introSweep 1320ms cubic-bezier(.2,.8,.2,1) 1540ms forwards;
-}
-
-.introLoader::after{
-  background:
-    linear-gradient(180deg,transparent 0 48%,rgba(216,183,110,0.18) 50%,transparent 53%),
-    radial-gradient(circle,rgba(240,220,168,0.10),transparent 45%);
-  opacity:0;
-  animation:introBlink 1700ms linear 1180ms both;
-}
-
-.introStage{
-  position:relative;
-  width:min(720px,88vw);
-  min-height:300px;
-  display:grid;
-  place-items:center;
-  isolation:isolate;
-}
-
-.introBrand{
-  position:relative;
-  width:min(800px,90vw);
-  min-height:220px;
-  display:grid;
-  place-items:center;
-  transform:translateY(0) scale(1);
-  opacity:1;
-}
-
-.introWatermark{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  isolation:isolate;
-}
-
-.introWordmark{
-  position:relative;
-  display:inline-flex;
-  align-items:baseline;
-  justify-content:center;
-  margin:0;
-  color:var(--gold);
-  font-size:clamp(48px,8.4vw,104px);
-  line-height:1;
-  letter-spacing:0;
-  text-transform:lowercase;
-  white-space:nowrap;
-  filter:drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 42px rgba(240,220,168,0.18));
-  opacity:0;
-  transform:translateY(10px) scale(0.94);
-  animation:introWordmarkIn 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
-}
-
-.introBracket,
-.introCore{
-  font-family:"NC Studio Brand", "NC Studio Brand Lighter", sans-serif;
-  flex:0 0 auto;
-}
-
-.introStudio{
-  font-family:"NC Studio Brand Lighter", "NC Studio Brand", sans-serif;
-  display:inline-block;
-  overflow:hidden;
-  max-width:6.8ch;
-  margin-left:0;
-  opacity:1;
-  white-space:nowrap;
-  flex:0 1 auto;
-  animation:introStudioCollapse 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
-}
-
-.introBracketClose{
-  transform:translateX(0);
-  animation:introBracketClose 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
-}
-
-.introCutBeam{
-  display:none;
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:2px;
-  height:72%;
-  border-radius:999px;
-  background:linear-gradient(180deg,transparent,rgba(255,248,222,0.98),rgba(216,183,110,0.84),transparent);
-  box-shadow:0 0 12px rgba(255,248,222,0.9),0 0 34px rgba(216,183,110,0.68),0 0 80px rgba(216,183,110,0.28);
-  opacity:0;
-  transform:translate(-50%,-50%) scaleY(0.36);
-  animation:introCutBeam 3900ms cubic-bezier(.2,.8,.2,1) 420ms forwards;
-  z-index:4;
-}
-
-.introSignal{
-  display:none;
-  position:absolute;
-  inset:auto 0 42px;
-  margin:auto;
-  width:min(300px,48vw);
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(217,182,111,0.52),transparent);
-  opacity:0;
-  animation:introSignal 900ms ease 3650ms forwards;
-}
-
-.siteHeader{
-  position:fixed;
-  inset:0 0 auto;
-  z-index:20;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:18px;
-  padding:16px clamp(16px,4vw,54px);
-  background:linear-gradient(180deg,rgba(5,5,4,0.92),rgba(5,5,4,0.24));
-  backdrop-filter:blur(18px);
-  transform:translateY(-16px);
-  opacity:0;
-  animation:dropIn 760ms ease 180ms forwards;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:0;
-  text-decoration:none;
-  min-width:0;
-}
-
-.brandMark{
-  width:clamp(132px,16vw,220px);
-  height:72px;
-  object-fit:contain;
-  border:0;
-  border-radius:0;
-  filter:drop-shadow(0 0 14px rgba(216,183,110,0.22));
-  transition:transform 220ms ease, filter 220ms ease;
-}
-
-.brand:hover .brandMark,
-.brand:focus-visible .brandMark{
-  transform:translateY(-2px);
-  filter:drop-shadow(0 0 18px rgba(216,183,110,0.42)) drop-shadow(0 0 38px rgba(240,220,168,0.18));
-}
-
-.brandText{
-  display:grid;
-  gap:2px;
-}
-
-.brandText strong{
-  font-size:14px;
-  letter-spacing:0.08em;
-  text-transform:lowercase;
-}
-
-.brandText span{
-  color:var(--muted);
-  font-size:12px;
-}
-
-.nav{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.nav a{
-  text-decoration:none;
-  color:rgba(248,245,239,0.78);
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:0.08em;
-  text-transform:lowercase;
-  padding:9px 3px;
-  transition:color 180ms ease, text-shadow 180ms ease, transform 180ms ease;
-}
-
-.nav a:hover,
-.nav a:focus-visible{
-  color:var(--ink);
-  text-shadow:0 0 18px rgba(216,183,110,0.34);
-  transform:translateY(-1px);
-  outline:none;
-}
-
-.nav .navCta{
-  min-height:42px;
-  display:inline-flex;
-  align-items:center;
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:999px;
-  padding:0 15px;
-  color:#11100c;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  box-shadow:0 16px 34px rgba(216,183,110,0.20);
-  transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
-}
-
-.nav .navCta:hover,
-.nav .navCta:focus-visible{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,0.30);
-  box-shadow:0 18px 50px rgba(216,183,110,0.34),0 0 34px rgba(240,220,168,0.16);
-}
-
-.hero{
-  min-height:88svh;
-  display:grid;
-  align-items:end;
-  padding:118px clamp(18px,5vw,72px) 42px;
-  position:relative;
-  overflow:hidden;
-  isolation:isolate;
-}
-
-.hero::marker{
-  display:none;
-}
-
-.hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-2;
-  background:
-    linear-gradient(90deg,rgba(7,8,11,0.96),rgba(7,8,11,0.68) 44%,rgba(7,8,11,0.10)),
-    linear-gradient(0deg,rgba(7,8,11,0.96),rgba(7,8,11,0.10) 38%,rgba(7,8,11,0.38)),
-    var(--hero-media);
-  background-repeat:no-repeat;
-  background-size:cover,cover,min(72vw,840px);
-  background-position:center,center,right 3vw center;
-}
-
-.heroInner::before{
-  content:"";
-  display:block;
-  width:72px;
-  height:2px;
-  margin-bottom:18px;
-  background:linear-gradient(90deg,var(--gold),transparent);
-  box-shadow:0 0 24px rgba(216,183,110,0.45);
-  transform-origin:left;
-  animation:heroSignal 1000ms ease 950ms both;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:auto 0 0;
-  height:34vh;
-  z-index:-1;
-  background:linear-gradient(180deg,rgba(7,8,11,0),var(--bg));
-}
-
-.hero .button{
-  position:relative;
-  overflow:hidden;
-}
-
-.hero .button::after{
-  content:"";
-  position:absolute;
-  inset:-60% auto -60% -44%;
-  width:42%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.34),transparent);
-  transform:skewX(-18deg);
-  transition:transform 520ms ease;
-}
-
-.hero .button:hover::after,
-.hero .button:focus-visible::after{
-  transform:translateX(340%) skewX(-18deg);
-}
-
-.heroInner{
-  width:min(1180px,100%);
-  opacity:0;
-  transform:translateY(30px);
-  animation:riseIn 900ms ease 420ms forwards;
-}
-
-.eyebrow{
-  color:var(--gold);
-  text-transform:lowercase;
-  letter-spacing:0.08em;
-  font-size:12px;
-  font-weight:950;
-}
-
-.hero h1{
-  max-width:860px;
-  margin-top:14px;
-  font-size:clamp(52px,9.5vw,112px);
-  line-height:0.84;
-  letter-spacing:0;
-  animation:titleGoldReveal 1600ms linear 540ms both;
-}
-
-.heroLead{
-  max-width:640px;
-  margin-top:22px;
-  color:var(--paper);
-  font-size:clamp(18px,2.1vw,23px);
-  line-height:1.38;
-}
-
-.heroActions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:30px;
-}
-
-.heroDeck{
-  width:min(980px,100%);
-  margin-top:38px;
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  border:1px solid rgba(216,183,110,0.32);
-  border-left:0;
-  background:rgba(0,0,0,0.20);
-  backdrop-filter:blur(12px);
-}
-
-.heroDeck a{
-  min-height:92px;
-  padding:14px;
-  border-left:1px solid rgba(216,183,110,0.32);
-  color:var(--ink);
-  text-decoration:none;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  transition:background 180ms ease, color 180ms ease;
-}
-
-.heroDeck a:hover,
-.heroDeck a:focus-visible{
-  background:rgba(216,183,110,0.12);
-  outline:none;
-}
-
-.heroDeck strong{
-  color:var(--gold);
-  font-family:var(--font-brand-light);
-  font-size:18px;
-}
-
-.heroDeck span{
-  margin-top:8px;
-  font-size:12px;
-  font-weight:850;
-  letter-spacing:0.16em;
-  text-transform:uppercase;
-}
-
-.heroDeck em{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:12px;
-  font-style:normal;
-}
-
-.button{
-  min-height:50px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid rgba(255,255,255,0.18);
-  border-radius:999px;
-  padding:0 19px;
-  text-decoration:none;
-  color:#11100c;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  font-weight:950;
-  box-shadow:0 18px 46px rgba(216,183,110,0.22);
-  transition:transform 210ms ease, box-shadow 210ms ease, border-color 210ms ease, background 210ms ease;
-}
-
-.button.secondary{
-  background:rgba(255,255,255,0.09);
-  box-shadow:none;
-}
-
-.button:hover,
-.button:focus-visible,
-.submitButton:hover,
-.submitButton:focus-visible{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,0.32);
-  box-shadow:0 22px 58px rgba(216,183,110,0.34),0 0 34px rgba(240,220,168,0.16);
-  outline:none;
-}
-
-.button.secondary:hover,
-.button.secondary:focus-visible{
-  background:rgba(216,183,110,0.16);
-}
-
-.scrollCue{
-  margin-top:36px;
-  color:var(--soft);
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:0.08em;
-  text-transform:lowercase;
-  animation:softBlink 2200ms ease-in-out infinite;
-}
-
-.section{
-  padding:76px clamp(18px,5vw,72px);
-  border-top:1px solid rgba(255,255,255,0.08);
-}
-
-.sectionInner{
-  width:min(1180px,100%);
-  margin:0 auto;
-}
-
-.sectionHead{
-  display:grid;
-  grid-template-columns:minmax(0,0.9fr) minmax(260px,0.6fr);
-  gap:28px;
-  align-items:end;
-  margin-bottom:34px;
-}
-
-.sectionHead h2{
-  font-size:clamp(36px,6.4vw,74px);
-  line-height:0.9;
-  letter-spacing:0;
-}
-
-.sectionHead p{
-  color:var(--muted);
-  line-height:1.62;
-  font-size:16px;
-}
-
-.aboutLayout{
-  display:grid;
-  grid-template-columns:minmax(260px,0.72fr) minmax(0,1.28fr);
-  gap:28px;
-  align-items:stretch;
-}
-
-.portraitPanel{
-  position:relative;
-  min-height:520px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:#11131a;
-  box-shadow:var(--shadow);
-  display:flex;
-  align-items:end;
-  padding:20px;
-  overflow:hidden;
-  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-}
-
-.portraitPanel::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,rgba(7,8,11,0),rgba(7,8,11,0.22) 48%,rgba(7,8,11,0.90));
-  pointer-events:none;
-}
-
-.portraitImage{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center 34%;
-  transition:transform 700ms ease, filter 700ms ease;
-}
-
-.portraitPanel:hover,
-.filmCard:hover,
-.principle:hover,
-.serviceCard:hover,
-.formPanel:hover{
-  transform:translateY(-4px);
-  border-color:rgba(216,183,110,0.32);
-  box-shadow:0 32px 88px rgba(0,0,0,0.46),0 0 42px rgba(216,183,110,0.14);
-}
-
-.portraitPanel:hover .portraitImage{
-  transform:scale(1.035);
-  filter:saturate(1.08) contrast(1.03);
-}
-
-.portraitCaption{
-  position:relative;
-  z-index:1;
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  border-top:1px solid rgba(255,255,255,0.22);
-  padding-top:14px;
-}
-
-.portraitCaption strong{
-  display:block;
-  font-size:18px;
-}
-
-.portraitCaption span{
-  display:block;
-  margin-top:4px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.aboutCopy{
-  display:grid;
-  align-content:center;
-  gap:20px;
-}
-
-.aboutCopy > p{
-  color:var(--paper);
-  font-size:clamp(21px,3.2vw,38px);
-  line-height:1.12;
-}
-
-.aboutCopy .smallCopy{
-  display:grid;
-  gap:12px;
-}
-
-.aboutCopy .smallCopy p{
-  color:var(--muted);
-  font-size:16px;
-  line-height:1.72;
-  max-width:740px;
-}
-
-.principles{
-  background:rgba(255,255,255,0.035);
-}
-
-.principleGrid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.principle{
-  min-height:260px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:linear-gradient(145deg,rgba(255,255,255,0.105),rgba(255,255,255,0.045));
-  box-shadow:var(--shadow);
-  padding:22px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-}
-
-.principle span,
-.filmCard span,
-.serviceCard span{
-  color:var(--gold);
-  font-size:12px;
-  font-weight:950;
-  letter-spacing:0.08em;
-  text-transform:lowercase;
-}
-
-.principle h3{
-  margin-top:20px;
-  font-size:clamp(25px,3vw,34px);
-  line-height:0.95;
-}
-
-.principle p{
-  margin-top:16px;
-  color:var(--muted);
-  line-height:1.55;
-}
-
-.splitFeature{
-  min-height:620px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  align-items:center;
-  padding:0;
-  overflow:hidden;
-}
-
-.featureImage{
-  position:relative;
-  min-height:620px;
-  background:
-    linear-gradient(180deg,rgba(7,8,11,0.08),rgba(7,8,11,0.72)),
-    var(--feature-media);
-  background-size:cover;
-  background-position:center;
-  overflow:hidden;
-}
-
-.featureCopy{
-  padding:clamp(34px,6vw,76px);
-}
-
-.featureCopy h2{
-  font-size:clamp(44px,7vw,86px);
-  line-height:0.88;
-  letter-spacing:0;
-}
-
-.featureCopy p{
-  margin-top:22px;
-  color:var(--muted);
-  line-height:1.7;
-  font-size:17px;
-  max-width:560px;
-}
-
-.filmGrid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.workCarousel{
-  display:grid;
-  gap:14px;
-}
-
-.workCarousel .filmGrid{
-  display:flex;
-  grid-template-columns:none;
-  overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;
-  scrollbar-width:none;
-  padding-bottom:2px;
-}
-
-.workCarousel .filmGrid::-webkit-scrollbar{
-  display:none;
-}
-
-.carouselControls{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-}
-
-.carouselButton{
-  min-width:88px;
-  min-height:42px;
-  border:1px solid rgba(216,183,110,0.36);
-  border-radius:999px;
-  background:rgba(247,239,227,0.07);
-  color:var(--ink);
-  font-family:var(--font-brand-light);
-  font-size:13px;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  cursor:pointer;
-}
-
-.carouselButton:disabled{
-  opacity:0.38;
-  cursor:default;
-}
-
-.carouselDots{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.carouselDots span{
-  display:block;
-  width:34px;
-  height:2px;
-  background:rgba(247,239,227,0.22);
-  transition:background 180ms ease, width 180ms ease;
-}
-
-.carouselDots span.is-active{
-  width:48px;
-  background:var(--gold);
-}
-
-.filmCard{
-  position:relative;
-  min-height:430px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:
-    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
-    var(--film-one-media);
-  background-size:cover;
-  background-position:center;
-  box-shadow:var(--shadow);
-  padding:18px;
-  display:flex;
-  align-items:end;
-  overflow:hidden;
-  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease, filter 260ms ease;
-}
-
-.workCarousel .filmCard{
-  flex:0 0 min(78vw,520px);
-  scroll-snap-align:start;
-}
-
-.filmCard:nth-child(2){
-  background-image:
-    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
-    var(--film-two-media);
-  background-position:55% center;
-}
-
-.filmCard:nth-child(3){
-  background-image:
-    linear-gradient(180deg,rgba(7,8,11,0.03),rgba(7,8,11,0.88)),
-    var(--film-three-media);
-  background-position:70% center;
-}
-
-.filmCard h3{
-  margin-top:12px;
-  font-size:30px;
-  line-height:0.95;
-}
-
-.filmCard p{
-  margin-top:10px;
-  color:var(--muted);
-  line-height:1.48;
-}
-
-.services{
-  background:rgba(255,255,255,0.03);
-}
-
-.serviceGrid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
-.serviceCard{
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:rgba(255,255,255,0.07);
-  padding:22px;
-  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-}
-
-.serviceCard h3{
-  margin-top:18px;
-  font-size:26px;
-}
-
-.serviceCard p{
-  margin-top:12px;
-  color:var(--muted);
-  line-height:1.58;
-}
-
-.availabilityStrip{
-  margin-top:28px;
-  border-top:1px solid rgba(217,182,111,0.48);
-  padding:0;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:0;
-  overflow:hidden;
-}
-
-.availabilityStrip > div{
-  min-width:0;
-  padding:clamp(18px,2.4vw,28px);
-}
-
-.availabilityStrip > div + div{
-  border-left:1px solid rgba(216,183,110,0.20);
-}
-
-.availabilityStrip strong{
-  display:block;
-  font-size:18px;
-  line-height:1.08;
-}
-
-.availabilityStrip span{
-  display:block;
-  margin-top:6px;
-  color:var(--muted);
-  line-height:1.5;
-  font-size:14px;
-  max-width:34ch;
-}
-
-.enquiry{
-  background:
-    linear-gradient(145deg,rgba(216,183,110,0.16),rgba(247,239,227,0.025)),
-    var(--bg);
-}
-
-.enquiryLayout{
-  display:grid;
-  grid-template-columns:minmax(260px,0.72fr) minmax(0,1.28fr);
-  gap:30px;
-  align-items:start;
-}
-
-.enquiryIntro{
-  position:sticky;
-  top:104px;
-}
-
-.enquiryIntro h2{
-  margin-top:12px;
-  font-size:clamp(40px,6.6vw,78px);
-  line-height:0.88;
-  letter-spacing:0;
-}
-
-.enquiryIntro p{
-  margin-top:18px;
-  color:var(--muted);
-  line-height:1.68;
-}
-
-.formPanel{
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:
-    linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.045)),
-    rgba(16,19,26,0.94);
-  box-shadow:var(--shadow);
-  padding:22px;
-  transition:transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
-}
-
-.formGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.field{
-  display:grid;
-  gap:7px;
-}
-
-.field.wide{
-  grid-column:1 / -1;
-}
-
-label{
-  color:var(--muted);
-  font-size:12px;
-  font-weight:950;
-  text-transform:lowercase;
-  letter-spacing:0.06em;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  border:1px solid rgba(255,255,255,0.14);
-  background:rgba(0,0,0,0.28);
-  color:var(--ink);
-  border-radius:8px;
-  padding:13px;
-  outline:none;
-}
-
-textarea{
-  min-height:132px;
-  resize:vertical;
-}
-
-select option{
-  color:#111827;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  border-color:rgba(217,182,111,0.68);
-  box-shadow:0 0 0 4px rgba(217,182,111,0.12);
-}
-
-.hiddenField{
-  position:absolute;
-  left:-9999px;
-  opacity:0;
-}
-
-.formFooter{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  flex-wrap:wrap;
-  margin-top:16px;
-}
-
-.submitButton{
-  min-height:50px;
-  border:0;
-  border-radius:999px;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#11100c;
-  padding:0 20px;
-  font-weight:950;
-  cursor:pointer;
-  box-shadow:0 18px 42px rgba(216,183,110,0.24);
-  transition:transform 210ms ease, box-shadow 210ms ease, opacity 210ms ease;
-}
-
-.submitButton:disabled{
-  opacity:0.62;
-  cursor:not-allowed;
-}
-
-.formStatus{
-  min-height:22px;
-  color:var(--muted);
-  line-height:1.45;
-}
-
-.formStatus.success{
-  color:var(--green);
-}
-
-.formStatus.error{
-  color:var(--gold2);
-}
-
-.messageLauncher{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:58;
-  min-height:48px;
-  border:1px solid rgba(216,183,110,0.44);
-  border-radius:999px;
-  padding:0 17px;
-  color:#11100c;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  box-shadow:0 18px 44px rgba(216,183,110,0.30),0 0 26px rgba(240,220,168,0.14);
-  font-weight:950;
-  cursor:pointer;
-}
-
-body.is-loading .messageLauncher,
-body.is-loading .messageWidget{
-  opacity:0;
-  pointer-events:none;
-}
-
-body.me-mode-ready .messageLauncher{
-  bottom:78px;
-}
-
-.messageWidget{
-  position:fixed;
-  right:18px;
-  bottom:78px;
-  z-index:57;
-  width:min(390px,calc(100vw - 32px));
-  max-height:min(720px,calc(100svh - 112px));
-  border:1px solid rgba(216,183,110,0.34);
-  background:rgba(6,7,8,0.96);
-  box-shadow:0 30px 90px rgba(0,0,0,0.56),0 0 48px rgba(216,183,110,0.12);
-  transform:translateY(14px);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 220ms ease, transform 220ms ease;
-  overflow:auto;
-}
-
-body.message-open .messageWidget{
-  opacity:1;
-  transform:none;
-  pointer-events:auto;
-}
-
-.messageWidgetHead{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  padding:16px;
-  border-bottom:1px solid rgba(216,183,110,0.24);
-}
-
-.messageWidgetHead strong{
-  display:block;
-  color:var(--gold);
-  font-size:16px;
-}
-
-.messageWidgetHead span{
-  display:block;
-  margin-top:5px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.4;
-}
-
-.messageClose{
-  width:34px;
-  height:34px;
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:50%;
-  color:var(--ink);
-  background:rgba(255,255,255,0.07);
-  cursor:pointer;
-}
-
-.directMessageForm{
-  padding:16px;
-  display:grid;
-  gap:12px;
-}
-
-.directMessageForm .submitButton{
-  width:max-content;
-}
-
-.footer{
-  padding:28px clamp(18px,5vw,72px) 36px;
-  border-top:1px solid rgba(255,255,255,0.08);
-  color:var(--soft);
-  display:flex;
-  justify-content:space-between;
-  gap:16px;
-  flex-wrap:wrap;
-}
-
-.mediaVideo{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:-3;
-  opacity:0.62;
-  pointer-events:none;
-}
-
-.mediaMount{
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  overflow:hidden;
-}
-
-.mediaMount .mediaVideo{
-  z-index:0;
-}
-
-.filmCard .mediaVideo,
-.featureImage .mediaVideo,
-.portraitPanel .mediaVideo{
-  z-index:0;
-  opacity:1;
-}
-
-.filmCard > div,
-.featureCopy,
-.portraitCaption{
-  position:relative;
-  z-index:1;
-}
-
-.revealItem{
-  opacity:0;
-  transform:translateY(34px);
-  transition:opacity 760ms ease var(--reveal-delay,0ms), transform 760ms cubic-bezier(.2,.8,.2,1) var(--reveal-delay,0ms), filter 760ms ease var(--reveal-delay,0ms);
-  filter:blur(10px);
-}
-
-.revealItem.is-visible{
-  opacity:1;
-  transform:none;
-  filter:blur(0);
-}
-
-
-
-
-/* NC Studio website type roles
-   Brand: short logo-style labels only.
-   Header: large readable page/section titles.
-   Subheader: supporting headings and intro lines.
-   Normal: paragraphs, forms, cards and long text. */
-body{
-  font-family:var(--font-body);
-  font-weight:400;
-}
-
-h1,h2,h3,
-.hero h1,
-.sectionHead h2,
-.splitText h2,
-.enquiryCopy h2,
-.filmCard h3,
-.serviceCard h3,
-.principle h3,
-.formPanel h3{
-  font-family:var(--font-heading);
-  font-weight:780;
-  letter-spacing:0;
-}
-
-.hero h1{
-  max-width:760px;
-  font-size:clamp(43px,7.7vw,88px);
-  line-height:0.93;
-  font-weight:820;
-}
-
-.heroLead,
-.sectionHead p,
-.splitText p,
-.formPanel p,
-.serviceCard p,
-.principle p,
-.footer p,
-input,
-select,
-textarea,
-label{
-  font-family:var(--font-body);
-  font-weight:450;
-  letter-spacing:0;
-}
-
-.heroLead{
-  max-width:620px;
-  font-size:clamp(17px,1.9vw,22px);
-  line-height:1.46;
-}
-
-.nav a,
-.eyebrow,
-.scrollCue,
-.serviceMeta,
-.filmMeta span{
-  font-family:var(--font-brand-light);
-  font-weight:400;
-  letter-spacing:0;
-}
-
-.button,
-.submitButton{
-  font-family:var(--font-heading);
-  font-weight:760;
-  letter-spacing:0;
-}
-
-@keyframes pageWake{
-  from{opacity:0;background-position:0 0,0 0,0 0;}
-  to{opacity:1;background-position:0 0,0 0,0 0;}
-}
-
-@keyframes introWordmarkIn{
-  0%{opacity:0;transform:translateY(10px) scale(0.94);filter:blur(8px) drop-shadow(0 0 24px rgba(216,183,110,0.18));}
-  15%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.34));}
-  40%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 18px rgba(216,183,110,0.34));}
-  72%{opacity:1;transform:translateY(0) scale(0.985);filter:blur(0) drop-shadow(0 0 22px rgba(216,183,110,0.48));}
-  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0) drop-shadow(0 0 16px rgba(216,183,110,0.34));}
-}
-
-@keyframes introStudioCollapse{
-  0%,40%{max-width:6.8ch;opacity:1;filter:blur(0);transform:translateX(0);}
-  58%{max-width:3.3ch;opacity:0.46;filter:blur(0.6px);transform:translateX(-0.04ch);}
-  72%,100%{max-width:0;opacity:0;filter:blur(1.4px);transform:translateX(-0.12ch);}
-}
-
-@keyframes introBracketClose{
-  0%,40%{transform:translateX(0);}
-  72%,100%{transform:translateX(-0.04ch);}
-}
-
-@keyframes introCutBeam{
-  0%,40%{opacity:0;transform:translate(-235%,-50%) scaleY(0.35);}
-  48%{opacity:1;transform:translate(-42%,-50%) scaleY(1);}
-  58%{opacity:0.88;transform:translate(68%,-50%) scaleY(0.96);}
-  70%{opacity:0;transform:translate(235%,-50%) scaleY(0.35);}
-  100%{opacity:0;transform:translate(235%,-50%) scaleY(0.35);}
-}
-
-@keyframes introSignal{
-  0%{opacity:0;transform:scaleX(0);}
-  35%{opacity:1;}
-  100%{opacity:0.42;transform:scaleX(1);}
-}
-
-@keyframes introSweep{
-  to{transform:translateX(118%) skewX(-14deg);}
-}
-
-@keyframes introBlink{
-  0%,9%,13%,20%,100%{opacity:0;}
-  10%,14%,21%{opacity:0.92;}
-}
-
-@keyframes introLeave{
-  0%{opacity:1;transform:scale(1);filter:blur(0);}
-  100%{opacity:0;transform:scale(1.04);filter:blur(16px);visibility:hidden;}
-}
-
-@keyframes heroSignal{
-  from{transform:scaleX(0);opacity:0;}
-  to{transform:scaleX(1);opacity:1;}
-}
-
-@keyframes dropIn{
-  to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes riseIn{
-  to{opacity:1;transform:translateY(0);}
-}
-
-@keyframes titleGoldReveal{
-  0%,5%,8%,12%{opacity:0.24;text-shadow:none;}
-  6%,10%,16%{opacity:0.86;text-shadow:0 0 20px rgba(216,183,110,0.20);}
-  22%,100%{opacity:1;text-shadow:0 0 30px rgba(240,220,168,0.12);}
-}
-
-@keyframes softBlink{
-  0%,100%{opacity:0.48;}
-  50%{opacity:1;}
-}
-
-@media (prefers-reduced-motion:reduce){
-  *,
-  *::before,
-  *::after{
-    animation-duration:0.001ms !important;
-    animation-iteration-count:1 !important;
-    scroll-behavior:auto !important;
-    transition:none !important;
-  }
-}
-
-@media(max-width:980px){
-  .siteHeader{
-    position:absolute;
-  }
-
-  .nav a:not(.navCta){
-    display:none;
-  }
-
-  .brandText span{
-    display:none;
-  }
-
-  .sectionHead,
-  .aboutLayout,
-  .splitFeature,
-  .enquiryLayout,
-  .principleGrid,
-  .filmGrid,
-  .serviceGrid,
-  .availabilityStrip{
-    grid-template-columns:1fr;
-  }
-
-  .availabilityStrip > div + div{
-    border-left:0;
-    border-top:1px solid rgba(216,183,110,0.20);
-  }
-
-  .heroDeck{
-    grid-template-columns:1fr;
-  }
-
-  .hero::before{
-    background-size:cover,cover,120vw;
-    background-position:center,center,42vw 54%;
-  }
-
-  .portraitPanel,
-  .featureImage{
-    min-height:420px;
-  }
-
-  .workCarousel .filmCard{
-    flex-basis:82vw;
-  }
-
-  .enquiryIntro{
-    position:static;
-  }
-}
-
-@media(max-width:640px){
-  .siteHeader{
-    padding:14px 16px;
-  }
-
-  .brandMark{
-    width:132px;
-    height:58px;
-  }
-
-  .hero{
-    min-height:88svh;
-    padding:104px 16px 34px;
-  }
-
-  .hero h1{
-    font-size:60px;
-  }
-
-  .heroLead{
-    font-size:17px;
-  }
-
-  .heroDeck{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    margin-top:26px;
-  }
-
-  .heroDeck a{
-    min-height:76px;
-    padding:12px;
-  }
-
-  .heroActions{
-    display:grid;
-  }
-
-  .carouselControls{
-    justify-content:space-between;
-  }
-
-  .carouselButton{
-    flex:1;
-  }
-
-  .workCarousel .filmCard{
-    flex-basis:calc(100vw - 32px);
-    min-height:420px;
-  }
-
-  .button{
-    width:100%;
-  }
-
-  .section{
-    padding:54px 16px;
-  }
-
-  .featureCopy{
-    padding:44px 16px;
-  }
-
-  .formGrid{
-    grid-template-columns:1fr;
-  }
-
-  .formPanel{
-    padding:16px;
-  }
-
-  .messageLauncher{
-    right:14px;
-    bottom:14px;
-  }
-
-  body.me-mode-ready .messageLauncher{
-    bottom:72px;
-  }
-
-  .messageWidget{
-    right:10px;
-    bottom:72px;
-    width:calc(100vw - 20px);
-  }
-}
-
-/* NC Studio guide alignment
-   Header: large serif titles.
-   Subheader: small mono labels and section cues.
-   Normal: readable body copy, forms and cards.
-   Brand: approved [nc] lockup and custom font only. */
-body{
-  background:
-    linear-gradient(rgba(216,183,110,0.045) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(216,183,110,0.045) 1px, transparent 1px),
-    linear-gradient(145deg,#050504,#0d0c0a) !important;
-  background-size:48px 48px,48px 48px,100% 100% !important;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif !important;
-  letter-spacing:0 !important;
-}
-
-body::after{
-  inset:clamp(10px,2vw,28px) !important;
-  border-color:rgba(216,183,110,0.26) !important;
-  background:
-    linear-gradient(90deg,transparent 0 6%,rgba(216,183,110,0.16) 6% calc(6% + 1px),transparent calc(6% + 1px) 100%),
-    linear-gradient(180deg,transparent 0 15%,rgba(216,183,110,0.16) 15% calc(15% + 1px),transparent calc(15% + 1px) 100%),
-    linear-gradient(180deg,transparent 0 calc(100% - 70px),rgba(216,183,110,0.18) calc(100% - 70px) calc(100% - 69px),transparent calc(100% - 69px) 100%) !important;
-  opacity:0.86 !important;
-}
-
-.siteHeader{
-  padding:clamp(18px,3vw,34px) clamp(20px,5vw,72px) !important;
-  border-bottom:1px solid rgba(216,183,110,0.24) !important;
-  background:rgba(5,5,4,0.72) !important;
-  backdrop-filter:none !important;
-  box-shadow:none !important;
-}
-
-.brandMark{
-  width:clamp(156px,18vw,240px) !important;
-  height:auto !important;
-  filter:drop-shadow(0 8px 20px rgba(216,183,110,0.18)) !important;
-}
-
-.nav a,
-.eyebrow,
-.scrollCue,
-.serviceMeta,
-.filmMeta span,
-.heroDeck span,
-.heroDeck em,
-.availabilityStrip span,
-.portraitCaption span,
-.formPanel label,
-.footer{
-  font-family:"SFMono-Regular","Menlo","Monaco","Courier New",monospace !important;
-  font-weight:500 !important;
-  letter-spacing:0 !important;
-  text-transform:uppercase !important;
-}
-
-.nav a{
-  color:rgba(247,239,227,0.78) !important;
-  padding:10px 0 !important;
-}
-
-.nav .navCta{
-  min-height:40px !important;
-  border-radius:0 !important;
-  border-color:rgba(216,183,110,0.42) !important;
-  color:#080704 !important;
-  background:linear-gradient(90deg,var(--gold),var(--gold2)) !important;
-  box-shadow:none !important;
-  padding:0 14px !important;
-}
-
-.hero{
-  min-height:92svh !important;
-  align-items:center !important;
-  padding:138px clamp(20px,5vw,72px) 48px !important;
-}
-
-.hero::before{
-  background:
-    linear-gradient(90deg,rgba(5,5,4,0.98),rgba(5,5,4,0.78) 54%,rgba(5,5,4,0.36)),
-    linear-gradient(180deg,rgba(5,5,4,0.22),rgba(5,5,4,0.96)),
-    var(--hero-media) !important;
-  background-repeat:no-repeat !important;
-  background-size:cover,cover,min(58vw,720px) !important;
-  background-position:center,center,right 5vw center !important;
-  filter:saturate(0.86) contrast(1.02) !important;
-}
-
-.hero::after{
-  background:linear-gradient(180deg,rgba(5,5,4,0),#050504) !important;
-}
-
-.heroInner{
-  border-left:1px solid rgba(216,183,110,0.28) !important;
-  padding-left:clamp(22px,4vw,52px) !important;
-}
-
-.heroInner::before{
-  width:122px !important;
-  height:1px !important;
-  margin-bottom:24px !important;
-  background:var(--gold) !important;
-  box-shadow:none !important;
-}
-
-h1,
-h2,
-h3,
-.hero h1,
-.sectionHead h2,
-.splitText h2,
-.featureCopy h2,
-.enquiryIntro h2,
-.filmCard h3,
-.serviceCard h3,
-.principle h3,
-.formPanel h3{
-  font-family:Georgia,"Times New Roman",serif !important;
-  font-weight:400 !important;
-  letter-spacing:0 !important;
-  color:var(--ink) !important;
-}
-
-.hero h1{
-  max-width:860px !important;
-  color:var(--ink) !important;
-  font-size:clamp(62px,9.5vw,132px) !important;
-  line-height:0.9 !important;
-  text-shadow:0 18px 34px rgba(0,0,0,0.42),0 0 24px rgba(216,183,110,0.10) !important;
-}
-
-.sectionHead h2,
-.featureCopy h2,
-.enquiryIntro h2{
-  color:var(--gold2) !important;
-  font-size:clamp(44px,7vw,92px) !important;
-  line-height:0.92 !important;
-}
-
-.heroLead,
-.sectionHead p,
-.splitText p,
-.formPanel p,
-.serviceCard p,
-.principle p,
-.footer p,
-.aboutCopy .smallCopy p,
-.featureCopy p,
-.enquiryIntro p,
-.filmCard p,
-input,
-select,
-textarea{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif !important;
-  font-weight:400 !important;
-  letter-spacing:0 !important;
-  color:var(--paper) !important;
-}
-
-.heroLead{
-  max-width:640px !important;
-  font-size:clamp(17px,1.8vw,22px) !important;
-}
-
-.button,
-.submitButton,
-.carouselButton,
-.messageLauncher,
-.messageClose{
-  border-radius:0 !important;
-  border:1px solid rgba(216,183,110,0.42) !important;
-  box-shadow:none !important;
-  font-family:"SFMono-Regular","Menlo","Monaco","Courier New",monospace !important;
-  font-weight:600 !important;
-  letter-spacing:0 !important;
-  text-transform:uppercase !important;
-}
-
-.button,
-.submitButton{
-  min-height:48px !important;
-  color:#080704 !important;
-  background:linear-gradient(90deg,var(--gold),var(--gold2)) !important;
-}
-
-.button.secondary,
-.carouselButton,
-.messageLauncher,
-.messageClose{
-  color:var(--gold2) !important;
-  background:rgba(5,5,4,0.72) !important;
-}
-
-.heroDeck,
-.portraitPanel,
-.principle,
-.filmCard,
-.serviceCard,
-.formPanel,
-.messageWidget,
-.availabilityStrip,
-.splitFeature{
-  border:1px solid rgba(216,183,110,0.26) !important;
-  border-radius:0 !important;
-  background:
-    linear-gradient(180deg,rgba(216,183,110,0.075),rgba(216,183,110,0.02)),
-    rgba(5,5,4,0.74) !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-}
-
-.heroDeck{
-  border-left:1px solid rgba(216,183,110,0.26) !important;
-}
-
-.heroDeck a{
-  border-left:1px solid rgba(216,183,110,0.26) !important;
-}
-
-.heroDeck a:first-child{
-  border-left:0 !important;
-}
-
-.heroDeck strong,
-.principle span,
-.filmCard span,
-.serviceCard span,
-.eyebrow{
-  color:var(--gold) !important;
-  font-family:"NC Studio Brand Lighter","NC Studio Brand",Impact,sans-serif !important;
-  letter-spacing:0 !important;
-}
-
-.section{
-  border-top:1px solid rgba(216,183,110,0.18) !important;
-}
-
-.principles,
-.services,
-.enquiry{
-  background:rgba(5,5,4,0.42) !important;
-}
-
-.featureImage,
-.portraitPanel,
-.filmCard{
-  background-color:#080704 !important;
-}
-
-.filmCard{
-  background:
-    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
-    var(--film-one-media) !important;
-  background-size:cover !important;
-  background-position:center !important;
-}
-
-.filmCard:nth-child(2){
-  background:
-    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
-    var(--film-two-media) !important;
-  background-size:cover !important;
-  background-position:55% center !important;
-}
-
-.filmCard:nth-child(3){
-  background:
-    linear-gradient(180deg,rgba(5,5,4,0.04),rgba(5,5,4,0.88)),
-    var(--film-three-media) !important;
-  background-size:cover !important;
-  background-position:70% center !important;
-}
-
-.formPanel input,
-.formPanel select,
-.formPanel textarea,
-.messageWidget input,
-.messageWidget textarea{
-  border-radius:0 !important;
-  border:1px solid rgba(216,183,110,0.28) !important;
-  background:rgba(0,0,0,0.34) !important;
-  color:var(--ink) !important;
-  box-shadow:none !important;
-}
-
-.messageWidget{
-  background:rgba(5,5,4,0.94) !important;
-}
-
-.introLoader{
-  background:
-    linear-gradient(rgba(216,183,110,0.05) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(216,183,110,0.05) 1px, transparent 1px),
-    #050504 !important;
-  background-size:42px 42px,42px 42px,100% 100% !important;
-}
-
-.introWordmark{
-  color:var(--gold) !important;
-  text-shadow:none !important;
-}
-
-.introSignal{
-  background:rgba(216,183,110,0.42) !important;
-  box-shadow:none !important;
-}
-
-@media(max-width:980px){
-  .siteHeader{
-    position:absolute !important;
-  }
-
-  .hero h1{
-    font-size:clamp(54px,13vw,94px) !important;
-  }
-}
-
-@media(max-width:640px){
-  body::after{
-    inset:8px !important;
-  }
-
-  .siteHeader{
-    padding:14px 16px !important;
-  }
-
-  .brandMark{
-    width:142px !important;
-  }
-
-  .hero{
-    min-height:92svh !important;
-    padding:112px 16px 34px !important;
-  }
-
-  .heroInner{
-    padding-left:18px !important;
-  }
-
-  .hero h1{
-    font-size:clamp(48px,17vw,72px) !important;
-  }
-
-  .heroDeck{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-
-  .section{
-    padding:56px 16px !important;
-  }
-}
-
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080806">
+  <meta name="description" content="NC Studio creates honest, cinematic wedding photography and films across the UK.">
+  <title>NC Studio | Photography + Film</title>
+  <link rel="manifest" href="website.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" href="icon-32.png">
+  <style>
+    @font-face {
+      font-family: "NC Brand";
+      src: url("assets/fonts/NC_Font_Lighter.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    :root {
+      --black: #080806;
+      --black-2: #12110e;
+      --cream: #f1e7d7;
+      --paper: #12100c;
+      --gold: #d7b66c;
+      --gold-light: #f1dda9;
+      --ink: #f5ecdf;
+      --muted: #b9afa1;
+      --line: rgba(215, 182, 108, .24);
+      --glass: rgba(12, 11, 8, .91);
+      --shadow: 0 34px 90px rgba(0, 0, 0, .38), 0 3px 14px rgba(0, 0, 0, .16);
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { width: 100%; min-height: 100%; }
+
+    html { background: var(--black); }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--black);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, a { font: inherit; }
+    button { color: inherit; }
+    img, video { display: block; max-width: 100%; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+    .boot {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--cream);
+      background: #080806;
+      transition: opacity .65s ease, visibility .65s ease;
+    }
+
+    .boot::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: linear-gradient(105deg, transparent 42%, rgba(241, 221, 169, .14), transparent 58%);
+      transform: translateX(-45%);
+      animation: bootSweep 2.1s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .boot-reel {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .46;
+      filter: grayscale(.45) contrast(1.25) brightness(.62);
+    }
+
+    .boot-shade {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(8,8,6,.16), rgba(8,8,6,.82)),
+        repeating-linear-gradient(90deg, transparent 0 9.8vw, rgba(255,255,255,.04) 9.8vw 10vw);
+    }
+
+    .boot-words {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .boot-words span {
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      width: 100%;
+      opacity: 0;
+      color: #fff;
+      font-size: clamp(64px, 18vw, 240px);
+      font-weight: 800;
+      line-height: .78;
+      letter-spacing: 0;
+      text-align: center;
+      text-transform: uppercase;
+      transform: translate(-50%,-50%) scale(1.14);
+      animation: wordFlash 560ms steps(1,end) both;
+    }
+
+    .boot-words span:nth-child(2) { animation-delay: .42s; color: var(--gold-light); transform: translate(-54%,-68%) scale(.92); }
+    .boot-words span:nth-child(3) { animation-delay: .84s; transform: translate(-47%,-34%) scale(1.04); }
+    .boot-words span:nth-child(4) { animation-delay: 1.26s; color: var(--gold); transform: translate(-50%,-58%) scale(.88); }
+    .boot-words span:nth-child(5) { animation-delay: 1.68s; transform: translate(-52%,-42%) scale(1.08); }
+    .boot-words span:nth-child(6) { animation-delay: 2.10s; color: var(--gold-light); transform: translate(-50%,-50%) scale(.84); }
+
+    .desktop-ready .boot { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .boot-inner {
+      position: relative;
+      z-index: 4;
+      width: min(620px, calc(100vw - 40px));
+      margin-top: min(48vh, 420px);
+      text-align: center;
+    }
+
+    .boot-mark {
+      width: clamp(66px, 10vw, 92px);
+      margin: 0 auto 12px;
+      filter: drop-shadow(0 12px 30px rgba(215, 182, 108, .18));
+      animation: markIn .9s cubic-bezier(.2,.85,.2,1) both;
+    }
+
+    .boot-kicker,
+    .boot-status,
+    .menu-left,
+    .menu-right,
+    .eyebrow,
+    .meta,
+    .tag,
+    .dock-tip {
+      font-family: var(--mono);
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .boot-kicker { margin: 0 0 6px; color: var(--gold-light); font-size: 9px; }
+
+    .boot h1 {
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 520;
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .boot h1 em { color: var(--gold); font-family: Georgia, serif; font-weight: 400; }
+
+    .boot-progress {
+      width: min(360px, 80vw);
+      height: 3px;
+      margin: 16px auto 10px;
+      overflow: hidden;
+      background: rgba(255,255,255,.12);
+    }
+
+    .boot-progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      box-shadow: 0 0 22px var(--gold);
+      transition: width .16s ease;
+    }
+
+    .boot-status { min-height: 18px; margin: 0; color: #a8a093; font-size: 9px; }
+
+    .enter-button {
+      min-width: 210px;
+      margin-top: 14px;
+      padding: 14px 20px;
+      border: 1px solid rgba(241, 221, 169, .55);
+      border-radius: 999px;
+      opacity: 0;
+      color: var(--black);
+      background: var(--gold-light);
+      font-weight: 700;
+      cursor: pointer;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .4s ease, transform .4s ease, background .2s ease;
+    }
+
+    .boot.is-ready .enter-button { opacity: 1; transform: none; pointer-events: auto; }
+    .enter-button:hover { background: #fff2cf; }
+
+    .desktop {
+      position: fixed;
+      inset: 0;
+      isolation: isolate;
+      overflow: hidden;
+      opacity: 0;
+      transform: scale(1.025);
+      transition: opacity .8s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .1s;
+    }
+
+    .desktop-ready .desktop { opacity: 1; transform: none; }
+
+    .wallpaper {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      color: var(--cream);
+      background:
+        linear-gradient(100deg, rgba(8,8,6,.98) 0 37%, rgba(8,8,6,.74) 55%, rgba(8,8,6,.16) 100%),
+        radial-gradient(circle at 78% 45%, rgba(215,182,108,.28), transparent 30%),
+        #15120e;
+    }
+
+    .wallpaper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: .19;
+      mix-blend-mode: overlay;
+      background-image: url("exports/nc-watermark-animation/nc-watermark-animation-preview.png");
+      background-size: 300px;
+    }
+
+    .wallpaper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent 0 63%, rgba(215,182,108,.45) 63% calc(63% + 1px), transparent calc(63% + 1px));
+    }
+
+    .wallpaper-portrait {
+      position: absolute;
+      inset: -9% -2% -7% auto;
+      z-index: 1;
+      width: min(62vw, 920px);
+      height: 116%;
+      object-fit: cover;
+      object-position: 50% 42%;
+      filter: sepia(.08) contrast(1.07);
+    }
+
+    .wallpaper-copy {
+      position: absolute;
+      left: clamp(22px, 4vw, 74px);
+      top: 50%;
+      z-index: 4;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .wallpaper-copy p { margin: 0 0 14px; color: var(--gold-light); font: 10px/1.2 var(--mono); letter-spacing: .22em; text-transform: uppercase; }
+
+    .wallpaper-copy strong {
+      display: block;
+      max-width: 680px;
+      color: var(--cream);
+      font-size: clamp(50px, 9.5vw, 144px);
+      font-weight: 650;
+      line-height: .76;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .wallpaper-copy strong span { display: block; margin-left: .45em; color: transparent; -webkit-text-stroke: 1px rgba(241,231,215,.72); }
+
+    .menu-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+      color: #f7efe3;
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      background: rgba(10,9,7,.72);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      font-size: 10px;
+    }
+
+    .menu-left, .menu-right { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+    .menu-left strong { color: var(--gold-light); }
+    .menu-mark { width: 22px; height: 22px; object-fit: contain; }
+
+    .desktop-icons {
+      position: absolute;
+      top: 58px;
+      right: 26px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: repeat(2, 94px);
+      gap: 20px 14px;
+    }
+
+    .desktop-icon {
+      width: 94px;
+      min-height: 94px;
+      padding: 0;
+      border: 0;
+      color: #fff;
+      background: transparent;
+      text-align: center;
+      cursor: pointer;
+      text-shadow: 0 2px 8px rgba(0,0,0,.8);
+    }
+
+    .desktop-icon .icon-art {
+      position: relative;
+      width: 62px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 7px;
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 8px;
+      color: var(--cream);
+      background: linear-gradient(150deg, rgba(241,221,169,.26), rgba(8,8,6,.9));
+      box-shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.3);
+      font: 700 22px/1 var(--mono);
+      transition: transform .18s ease, border-color .18s ease;
+    }
+
+    .desktop-icon:nth-child(2n) .icon-art { background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(113,86,35,.88)); }
+    .desktop-icon:hover .icon-art { transform: translateY(-4px) scale(1.04); border-color: var(--gold-light); }
+    .desktop-icon small { display: block; font-size: 11px; line-height: 1.15; }
+
+    .window {
+      --x: 12vw;
+      --y: 10vh;
+      --w: 680px;
+      --h: 620px;
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 100;
+      width: min(var(--w), calc(100vw - 34px));
+      height: min(var(--h), calc(100vh - 110px));
+      min-width: 340px;
+      min-height: 250px;
+      overflow: hidden;
+      border: 1px solid rgba(215,182,108,.42);
+      border-radius: 8px;
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(28px) saturate(1.08);
+      -webkit-backdrop-filter: blur(28px) saturate(1.08);
+      animation: windowOpen .34s cubic-bezier(.2,.85,.25,1) both;
+      resize: both;
+    }
+
+    .window[hidden], .window.is-minimized { display: none; }
+    .window.is-maximized { inset: 40px 12px 76px !important; width: auto !important; height: auto !important; resize: none; }
+
+    .window-bar {
+      height: 42px;
+      display: grid;
+      grid-template-columns: 82px 1fr 82px;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--cream);
+      border-bottom: 1px solid rgba(215,182,108,.18);
+      background: rgba(18,16,12,.94);
+      user-select: none;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .window-bar:active { cursor: grabbing; }
+    .window-controls { display: flex; gap: 8px; }
+    .window-control { width: 13px; height: 13px; padding: 0; border: 1px solid rgba(241,221,169,.45); border-radius: 50%; cursor: pointer; }
+    .window-control.close { background: rgba(215,182,108,.92); }
+    .window-control.minimize { background: rgba(241,221,169,.55); }
+    .window-control.maximize { background: rgba(255,255,255,.22); }
+    .window-title { overflow: hidden; font-size: 12px; font-weight: 650; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+    .window-title span { color: #867d6e; font-weight: 450; }
+    .window-title:focus { outline: none; }
+
+    .window-body {
+      height: calc(100% - 42px);
+      overflow: auto;
+      overscroll-behavior: contain;
+      color: var(--cream);
+      background: rgba(10,9,7,.94);
+      scrollbar-color: #8f733c transparent;
+    }
+
+    .window-hero {
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      padding: clamp(26px, 5vw, 58px);
+      overflow: hidden;
+      color: var(--cream);
+      background: #11100d;
+    }
+
+    .window-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,8,6,.9), transparent 70%); }
+    .window-hero > * { position: relative; z-index: 2; }
+    .eyebrow { margin: 0 0 10px; color: var(--gold-light); font-size: 9px; }
+    .window-hero h2 { max-width: 760px; margin: 0; font-size: clamp(36px, 5vw, 64px); line-height: .96; letter-spacing: 0; }
+    .window-hero p:not(.eyebrow) { max-width: 620px; margin: 18px 0 0; color: #d6ccbd; line-height: 1.6; }
+
+    .content { padding: clamp(24px, 5vw, 58px); }
+    .content h2, .content h3, .content p { margin-top: 0; }
+    .content h2 { font-size: clamp(30px, 5vw, 56px); line-height: .98; letter-spacing: 0; }
+    .content h3 { margin-bottom: 10px; font-size: 20px; letter-spacing: 0; }
+    .content p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .content p.lead { max-width: 760px; color: var(--cream); font-size: clamp(18px, 2.4vw, 25px); line-height: 1.45; }
+    .meta { color: var(--gold); font-size: 9px; line-height: 1.6; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; }
+    .tag { padding: 7px 9px; border: 1px solid rgba(215,182,108,.32); border-radius: 999px; color: var(--gold-light); background: rgba(215,182,108,.08); font-size: 8px; }
+
+    .finder-layout { display: grid; grid-template-columns: 170px 1fr; min-height: 100%; }
+    .finder-sidebar { padding: 24px 14px; border-right: 1px solid var(--line); background: rgba(25,21,15,.72); }
+    .finder-sidebar strong { display: block; margin: 0 8px 12px; color: var(--gold); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .finder-sidebar button { width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 0; border-radius: 7px; color: var(--cream); background: transparent; text-align: left; cursor: pointer; }
+    .finder-sidebar button:hover { background: rgba(215,182,108,.12); }
+    .finder-main { padding: 30px; }
+    .finder-main h2 { margin: 0; font-size: clamp(34px, 5vw, 58px); line-height: .94; letter-spacing: 0; }
+    .finder-main .intro { max-width: 620px; margin: 18px 0 28px; color: var(--muted); font-size: 15px; line-height: 1.65; }
+    .finder-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .finder-card { min-height: 144px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; color: var(--cream); background: rgba(255,255,255,.035); cursor: pointer; text-align: left; }
+    .finder-card:hover { border-color: var(--gold); background: rgba(215,182,108,.1); }
+    .finder-card span { display: block; margin-bottom: 24px; color: #ad8a3f; font: 700 18px var(--mono); }
+    .finder-card strong { display: block; font-size: 15px; }
+    .finder-card small { display: block; margin-top: 5px; color: var(--muted); line-height: 1.3; }
+
+    .case-summary { display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(20px, 5vw, 70px); align-items: start; }
+    .case-facts { display: grid; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.04); }
+    .case-facts div { display: grid; gap: 5px; }
+    .case-facts span { color: #8a8174; font: 8px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .case-facts strong { font-size: 13px; line-height: 1.4; }
+    .case-gallery { display: grid; gap: 20px; padding: 0 clamp(18px, 4vw, 44px) 50px; }
+    .case-gallery figure { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #11100d; }
+    .case-gallery img { width: 100%; height: auto; }
+    .case-gallery figcaption { display: flex; justify-content: space-between; gap: 20px; padding: 13px 15px; color: var(--muted); font-size: 11px; }
+    .case-gallery .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .studio-hero { min-height: 380px; background-image: linear-gradient(90deg, rgba(7,7,5,.9), rgba(7,7,5,.2)), url("assets/jason-roisin-engagement-card.jpg"); background-size: cover; background-position: center 36%; }
+    .studio-hero .studio-logo { width: min(330px, 65vw); margin-bottom: 14px; }
+    .split { display: grid; grid-template-columns: .78fr 1.22fr; gap: 28px; align-items: stretch; }
+    .split img { width: 100%; height: 100%; min-height: 390px; object-fit: cover; border-radius: 8px; }
+    .split-copy { padding: clamp(8px, 3vw, 30px) 0; }
+    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 24px; }
+    .principles-grid div { min-height: 130px; padding: 17px; border: 1px solid var(--line); border-radius: 8px; background: rgba(215,182,108,.04); }
+    .principles-grid span { color: #a4823e; font: 10px var(--mono); }
+    .principles-grid strong { display: block; margin-top: 30px; font-size: 14px; }
+
+    .media-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .media-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #111; }
+    .media-card:first-child,
+    .media-card.is-featured { grid-column: 1 / -1; }
+    .media-card video, .media-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+    .media-card-copy { padding: 15px; color: #f2e9dc; }
+    .media-card-copy strong { display: block; margin-bottom: 5px; }
+    .media-card-copy small { color: #b7ad9e; line-height: 1.4; }
+
+    .poster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .poster-grid figure { margin: 0; }
+    .poster-grid img { width: 100%; border-radius: 8px; box-shadow: 0 12px 34px rgba(0,0,0,.16); }
+    .poster-grid figcaption { padding: 11px 2px; color: var(--muted); font-size: 11px; }
+
+    .weddings-hero {
+      min-height: 360px;
+      background-color: #090806;
+      background-image:
+        linear-gradient(rgba(215,182,108,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(215,182,108,.08) 1px, transparent 1px);
+      background-size: 54px 54px;
+    }
+
+    .engagements-hero {
+      min-height: 400px;
+      background-image: linear-gradient(90deg, rgba(7,7,5,.9), rgba(7,7,5,.12)), url("assets/jason-roisin-engagement-card.jpg");
+      background-size: cover;
+      background-position: center 43%;
+    }
+
+    .photo-wall {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0,1fr));
+      grid-auto-flow: dense;
+      gap: 12px;
+      padding: 0 clamp(18px, 4vw, 44px) 48px;
+    }
+
+    .photo-wall figure {
+      position: relative;
+      grid-column: span 6;
+      min-height: 300px;
+      margin: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #171510;
+    }
+
+    .photo-wall figure.wide { grid-column: span 8; }
+    .photo-wall figure.narrow { grid-column: span 4; }
+    .photo-wall figure.full { grid-column: 1 / -1; min-height: 420px; }
+    .photo-wall img { width: 100%; height: 100%; min-height: inherit; object-fit: cover; transition: transform .6s ease; }
+    .photo-wall figure:hover img { transform: scale(1.025); }
+    .photo-wall figcaption { position: absolute; inset: auto 0 0; padding: 34px 14px 13px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+
+    .about-layout { display: grid; grid-template-columns: minmax(220px,.8fr) 1.2fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+    .about-layout img { width: 100%; max-height: 570px; object-fit: cover; border-radius: 8px; }
+    .skills { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px 20px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .skills span { color: var(--muted); font-size: 12px; }
+
+    .contact-window .window-body { color: var(--cream); background: #0d0c09; }
+    .contact-panel { min-height: 100%; display: grid; place-items: center; padding: clamp(30px, 7vw, 82px); text-align: center; background: radial-gradient(circle at 50% 0, rgba(215,182,108,.18), transparent 45%); }
+    .contact-panel h2 { max-width: 720px; margin: 0; font-size: clamp(42px, 7vw, 82px); line-height: .9; letter-spacing: 0; }
+    .contact-panel p { max-width: 560px; margin: 25px auto; color: #bdb3a5; line-height: 1.65; }
+    .button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border: 1px solid var(--gold); border-radius: 999px; color: #100f0c; background: var(--gold-light); font-weight: 700; text-decoration: none; }
+    .button.secondary { color: var(--cream); background: transparent; }
+    .button:hover { filter: brightness(1.08); }
+
+    .menu-command {
+      padding: 0;
+      border: 0;
+      color: inherit;
+      background: transparent;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      cursor: pointer;
+    }
+
+    .menu-command:hover,
+    .menu-command:focus-visible { color: var(--gold-light); }
+
+    .contact-panel > div { width: min(760px,100%); }
+    .contact-panel .button-row { margin-bottom: 26px; }
+    .direct-message-form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; text-align: left; }
+    .direct-message-form .full { grid-column: 1 / -1; }
+    .direct-message-form label { display: block; margin-bottom: 6px; color: var(--gold); font: 9px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .direct-message-form input,
+    .direct-message-form select,
+    .direct-message-form textarea {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid rgba(215,182,108,.28);
+      border-radius: 7px;
+      padding: 11px 12px;
+      color: var(--cream);
+      background: rgba(255,255,255,.05);
+      font: 14px var(--sans);
+    }
+    .direct-message-form textarea { min-height: 110px; resize: vertical; }
+    .direct-message-form .submit-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .direct-message-form button { min-height: 46px; border: 1px solid var(--gold); border-radius: 999px; padding: 0 18px; color: #100f0c; background: var(--gold-light); font-weight: 750; cursor: pointer; }
+    .form-status { margin: 0 !important; color: var(--muted) !important; font-size: 12px !important; }
+    .form-status.success { color: #9fdfb6 !important; }
+    .form-status.error { color: #efb0a6 !important; }
+
+    .dynamic-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wallpaper > .dynamic-media { z-index: 1; }
+    .media-card-visual { position: relative; min-height: 260px; overflow: hidden; background: #111; }
+    .media-card-visual > video,
+    .media-card-visual > img { width: 100%; height: 100%; min-height: 260px; aspect-ratio: 16/9; object-fit: cover; }
+
+    .dock-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 9500;
+      transform: translateX(-50%);
+    }
+
+    .dock {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 8px;
+      background: rgba(24,22,18,.62);
+      box-shadow: 0 15px 50px rgba(0,0,0,.3);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    }
+
+    .dock-button {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 8px;
+      color: var(--cream);
+      background: linear-gradient(145deg, #4b402a, #12110e);
+      box-shadow: inset 0 1px rgba(255,255,255,.2);
+      font: 700 14px var(--mono);
+      cursor: pointer;
+      transition: transform .18s ease;
+    }
+
+    .dock-button:hover { transform: translateY(-8px) scale(1.13); }
+    .dock-button.is-open::after { content: ""; position: absolute; bottom: -6px; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+    .dock-tip { position: absolute; left: 50%; bottom: calc(100% + 8px); padding: 6px 7px; border-radius: 5px; opacity: 0; color: #eee5d8; background: rgba(8,8,6,.9); font-size: 7px; white-space: nowrap; transform: translate(-50%,5px); pointer-events: none; transition: .15s ease; }
+    .dock-button:hover .dock-tip { opacity: 1; transform: translate(-50%,0); }
+    .dock-divider { width: 1px; height: 43px; margin: 0 2px; background: rgba(255,255,255,.22); }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes bootSweep { 0% { transform: translateX(-45%); } 100% { transform: translateX(45%); } }
+    @keyframes wordFlash { 0%, 82% { opacity: 1; filter: blur(0); } 83%, 100% { opacity: 0; filter: blur(8px); } }
+    @keyframes markIn { from { opacity: 0; transform: scale(.78); filter: blur(9px); } to { opacity: 1; transform: none; filter: none; } }
+    @keyframes windowOpen { from { opacity: 0; transform: translateY(22px) scale(.94); } to { opacity: 1; transform: none; } }
+
+    @media (max-width: 900px) {
+      .desktop-icons { grid-template-columns: 88px; }
+      .case-summary, .split, .about-layout { grid-template-columns: 1fr; }
+      .split img { max-height: 520px; }
+    }
+
+    @media (max-width: 700px) {
+      .menu-left span, .menu-right span:first-child { display: none; }
+      .menu-right { display: none; }
+      .wallpaper-portrait { right: -36%; width: 118vw; opacity: .74; }
+      .wallpaper-copy { top: 43%; }
+      .wallpaper-copy strong { font-size: clamp(54px, 20vw, 94px); }
+      .desktop-icons { top: 54px; right: 10px; left: 10px; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px 4px; }
+      .desktop-icon { width: 100%; min-height: 84px; }
+      .desktop-icon .icon-art { width: 54px; height: 50px; }
+      .window { position: fixed; inset: 32px 0 74px !important; width: auto !important; height: auto !important; min-width: 0; min-height: 0; border: 0; border-radius: 0; resize: none; }
+      .window.is-maximized { inset: 32px 0 74px !important; }
+      .window-bar { grid-template-columns: 75px 1fr 75px; }
+      .finder-layout { grid-template-columns: 1fr; }
+      .finder-sidebar { display: none; }
+      .finder-main { padding: 24px 18px 34px; }
+      .finder-grid { grid-template-columns: 1fr; }
+      .case-gallery .pair, .media-grid, .poster-grid, .principles-grid { grid-template-columns: 1fr; }
+      .photo-wall { grid-template-columns: 1fr; }
+      .photo-wall figure, .photo-wall figure.wide, .photo-wall figure.narrow, .photo-wall figure.full { grid-column: 1; min-height: 330px; }
+      .media-card:first-child, .media-card.is-featured { grid-column: auto; }
+      .poster-grid { gap: 28px; }
+      .about-layout { display: block; }
+      .about-layout img { max-height: 410px; margin-bottom: 25px; object-position: 50% 35%; }
+      .dock-wrap { width: calc(100vw - 12px); }
+      .dock { justify-content: start; gap: 6px; overflow-x: auto; border-radius: 8px; }
+      .dock-button { flex: 0 0 43px; width: 43px; height: 43px; }
+      .dock-tip { display: none; }
+      .window-hero { min-height: 250px; }
+    }
+
+    @media (max-width: 390px) {
+      .skills { grid-template-columns: 1fr; }
+      .content { padding-inline: 18px; }
+      .contact-panel { padding-inline: 20px; }
+      .direct-message-form { grid-template-columns: 1fr; }
+      .direct-message-form .full { grid-column: auto; }
+      .direct-message-form .submit-row { grid-column: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
 </head>
-
-<body class="is-loading">
-<div class="introLoader" role="status" aria-label="nc studio loading">
-  <div class="introStage">
-    <div class="introBrand" aria-hidden="true">
-      <div class="introWatermark">
-        <p class="introWordmark">
-          <span class="introBracket">[</span><span class="introCore">nc</span><span class="introStudio"> studio</span><span class="introBracket introBracketClose">]</span>
-        </p>
-        <span class="introCutBeam"></span>
-      </div>
+<body>
+  <section class="boot" aria-labelledby="boot-title">
+    <video class="boot-reel" data-media-element="feature" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
+    </video>
+    <div class="boot-shade" aria-hidden="true"></div>
+    <div class="boot-words" aria-hidden="true">
+      <span>Vows</span><span>Feeling</span><span>Forever</span><span>Motion</span><span>Memory</span><span>NC Studio</span>
     </div>
-    <div class="introSignal" aria-hidden="true"></div>
-  </div>
-</div>
-
-<header class="siteHeader">
-  <a class="brand" href="#home" aria-label="nc studio home">
-    <img class="brandMark" src="ncstudios-logo-transparent.png?v=brand-20260612" alt="nc studio logo">
-  </a>
-
-  <nav class="nav" aria-label="site navigation">
-    <a href="#about">about</a>
-    <a href="#films">work</a>
-    <a class="navCta" href="availability.html">availability</a>
-  </nav>
-</header>
-
-<main id="home">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="mediaMount" data-media-target="hero"></div>
-    <div class="heroInner">
-      <p class="eyebrow" data-site-field="heroEyebrow">photo + film</p>
-      <h1 id="hero-title" data-site-field="heroTitle">real. cinematic. yours.</h1>
-      <p class="heroLead" data-site-field="heroLead">weddings · couples · cinematic stories</p>
-
-      <div class="heroActions">
-        <a class="button" href="#films">view the work</a>
-        <a class="button secondary" href="availability.html">check availability</a>
-      </div>
-
-      <div class="heroDeck" aria-label="nc studio process">
-        <a href="#about">
-          <strong>01</strong>
-          <span>about</span>
-        </a>
-        <a href="#principles">
-          <strong>02</strong>
-          <span>process</span>
-        </a>
-        <a href="#films">
-          <strong>03</strong>
-          <span>work</span>
-        </a>
-        <a href="availability.html">
-          <strong>04</strong>
-          <span>enquire</span>
-        </a>
-      </div>
-
-      <p class="scrollCue" data-site-field="scrollCue">explore</p>
+    <div class="boot-inner">
+      <img class="boot-mark" src="ncstudios-logo-mark-transparent.png" alt="NC mark">
+      <p class="boot-kicker">NC Studio · photography + film</p>
+      <h1 id="boot-title">Real. cinematic. <em>yours.</em></h1>
+      <div class="boot-progress" aria-hidden="true"><span data-progress-bar></span></div>
+      <p class="boot-status" aria-live="polite" data-boot-status>loading the archive...</p>
+      <button class="enter-button" type="button" data-enter>enter nc studio <span aria-hidden="true">↗</span></button>
     </div>
   </section>
 
-  <section class="section" id="about">
-    <div class="sectionInner aboutLayout">
-      <div class="portraitPanel" aria-label="portrait of the nc studio creative" data-media-panel="portrait">
-        <img class="portraitImage" data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="portrait of the nc studio creative">
-        <div class="portraitCaption">
-          <div>
-            <strong data-site-field="aboutCaptionTitle">the creative behind nc studio</strong>
-            <span data-site-field="aboutCaptionMeta"></span>
+  <main class="desktop" aria-label="NC Studio photography and film website" data-desktop>
+    <div class="wallpaper" aria-hidden="true">
+      <img class="wallpaper-portrait" data-media-image="hero" src="assets/jason-roisin-engagement-card.jpg" alt="">
+      <div class="wallpaper-copy">
+        <p>Wedding photography · cinematic films</p>
+        <strong>NC <span>Studio</span></strong>
+      </div>
+    </div>
+
+    <header class="menu-bar">
+      <div class="menu-left">
+        <img class="menu-mark" src="ncstudios-logo-mark-transparent.png" alt="">
+        <strong>NC Studio</strong>
+        <button class="menu-command" type="button" data-open="weddings">Weddings</button>
+        <button class="menu-command" type="button" data-open="engagements">Engagements</button>
+        <button class="menu-command" type="button" data-open="films">Films</button>
+      </div>
+      <div class="menu-right"><span>UK · weddings · photo + film</span><time data-clock>09:41</time></div>
+    </header>
+
+    <nav class="desktop-icons" aria-label="NC Studio sections">
+      <button class="desktop-icon" type="button" data-open="weddings" aria-label="Open wedding photography">
+        <span class="icon-art" aria-hidden="true">W</span><small>Weddings</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="engagements" aria-label="Open engagement photography">
+        <span class="icon-art" aria-hidden="true">♡</span><small>Engagements</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="films" aria-label="Open films">
+        <span class="icon-art" aria-hidden="true">▶</span><small>Films</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="experience" aria-label="Open the wedding experience">
+        <span class="icon-art" aria-hidden="true">01</span><small>The experience</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="about" aria-label="Open about Janelle">
+        <span class="icon-art" aria-hidden="true">NC</span><small>About</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="contact" aria-label="Open work together window">
+        <span class="icon-art" aria-hidden="true">↗</span><small>Work together</small>
+      </button>
+    </nav>
+
+    <section class="window" style="--x:10vw;--y:9vh;--w:720px;--h:650px" data-window="finder" role="dialog" aria-label="Welcome to NC Studio" aria-hidden="false">
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">NC Studio <span>— selected work</span></div><span></span>
+      </header>
+      <div class="window-body finder-layout">
+        <aside class="finder-sidebar">
+          <strong>Favourites</strong>
+          <button type="button" data-open="weddings"><span>●</span> Weddings</button>
+          <button type="button" data-open="engagements"><span>♡</span> Engagements</button>
+          <button type="button" data-open="films"><span>▶</span> Wedding films</button>
+          <button type="button" data-open="experience"><span>●</span> The experience</button>
+          <button type="button" data-open="about"><span>●</span> About NC Studio</button>
+        </aside>
+        <div class="finder-main">
+          <p class="eyebrow">NC Studio · Wedding photo + film</p>
+          <h2>Your day, held like a film.</h2>
+          <p class="intro">I’m Janelle, the creative behind NC Studio. I document weddings with calm direction, honest feeling and a timeless, cinematic finish.</p>
+          <div class="finder-grid">
+            <button class="finder-card" type="button" data-open="weddings"><span>01</span><strong>Weddings</strong><small>Story-led coverage from morning preparations to the dance floor.</small></button>
+            <button class="finder-card" type="button" data-open="engagements"><span>02</span><strong>Engagements</strong><small>A relaxed session before the wedding, built around your connection.</small></button>
+            <button class="finder-card" type="button" data-open="films"><span>03</span><strong>Wedding films</strong><small>Movement, vows and atmosphere shaped into a cinematic memory.</small></button>
+            <button class="finder-card" type="button" data-open="experience"><span>04</span><strong>The experience</strong><small>Calm planning, clear communication and gentle direction.</small></button>
           </div>
-          <span>uk</span>
         </div>
       </div>
+    </section>
 
-      <div class="aboutCopy">
-        <p data-site-field="aboutHeadline">hi, i'm janelle.</p>
-        <div class="smallCopy">
-          <p data-site-field="aboutBodyOne">founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.</p>
-          <p data-site-field="aboutBodyTwo">my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.</p>
-          <p data-site-field="aboutBodyThree">because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.</p>
+    <section class="window" style="--x:7vw;--y:6vh;--w:980px;--h:760px" data-window="weddings" role="dialog" aria-label="Wedding photography and films" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section principles" id="principles">
-    <div class="sectionInner">
-      <div class="sectionHead">
-        <h2 data-site-field="principlesTitle">approach.</h2>
-        <p data-site-field="principlesLead">natural. calm. intentional.</p>
-      </div>
-
-      <div class="principleGrid">
-        <article class="principle">
-          <div>
-            <span>01</span>
-            <h3 data-site-field="principleOneTitle">story led</h3>
-          </div>
-          <p data-site-field="principleOneText">your day is captured with feeling, not just as a checklist of moments.</p>
-        </article>
-
-        <article class="principle">
-          <div>
-            <span>02</span>
-            <h3 data-site-field="principleTwoTitle">calm direction</h3>
-          </div>
-          <p data-site-field="principleTwoText">gentle guidance when needed, with space for natural moments to unfold.</p>
-        </article>
-
-        <article class="principle">
-          <div>
-            <span>03</span>
-            <h3 data-site-field="principleThreeTitle">cinematic finish</h3>
-          </div>
-          <p data-site-field="principleThreeText">clean colours, soft movement and a timeless edit that feels true to the day.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="splitFeature" aria-labelledby="motion-title">
-    <div class="featureImage" aria-hidden="true" data-media-panel="feature"></div>
-    <div class="featureCopy">
-      <p class="eyebrow" data-site-field="featureEyebrow">film</p>
-      <h2 id="motion-title" data-site-field="featureTitle">movement. sound. feeling.</h2>
-      <p data-site-field="featureBody">vows, speeches, reactions, atmosphere.</p>
-    </div>
-  </section>
-
-  <section class="section" id="films">
-    <div class="sectionInner">
-      <div class="sectionHead">
-        <h2 data-site-field="workTitle">work.</h2>
-        <p data-site-field="workLead">wedding photography, cinematic films and story led content.</p>
-      </div>
-
-      <div class="workCarousel" data-work-carousel>
-        <div class="carouselControls" aria-label="work carousel controls">
-          <button class="carouselButton" type="button" data-carousel-prev aria-label="previous work">prev</button>
-          <button class="carouselButton" type="button" data-carousel-next aria-label="next work">next</button>
+        <div class="window-title">Weddings <span>— photography + film</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="window-hero weddings-hero">
+          <p class="eyebrow">Wedding photography · Cinematic films</p>
+          <h2>The feeling of the whole day.</h2>
+          <p>From the quiet preparation to the full dance floor, your wedding is documented as one connected story.</p>
         </div>
-
-        <div class="filmGrid" data-carousel-track tabindex="0" aria-label="work carousel">
-          <article class="filmCard" data-media-panel="filmOne">
+        <div class="content">
+          <div class="case-summary">
             <div>
-              <span>engagements</span>
-              <h3 data-site-field="filmOneTitle">couple sessions</h3>
-              <p data-site-field="filmOneBody">couple sessions.</p>
+              <p class="meta">NC Studio · UK wedding coverage</p>
+              <h2>Present, calm and never over-produced.</h2>
+              <p class="lead">I step in when guidance helps and disappear into the background when the real moment is already unfolding.</p>
             </div>
-          </article>
-
-          <article class="filmCard" data-media-panel="filmTwo">
-            <div>
-              <span>weddings</span>
-              <h3 data-site-field="filmTwoTitle">wedding coverage</h3>
-              <p data-site-field="filmTwoBody">weddings.</p>
+            <div class="case-facts">
+              <div><span>Coverage</span><strong>Photography, film or both</strong></div>
+              <div><span>Style</span><strong>Honest, cinematic, timeless</strong></div>
+              <div><span>Approach</span><strong>Gentle direction, natural moments</strong></div>
             </div>
-          </article>
-
-          <article class="filmCard" data-media-panel="filmThree">
-            <div>
-              <span>events and content</span>
-              <h3 data-site-field="filmThreeTitle">short edits that move</h3>
-              <p data-site-field="filmThreeBody">reels and event edits.</p>
-            </div>
-          </article>
-        </div>
-
-        <div class="carouselDots" aria-hidden="true">
-          <span class="is-active"></span>
-          <span></span>
-          <span></span>
+          </div>
+          <div class="tag-row"><span class="tag">Morning prep</span><span class="tag">Ceremony</span><span class="tag">Portraits</span><span class="tag">Speeches</span><span class="tag">Reception</span></div>
+          <div class="media-grid" style="margin-top:28px">
+            <article class="media-card">
+              <video controls muted loop playsinline preload="metadata">
+                <source src="assets/weddings/marvin-blessing-wedding-film-01.mp4" type="video/mp4">
+              </video>
+              <div class="media-card-copy"><strong>Marvin + Blessing</strong><small>Wedding morning · groom preparations.</small></div>
+            </article>
+            <article class="media-card is-featured">
+              <video controls muted loop playsinline preload="metadata">
+                <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
+              </video>
+              <div class="media-card-copy"><strong>Marvin + Blessing</strong><small>Wedding morning · bridal details.</small></div>
+            </article>
+          </div>
         </div>
       </div>
+    </section>
+
+    <section class="window" style="--x:12vw;--y:7vh;--w:940px;--h:730px" data-window="engagements" role="dialog" aria-label="Engagement photography" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Engagements <span>— story-led photography</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="window-hero engagements-hero">
+          <p class="eyebrow">Engagements · Pre-wedding sessions</p>
+          <h2>Connection over performance.</h2>
+          <p>Gentle direction, natural movement and photographs that keep the personality of the people inside them.</p>
+        </div>
+        <div class="content">
+          <p class="meta">The approach</p>
+          <h2>Warm, observant and true to you.</h2>
+          <p class="lead">The best images usually happen once you stop thinking about the camera. I give enough direction to make you feel comfortable, then leave room for the real expressions, movement and laughter.</p>
+          <div class="principles-grid">
+            <div><span>01</span><strong>Story led</strong></div>
+            <div><span>02</span><strong>Calm direction</strong></div>
+            <div><span>03</span><strong>Cinematic finish</strong></div>
+          </div>
+        </div>
+        <div class="case-gallery">
+          <figure><img src="assets/jason-roisin-engagement-card.jpg" alt="Jason and Roisin laughing beneath blossom trees" loading="lazy"><figcaption><span>Jason + Roisin</span><span>Engagement session</span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:13vw;--y:10vh;--w:880px;--h:700px" data-window="films" role="dialog" aria-label="Wedding films" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Wedding Films <span>— movement, voices &amp; atmosphere</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content">
+          <p class="eyebrow" style="color:#886820">Wedding film · Edit · Sound · Feeling</p>
+          <h2>The parts of the day a photograph cannot hold.</h2>
+          <p class="lead">The vows, the pause before a reaction, the room during the speeches and the movement of the dance floor. Each film is paced around the feeling of your wedding.</p>
+          <div class="tag-row" style="margin-bottom:28px"><span class="tag">Wedding films</span><span class="tag">Ceremony</span><span class="tag">Speeches</span><span class="tag">Sound design</span><span class="tag">Cinematic edit</span></div>
+          <div class="media-grid">
+            <article class="media-card">
+              <div class="media-card-visual" data-media-panel="filmOne">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="assets/weddings/marvin-blessing-wedding-film-01.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="media-card-copy"><strong>Marvin + Blessing · Film I</strong><small>Preparation, detail and anticipation before the ceremony.</small></div>
+            </article>
+            <article class="media-card is-featured">
+              <div class="media-card-visual" data-media-panel="filmTwo">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="media-card-copy"><strong>Marvin + Blessing · Film II</strong><small>Bridal details and the quiet moments that begin the story.</small></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:18vw;--y:7vh;--w:900px;--h:730px" data-window="experience" role="dialog" aria-label="The NC Studio wedding experience" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">The Experience <span>— from enquiry to delivery</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content">
+          <p class="eyebrow" style="color:#886820">A calm, clear wedding process</p>
+          <h2>You enjoy the day. I keep the story together.</h2>
+          <p class="lead">Good wedding coverage starts before the cameras come out. We plan the important people, timings and priorities so the day itself can feel natural.</p>
+          <div class="finder-grid" style="margin-top:30px">
+            <div class="finder-card"><span>01</span><strong>Enquire</strong><small>Share your date, venue and the kind of coverage you need.</small></div>
+            <div class="finder-card"><span>02</span><strong>Plan</strong><small>We shape the timeline, priorities and moments that matter to you.</small></div>
+            <div class="finder-card"><span>03</span><strong>Your wedding</strong><small>Calm direction when needed, quiet observation when it is not.</small></div>
+            <div class="finder-card"><span>04</span><strong>Delivery</strong><small>Your finished photographs and films, edited with care.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window" style="--x:16vw;--y:8vh;--w:820px;--h:690px" data-window="about" role="dialog" aria-label="About Janelle Lamptey" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">About Janelle <span>— read me</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content about-layout">
+          <img data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Janelle Lamptey with a camera" loading="lazy">
+          <div>
+            <p class="eyebrow" style="color:#886820">Janelle Lamptey · UK</p>
+            <h2>The creative behind NC Studio.</h2>
+            <p class="lead">Hi, I’m Janelle. Inspired by film and drawn to genuine moments, I document weddings with a timeless and cinematic approach.</p>
+            <p>My goal is simple: to preserve your day in a way that feels honest, beautiful and true to you. Long after the flowers fade and the music stops, the memories remain.</p>
+            <div class="skills" aria-label="Services">
+              <span>Wedding photography</span><span>Wedding films</span><span>Engagement sessions</span><span>Story-led coverage</span><span>Cinematic editing</span><span>Calm direction</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window contact-window" style="--x:20vw;--y:8vh;--w:760px;--h:680px" data-window="contact" role="dialog" aria-label="Contact NC Studio" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Check Your Date <span>— wedding enquiry</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="contact-panel">
+          <div>
+            <p class="eyebrow">Planning your wedding?</p>
+            <h2>Tell me about your day.</h2>
+            <p>Send your wedding date, venue and the kind of coverage you need. I’ll come back with availability and the right option.</p>
+            <div class="button-row"><a class="button" href="availability.html">check your date ↗</a></div>
+
+            <form class="direct-message-form" id="directMessageForm">
+              <div>
+                <label for="directName">name</label>
+                <input id="directName" name="directName" type="text" autocomplete="name" required>
+              </div>
+              <div>
+                <label for="directEmail">email</label>
+                <input id="directEmail" name="directEmail" type="email" autocomplete="email" required>
+              </div>
+              <div>
+                <label for="directPhone">phone</label>
+                <input id="directPhone" name="directPhone" type="tel" autocomplete="tel">
+              </div>
+              <div>
+                <label for="directSubject">how can I help?</label>
+                <select id="directSubject" name="directSubject">
+                  <option>wedding booking</option>
+                  <option>availability check</option>
+                  <option>engagement session</option>
+                  <option>wedding film</option>
+                  <option>existing client</option>
+                </select>
+              </div>
+              <div class="full">
+                <label for="directMessage">message</label>
+                <textarea id="directMessage" name="directMessage" required></textarea>
+              </div>
+              <div class="sr-only" aria-hidden="true">
+                <label for="messageWebsite">website</label>
+                <input id="messageWebsite" name="messageWebsite" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <div class="submit-row">
+                <button type="submit">send message</button>
+                <p class="form-status" data-message-status aria-live="polite"></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="dock-wrap">
+      <nav class="dock" aria-label="NC Studio navigation">
+        <button class="dock-button is-open" type="button" data-open="finder" aria-label="Start here"><span aria-hidden="true">⌂</span><span class="dock-tip">Start here</span></button>
+        <button class="dock-button" type="button" data-open="weddings" aria-label="Weddings"><span aria-hidden="true">W</span><span class="dock-tip">Weddings</span></button>
+        <button class="dock-button" type="button" data-open="engagements" aria-label="Engagements"><span aria-hidden="true">♡</span><span class="dock-tip">Engagements</span></button>
+        <button class="dock-button" type="button" data-open="films" aria-label="Wedding films"><span aria-hidden="true">▶</span><span class="dock-tip">Wedding films</span></button>
+        <button class="dock-button" type="button" data-open="experience" aria-label="The experience"><span aria-hidden="true">01</span><span class="dock-tip">The experience</span></button>
+        <button class="dock-button" type="button" data-open="about" aria-label="About"><span aria-hidden="true">NC</span><span class="dock-tip">About</span></button>
+        <span class="dock-divider" aria-hidden="true"></span>
+        <button class="dock-button" type="button" data-open="contact" aria-label="Check your date"><span aria-hidden="true">↗</span><span class="dock-tip">Check your date</span></button>
+      </nav>
     </div>
-  </section>
+  </main>
 
-</main>
+  <script>
+    (() => {
+      const body = document.body;
+      const boot = document.querySelector('.boot');
+      const progressBar = document.querySelector('[data-progress-bar]');
+      const status = document.querySelector('[data-boot-status]');
+      const enter = document.querySelector('[data-enter]');
+      const desktop = document.querySelector('[data-desktop]');
+      const windows = [...document.querySelectorAll('[data-window]')];
+      let topZ = 200;
+      let progress = 0;
+      const statusCopy = ['loading nc studio...', 'finding the feeling...', 'threading vows + stills...', 'studio ready.'];
 
-<footer class="footer">
-  <span>&copy; ncstudiouk</span>
-  <span>nc studio</span>
-</footer>
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isAdminPreview = new URLSearchParams(location.search).has('adminPreview');
+      let tick = null;
 
-<button class="messageLauncher" type="button" data-message-open>message nc</button>
+      if (reducedMotion || isAdminPreview) {
+        progressBar.style.width = '100%';
+        status.textContent = statusCopy[3];
+        boot.classList.add('is-ready');
+        if (isAdminPreview) body.classList.add('desktop-ready');
+      } else {
+        tick = setInterval(() => {
+          progress = Math.min(100, progress + (progress < 72 ? 9 : 4));
+          progressBar.style.width = progress + '%';
+          status.textContent = statusCopy[Math.min(3, Math.floor(progress / 27))];
+          if (progress >= 100) {
+            clearInterval(tick);
+            boot.classList.add('is-ready');
+            enter.focus({ preventScroll: true });
+          }
+        }, 180);
+      }
 
-<aside class="messageWidget" aria-label="direct message nc studio" aria-hidden="true" data-message-widget>
-  <div class="messageWidgetHead">
-    <div>
-      <strong>message nc studio</strong>
-      <span>send a direct note without WhatsApp. It lands in the studio inbox.</span>
-    </div>
-    <button class="messageClose" type="button" aria-label="close message box" data-message-close>&times;</button>
-  </div>
-
-  <form class="directMessageForm" id="directMessageForm">
-    <div class="hiddenField" aria-hidden="true">
-      <label for="messageWebsite">website</label>
-      <input id="messageWebsite" name="messageWebsite" type="text" tabindex="-1" autocomplete="off">
-    </div>
-
-    <div class="field">
-      <label for="directName">name</label>
-      <input id="directName" name="directName" type="text" autocomplete="name" required placeholder="your name">
-    </div>
-
-    <div class="field">
-      <label for="directEmail">email</label>
-      <input id="directEmail" name="directEmail" type="email" autocomplete="email" placeholder="you@example.com">
-    </div>
-
-    <div class="field">
-      <label for="directPhone">phone</label>
-      <input id="directPhone" name="directPhone" type="tel" autocomplete="tel" placeholder="optional">
-    </div>
-
-    <div class="field">
-      <label for="directSubject">how can i help?</label>
-      <select id="directSubject" name="directSubject">
-        <option>wedding booking</option>
-        <option>availability check</option>
-        <option>couple session</option>
-        <option>event coverage</option>
-        <option>existing client</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label for="directMessage">message</label>
-      <textarea id="directMessage" name="directMessage" required placeholder="write what you need here."></textarea>
-    </div>
-
-    <button class="submitButton" type="submit">send message</button>
-    <p class="formStatus" data-message-status aria-live="polite"></p>
-  </form>
-</aside>
-
-<script>
-(function(){
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isAdminPreview = new URLSearchParams(window.location.search).has("adminPreview");
-  const loader = document.querySelector(".introLoader");
-
-  function finishIntro(removeImmediately){
-    document.body.classList.remove("is-loading");
-    document.body.classList.add("intro-done");
-    if(loader){
-      loader.setAttribute("aria-hidden","true");
-      setTimeout(() => loader.remove(),removeImmediately ? 0 : 900);
-    }
-  }
-
-  if(prefersReducedMotion || isAdminPreview){
-    finishIntro(isAdminPreview);
-  }else{
-    setTimeout(finishIntro,5100);
-  }
-
-  function initReveals(){
-    if(prefersReducedMotion) return;
-
-    const items = Array.from(document.querySelectorAll(
-      ".sectionHead, .portraitPanel, .aboutCopy, .principle, .splitFeature, .filmCard, .serviceCard, .availabilityStrip, .enquiryIntro, .formPanel"
-    ));
-
-    items.forEach((item,index) => {
-      item.classList.add("revealItem");
-      item.style.setProperty("--reveal-delay", `${Math.min((index % 4) * 90,270)}ms`);
-    });
-
-    if(!("IntersectionObserver" in window)){
-      items.forEach(item => item.classList.add("is-visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
+      enter.addEventListener('click', () => {
+        body.classList.add('desktop-ready');
+        setTimeout(() => desktop.focus?.(), 500);
       });
-    },{threshold:0.18,rootMargin:"0px 0px -10% 0px"});
 
-    items.forEach(item => observer.observe(item));
-  }
+      const windowFor = (name) => document.querySelector(`[data-window="${name}"]`);
 
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded",initReveals);
-  }else{
-    initReveals();
-  }
-})();
-</script>
-<script src="supabase-js.js?v=2.107.0"></script>
-<script src="supabase-config.js?v=public-site-1"></script>
-<script>
-(function(){
-  const LIVE_CONTENT_TABLE = "app_storage";
-  const LIVE_CONTENT_KEY = "website_content_live";
-
-  const mediaVarMap = {
-    hero:"--hero-media",
-    feature:"--feature-media",
-    filmOne:"--film-one-media",
-    filmTwo:"--film-two-media",
-    filmThree:"--film-three-media"
-  };
-
-  const copyReplacements = {
-    heroLead:{["weddings · couples · " + "events"]:"weddings · couples · cinematic stories"},
-    aboutCaptionTitle:{["the eye behind nc " + "studios"]:"the creative behind nc studio"},
-    aboutCaptionMeta:{["photo or " + "film"]:""},
-    principleOneTitle:{["story with " + "purpose"]:"story led"},
-    principleOneText:{["feeling " + "first."]:"your day is captured with feeling, not just as a checklist of moments."},
-    principleTwoTitle:{["cinematic " + "finish"]:"calm direction"},
-    principleTwoText:{["clean " + "finish."]:"gentle guidance when needed, with space for natural moments to unfold."},
-    principleThreeTitle:{["client " + "focused"]:"cinematic finish"},
-    principleThreeText:{["clear " + "process."]:"clean colours, soft movement and a timeless edit that feels true to the day."},
-    workLead:{["photo, " + "film and content."]:"wedding photography, cinematic films and story led content."},
-    filmTwoTitle:{["photo or " + "film"]:"wedding coverage"}
-  };
-
-  function cleanText(key,value){
-    if(value === undefined || value === null) return value;
-
-    let next = String(value);
-    if(next.trim() === "") return undefined;
-
-    const replacements = copyReplacements[key] || {};
-
-    if(Object.prototype.hasOwnProperty.call(replacements,next)){
-      next = replacements[next];
-    }
-
-    return next.replaceAll("nc " + "studios","nc studio");
-  }
-
-  function cleanConfig(config){
-    const safeConfig = config && typeof config === "object" ? config : {fields:{},media:{}};
-    const fields = {};
-
-    Object.entries(safeConfig.fields || {}).forEach(([key,value]) => {
-      const cleanValue = cleanText(key,value);
-      if(cleanValue !== undefined && cleanValue !== null){
-        fields[key] = cleanValue;
+      function syncDock(name, open) {
+        document.querySelectorAll(`[data-open="${name}"].dock-button`).forEach(button => button.classList.toggle('is-open', open));
       }
-    });
 
-    return {
-      ...safeConfig,
-      fields,
-      media:safeConfig.media || {},
-      mediaTypes:safeConfig.mediaTypes || {}
-    };
-  }
-
-  function setFieldValue(key,value){
-    const node = document.querySelector(`[data-site-field="${key}"]`);
-    if(node && value !== undefined && value !== null){
-      node.textContent = value;
-    }
-  }
-
-  function cssUrl(value){
-    return `url("${String(value).replaceAll("\\","\\\\").replaceAll('"','\\"')}")`;
-  }
-
-  function clearVideo(target){
-    document.querySelectorAll(`[data-generated-video="${target}"]`).forEach(node => node.remove());
-  }
-
-  function setVideo(target,value){
-    clearVideo(target);
-    const video = document.createElement("video");
-    video.className = "mediaVideo";
-    video.src = value;
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute("data-generated-video",target);
-
-    if(target === "portrait"){
-      const image = document.querySelector('[data-media-image="portrait"]');
-      if(image){
-        image.style.opacity = "0";
+      function focusWindow(win) {
+        topZ += 1;
+        win.style.zIndex = topZ;
+        windows.forEach(item => item.classList.toggle('is-active', item === win));
       }
-    }
 
-    const mount = document.querySelector(`[data-media-target="${target}"]`) || document.querySelector(`[data-media-panel="${target}"]`);
-    if(mount){
-      mount.prepend(video);
-    }
-  }
+      function openWindow(name) {
+        const win = windowFor(name);
+        if (!win) return;
+        win.hidden = false;
+        win.classList.remove('is-minimized');
+        win.setAttribute('aria-hidden', 'false');
+        focusWindow(win);
+        syncDock(name, true);
+        const title = win.querySelector('.window-title');
+        if (title) title.setAttribute('tabindex', '-1');
+        title?.focus({ preventScroll: true });
+        win.querySelectorAll('video').forEach(video => video.play().catch(() => {}));
+      }
 
-  function isVideo(value,type){
-    return String(type || "").startsWith("video/")
-      || /^data:video\//.test(value)
-      || /\.(mp4|webm|mov)(\?|#|$)/i.test(value);
-  }
+      window.ncOpenWindow = openWindow;
 
-  function setMedia(target,value,type){
-    if(!value) return;
+      function closeWindow(win) {
+        const name = win.dataset.window;
+        win.hidden = true;
+        win.classList.remove('is-minimized', 'is-maximized');
+        win.setAttribute('aria-hidden', 'true');
+        syncDock(name, false);
+        win.querySelectorAll('video').forEach(video => video.pause());
+      }
 
-    if(isVideo(value,type)){
-      setVideo(target,value);
-      return;
-    }
+      document.addEventListener('click', event => {
+        const opener = event.target.closest('[data-open]');
+        if (opener) {
+          openWindow(opener.dataset.open);
+          return;
+        }
 
-    clearVideo(target);
+        const win = event.target.closest('[data-window]');
+        if (!win) return;
+        focusWindow(win);
+        if (event.target.closest('[data-close]')) closeWindow(win);
+        if (event.target.closest('[data-minimize]')) {
+          win.classList.add('is-minimized');
+          win.setAttribute('aria-hidden', 'true');
+        }
+        if (event.target.closest('[data-maximize]')) win.classList.toggle('is-maximized');
+      });
 
-    if(target === "portrait"){
-      const image = document.querySelector('[data-media-image="portrait"]');
-      if(image){
-        image.style.opacity = "";
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        const active = windows.filter(win => !win.hidden && !win.classList.contains('is-minimized')).sort((a,b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+        if (active) closeWindow(active);
+      });
+
+      document.querySelectorAll('[data-drag-handle]').forEach(handle => {
+        handle.addEventListener('pointerdown', event => {
+          if (event.target.closest('button') || innerWidth <= 700) return;
+          const win = handle.closest('[data-window]');
+          if (win.classList.contains('is-maximized')) return;
+          focusWindow(win);
+          const rect = win.getBoundingClientRect();
+          const offsetX = event.clientX - rect.left;
+          const offsetY = event.clientY - rect.top;
+          handle.setPointerCapture(event.pointerId);
+
+          const move = moveEvent => {
+            const maxLeft = innerWidth - Math.min(120, rect.width);
+            const maxTop = innerHeight - 110;
+            win.style.left = Math.max(-rect.width + 120, Math.min(maxLeft, moveEvent.clientX - offsetX)) + 'px';
+            win.style.top = Math.max(32, Math.min(maxTop, moveEvent.clientY - offsetY)) + 'px';
+          };
+
+          const stop = () => {
+            handle.removeEventListener('pointermove', move);
+            handle.removeEventListener('pointerup', stop);
+            handle.removeEventListener('pointercancel', stop);
+          };
+
+          handle.addEventListener('pointermove', move);
+          handle.addEventListener('pointerup', stop);
+          handle.addEventListener('pointercancel', stop);
+        });
+      });
+
+      function updateClock() {
+        const clock = document.querySelector('[data-clock]');
+        if (!clock) return;
+        const now = new Date();
+        clock.dateTime = now.toISOString();
+        clock.textContent = new Intl.DateTimeFormat('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(now);
+      }
+
+      updateClock();
+      setInterval(updateClock, 30000);
+      focusWindow(windowFor('finder'));
+    })();
+  </script>
+  <script src="supabase-js.js?v=2.107.0"></script>
+  <script src="supabase-config.js?v=public-site-2"></script>
+  <script>
+    (() => {
+      const storageTable = 'app_storage';
+      const contentKey = 'website_content_live';
+      const expectedSiteVersion = 'wedding-v2';
+
+      const isVideo = (value,type) => String(type || '').startsWith('video/') || /\.(mp4|m4v|webm|mov)(\?|#|$)/i.test(String(value || ''));
+
+      function makeVideo(value,target) {
+        const video = document.createElement('video');
+        video.className = 'dynamic-media';
+        video.src = value;
+        video.autoplay = target !== 'filmOne' && target !== 'filmTwo' && target !== 'filmThree';
+        video.controls = target === 'filmOne' || target === 'filmTwo' || target === 'filmThree';
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.dataset.generatedMedia = target;
+        return video;
+      }
+
+      function clearGenerated(target) {
+        document.querySelectorAll(`[data-generated-media="${target}"]`).forEach(node => node.remove());
+      }
+
+      function setPanelMedia(target,value,type) {
+        const panel = document.querySelector(`[data-media-panel="${target}"]`);
+        if (!panel || !value) return;
+
+        clearGenerated(target);
+        const requestedUrl = new URL(value,document.baseURI).href;
+
+        if (isVideo(value,type)) {
+          const existingVideo = panel.querySelector('video:not([data-generated-media])');
+          const existingUrl = existingVideo?.currentSrc || existingVideo?.querySelector('source')?.src || existingVideo?.src || '';
+          if (existingVideo && existingUrl === requestedUrl) {
+            Array.from(panel.children).forEach(node => { node.hidden = node !== existingVideo; });
+            return;
+          }
+        } else {
+          const existingImage = panel.querySelector('img:not([data-generated-media])');
+          if (existingImage && existingImage.src === requestedUrl) {
+            Array.from(panel.children).forEach(node => { node.hidden = node !== existingImage; });
+            return;
+          }
+        }
+
+        Array.from(panel.children).forEach(node => {
+          if (!node.dataset.generatedMedia) node.hidden = true;
+        });
+
+        if (isVideo(value,type)) {
+          panel.appendChild(makeVideo(value,target));
+          return;
+        }
+
+        const image = document.createElement('img');
+        image.className = 'dynamic-media';
+        image.src = value;
+        image.alt = '';
+        image.dataset.generatedMedia = target;
+        panel.appendChild(image);
+      }
+
+      function setImageMedia(target,value,type) {
+        const image = document.querySelector(`[data-media-image="${target}"]`);
+        if (!image || !value) return;
+
+        clearGenerated(target);
+        if (isVideo(value,type)) {
+          image.hidden = true;
+          const video = makeVideo(value,target);
+          image.parentElement.prepend(video);
+          return;
+        }
+
+        image.hidden = false;
         image.src = value;
       }
-      return;
-    }
 
-    const cssVar = mediaVarMap[target];
-    if(cssVar){
-      document.documentElement.style.setProperty(cssVar,cssUrl(value));
-    }
-  }
+      function setFeatureMedia(value,type) {
+        const reel = document.querySelector('[data-media-element="feature"]');
+        if (!reel || !value) return;
 
-  function applyConfig(config){
-    const safeConfig = cleanConfig(config);
-    Object.entries(safeConfig.fields || {}).forEach(([key,value]) => setFieldValue(key,value));
-    Object.entries(safeConfig.media || {}).forEach(([key,value]) => setMedia(key,value,safeConfig.mediaTypes?.[key]));
-  }
-
-  window.NC_SITE_APPLY_CONTENT = applyConfig;
-
-  window.addEventListener("message",event => {
-    const data = event.data || {};
-    if(data.type !== "nc-site-preview"){
-      return;
-    }
-
-    applyConfig(data.config || {});
-
-    if(data.scrollTo){
-      document.querySelector(data.scrollTo)?.scrollIntoView({block:"start"});
-    }
-  });
-
-  async function loadPublishedConfig(){
-    try{
-      const response = await fetch("site-content.json",{cache:"no-store"});
-      if(!response.ok) return null;
-      return await response.json();
-    }catch(error){
-      return null;
-    }
-  }
-
-  function wait(ms){
-    return new Promise(resolve => setTimeout(resolve,ms));
-  }
-
-  async function waitForSupabase(){
-    for(let attempt = 0; attempt < 50; attempt++){
-      if(window.ncSupabase){
-        return true;
-      }
-
-      await wait(120);
-    }
-
-    return false;
-  }
-
-  async function loadLiveConfig(){
-    try{
-      const ready = await waitForSupabase();
-      if(!ready) return null;
-
-      const response = await window.ncSupabase
-        .from(LIVE_CONTENT_TABLE)
-        .select("data")
-        .eq("app_key",LIVE_CONTENT_KEY)
-        .maybeSingle();
-
-      if(response.error) throw response.error;
-      return response.data?.data || null;
-    }catch(error){
-      console.warn("Could not load live site content",error);
-      return null;
-    }
-  }
-
-  async function initSiteContent(){
-    const liveConfig = await loadLiveConfig();
-    const publishedConfig = liveConfig || await loadPublishedConfig();
-
-    if(publishedConfig){
-      applyConfig(publishedConfig);
-    }
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded",initSiteContent);
-  }else{
-    initSiteContent();
-  }
-})();
-</script>
-<script>
-(function(){
-  const carousel = document.querySelector("[data-work-carousel]");
-  if(!carousel){
-    return;
-  }
-
-  const track = carousel.querySelector("[data-carousel-track]");
-  const slides = Array.from(carousel.querySelectorAll(".filmCard"));
-  const prev = carousel.querySelector("[data-carousel-prev]");
-  const next = carousel.querySelector("[data-carousel-next]");
-  const dots = Array.from(carousel.querySelectorAll(".carouselDots span"));
-  let activeIndex = 0;
-  let ticking = false;
-
-  function updateState(){
-    const trackLeft = track.scrollLeft;
-    let nearest = 0;
-    let distance = Infinity;
-
-    slides.forEach(function(slide,index){
-      const slideDistance = Math.abs(slide.offsetLeft - trackLeft);
-      if(slideDistance < distance){
-        distance = slideDistance;
-        nearest = index;
-      }
-    });
-
-    activeIndex = nearest;
-    dots.forEach(function(dot,index){
-      dot.classList.toggle("is-active",index === activeIndex);
-    });
-
-    if(prev){
-      prev.disabled = activeIndex === 0;
-    }
-
-    if(next){
-      next.disabled = activeIndex === slides.length - 1;
-    }
-  }
-
-  function goTo(index){
-    const nextIndex = Math.max(0,Math.min(slides.length - 1,index));
-    slides[nextIndex].scrollIntoView({
-      behavior:"smooth",
-      inline:"start",
-      block:"nearest"
-    });
-  }
-
-  prev?.addEventListener("click",function(){
-    goTo(activeIndex - 1);
-  });
-
-  next?.addEventListener("click",function(){
-    goTo(activeIndex + 1);
-  });
-
-  track.addEventListener("scroll",function(){
-    if(ticking){
-      return;
-    }
-
-    ticking = true;
-    window.requestAnimationFrame(function(){
-      updateState();
-      ticking = false;
-    });
-  },{passive:true});
-
-  window.addEventListener("resize",updateState);
-  updateState();
-})();
-</script>
-<script>
-(function(){
-  const ENQUIRIES_TABLE = "website_enquiries";
-
-  const form = document.getElementById("enquiryForm");
-  const statusEl = document.querySelector("[data-form-status]");
-  if(!form || !statusEl){
-    return;
-  }
-  const submitButton = form.querySelector("[type='submit']");
-
-  function setStatus(message,type){
-    statusEl.textContent = message;
-    statusEl.className = "formStatus" + (type ? " " + type : "");
-  }
-
-  function value(formData,name){
-    return String(formData.get(name) || "").trim();
-  }
-
-  function uid(){
-    if(window.crypto && crypto.randomUUID){
-      return crypto.randomUUID();
-    }
-
-    return "website_" + Date.now() + "_" + Math.random().toString(16).slice(2);
-  }
-
-  function wait(ms){
-    return new Promise(function(resolve){
-      setTimeout(resolve,ms);
-    });
-  }
-
-  async function waitForSupabase(){
-    for(let attempt = 0; attempt < 50; attempt++){
-      if(window.ncSupabase){
-        return true;
-      }
-
-      await wait(120);
-    }
-
-    return false;
-  }
-
-  function buildNotes(data){
-    return [
-      "website enquiry",
-      "email: " + data.email,
-      "phone: " + (data.phone || "not provided"),
-      "event type: " + data.eventType,
-      "partner/client name: " + (data.partnerName || "not provided"),
-      "guest count: " + (data.guestCount || "not provided"),
-      "package interest: " + (data.packageInterest || "not sure yet"),
-      "budget: " + (data.budget || "not provided"),
-      "instagram: " + (data.instagram || "not provided"),
-      "",
-      "message:",
-      data.message,
-      "",
-      "submitted: " + new Date().toLocaleString("en-GB")
-    ].join("\n");
-  }
-
-  function buildBooking(data){
-    const now = new Date().toISOString();
-    const eventName = data.eventType ? data.eventType + " enquiry" : "website enquiry";
-
-    return {
-      id:uid(),
-      clientName:data.fullName,
-      eventName:eventName,
-      eventDate:data.eventDate,
-      status:"enquiry",
-      packagePrice:0,
-      depositPaid:0,
-      location:data.venue,
-      nextAction:"reply to website enquiry",
-      notes:buildNotes(data),
-      source:"website",
-      contactEmail:data.email,
-      contactPhone:data.phone,
-      updatedAt:now,
-      createdAt:now
-    };
-  }
-
-  async function saveBooking(booking){
-    const ready = await waitForSupabase();
-
-    if(!ready){
-      throw new Error("Booking system is not available yet.");
-    }
-
-    const response = await window.ncSupabase
-      .from(ENQUIRIES_TABLE)
-      .insert(
-        {
-          id:booking.id,
-          data:booking,
-          status:"new",
-          created_at:booking.createdAt,
-          updated_at:booking.updatedAt
+        if (isVideo(value,type)) {
+          reel.src = value;
+          reel.load();
+          reel.play().catch(() => {});
+        } else {
+          reel.pause();
+          reel.removeAttribute('src');
+          reel.querySelectorAll('source').forEach(source => source.remove());
+          reel.poster = value;
+          reel.load();
         }
-      );
-
-    if(response.error){
-      throw response.error;
-    }
-
-    try{
-      const saved = JSON.parse(localStorage.getItem("ncstudios_public_enquiries_v1")) || [];
-      localStorage.setItem("ncstudios_public_enquiries_v1",JSON.stringify([booking,...saved].slice(0,20)));
-    }catch(error){
-      console.warn("Could not mirror enquiry locally",error);
-    }
-  }
-
-  form.addEventListener("submit",async function(event){
-    event.preventDefault();
-
-    const formData = new FormData(form);
-
-    if(value(formData,"companyWebsite")){
-      form.reset();
-      setStatus("thank you. Your enquiry has been received.","success");
-      return;
-    }
-
-    const data = {
-      fullName:value(formData,"fullName"),
-      partnerName:value(formData,"partnerName"),
-      email:value(formData,"email"),
-      phone:value(formData,"phone"),
-      eventType:value(formData,"eventType"),
-      eventDate:value(formData,"eventDate"),
-      venue:value(formData,"venue"),
-      guestCount:value(formData,"guestCount"),
-      packageInterest:value(formData,"packageInterest"),
-      budget:value(formData,"budget"),
-      instagram:value(formData,"instagram"),
-      message:value(formData,"message")
-    };
-
-    if(!data.fullName || !data.email || !data.eventType || !data.message){
-      setStatus("please complete your name, email, event type and message.","error");
-      return;
-    }
-
-    submitButton.disabled = true;
-    setStatus("sending your enquiry...");
-
-    try{
-      await saveBooking(buildBooking(data));
-      form.reset();
-      setStatus("thank you. Your enquiry has been received.","success");
-    }catch(error){
-      console.warn("website enquiry failed",error);
-      setStatus("this could not send right now. Please try again in a moment.","error");
-    }finally{
-      submitButton.disabled = false;
-    }
-  });
-})();
-</script>
-<script>
-(function(){
-  const MESSAGES_TABLE = "website_messages";
-
-  const form = document.getElementById("directMessageForm");
-  const openButton = document.querySelector("[data-message-open]");
-  const closeButton = document.querySelector("[data-message-close]");
-  const widget = document.querySelector("[data-message-widget]");
-  const statusEl = document.querySelector("[data-message-status]");
-
-  if(!form || !openButton || !closeButton || !widget || !statusEl){
-    return;
-  }
-
-  function setOpen(isOpen){
-    document.body.classList.toggle("message-open", isOpen);
-    widget.setAttribute("aria-hidden", isOpen ? "false" : "true");
-  }
-
-  function setStatus(message,type){
-    statusEl.textContent = message;
-    statusEl.className = "formStatus" + (type ? " " + type : "");
-  }
-
-  function value(formData,name){
-    return String(formData.get(name) || "").trim();
-  }
-
-  function uid(){
-    if(window.crypto && crypto.randomUUID){
-      return crypto.randomUUID();
-    }
-
-    return "message_" + Date.now() + "_" + Math.random().toString(16).slice(2);
-  }
-
-  function wait(ms){
-    return new Promise(function(resolve){
-      setTimeout(resolve,ms);
-    });
-  }
-
-  async function waitForSupabase(){
-    for(let attempt = 0; attempt < 50; attempt++){
-      if(window.ncSupabase){
-        return true;
       }
 
-      await wait(120);
-    }
+      function applyMediaConfig(config) {
+        const media = config?.media || {};
+        const mediaTypes = config?.mediaTypes || {};
+        if (media.hero) setImageMedia('hero',media.hero,mediaTypes.hero);
+        if (media.portrait) setImageMedia('portrait',media.portrait,mediaTypes.portrait);
+        if (media.feature) setFeatureMedia(media.feature,mediaTypes.feature);
+        ['filmOne','filmTwo','filmThree'].forEach(target => {
+          if (media[target]) setPanelMedia(target,media[target],mediaTypes[target]);
+        });
+      }
 
-    return false;
-  }
-
-  function mirrorLocally(message){
-    try{
-      const saved = JSON.parse(localStorage.getItem("ncstudios_public_messages_v1")) || [];
-      localStorage.setItem("ncstudios_public_messages_v1", JSON.stringify([message, ...saved].slice(0,20)));
-    }catch(error){
-      console.warn("Could not mirror website message locally", error);
-    }
-  }
-
-  async function saveMessage(message){
-    const ready = await waitForSupabase();
-
-    if(!ready){
-      throw new Error("Message system is not available yet.");
-    }
-
-    const response = await window.ncSupabase
-      .from(MESSAGES_TABLE)
-      .insert(
-        {
-          id:message.id,
-          data:message,
-          status:"new",
-          created_at:message.createdAt,
-          updated_at:message.updatedAt
+      async function waitForSupabase() {
+        for (let attempt = 0; attempt < 50; attempt += 1) {
+          if (window.ncSupabase) return true;
+          await new Promise(resolve => setTimeout(resolve,120));
         }
-      );
+        return false;
+      }
 
-    if(response.error){
-      throw response.error;
-    }
+      async function loadSiteContent() {
+        let fallbackConfig = null;
+        let liveConfig = null;
 
-    mirrorLocally(message);
-  }
+        try {
+          const response = await fetch('site-content.json',{cache:'no-store'});
+          if (response.ok) fallbackConfig = await response.json();
+        } catch (error) {
+          console.warn('Could not load fallback site media',error);
+        }
 
-  openButton.addEventListener("click", function(){
-    setOpen(true);
-    setTimeout(function(){
-      const input = document.getElementById("directName");
-      if(input) input.focus();
-    }, 180);
-  });
+        try {
+          if (await waitForSupabase()) {
+            const response = await window.ncSupabase.from(storageTable).select('data').eq('app_key',contentKey).maybeSingle();
+            if (!response.error) liveConfig = response.data?.data || null;
+          }
+        } catch (error) {
+          console.warn('Could not load live site media',error);
+        }
 
-  closeButton.addEventListener("click", function(){
-    setOpen(false);
-  });
+        const config = liveConfig?.siteVersion === expectedSiteVersion ? liveConfig : fallbackConfig;
+        if (config) applyMediaConfig(config);
+      }
 
-  document.addEventListener("keydown", function(event){
-    if(event.key === "Escape"){
-      setOpen(false);
-    }
-  });
+      window.addEventListener('message',event => {
+        if (event.data?.type !== 'nc-site-preview') return;
+        applyMediaConfig(event.data.config || {});
+        const previewWindow = {
+          '#home':'finder',
+          '#about':'about',
+          '#films':'films',
+          '#motion-title':'films'
+        }[event.data.scrollTo];
+        if (previewWindow) window.ncOpenWindow?.(previewWindow);
+      });
 
-  form.addEventListener("submit", async function(event){
-    event.preventDefault();
+      loadSiteContent();
+    })();
+  </script>
+  <script>
+    (() => {
+      const form = document.getElementById('directMessageForm');
+      const status = document.querySelector('[data-message-status]');
+      if (!form || !status) return;
 
-    const formData = new FormData(form);
+      const setStatus = (message,type) => {
+        status.textContent = message;
+        status.className = `form-status${type ? ` ${type}` : ''}`;
+      };
 
-    if(value(formData,"messageWebsite")){
-      form.reset();
-      setStatus("thank you. Your message has been received.","success");
-      return;
-    }
+      const uid = () => window.crypto?.randomUUID ? window.crypto.randomUUID() : `message_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-    const now = new Date().toISOString();
-    const message = {
-      id:uid(),
-      clientName:value(formData,"directName"),
-      contactEmail:value(formData,"directEmail"),
-      contactPhone:value(formData,"directPhone"),
-      subject:value(formData,"directSubject") || "quick question",
-      message:value(formData,"directMessage"),
-      status:"new",
-      source:"website message",
-      channel:"website",
-      createdAt:now,
-      updatedAt:now,
-      replies:[]
-    };
+      async function waitForSupabase() {
+        for (let attempt = 0; attempt < 50; attempt += 1) {
+          if (window.ncSupabase) return true;
+          await new Promise(resolve => setTimeout(resolve,120));
+        }
+        return false;
+      }
 
-    if(!message.clientName || !message.message){
-      setStatus("please add your name and message.","error");
-      return;
-    }
+      form.addEventListener('submit',async event => {
+        event.preventDefault();
+        const data = new FormData(form);
 
-    const submitButton = form.querySelector("[type='submit']");
-    submitButton.disabled = true;
-    setStatus("sending your message...");
+        if (String(data.get('messageWebsite') || '').trim()) {
+          form.reset();
+          setStatus('Thank you. Your message has been received.','success');
+          return;
+        }
 
-    try{
-      await saveMessage(message);
-      form.reset();
-      setStatus("thank you. Your message has been received.","success");
-      setTimeout(function(){
-        setOpen(false);
-      }, 900);
-    }catch(error){
-      console.warn("website message failed", error);
-      setStatus("this could not send right now. Please try again in a moment.","error");
-    }finally{
-      submitButton.disabled = false;
-    }
-  });
-})();
-</script>
+        const createdAt = new Date().toISOString();
+        const message = {
+          id:uid(),
+          name:String(data.get('directName') || '').trim(),
+          email:String(data.get('directEmail') || '').trim(),
+          phone:String(data.get('directPhone') || '').trim(),
+          subject:String(data.get('directSubject') || '').trim(),
+          message:String(data.get('directMessage') || '').trim(),
+          source:'website',
+          createdAt
+        };
+
+        try {
+          setStatus('Sending...');
+          if (!(await waitForSupabase())) throw new Error('Message service unavailable');
+          const response = await window.ncSupabase.from('website_messages').insert({id:message.id,data:message,status:'new',created_at:createdAt,updated_at:createdAt});
+          if (response.error) throw response.error;
+          form.reset();
+          setStatus('Message sent. I’ll come back to you soon.','success');
+        } catch (error) {
+          console.warn('Could not send website message',error);
+          setStatus('Message could not send. Please use the availability form.','error');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

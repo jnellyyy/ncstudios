@@ -1,6 +1,7 @@
 {
+  "siteVersion": "wedding-v2",
   "fields": {
-    "heroLead": "weddings · couples · cinematic stories",
+    "heroLead": "weddings · engagements · cinematic films",
     "aboutCaptionTitle": "the creative behind nc studio",
     "aboutCaptionMeta": "",
     "aboutHeadline": "hi, i'm janelle.",
@@ -14,9 +15,27 @@
     "principleThreeTitle": "cinematic finish",
     "principleThreeText": "clean colours, soft movement and a timeless edit that feels true to the day.",
     "workLead": "wedding photography, cinematic films and story led content.",
-    "filmTwoTitle": "wedding coverage"
+    "filmOneTitle": "Marvin + Blessing · Film I",
+    "filmOneBody": "wedding morning · groom preparations.",
+    "filmTwoTitle": "Marvin + Blessing · Film II",
+    "filmTwoBody": "wedding morning · bridal details.",
+    "filmThreeTitle": "wedding day stories",
+    "filmThreeBody": "additional wedding film previews."
   },
   "media": {
-    "filmOne": "assets/jason-roisin-engagement-card.jpg?v=engagement-20260614"
+    "hero": "assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
+    "portrait": "assets/nc-about-portrait.jpg",
+    "feature": "assets/weddings/marvin-blessing-wedding-film-02.mp4",
+    "filmOne": "assets/weddings/marvin-blessing-wedding-film-01.mp4",
+    "filmTwo": "assets/weddings/marvin-blessing-wedding-film-02.mp4",
+    "filmThree": ""
+  },
+  "mediaTypes": {
+    "hero": "image/jpeg",
+    "portrait": "image/jpeg",
+    "feature": "video/mp4",
+    "filmOne": "video/mp4",
+    "filmTwo": "video/mp4",
+    "filmThree": ""
   }
 }
