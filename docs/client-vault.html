@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080806">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>NC Studio Client Vault</title>
+  <link rel="icon" href="icon-32.png">
+  <style>
+    @font-face{font-family:"NC Brand";src:url("assets/fonts/NC_Font_.ttf") format("truetype");font-display:swap}
+    @font-face{font-family:"NC Brand Light";src:url("assets/fonts/NC_Font_Lighter.ttf") format("truetype");font-display:swap}
+    :root{--bg:#080806;--panel:#100f0c;--panel2:#15130f;--line:rgba(215,182,108,.25);--gold:#d7b66c;--gold2:#f0dba4;--cream:#f4ecdf;--muted:#aaa093;--green:#83c79d;--danger:#e4a29a}
+    *{box-sizing:border-box}
+    html{background:var(--bg);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+    body{min-height:100vh;margin:0;background-image:linear-gradient(rgba(215,182,108,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(215,182,108,.04) 1px,transparent 1px);background-size:50px 50px}
+    button,input,select,textarea{font:inherit}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+    .app{width:min(1320px,100%);min-height:100vh;margin:auto;border-inline:1px solid rgba(215,182,108,.17);background:rgba(8,8,6,.95)}
+    .topbar{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px clamp(18px,4vw,46px);border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:12px;color:var(--cream);text-decoration:none}
+    .brand img{width:42px;height:31px;object-fit:contain}.brand strong{font:24px "NC Brand",Impact,sans-serif;color:var(--gold)}.brand span{color:var(--muted);font:10px monospace;letter-spacing:.12em;text-transform:uppercase}
+    .top-actions{display:flex;gap:8px;align-items:center}.top-actions a,.top-actions button{min-height:38px}
+    .button{min-height:44px;padding:0 15px;border:1px solid var(--gold);border-radius:6px;color:#090806;background:var(--gold2);font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .button.secondary{color:var(--cream);background:transparent}.button.danger{border-color:rgba(228,162,154,.45);color:var(--danger);background:transparent}.icon-button{width:40px;padding:0}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:24px;padding:clamp(32px,6vw,74px) clamp(20px,5vw,64px);border-bottom:1px solid var(--line)}
+    .eyebrow{margin:0 0 16px;color:var(--gold);font:10px/1.4 monospace;letter-spacing:.16em;text-transform:uppercase}
+    .hero h1{max-width:800px;margin:0;font:clamp(54px,9vw,104px)/.8 "NC Brand Light",Georgia,serif;font-weight:400}.hero p:not(.eyebrow){max-width:620px;margin:24px 0 0;color:var(--muted);font-size:15px;line-height:1.6}
+    .stats{display:grid;grid-template-columns:repeat(3,120px);align-self:end;border:1px solid var(--line)}.stat{padding:18px;border-right:1px solid var(--line)}.stat:last-child{border-right:0}.stat span{display:block;color:var(--muted);font:9px monospace;text-transform:uppercase}.stat strong{display:block;margin-top:10px;font:30px "NC Brand",Impact,sans-serif;color:var(--gold2)}
+    .setup{margin:20px clamp(20px,5vw,64px) 0;padding:15px;border:1px solid var(--line);background:#17140e;color:var(--gold2);font-size:13px;line-height:1.5}.setup[hidden]{display:none}
+    .workspace{display:grid;grid-template-columns:370px minmax(0,1fr);gap:0;border-top:1px solid var(--line);margin-top:26px}
+    .composer{min-height:calc(100vh - 300px);padding:28px;border-right:1px solid var(--line);background:#0d0c09}.composer h2,.library-head h2{margin:0;font:32px/.95 "NC Brand Light",Georgia,serif;font-weight:400}.composer-copy,.library-head p{margin:9px 0 22px;color:var(--muted);font-size:13px;line-height:1.5}
+    .form{display:grid;gap:13px}.form label{display:grid;gap:7px;color:var(--gold);font:9px monospace;letter-spacing:.09em;text-transform:uppercase}.form input,.form select,.form textarea{width:100%;min-height:44px;padding:11px 12px;border:1px solid var(--line);border-radius:6px;color:var(--cream);background:#090806}.form textarea{min-height:95px;resize:vertical}.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.form-status{min-height:18px;margin:0;color:var(--muted);font-size:12px;line-height:1.4}.form-status.error{color:var(--danger)}.form-status.success{color:var(--green)}
+    .library{padding:28px;min-width:0}.library-head{display:flex;justify-content:space-between;align-items:start;gap:20px}.library-head select{min-height:42px;padding:0 12px;border:1px solid var(--line);border-radius:6px;color:var(--cream);background:#0a0907}
+    .delivery-list{display:grid;gap:14px;margin-top:24px}.delivery-card{border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}.delivery-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:18px}.delivery-title{min-width:0}.delivery-title h3{margin:0;font-size:19px}.delivery-title p{margin:5px 0 0;color:var(--muted);font-size:12px}.delivery-badges{display:flex;gap:7px;align-items:start;flex-wrap:wrap;justify-content:end}.badge{padding:6px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font:9px monospace;text-transform:uppercase}.badge.live{border-color:rgba(131,199,157,.4);color:var(--green)}.badge.disabled{border-color:rgba(228,162,154,.4);color:var(--danger)}
+    .delivery-data{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-block:1px solid var(--line)}.data-cell{min-width:0;padding:13px 16px;border-right:1px solid var(--line)}.data-cell:last-child{border-right:0}.data-cell span{display:block;margin-bottom:6px;color:var(--muted);font:8px monospace;text-transform:uppercase}.data-cell strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+    .link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line);background:#0b0a08}.link-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold2);font:11px monospace;align-self:center}.card-actions{display:flex;gap:7px;flex-wrap:wrap;padding:14px 16px}.card-actions .button{min-height:38px;font-size:11px}
+    .upload-zone{padding:16px;border-top:1px solid var(--line);background:var(--panel2)}.upload-drop{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px;padding:12px 13px;border:1px dashed var(--line);border-radius:6px;transition:border-color .18s,background .18s}.upload-drop.dragging{border-color:var(--gold2);background:rgba(215,182,108,.08)}.upload-drop strong{display:block;font-size:13px}.upload-drop p{margin:4px 0 0;color:var(--muted);font-size:11px}.upload-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.upload-choice{position:relative;min-height:36px;padding:0 11px;border:1px solid var(--line);border-radius:5px;color:var(--cream);background:#0a0907;display:inline-flex;align-items:center;font-size:11px;font-weight:700;cursor:pointer}.upload-choice input{position:absolute;width:1px;height:1px;opacity:0}.upload-progress{height:5px;margin-top:10px;background:#070705;overflow:hidden}.upload-progress span{display:block;width:0;height:100%;background:var(--gold);transition:width .2s}.upload-state{min-height:17px;margin:8px 0 0;color:var(--muted);font-size:11px}
+    .files{display:grid;gap:7px;margin-top:12px}.stored-file{display:grid;grid-template-columns:minmax(0,1fr) minmax(145px,190px) auto;align-items:center;gap:10px;padding:10px;border:1px solid rgba(215,182,108,.16);background:#0c0b09}.stored-file strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}.stored-file small{display:block;margin-top:4px;color:var(--muted);font-size:10px}.stored-file select{width:100%;min-height:34px;padding:0 8px;border:1px solid var(--line);border-radius:5px;color:var(--cream);background:#080806;font-size:10px}.stored-file button{width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:6px;color:var(--danger);background:transparent;cursor:pointer}
+    .review{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:18px;background:rgba(4,4,3,.93)}.review[hidden]{display:none}.review-panel{width:min(1120px,100%);height:min(820px,calc(100vh - 36px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--line);background:#0d0c09;box-shadow:0 24px 80px rgba(0,0,0,.5)}.review-head{display:flex;justify-content:space-between;gap:20px;padding:22px 24px;border-bottom:1px solid var(--line)}.review-head h2{margin:0;font:38px/.9 "NC Brand Light",Georgia,serif;font-weight:400}.review-head p{margin:7px 0 0;color:var(--muted);font-size:12px}.review-close{width:40px;height:40px;border:1px solid var(--line);border-radius:5px;color:var(--cream);background:transparent;font-size:21px;cursor:pointer}.review-summary{display:flex;justify-content:space-between;gap:15px;padding:12px 24px;border-bottom:1px solid var(--line);color:var(--muted);font:10px monospace;text-transform:uppercase}.review-list{min-height:0;overflow:auto;padding:12px 24px 24px}.review-file{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(155px,210px) 36px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(215,182,108,.14)}.review-thumb{width:72px;aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden;border:1px solid var(--line);background:#060605;color:var(--gold);font:18px "NC Brand",Impact,sans-serif}.review-thumb img,.review-thumb video{width:100%;height:100%;object-fit:cover}.review-name{min-width:0}.review-name strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}.review-name small{display:block;margin-top:5px;color:var(--muted);font-size:10px}.review-name small.sorting{color:var(--gold2)}.review-file select{width:100%;min-height:38px;padding:0 9px;border:1px solid var(--line);border-radius:5px;color:var(--cream);background:#080806;font-size:11px}.review-remove{width:36px;height:36px;padding:0;border:1px solid var(--line);border-radius:5px;color:var(--danger);background:transparent;cursor:pointer}.review-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 24px;border-top:1px solid var(--line);background:#0a0907}.review-note{max-width:600px;margin:0;color:var(--muted);font-size:11px;line-height:1.45}.review-buttons{display:flex;gap:8px;flex-shrink:0}
+    .empty{padding:50px 20px;border:1px dashed var(--line);color:var(--muted);text-align:center}.login{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(5,5,4,.94)}.login[hidden]{display:none}.login-box{width:min(430px,100%);padding:30px;border:1px solid var(--line);background:#0e0d0a}.login-box h2{margin:0 0 8px;font:42px/.9 "NC Brand Light",Georgia,serif;font-weight:400}.login-box p{margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.5}.login-box form{display:grid;gap:10px}.login-box input{min-height:46px;padding:12px;border:1px solid var(--line);border-radius:6px;color:var(--cream);background:#080806}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.workspace{grid-template-columns:1fr}.composer{min-height:0;border-right:0;border-bottom:1px solid var(--line)}.delivery-data{grid-template-columns:repeat(2,1fr)}.data-cell:nth-child(2){border-right:0}.data-cell:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+    @media(max-width:620px){.brand span{display:none}.top-actions .secondary{display:none}.hero{padding:36px 18px}.hero h1{font-size:58px}.stats{width:100%}.stat{padding:12px}.stat strong{font-size:24px}.composer,.library{padding:22px 16px}.library-head{display:block}.delivery-top{grid-template-columns:1fr}.delivery-badges{justify-content:start}.delivery-data{grid-template-columns:1fr}.data-cell,.data-cell:nth-child(2){border-right:0}.data-cell:nth-child(-n+3){border-bottom:1px solid var(--line)}.link-row{grid-template-columns:1fr}.link-value{padding-block:6px}.link-row .button{width:100%}.upload-drop{display:block}.upload-actions{justify-content:start;margin-top:12px}.stored-file{grid-template-columns:minmax(0,1fr) 34px}.stored-file select{grid-column:1/-1;grid-row:2}.review{padding:0}.review-panel{height:100vh;border:0}.review-head,.review-summary,.review-list,.review-footer{padding-inline:16px}.review-summary{display:block}.review-file{grid-template-columns:58px minmax(0,1fr) 34px}.review-thumb{width:58px}.review-file select{grid-column:2/-1}.review-footer{display:block}.review-note{margin-bottom:12px}.review-buttons .button{flex:1}.review-buttons{width:100%}.footer{display:none}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="index.html"><img src="ncstudios-logo-mark-transparent.png" alt=""><strong>NC Studio</strong><span>Client vault</span></a>
+      <div class="top-actions"><a class="button secondary" href="index.html">Website</a><button class="button icon-button" type="button" data-refresh aria-label="Refresh deliveries" title="Refresh">↻</button></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div><p class="eyebrow">Private website workspace</p><h1>Client vault.</h1><p>Create each couple's delivery, upload the finished files and send one private NC Studio link.</p></div>
+        <div class="stats"><div class="stat"><span>Total</span><strong data-total>0</strong></div><div class="stat"><span>Live</span><strong data-live>0</strong></div><div class="stat"><span>Files</span><strong data-files-total>0</strong></div></div>
+      </section>
+
+      <div class="setup" data-setup hidden></div>
+
+      <section class="workspace">
+        <aside class="composer">
+          <h2 data-form-title>New delivery.</h2>
+          <p class="composer-copy">Create the private link before adding files.</p>
+          <form class="form" data-delivery-form>
+            <input type="hidden" data-delivery-id>
+            <label>Couple<input data-couple type="text" placeholder="Marvin + Blessing" required></label>
+            <label>Collection title<input data-project type="text" placeholder="Your wedding films"></label>
+            <label>Wedding date<input data-event-date type="date"></label>
+            <label>Link expiry<input data-expiry type="date"></label>
+            <label>PIN <input data-pin type="text" inputmode="numeric" autocomplete="off" placeholder="Optional"></label>
+            <label>Message<textarea data-message placeholder="A personal note for the couple"></textarea></label>
+            <div class="form-actions"><button class="button" type="submit" data-save>Create delivery</button><button class="button secondary" type="button" data-cancel hidden>Cancel</button></div>
+            <p class="form-status" data-form-status aria-live="polite"></p>
+          </form>
+        </aside>
+
+        <section class="library">
+          <div class="library-head"><div><h2>Deliveries.</h2><p>Draft, publish or disable each personal link.</p></div><select data-filter aria-label="Filter deliveries"><option value="all">All deliveries</option><option value="draft">Draft</option><option value="live">Live</option><option value="disabled">Disabled</option></select></div>
+          <div class="delivery-list" data-list><div class="empty">Loading client deliveries...</div></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <section class="review" data-review hidden aria-labelledby="review-title">
+    <div class="review-panel">
+      <header class="review-head"><div><h2 id="review-title">Review your upload.</h2><p>Check the suggested sections before these files are stored.</p></div><button class="review-close" type="button" data-review-close aria-label="Close upload review" title="Close">×</button></header>
+      <div class="review-summary"><span data-review-count></span><span data-review-progress></span></div>
+      <div class="review-list" data-review-list></div>
+      <footer class="review-footer"><p class="review-note">Smart sorting checks a small temporary preview. Your original files are uploaded only after you approve this screen.</p><div class="review-buttons"><button class="button secondary" type="button" data-review-cancel>Cancel</button><button class="button" type="button" data-review-upload>Upload files</button></div></footer>
+    </div>
+  </section>
+
+  <aside class="login" data-login hidden>
+    <div class="login-box">
+      <p class="eyebrow">NC Studio · Private</p><h2>Studio sign in.</h2><p>Use the same Supabase login as the NC Studio app.</p>
+      <form data-login-form><input data-email type="email" autocomplete="email" placeholder="Email" required><input data-password type="password" autocomplete="current-password" placeholder="Password" required><button class="button" type="submit">Sign in</button><p class="form-status" data-login-status aria-live="polite"></p></form>
+    </div>
+  </aside>
+
+  <script src="supabase-js.js?v=2.107.0"></script>
+  <script src="supabase-config.js?v=public-site-2"></script>
+  <script>
+    (() => {
+      const CHUNK_SIZE = 8 * 1024 * 1024;
+      const CATEGORIES = ["Details", "Getting Ready", "Ceremony", "Couple Portraits", "Wedding Party & Family", "Reception", "Speeches", "First Dance", "Evening Party", "Films", "Documents", "Unsorted"];
+      const state = { deliveries: [], session: null, review: null, aiUnavailable: false };
+      const form = document.querySelector("[data-delivery-form]");
+      const list = document.querySelector("[data-list]");
+      const setup = document.querySelector("[data-setup]");
+      const formStatus = document.querySelector("[data-form-status]");
+      const login = document.querySelector("[data-login]");
+      const review = document.querySelector("[data-review]");
+      const reviewList = document.querySelector("[data-review-list]");
+
+      const setStatus = (node, message, type = "") => { node.textContent = message; node.className = `form-status${type ? ` ${type}` : ""}`; };
+
+      async function waitForSupabase() {
+        for (let attempt = 0; attempt < 50; attempt += 1) {
+          if (window.ncSupabase) return true;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        return false;
+      }
+
+      async function getSession() {
+        if (!(await waitForSupabase())) return null;
+        const response = await window.ncSupabase.auth.getSession();
+        return response.data?.session || null;
+      }
+
+      async function vaultFetch(action, options = {}) {
+        state.session = await getSession();
+        if (!state.session) {
+          login.hidden = false;
+          throw new Error("Sign in to open the client vault.");
+        }
+
+        const method = options.method || "GET";
+        const headers = { authorization: `Bearer ${state.session.access_token}`, ...(options.headers || {}) };
+        let body = options.body;
+        if (body && !(body instanceof Blob) && !(body instanceof ArrayBuffer)) {
+          headers["content-type"] = "application/json";
+          body = JSON.stringify(body);
+        }
+
+        const response = await fetch(`/api/client-vault?action=${encodeURIComponent(action)}${options.query || ""}`, { method, headers, body });
+        const data = await response.json().catch(() => ({}));
+        if (data.setupRequired) {
+          setup.hidden = false;
+          setup.textContent = "Cloudflare storage needs the CLIENT_DELIVERIES R2 binding before uploads can begin.";
+        }
+        if (!response.ok) {
+          const error = new Error(data.error || "The client vault request failed.");
+          error.aiSetupRequired = Boolean(data.aiSetupRequired);
+          throw error;
+        }
+        return data;
+      }
+
+      async function loadDeliveries() {
+        list.innerHTML = '<div class="empty">Loading client deliveries...</div>';
+        try {
+          const data = await vaultFetch("list");
+          state.deliveries = data.deliveries || [];
+          setup.hidden = true;
+          render();
+        } catch (error) {
+          list.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+        }
+      }
+
+      function render() {
+        const filter = document.querySelector("[data-filter]").value;
+        const visible = state.deliveries.filter(delivery => filter === "all" || delivery.status === filter);
+        document.querySelector("[data-total]").textContent = state.deliveries.length;
+        document.querySelector("[data-live]").textContent = state.deliveries.filter(item => item.status === "live").length;
+        document.querySelector("[data-files-total]").textContent = state.deliveries.reduce((total, item) => total + (item.files?.length || 0), 0);
+
+        if (!visible.length) {
+          list.innerHTML = '<div class="empty">No client deliveries in this view.</div>';
+          return;
+        }
+
+        list.innerHTML = visible.map(delivery => {
+          const link = `${location.origin}/client-delivery.html?token=${encodeURIComponent(delivery.token)}`;
+          const files = (delivery.files || []).map(file => `
+            <div class="stored-file"><div><strong>${escapeHtml(file.name)}</strong><small>${formatBytes(file.size)}</small></div><select data-file-category="${delivery.id}" data-file-id="${file.id}" aria-label="Section for ${escapeHtml(file.name)}">${categoryOptions(file.category)}</select><button type="button" data-delete-file="${delivery.id}" data-file-id="${file.id}" aria-label="Delete ${escapeHtml(file.name)}" title="Delete file">×</button></div>
+          `).join("");
+          return `
+            <article class="delivery-card" data-card="${delivery.id}">
+              <div class="delivery-top"><div class="delivery-title"><h3>${escapeHtml(delivery.coupleName)}</h3><p>${escapeHtml(delivery.projectTitle || "NC Studio delivery")}</p></div><div class="delivery-badges"><span class="badge ${delivery.status}">${escapeHtml(delivery.status)}</span>${delivery.hasPin ? '<span class="badge">PIN</span>' : ""}</div></div>
+              <div class="delivery-data"><div class="data-cell"><span>Wedding</span><strong>${formatDate(delivery.eventDate)}</strong></div><div class="data-cell"><span>Expires</span><strong>${formatDate(delivery.expiresAt)}</strong></div><div class="data-cell"><span>Opened</span><strong>${Number(delivery.opens || 0)} times</strong></div><div class="data-cell"><span>Files</span><strong>${delivery.files?.length || 0}</strong></div></div>
+              <div class="link-row"><span class="link-value">${escapeHtml(link)}</span><button class="button" type="button" data-copy="${escapeHtml(link)}">Copy link</button></div>
+              <div class="card-actions"><button class="button secondary" type="button" data-edit="${delivery.id}">Edit</button><button class="button secondary" type="button" data-status="${delivery.id}" data-next-status="${delivery.status === "live" ? "disabled" : "live"}">${delivery.status === "live" ? "Disable" : "Publish"}</button><button class="button danger" type="button" data-delete="${delivery.id}">Delete</button></div>
+              <div class="upload-zone">
+                <div class="upload-drop" data-drop="${delivery.id}"><div><strong>Drop one complete folder here</strong><p>Photos will be sorted into wedding sections for review.</p></div><div class="upload-actions"><label class="upload-choice">Choose folder<input type="file" multiple webkitdirectory directory data-folder-upload="${delivery.id}"></label><label class="upload-choice">Choose files<input type="file" multiple data-upload="${delivery.id}"></label></div></div>
+                <div class="upload-progress"><span data-progress="${delivery.id}"></span></div><p class="upload-state" data-upload-state="${delivery.id}"></p>
+                <div class="files">${files}</div>
+              </div>
+            </article>`;
+        }).join("");
+      }
+
+      async function saveDelivery(event) {
+        event.preventDefault();
+        const id = document.querySelector("[data-delivery-id]").value;
+        const payload = {
+          id,
+          coupleName: document.querySelector("[data-couple]").value.trim(),
+          projectTitle: document.querySelector("[data-project]").value.trim(),
+          eventDate: document.querySelector("[data-event-date]").value,
+          expiresAt: document.querySelector("[data-expiry]").value,
+          pin: document.querySelector("[data-pin]").value.trim(),
+          message: document.querySelector("[data-message]").value.trim()
+        };
+
+        setStatus(formStatus, id ? "Saving changes..." : "Creating delivery...");
+        try {
+          await vaultFetch(id ? "update" : "create", { method: "POST", body: payload });
+          resetForm();
+          setStatus(formStatus, id ? "Delivery updated." : "Delivery created.", "success");
+          await loadDeliveries();
+        } catch (error) {
+          setStatus(formStatus, error.message, "error");
+        }
+      }
+
+      function editDelivery(id) {
+        const delivery = state.deliveries.find(item => item.id === id);
+        if (!delivery) return;
+        document.querySelector("[data-delivery-id]").value = delivery.id;
+        document.querySelector("[data-couple]").value = delivery.coupleName || "";
+        document.querySelector("[data-project]").value = delivery.projectTitle || "";
+        document.querySelector("[data-event-date]").value = delivery.eventDate || "";
+        document.querySelector("[data-expiry]").value = delivery.expiresAt || "";
+        document.querySelector("[data-pin]").value = "";
+        document.querySelector("[data-message]").value = delivery.message || "";
+        document.querySelector("[data-form-title]").textContent = "Edit delivery.";
+        document.querySelector("[data-save]").textContent = "Save changes";
+        document.querySelector("[data-cancel]").hidden = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function resetForm() {
+        form.reset();
+        document.querySelector("[data-delivery-id]").value = "";
+        document.querySelector("[data-form-title]").textContent = "New delivery.";
+        document.querySelector("[data-save]").textContent = "Create delivery";
+        document.querySelector("[data-cancel]").hidden = true;
+      }
+
+      async function updateStatus(id, status) {
+        try {
+          await vaultFetch("update", { method: "POST", body: { id, status } });
+          await loadDeliveries();
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      async function deleteDelivery(id) {
+        const delivery = state.deliveries.find(item => item.id === id);
+        if (!delivery || !confirm(`Delete ${delivery.coupleName}'s delivery and every stored file?`)) return;
+        try {
+          await vaultFetch("delete", { method: "POST", body: { id } });
+          await loadDeliveries();
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      async function deleteFile(id, fileId) {
+        if (!confirm("Delete this stored file?")) return;
+        try {
+          await vaultFetch("delete-file", { method: "POST", body: { id, fileId } });
+          await loadDeliveries();
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      async function updateFileCategory(id, fileId, category) {
+        try {
+          await vaultFetch("update-file", { method: "POST", body: { id, fileId, category } });
+          const delivery = state.deliveries.find(item => item.id === id);
+          const file = delivery?.files?.find(item => item.id === fileId);
+          if (file) file.category = category;
+        } catch (error) {
+          alert(error.message);
+          await loadDeliveries();
+        }
+      }
+
+      function openUploadReview(id, fileList) {
+        const delivery = state.deliveries.find(item => item.id === id);
+        if (!delivery) return;
+
+        const stored = new Set((delivery.files || []).map(file => fileSignature(file)));
+        const incoming = new Set();
+        let duplicateCount = 0;
+        const records = [...fileList].filter(file => file && file.name && !file.name.startsWith(".")).filter(file => {
+          const signature = fileSignature(file);
+          if (stored.has(signature) || incoming.has(signature)) {
+            duplicateCount += 1;
+            return false;
+          }
+          incoming.add(signature);
+          return true;
+        }).map(file => {
+          const image = isImageFile(file);
+          return {
+            id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+            file,
+            category: suggestedCategory(file),
+            previewUrl: image ? URL.createObjectURL(file) : "",
+            status: image ? "Waiting for smart sort" : "Ready",
+            touched: false,
+            removed: false
+          };
+        });
+
+        if (!records.length) {
+          alert(duplicateCount ? "Those files are already in this delivery." : "No usable files were found in that folder.");
+          return;
+        }
+
+        state.review = { deliveryId: id, records, duplicateCount, uploading: false };
+        review.hidden = false;
+        document.body.style.overflow = "hidden";
+        renderReview();
+        sortReviewImages(records.filter(record => isImageFile(record.file)));
+      }
+
+      function renderReview() {
+        if (!state.review) return;
+        reviewList.innerHTML = state.review.records.filter(record => !record.removed).map(record => {
+          const file = record.file;
+          const preview = record.previewUrl
+            ? `<img src="${escapeHtml(record.previewUrl)}" alt="">`
+            : `<span>${escapeHtml(fileExtension(file.name))}</span>`;
+          return `<div class="review-file" data-review-file="${record.id}"><div class="review-thumb">${preview}</div><div class="review-name"><strong>${escapeHtml(file.name)}</strong><small class="${record.status.includes("sort") || record.status.includes("Sorting") ? "sorting" : ""}" data-review-status>${escapeHtml(record.status)} · ${formatBytes(file.size)}</small></div><select data-review-category="${record.id}" aria-label="Section for ${escapeHtml(file.name)}">${categoryOptions(record.category)}</select><button class="review-remove" type="button" data-review-remove="${record.id}" aria-label="Remove ${escapeHtml(file.name)}" title="Remove">×</button></div>`;
+        }).join("");
+        updateReviewSummary();
+      }
+
+      function updateReviewRecord(record) {
+        if (!state.review || record.removed) return;
+        const row = reviewList.querySelector(`[data-review-file="${record.id}"]`);
+        if (!row) return;
+        const select = row.querySelector("select");
+        if (!record.touched) select.value = record.category;
+        const statusNode = row.querySelector("[data-review-status]");
+        statusNode.textContent = `${record.status} · ${formatBytes(record.file.size)}`;
+        statusNode.className = record.status.includes("Sorting") ? "sorting" : "";
+        updateReviewSummary();
+      }
+
+      function updateReviewSummary() {
+        if (!state.review) return;
+        const records = state.review.records.filter(record => !record.removed);
+        const sorting = records.filter(record => record.status === "Sorting photo").length;
+        const reviewNeeded = records.filter(record => record.category === "Unsorted").length;
+        document.querySelector("[data-review-count]").textContent = `${records.length} ${records.length === 1 ? "file" : "files"}${state.review.duplicateCount ? ` · ${state.review.duplicateCount} duplicate ${state.review.duplicateCount === 1 ? "skipped" : "files skipped"}` : ""}`;
+        document.querySelector("[data-review-progress]").textContent = sorting ? `${sorting} smart sorting` : reviewNeeded ? `${reviewNeeded} to review` : "Ready to upload";
+        const uploadButton = document.querySelector("[data-review-upload]");
+        uploadButton.textContent = state.review.uploading ? "Uploading..." : `Upload ${records.length} ${records.length === 1 ? "file" : "files"}`;
+        uploadButton.disabled = state.review.uploading || !records.length;
+      }
+
+      async function sortReviewImages(records) {
+        let next = 0;
+        const workers = Array.from({ length: Math.min(2, records.length) }, async () => {
+          while (next < records.length) {
+            const record = records[next];
+            next += 1;
+            if (!record.removed) await classifyReviewRecord(record);
+          }
+        });
+        await Promise.all(workers);
+        updateReviewSummary();
+      }
+
+      async function classifyReviewRecord(record) {
+        if (state.aiUnavailable) {
+          record.status = record.category === "Unsorted" ? "Review manually" : "Suggested from filename";
+          updateReviewRecord(record);
+          return;
+        }
+
+        record.status = "Sorting photo";
+        updateReviewRecord(record);
+        let preview;
+        try {
+          preview = await createAiPreview(record.file);
+        } catch (error) {
+          record.status = record.category === "Unsorted" ? "Review manually" : "Suggested from filename";
+          updateReviewRecord(record);
+          return;
+        }
+
+        try {
+          const result = await vaultFetch("classify-image", { method: "POST", body: preview, headers: { "content-type": "image/jpeg" } });
+          if (!record.touched) record.category = normaliseCategory(result.category, record.file);
+          record.status = record.category === "Unsorted" ? "Needs review" : "Smart suggestion";
+        } catch (error) {
+          state.aiUnavailable = true;
+          record.status = record.category === "Unsorted" ? "Review manually" : "Suggested from filename";
+          if (error.aiSetupRequired) {
+            setup.hidden = false;
+            setup.textContent = "Smart sorting needs the Cloudflare AI binding. Uploads still work and Unsorted photos can be changed here.";
+          }
+        }
+        updateReviewRecord(record);
+      }
+
+      function createAiPreview(file) {
+        return new Promise((resolve, reject) => {
+          const source = URL.createObjectURL(file);
+          const image = new Image();
+          image.onload = () => {
+            try {
+              const scale = Math.min(1, 640 / Math.max(image.naturalWidth, image.naturalHeight));
+              const canvas = document.createElement("canvas");
+              canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+              canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+              canvas.getContext("2d", { alpha: false }).drawImage(image, 0, 0, canvas.width, canvas.height);
+              canvas.toBlob(blob => {
+                URL.revokeObjectURL(source);
+                if (blob) resolve(blob);
+                else reject(new Error("Preview unavailable"));
+              }, "image/jpeg", .72);
+            } catch (error) {
+              URL.revokeObjectURL(source);
+              reject(error);
+            }
+          };
+          image.onerror = () => {
+            URL.revokeObjectURL(source);
+            reject(new Error("Preview unavailable"));
+          };
+          image.src = source;
+        });
+      }
+
+      function removeReviewFile(id) {
+        const record = state.review?.records.find(item => item.id === id);
+        if (!record || state.review.uploading) return;
+        record.removed = true;
+        if (record.previewUrl) URL.revokeObjectURL(record.previewUrl);
+        renderReview();
+      }
+
+      function closeUploadReview() {
+        if (!state.review || state.review.uploading) return;
+        state.review.records.forEach(record => {
+          if (record.previewUrl && !record.removed) URL.revokeObjectURL(record.previewUrl);
+        });
+        state.review = null;
+        review.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      async function uploadReviewedFiles() {
+        if (!state.review || state.review.uploading) return;
+        const records = state.review.records.filter(record => !record.removed);
+        state.review.uploading = true;
+        updateReviewSummary();
+        const uploaded = await uploadFiles(state.review.deliveryId, records);
+        if (uploaded) {
+          state.review.uploading = false;
+          closeUploadReview();
+        }
+        else {
+          state.review.uploading = false;
+          updateReviewSummary();
+        }
+      }
+
+      async function uploadFiles(id, records) {
+        const progress = document.querySelector(`[data-progress="${id}"]`);
+        const output = document.querySelector(`[data-upload-state="${id}"]`);
+        let completedBytes = 0;
+        const totalBytes = records.reduce((total, record) => total + record.file.size, 0) || 1;
+
+        for (const record of records) {
+          const file = record.file;
+          let upload = null;
+          record.status = "Uploading";
+          updateReviewRecord(record);
+          output.textContent = `Preparing ${file.name}...`;
+          try {
+            const type = inferredFileType(file);
+            upload = await vaultFetch("start-upload", { method: "POST", body: { id, name: file.name, type, size: file.size } });
+            const parts = [];
+            const partCount = Math.ceil(file.size / CHUNK_SIZE) || 1;
+            for (let index = 0; index < partCount; index += 1) {
+              const start = index * CHUNK_SIZE;
+              const end = Math.min(file.size, start + CHUNK_SIZE);
+              const chunk = file.slice(start, end);
+              output.textContent = `Uploading ${file.name} · part ${index + 1} of ${partCount}`;
+              const result = await vaultFetch("upload-part", {
+                method: "PUT",
+                body: chunk,
+                query: `&id=${encodeURIComponent(id)}&key=${encodeURIComponent(upload.key)}&uploadId=${encodeURIComponent(upload.uploadId)}&partNumber=${index + 1}`
+              });
+              parts.push(result);
+              const uploaded = completedBytes + end;
+              progress.style.width = `${Math.min(100, (uploaded / totalBytes) * 100)}%`;
+            }
+
+            await vaultFetch("complete-upload", { method: "POST", body: { id, ...upload, parts, category: record.category } });
+            completedBytes += file.size;
+            record.status = "Uploaded";
+            updateReviewRecord(record);
+          } catch (error) {
+            if (upload) {
+              await vaultFetch("abort-upload", { method: "POST", body: { id, key: upload.key, uploadId: upload.uploadId } }).catch(() => {});
+            }
+            record.status = "Upload failed";
+            updateReviewRecord(record);
+            output.textContent = `${file.name}: ${error.message}`;
+            progress.style.width = "0";
+            return false;
+          }
+        }
+
+        output.textContent = `${records.length} ${records.length === 1 ? "file" : "files"} uploaded and organised.`;
+        progress.style.width = "100%";
+        await loadDeliveries();
+        setTimeout(() => { progress.style.width = "0"; }, 1400);
+        return true;
+      }
+
+      async function signIn(event) {
+        event.preventDefault();
+        const output = document.querySelector("[data-login-status]");
+        setStatus(output, "Signing in...");
+        try {
+          if (!(await waitForSupabase())) throw new Error("Supabase is not available.");
+          const response = await window.ncSupabase.auth.signInWithPassword({ email: document.querySelector("[data-email]").value.trim(), password: document.querySelector("[data-password]").value });
+          if (response.error) throw response.error;
+          login.hidden = true;
+          await loadDeliveries();
+        } catch (error) {
+          setStatus(output, error.message || "Sign in failed.", "error");
+        }
+      }
+
+      function categoryOptions(selected) {
+        const current = CATEGORIES.includes(selected) ? selected : "Unsorted";
+        return CATEGORIES.map(category => `<option value="${escapeHtml(category)}"${category === current ? " selected" : ""}>${escapeHtml(category)}</option>`).join("");
+      }
+
+      function fileSignature(file) {
+        return `${String(file.name || "").toLowerCase()}:${Number(file.size || 0)}`;
+      }
+
+      function inferredFileType(file) {
+        if (file.type) return file.type;
+        const extension = String(file.name || "").split(".").pop().toLowerCase();
+        const types = {
+          jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif", heic: "image/heic", heif: "image/heif", avif: "image/avif", tif: "image/tiff", tiff: "image/tiff",
+          mp4: "video/mp4", mov: "video/quicktime", m4v: "video/x-m4v", webm: "video/webm",
+          pdf: "application/pdf", zip: "application/zip"
+        };
+        return types[extension] || "application/octet-stream";
+      }
+
+      function isImageFile(file) {
+        return inferredFileType(file).startsWith("image/");
+      }
+
+      function normaliseCategory(category, file) {
+        if (CATEGORIES.includes(category)) return category;
+        return suggestedCategory(file);
+      }
+
+      function suggestedCategory(file) {
+        const type = inferredFileType(file);
+        if (type.startsWith("video/")) return "Films";
+        if (!type.startsWith("image/")) return "Documents";
+
+        const name = `${file.name || ""} ${file.webkitRelativePath || ""}`.toLowerCase();
+        if (/first.?dance/.test(name)) return "First Dance";
+        if (/speech|toast|microphone/.test(name)) return "Speeches";
+        if (/evening|party|dancefloor|dance.floor|dj|disco/.test(name)) return "Evening Party";
+        if (/detail|ring|flower|bouquet|dress|shoe|stationery|invite|table|decor|venue/.test(name)) return "Details";
+        if (/prep|getting.?ready|makeup|hair|dressing|bride.?prep|groom.?prep/.test(name)) return "Getting Ready";
+        if (/ceremony|aisle|vow|altar|church|registrar|confetti|signing/.test(name)) return "Ceremony";
+        if (/couple|portrait|newlywed|bride.?groom/.test(name)) return "Couple Portraits";
+        if (/group|family|bridesmaid|groomsmen|wedding.?party/.test(name)) return "Wedding Party & Family";
+        if (/reception|dinner|breakfast|cake|guest/.test(name)) return "Reception";
+        return "Unsorted";
+      }
+
+      const fileExtension = name => String(name || "FILE").split(".").pop().slice(0, 5).toUpperCase();
+
+      list.addEventListener("click", async event => {
+        const copy = event.target.closest("[data-copy]");
+        if (copy) {
+          await navigator.clipboard.writeText(copy.dataset.copy);
+          const original = copy.textContent;
+          copy.textContent = "Copied";
+          setTimeout(() => { copy.textContent = original; }, 1200);
+          return;
+        }
+        const edit = event.target.closest("[data-edit]");
+        if (edit) return editDelivery(edit.dataset.edit);
+        const statusButton = event.target.closest("[data-status]");
+        if (statusButton) return updateStatus(statusButton.dataset.status, statusButton.dataset.nextStatus);
+        const remove = event.target.closest("[data-delete]");
+        if (remove) return deleteDelivery(remove.dataset.delete);
+        const removeFile = event.target.closest("[data-delete-file]");
+        if (removeFile) return deleteFile(removeFile.dataset.deleteFile, removeFile.dataset.fileId);
+      });
+
+      list.addEventListener("change", event => {
+        const category = event.target.closest("[data-file-category]");
+        if (category) return updateFileCategory(category.dataset.fileCategory, category.dataset.fileId, category.value);
+        const input = event.target.closest("[data-upload],[data-folder-upload]");
+        if (input?.files?.length) {
+          openUploadReview(input.dataset.upload || input.dataset.folderUpload, input.files);
+          input.value = "";
+        }
+      });
+
+      list.addEventListener("dragover", event => {
+        const drop = event.target.closest("[data-drop]");
+        if (!drop) return;
+        event.preventDefault();
+        drop.classList.add("dragging");
+      });
+
+      list.addEventListener("dragleave", event => {
+        const drop = event.target.closest("[data-drop]");
+        if (drop && !drop.contains(event.relatedTarget)) drop.classList.remove("dragging");
+      });
+
+      list.addEventListener("drop", event => {
+        const drop = event.target.closest("[data-drop]");
+        if (!drop) return;
+        event.preventDefault();
+        drop.classList.remove("dragging");
+        if (event.dataTransfer?.files?.length) openUploadReview(drop.dataset.drop, event.dataTransfer.files);
+      });
+
+      review.addEventListener("click", event => {
+        const remove = event.target.closest("[data-review-remove]");
+        if (remove) return removeReviewFile(remove.dataset.reviewRemove);
+        if (event.target.closest("[data-review-upload]")) return uploadReviewedFiles();
+        if (event.target.closest("[data-review-close],[data-review-cancel]")) return closeUploadReview();
+      });
+
+      review.addEventListener("change", event => {
+        const select = event.target.closest("[data-review-category]");
+        if (!select || !state.review) return;
+        const record = state.review.records.find(item => item.id === select.dataset.reviewCategory);
+        if (!record) return;
+        record.category = select.value;
+        record.touched = true;
+        record.status = "Checked by you";
+        updateReviewRecord(record);
+      });
+
+      form.addEventListener("submit", saveDelivery);
+      document.querySelector("[data-cancel]").addEventListener("click", resetForm);
+      document.querySelector("[data-filter]").addEventListener("change", render);
+      document.querySelector("[data-refresh]").addEventListener("click", loadDeliveries);
+      document.querySelector("[data-login-form]").addEventListener("submit", signIn);
+
+      const escapeHtml = value => String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      const formatDate = value => value ? new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${value}T12:00:00`)) : "No limit";
+      const formatBytes = bytes => { const value = Number(bytes || 0); if (!value) return "0 B"; const units = ["B", "KB", "MB", "GB"]; const unit = Math.min(Math.floor(Math.log(value) / Math.log(1024)), units.length - 1); return `${(value / (1024 ** unit)).toFixed(unit > 1 ? 1 : 0)} ${units[unit]}`; };
+
+      getSession().then(session => {
+        state.session = session;
+        if (!session) login.hidden = false;
+        else loadDeliveries();
+      });
+    })();
+  </script>
+</body>
+</html>

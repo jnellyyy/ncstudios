@@ -2,11 +2,16 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ncstudios",
   "compatibility_date": "2026-06-12",
+  "main": "./website-worker/worker.js",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "./docs"
+    "directory": "./docs",
+    "binding": "ASSETS"
+  },
+  "ai": {
+    "binding": "AI"
   },
   "compatibility_flags": [
     "nodejs_compat"
