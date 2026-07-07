@@ -26,6 +26,7 @@ The website client-delivery system is kept entirely outside the app:
 - `docs/client-vault.html` is the private website workspace used to create delivery links and upload client files.
 - `docs/client-delivery.html` is the branded page opened by each couple.
 - `website-worker/worker.js` protects the files and stores them in a private Cloudflare R2 bucket.
+- Folder uploads are smart-sorted into wedding sections from temporary previews, then held for review before the original files are uploaded.
 
 To connect storage in Cloudflare:
 
@@ -33,6 +34,8 @@ To connect storage in Cloudflare:
 2. Open the deployed `ncstudios` Worker, then add an R2 binding.
 3. Set the variable name to `CLIENT_DELIVERIES` and select the bucket.
 4. Redeploy, then open `/client-vault.html` and sign in with the existing NC Studio Supabase login.
+
+The `AI` binding used for smart sorting is already declared in `wrangler.jsonc`. Before the first smart sort, accept the Meta Llama 3.2 Vision licence once in the Cloudflare account. If AI is unavailable, the vault keeps working and places uncertain photographs in `Unsorted` for manual review.
 
 The R2 bucket must remain private. Client links use temporary access sessions created by the Worker.
 

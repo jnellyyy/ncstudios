@@ -13,6 +13,12 @@
   "ai": {
     "binding": "AI"
   },
+  "r2_buckets": [
+    {
+      "binding": "CLIENT_DELIVERIES",
+      "bucket_name": "nc-client-deliveries"
+    }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
