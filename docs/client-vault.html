@@ -52,7 +52,7 @@
 
     <main>
       <section class="hero">
-        <div><p class="eyebrow">Private website workspace</p><h1>Client vault.</h1><p>Create each couple's delivery, upload the finished files and send one private NC Studio link.</p></div>
+        <div><p class="eyebrow">Private website workspace</p><h1>Client vault.</h1><p>Create each client delivery, upload the finished files and send one private NC Studio link.</p></div>
         <div class="stats"><div class="stat"><span>Total</span><strong data-total>0</strong></div><div class="stat"><span>Live</span><strong data-live>0</strong></div><div class="stat"><span>Files</span><strong data-files-total>0</strong></div></div>
       </section>
 
@@ -64,9 +64,9 @@
           <p class="composer-copy">Create the private link before adding files.</p>
           <form class="form" data-delivery-form>
             <input type="hidden" data-delivery-id>
-            <label>Couple<input data-couple type="text" placeholder="Marvin + Blessing" required></label>
-            <label>Collection title<input data-project type="text" placeholder="Your wedding films"></label>
-            <label>Wedding date<input data-event-date type="date"></label>
+            <label>Client / couple<input data-couple type="text" placeholder="Marvin + Blessing, Ama Graduation, Baby Shower" required></label>
+            <label>Collection title<input data-project type="text" placeholder="Your photos and films"></label>
+            <label>Event date<input data-event-date type="date"></label>
             <label>Link expiry<input data-expiry type="date"></label>
             <label>PIN <input data-pin type="text" inputmode="numeric" autocomplete="off" placeholder="Optional"></label>
             <label>Message<textarea data-message placeholder="A personal note for the couple"></textarea></label>
@@ -104,7 +104,14 @@
   <script>
     (() => {
       const CHUNK_SIZE = 8 * 1024 * 1024;
-      const CATEGORIES = ["Details", "Getting Ready", "Ceremony", "Couple Portraits", "Wedding Party & Family", "Reception", "Speeches", "First Dance", "Evening Party", "Films", "Documents", "Unsorted"];
+      const CATEGORIES = ["Details & Decor", "Getting Ready", "Ceremony", "Portraits", "Couple Portraits", "Groups & Family", "Guests & Candids", "Speeches & Toasts", "Reception & Party", "First Dance", "Graduation", "Baby Shower", "Baby & Family", "Films", "Documents", "Unsorted"];
+      const LEGACY_CATEGORY_MAP = {
+        "Details": "Details & Decor",
+        "Wedding Party & Family": "Groups & Family",
+        "Reception": "Reception & Party",
+        "Speeches": "Speeches & Toasts",
+        "Evening Party": "Reception & Party"
+      };
       const state = { deliveries: [], session: null, review: null, aiUnavailable: false };
       const form = document.querySelector("[data-delivery-form]");
       const list = document.querySelector("[data-list]");
@@ -191,11 +198,11 @@
           return `
             <article class="delivery-card" data-card="${delivery.id}">
               <div class="delivery-top"><div class="delivery-title"><h3>${escapeHtml(delivery.coupleName)}</h3><p>${escapeHtml(delivery.projectTitle || "NC Studio delivery")}</p></div><div class="delivery-badges"><span class="badge ${delivery.status}">${escapeHtml(delivery.status)}</span>${delivery.hasPin ? '<span class="badge">PIN</span>' : ""}</div></div>
-              <div class="delivery-data"><div class="data-cell"><span>Wedding</span><strong>${formatDate(delivery.eventDate)}</strong></div><div class="data-cell"><span>Expires</span><strong>${formatDate(delivery.expiresAt)}</strong></div><div class="data-cell"><span>Opened</span><strong>${Number(delivery.opens || 0)} times</strong></div><div class="data-cell"><span>Files</span><strong>${delivery.files?.length || 0}</strong></div></div>
+              <div class="delivery-data"><div class="data-cell"><span>Event</span><strong>${formatDate(delivery.eventDate)}</strong></div><div class="data-cell"><span>Expires</span><strong>${formatDate(delivery.expiresAt)}</strong></div><div class="data-cell"><span>Opened</span><strong>${Number(delivery.opens || 0)} times</strong></div><div class="data-cell"><span>Files</span><strong>${delivery.files?.length || 0}</strong></div></div>
               <div class="link-row"><span class="link-value">${escapeHtml(link)}</span><button class="button" type="button" data-copy="${escapeHtml(link)}">Copy link</button></div>
               <div class="card-actions"><button class="button secondary" type="button" data-edit="${delivery.id}">Edit</button><button class="button secondary" type="button" data-status="${delivery.id}" data-next-status="${delivery.status === "live" ? "disabled" : "live"}">${delivery.status === "live" ? "Disable" : "Publish"}</button><button class="button danger" type="button" data-delete="${delivery.id}">Delete</button></div>
               <div class="upload-zone">
-                <div class="upload-drop" data-drop="${delivery.id}"><div><strong>Drop one complete folder here</strong><p>Photos will be sorted into wedding sections for review.</p></div><div class="upload-actions"><label class="upload-choice">Choose folder<input type="file" multiple webkitdirectory directory data-folder-upload="${delivery.id}"></label><label class="upload-choice">Choose files<input type="file" multiple data-upload="${delivery.id}"></label></div></div>
+                <div class="upload-drop" data-drop="${delivery.id}"><div><strong>Drop one complete folder here</strong><p>Photos will be sorted into event sections for review.</p></div><div class="upload-actions"><label class="upload-choice">Choose folder<input type="file" multiple webkitdirectory directory data-folder-upload="${delivery.id}"></label><label class="upload-choice">Choose files<input type="file" multiple data-upload="${delivery.id}"></label></div></div>
                 <div class="upload-progress"><span data-progress="${delivery.id}"></span></div><p class="upload-state" data-upload-state="${delivery.id}"></p>
                 <div class="files">${files}</div>
               </div>
@@ -549,7 +556,8 @@
       }
 
       function categoryOptions(selected) {
-        const current = CATEGORIES.includes(selected) ? selected : "Unsorted";
+        const mapped = LEGACY_CATEGORY_MAP[selected] || selected;
+        const current = CATEGORIES.includes(mapped) ? mapped : "Unsorted";
         return CATEGORIES.map(category => `<option value="${escapeHtml(category)}"${category === current ? " selected" : ""}>${escapeHtml(category)}</option>`).join("");
       }
 
@@ -573,7 +581,8 @@
       }
 
       function normaliseCategory(category, file) {
-        if (CATEGORIES.includes(category)) return category;
+        const mapped = LEGACY_CATEGORY_MAP[category] || category;
+        if (CATEGORIES.includes(mapped)) return mapped;
         return suggestedCategory(file);
       }
 
@@ -583,15 +592,19 @@
         if (!type.startsWith("image/")) return "Documents";
 
         const name = `${file.name || ""} ${file.webkitRelativePath || ""}`.toLowerCase();
+        if (/grad|graduation|graduate|cap.?gown|gown|diploma|degree|campus|hat.?toss/.test(name)) return "Graduation";
+        if (/baby.?shower|gender.?reveal|reveal|nappy|diaper/.test(name)) return "Baby Shower";
+        if (/newborn|baby|infant|milestone|cake.?smash|maternity|parent.?child|family.?at.?home/.test(name)) return "Baby & Family";
         if (/first.?dance/.test(name)) return "First Dance";
-        if (/speech|toast|microphone/.test(name)) return "Speeches";
-        if (/evening|party|dancefloor|dance.floor|dj|disco/.test(name)) return "Evening Party";
-        if (/detail|ring|flower|bouquet|dress|shoe|stationery|invite|table|decor|venue/.test(name)) return "Details";
+        if (/speech|toast|microphone|\\bmic\\b|speaker/.test(name)) return "Speeches & Toasts";
+        if (/evening|party|dancefloor|dance.floor|dj|disco|birthday|celebration|reception|dinner|cake.?cutting/.test(name)) return "Reception & Party";
+        if (/candid|guest|reaction|laugh|mingl|audience|crowd|live|worship/.test(name)) return "Guests & Candids";
+        if (/detail|ring|flower|bouquet|dress|shoe|stationery|invite|table|decor|venue|sign|balloon|cake/.test(name)) return "Details & Decor";
         if (/prep|getting.?ready|makeup|hair|dressing|bride.?prep|groom.?prep/.test(name)) return "Getting Ready";
         if (/ceremony|aisle|vow|altar|church|registrar|confetti|signing/.test(name)) return "Ceremony";
-        if (/couple|portrait|newlywed|bride.?groom/.test(name)) return "Couple Portraits";
-        if (/group|family|bridesmaid|groomsmen|wedding.?party/.test(name)) return "Wedding Party & Family";
-        if (/reception|dinner|breakfast|cake|guest/.test(name)) return "Reception";
+        if (/couple|newlywed|bride.?groom|engagement/.test(name)) return "Couple Portraits";
+        if (/group|family|bridesmaid|groomsmen|wedding.?party|friends/.test(name)) return "Groups & Family";
+        if (/portrait|headshot|solo/.test(name)) return "Portraits";
         return "Unsorted";
       }
 

@@ -26,7 +26,8 @@ The website client-delivery system is kept entirely outside the app:
 - `docs/client-vault.html` is the private website workspace used to create delivery links and upload client files.
 - `docs/client-delivery.html` is the branded page opened by each couple.
 - `website-worker/worker.js` protects the files and stores them in a private Cloudflare R2 bucket.
-- Folder uploads are smart-sorted into wedding sections from temporary previews, then held for review before the original files are uploaded.
+- Folder uploads are smart-sorted into event delivery sections from temporary previews, then held for review before the original files are uploaded. The sorter is not wedding-only: it also supports graduations, baby showers, baby/newborn sessions, family work and general events.
+- The client delivery page presents files in a desktop/Finder-style view with category tabs, individual downloads and a Download all ZIP option.
 
 To connect storage in Cloudflare:
 

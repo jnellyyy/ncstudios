@@ -2,20 +2,32 @@ const SUPABASE_URL = "https://qimgavpfscpnlsbxjhbk.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_CIR45TS0FmiV_RiQZBqhfg_-mDFUqT7";
 const META_PREFIX = "_nc/client-vault";
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000;
-const WEDDING_CATEGORIES = [
-  "Details",
+const DELIVERY_CATEGORIES = [
+  "Details & Decor",
   "Getting Ready",
   "Ceremony",
+  "Portraits",
   "Couple Portraits",
-  "Wedding Party & Family",
-  "Reception",
-  "Speeches",
+  "Groups & Family",
+  "Guests & Candids",
+  "Speeches & Toasts",
+  "Reception & Party",
   "First Dance",
-  "Evening Party",
+  "Graduation",
+  "Baby Shower",
+  "Baby & Family",
   "Films",
   "Documents",
   "Unsorted"
 ];
+
+const LEGACY_CATEGORY_MAP = {
+  "Details": "Details & Decor",
+  "Wedding Party & Family": "Groups & Family",
+  "Reception": "Reception & Party",
+  "Speeches": "Speeches & Toasts",
+  "Evening Party": "Reception & Party"
+};
 
 export default {
   async fetch(request, env) {
@@ -75,7 +87,7 @@ async function handleAdminRequest(request, env, url) {
     }
 
     try {
-      const suggestion = await classifyWeddingImage(env.AI, image, contentType);
+      const suggestion = await classifyDeliveryImage(env.AI, image, contentType);
       return json(suggestion);
     } catch (error) {
       console.error("NC smart sort error", error);
@@ -105,7 +117,7 @@ async function handleAdminRequest(request, env, url) {
       updatedAt: now
     };
 
-    if (!delivery.coupleName) return json({ error: "Add the couple name first." }, 400);
+    if (!delivery.coupleName) return json({ error: "Add the client name first." }, 400);
 
     await saveDelivery(env.CLIENT_DELIVERIES, delivery);
     await putJson(env.CLIENT_DELIVERIES, tokenKey(token), { deliveryId: id });
@@ -306,6 +318,12 @@ async function handleClientRequest(request, env, url) {
     return streamFile(request, env.CLIENT_DELIVERIES, file, url.searchParams.get("download") === "1");
   }
 
+  if (request.method === "GET" && action === "download-all") {
+    const access = await getSessionDelivery(env.CLIENT_DELIVERIES, url.searchParams.get("session"));
+    if (!access.delivery) return access.response;
+    return streamDeliveryZip(env.CLIENT_DELIVERIES, access.delivery);
+  }
+
   return json({ error: "Unknown client delivery action." }, 404);
 }
 
@@ -375,6 +393,107 @@ async function streamFile(request, bucket, file, download) {
 
   headers.set("content-length", String(object.size));
   return new Response(object.body, { headers });
+}
+
+function streamDeliveryZip(bucket, delivery) {
+  const files = (delivery.files || [])
+    .filter(file => file?.id && validDeliveryFileKey(delivery.id, file.key));
+
+  if (!files.length) return json({ error: "This delivery does not have files to download yet." }, 404);
+
+  const archiveName = `${cleanFileName(delivery.projectTitle || delivery.coupleName || "NC Studio delivery")}.zip`;
+  const encoder = new TextEncoder();
+  const usedNames = new Map();
+  const entries = [];
+  let offset = 0n;
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        for (const file of files) {
+          const object = await bucket.get(file.key);
+          if (!object?.body) continue;
+
+          const category = cleanCategory(file.category, file.type);
+          const folder = category === "Unsorted" ? "More from your day" : category;
+          const entryName = uniqueZipEntryName(`${cleanZipPathPart(folder)}/${cleanFileName(file.name)}`, usedNames);
+          const nameBytes = encoder.encode(entryName);
+          const dos = dosDateTime(file.createdAt || new Date().toISOString());
+          const knownSize = BigInt(object.size || file.size || 0);
+          const needsZip64File = knownSize > ZIP_MAX_32;
+          const entryOffset = offset;
+          const localHeader = zipLocalHeader(nameBytes, dos, needsZip64File);
+
+          controller.enqueue(localHeader);
+          offset += BigInt(localHeader.length);
+
+          let crc = 0xffffffff;
+          let size = 0n;
+          const reader = object.body.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = value instanceof Uint8Array ? value : new Uint8Array(value);
+            crc = crc32Update(crc, chunk);
+            size += BigInt(chunk.length);
+            offset += BigInt(chunk.length);
+            controller.enqueue(chunk);
+          }
+
+          const finalCrc = (crc ^ 0xffffffff) >>> 0;
+          const descriptor = zipDataDescriptor(finalCrc, size, needsZip64File || size > ZIP_MAX_32);
+          controller.enqueue(descriptor);
+          offset += BigInt(descriptor.length);
+
+          entries.push({
+            nameBytes,
+            dos,
+            crc: finalCrc,
+            size,
+            compressedSize: size,
+            offset: entryOffset
+          });
+        }
+
+        if (!entries.length) {
+          throw new Error("No files could be added to this download.");
+        }
+
+        const centralOffset = offset;
+        for (const entry of entries) {
+          const centralHeader = zipCentralHeader(entry);
+          controller.enqueue(centralHeader);
+          offset += BigInt(centralHeader.length);
+        }
+        const centralSize = offset - centralOffset;
+
+        const needsZip64 = entries.length > 0xffff || centralOffset > ZIP_MAX_32 || centralSize > ZIP_MAX_32 || entries.some(entry => zipEntryNeedsZip64(entry));
+        if (needsZip64) {
+          const zip64EocdOffset = offset;
+          const zip64Eocd = zip64EndOfCentralDirectory(entries.length, centralSize, centralOffset);
+          controller.enqueue(zip64Eocd);
+          offset += BigInt(zip64Eocd.length);
+          const locator = zip64EndOfCentralDirectoryLocator(zip64EocdOffset);
+          controller.enqueue(locator);
+          offset += BigInt(locator.length);
+        }
+
+        controller.enqueue(zipEndOfCentralDirectory(entries.length, centralSize, centralOffset));
+        controller.close();
+      } catch (error) {
+        controller.error(error);
+      }
+    }
+  });
+
+  return new Response(stream, {
+    headers: {
+      "content-type": "application/zip",
+      "content-disposition": `attachment; filename="${archiveName}"`,
+      "cache-control": "private, no-store",
+      "x-content-type-options": "nosniff"
+    }
+  });
 }
 
 async function getSessionDelivery(bucket, token) {
@@ -492,10 +611,12 @@ function publicFile(file) {
   };
 }
 
-async function classifyWeddingImage(ai, image, contentType) {
-  const prompt = `Sort this wedding photograph into exactly one category from this list: ${WEDDING_CATEGORIES.slice(0, 9).join(", ")}, or Unsorted.
+async function classifyDeliveryImage(ai, image, contentType) {
+  const prompt = `Sort this NC Studio client delivery photograph into exactly one category from this list: ${DELIVERY_CATEGORIES.filter(category => !["Films", "Documents"].includes(category)).join(", ")}.
 
-Use Details for rings, flowers, stationery, dress, shoes, tablescapes and venue details. Use Getting Ready for hair, makeup, dressing and preparations. Use Ceremony for aisle, vows, altar, signing and confetti exits. Use Couple Portraits when the couple are the clear focus away from the ceremony. Use Wedding Party & Family for posed groups, bridesmaids, groomsmen and relatives. Use Reception for room scenes, dinner, guests mingling and cake cutting. Use Speeches for microphones, toasts and speakers. Use First Dance only for the couple's first dance. Use Evening Party for dancing, DJs and late-night celebration. If uncertain, use Unsorted. Return only JSON.`;
+The shoot may be a wedding, graduation, baby shower, baby or newborn session, birthday, live event, family session, maternity session, engagement or other client event.
+
+Use Details & Decor for rings, flowers, stationery, signs, dresses, shoes, tablescapes, balloons, cakes, venue details and styled decor. Use Getting Ready for hair, makeup, dressing, prep and behind-the-scenes preparation. Use Ceremony for aisle, vows, altar, signing, confetti exits, graduation stage/diploma moments or any formal ceremony. Use Portraits for one main subject, including graduates, maternity portraits and solo posed portraits. Use Couple Portraits when a couple are the clear focus. Use Groups & Family for posed groups, families, bridal parties, friends and group portraits. Use Guests & Candids for reactions, mingling, laughter, audience, documentary moments and live-event atmosphere. Use Speeches & Toasts for microphones, toasts, speeches and speakers. Use Reception & Party for dinner, food, cake cutting, birthdays, dancefloor, DJ and celebration scenes. Use First Dance only for a couple's first dance. Use Graduation when caps, gowns, diplomas, campus portraits or graduate celebration are the clear subject. Use Baby Shower for pregnancy celebration, gender reveal, baby shower games and baby shower moments. Use Baby & Family for newborns, babies, baby milestones, parent-child portraits and family-at-home moments. If uncertain, use Unsorted. Return only JSON.`;
   const response = await ai.run("@cf/meta/llama-3.2-11b-vision-instruct", {
     prompt,
     image: `data:${contentType};base64,${arrayBufferToBase64(image)}`,
@@ -506,7 +627,7 @@ Use Details for rings, flowers, stationery, dress, shoes, tablescapes and venue 
       json_schema: {
         type: "object",
         properties: {
-          category: { type: "string", enum: WEDDING_CATEGORIES.filter(category => !["Films", "Documents"].includes(category)) }
+          category: { type: "string", enum: DELIVERY_CATEGORIES.filter(category => !["Films", "Documents"].includes(category)) }
         },
         required: ["category"]
       }
@@ -523,7 +644,7 @@ function parseAiResponse(response) {
   try {
     return JSON.parse(text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""));
   } catch (error) {
-    const category = WEDDING_CATEGORIES.find(item => text.toLowerCase().includes(item.toLowerCase()));
+    const category = DELIVERY_CATEGORIES.find(item => text.toLowerCase().includes(item.toLowerCase()));
     return { category: category || "Unsorted" };
   }
 }
@@ -540,7 +661,8 @@ function arrayBufferToBase64(buffer) {
 
 function cleanCategory(value, type = "") {
   const requested = cleanText(value, 80);
-  if (WEDDING_CATEGORIES.includes(requested)) return requested;
+  const mapped = LEGACY_CATEGORY_MAP[requested] || requested;
+  if (DELIVERY_CATEGORIES.includes(mapped)) return mapped;
   if (String(type).startsWith("video/")) return "Films";
   if (!String(type).startsWith("image/")) return "Documents";
   return "Unsorted";
@@ -614,6 +736,194 @@ function cleanFileName(value) {
     .trim()
     .slice(0, 140);
   return name || "file";
+}
+
+const ZIP_MAX_32 = 0xffffffffn;
+const ZIP_UTF8_WITH_DESCRIPTOR = 0x0808;
+const CRC32_TABLE = (() => {
+  const table = new Uint32Array(256);
+  for (let index = 0; index < 256; index += 1) {
+    let crc = index;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc & 1) ? (0xedb88320 ^ (crc >>> 1)) : (crc >>> 1);
+    }
+    table[index] = crc >>> 0;
+  }
+  return table;
+})();
+
+function crc32Update(crc, bytes) {
+  let next = crc >>> 0;
+  for (const byte of bytes) {
+    next = CRC32_TABLE[(next ^ byte) & 0xff] ^ (next >>> 8);
+  }
+  return next >>> 0;
+}
+
+function cleanZipPathPart(value) {
+  return cleanFileName(value).replace(/^\.+$/, "Files");
+}
+
+function uniqueZipEntryName(name, used) {
+  const safe = String(name || "file").replace(/^\/+/, "").replace(/\/+/g, "/");
+  const dot = safe.lastIndexOf(".");
+  const slash = safe.lastIndexOf("/");
+  const base = dot > slash ? safe.slice(0, dot) : safe;
+  const extension = dot > slash ? safe.slice(dot) : "";
+  const key = safe.toLowerCase();
+  const count = (used.get(key) || 0) + 1;
+  used.set(key, count);
+  if (count === 1) return safe;
+  const candidate = `${base}-${count}${extension}`;
+  used.set(candidate.toLowerCase(), 1);
+  return candidate;
+}
+
+function dosDateTime(value) {
+  const date = new Date(value);
+  const safe = Number.isFinite(date.getTime()) ? date : new Date();
+  const year = Math.max(1980, safe.getUTCFullYear());
+  const month = safe.getUTCMonth() + 1;
+  const day = safe.getUTCDate();
+  const hours = safe.getUTCHours();
+  const minutes = safe.getUTCMinutes();
+  const seconds = Math.floor(safe.getUTCSeconds() / 2);
+  return {
+    time: ((hours & 0x1f) << 11) | ((minutes & 0x3f) << 5) | (seconds & 0x1f),
+    date: (((year - 1980) & 0x7f) << 9) | ((month & 0x0f) << 5) | (day & 0x1f)
+  };
+}
+
+function zipEntryNeedsZip64(entry) {
+  return entry.size > ZIP_MAX_32 || entry.compressedSize > ZIP_MAX_32 || entry.offset > ZIP_MAX_32;
+}
+
+function zipLocalHeader(nameBytes, dos, zip64File) {
+  return concatBytes([
+    u32(0x04034b50),
+    u16(zip64File ? 45 : 20),
+    u16(ZIP_UTF8_WITH_DESCRIPTOR),
+    u16(0),
+    u16(dos.time),
+    u16(dos.date),
+    u32(0),
+    u32(0),
+    u32(0),
+    u16(nameBytes.length),
+    u16(0),
+    nameBytes
+  ]);
+}
+
+function zipDataDescriptor(crc, size, zip64File) {
+  return zip64File
+    ? concatBytes([u32(0x08074b50), u32(crc), u64(size), u64(size)])
+    : concatBytes([u32(0x08074b50), u32(crc), u32(Number(size)), u32(Number(size))]);
+}
+
+function zipCentralHeader(entry) {
+  const needsZip64 = zipEntryNeedsZip64(entry);
+  const extraParts = [];
+  if (needsZip64) {
+    const zip64Values = [];
+    if (entry.size > ZIP_MAX_32 || entry.compressedSize > ZIP_MAX_32) {
+      zip64Values.push(u64(entry.size), u64(entry.compressedSize));
+    }
+    if (entry.offset > ZIP_MAX_32) zip64Values.push(u64(entry.offset));
+    const extraBody = concatBytes(zip64Values);
+    extraParts.push(u16(0x0001), u16(extraBody.length), extraBody);
+  }
+  const extra = concatBytes(extraParts);
+  return concatBytes([
+    u32(0x02014b50),
+    u16(needsZip64 ? 45 : 20),
+    u16(needsZip64 ? 45 : 20),
+    u16(ZIP_UTF8_WITH_DESCRIPTOR),
+    u16(0),
+    u16(entry.dos.time),
+    u16(entry.dos.date),
+    u32(entry.crc),
+    u32(entry.compressedSize > ZIP_MAX_32 ? 0xffffffff : Number(entry.compressedSize)),
+    u32(entry.size > ZIP_MAX_32 ? 0xffffffff : Number(entry.size)),
+    u16(entry.nameBytes.length),
+    u16(extra.length),
+    u16(0),
+    u16(0),
+    u16(0),
+    u32(0),
+    u32(entry.offset > ZIP_MAX_32 ? 0xffffffff : Number(entry.offset)),
+    entry.nameBytes,
+    extra
+  ]);
+}
+
+function zip64EndOfCentralDirectory(entryCount, centralSize, centralOffset) {
+  return concatBytes([
+    u32(0x06064b50),
+    u64(44n),
+    u16(45),
+    u16(45),
+    u32(0),
+    u32(0),
+    u64(BigInt(entryCount)),
+    u64(BigInt(entryCount)),
+    u64(centralSize),
+    u64(centralOffset)
+  ]);
+}
+
+function zip64EndOfCentralDirectoryLocator(zip64EocdOffset) {
+  return concatBytes([
+    u32(0x07064b50),
+    u32(0),
+    u64(zip64EocdOffset),
+    u32(1)
+  ]);
+}
+
+function zipEndOfCentralDirectory(entryCount, centralSize, centralOffset) {
+  return concatBytes([
+    u32(0x06054b50),
+    u16(0),
+    u16(0),
+    u16(Math.min(entryCount, 0xffff)),
+    u16(Math.min(entryCount, 0xffff)),
+    u32(centralSize > ZIP_MAX_32 ? 0xffffffff : Number(centralSize)),
+    u32(centralOffset > ZIP_MAX_32 ? 0xffffffff : Number(centralOffset)),
+    u16(0)
+  ]);
+}
+
+function u16(value) {
+  const bytes = new Uint8Array(2);
+  const view = new DataView(bytes.buffer);
+  view.setUint16(0, Number(value), true);
+  return bytes;
+}
+
+function u32(value) {
+  const bytes = new Uint8Array(4);
+  const view = new DataView(bytes.buffer);
+  view.setUint32(0, Number(value), true);
+  return bytes;
+}
+
+function u64(value) {
+  const bytes = new Uint8Array(8);
+  const view = new DataView(bytes.buffer);
+  view.setBigUint64(0, BigInt(value), true);
+  return bytes;
+}
+
+function concatBytes(parts) {
+  const length = parts.reduce((total, part) => total + part.length, 0);
+  const output = new Uint8Array(length);
+  let offset = 0;
+  for (const part of parts) {
+    output.set(part, offset);
+    offset += part.length;
+  }
+  return output;
 }
 
 function safeNumber(value) {

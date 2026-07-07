@@ -13,12 +13,17 @@
     :root{--bg:#080806;--panel:#100f0c;--line:rgba(215,182,108,.28);--gold:#d7b66c;--gold2:#f0dba4;--cream:#f4ecdf;--muted:#aaa093;--danger:#e0a49c}
     *{box-sizing:border-box}
     html{background:var(--bg);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
-    body{min-height:100vh;margin:0;background-image:linear-gradient(rgba(215,182,108,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(215,182,108,.055) 1px,transparent 1px);background-size:52px 52px}
+    body{min-height:100vh;margin:0;background:
+      radial-gradient(circle at 18% 10%,rgba(215,182,108,.16),transparent 32%),
+      radial-gradient(circle at 85% 26%,rgba(244,236,223,.08),transparent 26%),
+      linear-gradient(rgba(215,182,108,.055) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(215,182,108,.055) 1px,transparent 1px),
+      var(--bg);background-size:auto,auto,52px 52px,52px 52px,auto}
     button,input{font:inherit}
     button,a{touch-action:manipulation}
     button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
-    .shell{width:min(1220px,100%);min-height:100vh;margin:auto;border-inline:1px solid rgba(215,182,108,.18);background:rgba(8,8,6,.94)}
-    .topbar{height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 clamp(18px,4vw,48px);border-bottom:1px solid var(--line)}
+    .shell{width:min(1220px,100%);min-height:100vh;margin:auto;border-inline:1px solid rgba(215,182,108,.18);background:rgba(8,8,6,.84);backdrop-filter:blur(18px)}
+    .topbar{height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 clamp(18px,4vw,48px);border-bottom:1px solid var(--line);background:rgba(8,8,6,.86);backdrop-filter:blur(22px)}
     .brand{display:flex;align-items:center;gap:13px;color:var(--cream);text-decoration:none}
     .brand img{width:42px;height:31px;object-fit:contain}
     .brand strong{font:24px/1 "NC Brand",Impact,sans-serif;color:var(--gold)}
@@ -37,7 +42,8 @@
     .status{min-height:20px;margin:16px 0 0;color:var(--muted);font-size:13px;line-height:1.4}
     .status.error{color:var(--danger)}
     .delivery[hidden],.gate[hidden]{display:none}
-    .delivery-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);min-height:430px;border-bottom:1px solid var(--line)}
+    .delivery{min-height:calc(100vh - 68px);background:radial-gradient(circle at 78% 9%,rgba(215,182,108,.13),transparent 28%)}
+    .delivery-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);min-height:430px;border-bottom:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(8,8,6,.18))}
     .delivery-intro{display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(32px,7vw,90px)}
     .delivery-intro h1{max-width:780px;margin-bottom:22px;font:clamp(60px,11vw,128px)/.78 "NC Brand Light",Georgia,serif;font-weight:400}
     .delivery-intro p:not(.eyebrow){max-width:650px;margin:0;color:var(--muted);font-size:17px;line-height:1.65}
@@ -49,20 +55,34 @@
     .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:26px}
     .section-head h2{margin:0;font:clamp(34px,6vw,64px)/.9 "NC Brand Light",Georgia,serif;font-weight:400}
     .section-head span{color:var(--muted);font:10px monospace;letter-spacing:.1em;text-transform:uppercase}
-    .category-block{margin-top:42px}.category-block:first-child{margin-top:0}.category-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:15px;padding-bottom:10px;border-bottom:1px solid var(--line)}.category-head h3{margin:0;font:28px/.95 "NC Brand Light",Georgia,serif;font-weight:400}.category-head span{color:var(--muted);font:9px monospace;text-transform:uppercase}
-    .file-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .file{min-width:0;border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}
-    .preview{aspect-ratio:16/9;display:grid;place-items:center;background:#050504;overflow:hidden}
-    .preview img,.preview video{width:100%;height:100%;object-fit:contain;background:#050504}
+    .section-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+    .download-all[hidden]{display:none}
+    .finder-window{border:1px solid var(--line);border-radius:18px;background:rgba(16,15,12,.88);box-shadow:0 30px 90px rgba(0,0,0,.45);overflow:hidden}
+    .finder-titlebar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;min-height:54px;padding:0 18px;border-bottom:1px solid rgba(215,182,108,.18);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035))}
+    .window-dots{display:flex;gap:7px}.window-dots span{width:12px;height:12px;border-radius:50%;display:block}.window-dots span:nth-child(1){background:#ff5f57}.window-dots span:nth-child(2){background:#ffbd2e}.window-dots span:nth-child(3){background:#28c840}
+    .finder-title{min-width:0;text-align:center;color:var(--cream);font-size:13px;font-weight:800}.finder-title small{display:block;margin-top:3px;color:var(--muted);font:9px monospace;text-transform:uppercase;letter-spacing:.12em}
+    .finder-view-label{color:var(--muted);font:9px monospace;text-transform:uppercase;letter-spacing:.12em}
+    .finder-tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;border-bottom:1px solid rgba(215,182,108,.18);background:rgba(5,5,4,.46);scrollbar-width:thin}
+    .finder-tab{flex:0 0 auto;min-height:42px;padding:8px 12px;border:1px solid rgba(215,182,108,.22);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.035);cursor:pointer;text-align:left}
+    .finder-tab[aria-selected="true"]{color:#0a0907;background:var(--gold2);border-color:var(--gold2)}
+    .finder-tab span{display:block;font-size:12px;font-weight:800;white-space:nowrap}.finder-tab small{display:block;margin-top:2px;font:9px monospace;text-transform:uppercase;opacity:.82}
+    .finder-content{min-height:420px;padding:18px;background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(0,0,0,.12))}
+    .active-folder{display:flex;justify-content:space-between;gap:14px;align-items:end;margin:2px 4px 18px;padding-bottom:12px;border-bottom:1px solid rgba(215,182,108,.14)}
+    .active-folder h3{margin:0;font:30px/.95 "NC Brand Light",Georgia,serif;font-weight:400}.active-folder span{color:var(--muted);font:9px monospace;text-transform:uppercase;letter-spacing:.12em}
+    .file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+    .file{min-width:0;border:1px solid rgba(215,182,108,.18);border-radius:14px;background:rgba(8,8,6,.62);overflow:hidden;transition:transform .18s,border-color .18s,background .18s}
+    .file:hover{transform:translateY(-2px);border-color:rgba(240,219,164,.55);background:rgba(20,18,14,.88)}
+    .preview{aspect-ratio:4/3;display:grid;place-items:center;background:#050504;overflow:hidden}
+    .preview img,.preview video{width:100%;height:100%;object-fit:cover;background:#050504}
     .file-icon{color:var(--gold);font:700 36px "NC Brand",Impact,sans-serif}
-    .file-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:15px}
-    .file-body strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+    .file-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px}
+    .file-body strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
     .file-body small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
     .download{width:42px;height:42px;padding:0;border:1px solid var(--line);border-radius:6px;color:var(--gold2);background:transparent;text-decoration:none;display:grid;place-items:center;font-size:20px}
     .empty{grid-column:1/-1;padding:52px 24px;border:1px dashed var(--line);color:var(--muted);text-align:center}
     .footer{display:flex;justify-content:space-between;gap:20px;padding:24px clamp(20px,5vw,60px);border-top:1px solid var(--line);color:var(--muted);font:10px monospace;letter-spacing:.08em;text-transform:uppercase}
-    @media(max-width:760px){.delivery-head{grid-template-columns:1fr;min-height:0}.delivery-intro{min-height:420px}.delivery-meta{border-left:0;border-top:1px solid var(--line)}.file-grid{grid-template-columns:1fr}.secure{display:none}}
-    @media(max-width:480px){.topbar{height:58px}.brand strong{font-size:20px}.brand span{display:none}.gate{min-height:calc(100vh - 58px)}.pin-form{grid-template-columns:1fr}.delivery-intro{min-height:390px;padding:50px 20px}.delivery-intro h1{font-size:58px}.delivery-meta,.files{padding:28px 20px}.section-head{align-items:start;flex-direction:column}.footer{flex-direction:column}}
+    @media(max-width:760px){.delivery-head{grid-template-columns:1fr;min-height:0}.delivery-intro{min-height:420px}.delivery-meta{border-left:0;border-top:1px solid var(--line)}.file-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.secure,.finder-view-label{display:none}}
+    @media(max-width:480px){.topbar{height:58px}.brand strong{font-size:20px}.brand span{display:none}.gate{min-height:calc(100vh - 58px)}.pin-form{grid-template-columns:1fr}.delivery-intro{min-height:390px;padding:50px 20px}.delivery-intro h1{font-size:58px}.delivery-meta,.files{padding:28px 20px}.section-head{align-items:start;flex-direction:column}.section-actions{justify-content:flex-start}.download-all{width:100%}.finder-titlebar{grid-template-columns:auto 1fr;padding-inline:12px}.finder-title{text-align:right}.finder-content{padding:12px}.active-folder{display:block}.footer{flex-direction:column}}
   </style>
 </head>
 <body>
@@ -101,7 +121,7 @@
         </div>
 
         <div class="files">
-          <div class="section-head"><h2>Your files.</h2><span data-file-count></span></div>
+          <div class="section-head"><h2>Your files.</h2><div class="section-actions"><span data-file-count></span><a class="button secondary download-all" data-download-all hidden>Download all</a></div></div>
           <div data-files></div>
         </div>
       </section>
@@ -121,8 +141,17 @@
       const pinInput = document.querySelector("[data-pin]");
       const status = document.querySelector("[data-status]");
       const gateCopy = document.querySelector("[data-gate-copy]");
-      const CATEGORY_ORDER = ["Details", "Getting Ready", "Ceremony", "Couple Portraits", "Wedding Party & Family", "Reception", "Speeches", "First Dance", "Evening Party", "Films", "Documents", "Unsorted"];
+      const CATEGORY_ORDER = ["Details & Decor", "Getting Ready", "Ceremony", "Portraits", "Couple Portraits", "Groups & Family", "Guests & Candids", "Speeches & Toasts", "Reception & Party", "First Dance", "Graduation", "Baby Shower", "Baby & Family", "Films", "Documents", "Unsorted"];
+      const LEGACY_CATEGORY_MAP = {
+        "Details": "Details & Decor",
+        "Wedding Party & Family": "Groups & Family",
+        "Reception": "Reception & Party",
+        "Speeches": "Speeches & Toasts",
+        "Evening Party": "Reception & Party"
+      };
       let session = "";
+      let activeCategory = "";
+      let currentFiles = [];
 
       const setStatus = (message, error = false) => {
         status.textContent = message;
@@ -172,7 +201,24 @@
         setOptionalDate("[data-expiry-row]", "[data-expiry]", delivery.expiresAt);
         const files = Array.isArray(delivery.files) ? delivery.files : [];
         document.querySelector("[data-file-count]").textContent = `${files.length} ${files.length === 1 ? "file" : "files"}`;
+        updateDownloadAll(delivery, files);
+        currentFiles = files;
+        activeCategory = "";
         renderFiles(files);
+      }
+
+      function updateDownloadAll(delivery, files) {
+        const link = document.querySelector("[data-download-all]");
+        if (!files.length || !session) {
+          link.hidden = true;
+          link.removeAttribute("href");
+          return;
+        }
+        const name = `${safeDownloadName(delivery.projectTitle || delivery.coupleName || "NC Studio delivery")}.zip`;
+        link.hidden = false;
+        link.href = `/api/client-delivery?action=download-all&session=${encodeURIComponent(session)}`;
+        link.setAttribute("download", name);
+        link.setAttribute("aria-label", `Download all files as ${name}`);
       }
 
       function setOptionalDate(rowSelector, valueSelector, value) {
@@ -195,29 +241,53 @@
 
         const groups = new Map();
         files.forEach(file => {
-          const category = CATEGORY_ORDER.includes(file.category) ? file.category : defaultCategory(file);
+          const mapped = LEGACY_CATEGORY_MAP[file.category] || file.category;
+          const category = CATEGORY_ORDER.includes(mapped) ? mapped : defaultCategory(file);
           if (!groups.has(category)) groups.set(category, []);
           groups.get(category).push(file);
         });
 
-        CATEGORY_ORDER.filter(category => groups.has(category)).forEach(category => {
-          const categoryFiles = groups.get(category);
-          const section = document.createElement("section");
-          section.className = "category-block";
-          const heading = document.createElement("div");
-          heading.className = "category-head";
-          const title = document.createElement("h3");
-          title.textContent = category === "Unsorted" ? "More from your day" : category;
-          const count = document.createElement("span");
-          count.textContent = `${categoryFiles.length} ${categoryFiles.length === 1 ? "file" : "files"}`;
-          heading.append(title, count);
-          const grid = document.createElement("div");
-          grid.className = "file-grid";
+        const categories = CATEGORY_ORDER.filter(category => groups.has(category));
+        if (!activeCategory || !groups.has(activeCategory)) activeCategory = categories[0];
+        const activeFiles = groups.get(activeCategory) || [];
+        const activeLabel = displayCategory(activeCategory);
 
-          categoryFiles.forEach(file => grid.appendChild(createFileCard(file)));
-          section.append(heading, grid);
-          container.appendChild(section);
+        const finder = document.createElement("section");
+        finder.className = "finder-window";
+        finder.setAttribute("aria-label", "Delivery files");
+        finder.innerHTML = `
+          <div class="finder-titlebar">
+            <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="finder-title">${escapeText(activeLabel)}<small>NC Studio delivery folder</small></div>
+            <div class="finder-view-label">Icon view</div>
+          </div>
+          <div class="finder-tabs" role="tablist" aria-label="Delivery categories"></div>
+          <div class="finder-content">
+            <div class="active-folder"><h3>${escapeText(activeLabel)}</h3><span>${activeFiles.length} ${activeFiles.length === 1 ? "item" : "items"}</span></div>
+            <div class="file-grid" data-active-grid></div>
+          </div>
+        `;
+
+        const tabs = finder.querySelector(".finder-tabs");
+        categories.forEach(category => {
+          const categoryFiles = groups.get(category) || [];
+          const tab = document.createElement("button");
+          tab.type = "button";
+          tab.className = "finder-tab";
+          tab.dataset.categoryTab = category;
+          tab.setAttribute("role", "tab");
+          tab.setAttribute("aria-selected", category === activeCategory ? "true" : "false");
+          tab.innerHTML = `<span>${escapeText(displayCategory(category))}</span><small>${categoryFiles.length} ${categoryFiles.length === 1 ? "item" : "items"}</small>`;
+          tab.addEventListener("click", () => {
+            activeCategory = category;
+            renderFiles(currentFiles);
+          });
+          tabs.appendChild(tab);
         });
+
+        const grid = finder.querySelector("[data-active-grid]");
+        activeFiles.forEach(file => grid.appendChild(createFileCard(file)));
+        container.appendChild(finder);
       }
 
       function createFileCard(file) {
@@ -275,6 +345,9 @@
 
       const fileUrl = (fileId, download) => `/api/client-delivery?action=file&session=${encodeURIComponent(session)}&file=${encodeURIComponent(fileId)}${download ? "&download=1" : ""}`;
       const fileExtension = name => String(name || "FILE").split(".").pop().slice(0, 5).toUpperCase();
+      const safeDownloadName = name => String(name || "NC Studio delivery").replace(/[\\/]+/g, "-").replace(/[^A-Za-z0-9._()' +&-]+/g, "-").replace(/\s+/g, " ").trim().slice(0, 90) || "NC Studio delivery";
+      const displayCategory = category => category === "Unsorted" ? "More from your day" : category;
+      const escapeText = value => String(value || "").replace(/[&<>"']/g, character => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#039;" }[character]));
       const formatBytes = bytes => {
         const value = Number(bytes || 0);
         if (!value) return "File";
@@ -290,14 +363,17 @@
 
       if (previewMode) {
         renderDelivery({
-          coupleName: "Marvin + Blessing",
-          projectTitle: "Your wedding films",
+          coupleName: "NC Studio Client",
+          projectTitle: "Your event gallery",
           eventDate: "2026-06-12",
           expiresAt: "2026-12-31",
-          message: "Your wedding story is ready. Thank you for trusting NC Studio to preserve it.",
+          message: "Your story is ready. Thank you for trusting NC Studio to preserve it.",
           files: [
-            { id: "preview-one", name: "Marvin + Blessing · Wedding gallery.zip", type: "application/zip", size: 286110670, category: "Documents" },
-            { id: "preview-two", name: "Marvin + Blessing · Highlight film.mp4", type: "video/mp4", size: 911008346, category: "Films" }
+            { id: "preview-grad", name: "Graduation portrait.jpg", type: "image/jpeg", size: 6412000, category: "Graduation", previewUrl: "assets/portfolio/grad-portrait.jpg" },
+            { id: "preview-baby", name: "Baby shower reveal.jpg", type: "image/jpeg", size: 7280000, category: "Baby Shower", previewUrl: "assets/portfolio/baby-shower-reveal.jpg" },
+            { id: "preview-family", name: "Baby milestone.jpg", type: "image/jpeg", size: 6120000, category: "Baby & Family", previewUrl: "assets/portfolio/newborn-close.jpg" },
+            { id: "preview-event", name: "Event candid.jpg", type: "image/jpeg", size: 5870000, category: "Guests & Candids", previewUrl: "assets/portfolio/event-birthday-candid.jpg" },
+            { id: "preview-film", name: "NC Studio · Highlight film.mp4", type: "video/mp4", size: 911008346, category: "Films" }
           ]
         });
       } else {
