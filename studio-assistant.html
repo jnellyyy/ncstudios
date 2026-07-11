@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Studio Assistant | NC Studio</title>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-2">
+<link rel="stylesheet" href="studio-assistant.css?v=2">
+<meta name="theme-color" content="#050504">
+</head>
+<body class="assistant-page">
+<div class="app-shell assistant-shell">
+  <header class="topbar assistant-topbar">
+    <a class="brand-row" href="dashboard.html" aria-label="NC Studio dashboard">
+      <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
+      <div class="brand-text"><p class="kicker">Business control</p><h2>Studio Assistant</h2></div>
+    </a>
+    <nav class="nav-pill" aria-label="Primary">
+      <a class="pill" href="dashboard.html">Home</a>
+      <a class="pill" href="crm.html">CRM</a>
+      <a class="pill" href="lists.html">Tasks</a>
+    </nav>
+  </header>
+
+  <nav class="ops-nav assistant-nav" aria-label="Studio tools">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="studio-assistant.html">Assistant</a>
+    <a href="crm.html">CRM</a>
+    <a href="bookings.html">Bookings</a>
+    <a href="finance.html">Finance</a>
+    <a href="consultations.html">Consult</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="content.html">Content</a>
+  </nav>
+
+  <main>
+    <section class="assistant-hero" aria-labelledby="assistantTitle">
+      <div class="assistant-intro">
+        <p class="kicker">What needs my attention?</p>
+        <h1 id="assistantTitle">Your next moves, in order.</h1>
+        <p id="assistantBrief">Checking your bookings, replies, money and deadlines.</p>
+      </div>
+      <div class="assistant-actions" aria-label="Quick actions">
+        <a class="btn" href="bookings.html">Add enquiry</a>
+        <a class="ghost-btn" href="clients.html">Add client</a>
+        <a class="ghost-btn" href="lists.html">Create task</a>
+        <button class="ghost-btn" id="runAutomations" type="button">Refresh smart tasks</button>
+      </div>
+    </section>
+
+    <section id="assistantStats" class="assistant-stats" aria-label="Business summary"></section>
+
+    <section class="assistant-section attention-section" aria-labelledby="attentionTitle">
+      <div class="assistant-section-head">
+        <div><p class="kicker">Calm priority list</p><h2 id="attentionTitle">Needs attention</h2></div>
+        <a class="ghost-btn" href="lists.html">Open all tasks</a>
+      </div>
+      <div id="attentionFilters" class="attention-filters" aria-label="Attention filters"></div>
+      <div id="attentionList" class="attention-list" aria-live="polite"></div>
+    </section>
+
+    <section class="assistant-section" id="pipeline" aria-labelledby="pipelineTitle">
+      <div class="assistant-section-head">
+        <div><p class="kicker">Every couple, one path</p><h2 id="pipelineTitle">Client pipeline</h2></div>
+        <a class="ghost-btn" href="crm.html">Open full CRM</a>
+      </div>
+      <div class="pipeline-tools">
+        <label class="search-field"><span>Search</span><input id="pipelineSearch" type="search" placeholder="Client, date, location or package"></label>
+        <label><span>Service</span><select id="serviceFilter"><option value="all">All services</option><option value="photography">Photography</option><option value="videography">Videography</option><option value="both">Photo + video</option></select></label>
+        <label><span>Payment</span><select id="paymentFilter"><option value="all">All payments</option><option value="outstanding">Outstanding</option><option value="paid">Paid</option></select></label>
+        <label><span>Contract</span><select id="contractFilter"><option value="all">All contracts</option><option value="needs-chasing">Needs chasing</option><option value="signed">Signed</option></select></label>
+      </div>
+      <div id="pipelineBoard" class="pipeline-board"></div>
+    </section>
+
+    <section class="assistant-section" id="calendar" aria-labelledby="calendarTitle">
+      <div class="assistant-section-head calendar-heading">
+        <div><p class="kicker">Dates across the business</p><h2 id="calendarTitle">Calendar</h2></div>
+        <div class="calendar-controls">
+          <button id="calendarPrevious" class="calendar-control" type="button" aria-label="Previous month">‹</button>
+          <strong id="calendarMonth"></strong>
+          <button id="calendarNext" class="calendar-control" type="button" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="calendar-legend" aria-label="Calendar legend">
+        <span class="wedding">Wedding</span><span class="consultation">Consultation</span><span class="payment">Payment</span><span class="task">Task</span><span class="delivery">Delivery</span><span class="content">Content</span>
+      </div>
+      <div id="calendarGrid" class="assistant-calendar"></div>
+      <div id="calendarAgenda" class="calendar-agenda"></div>
+    </section>
+
+    <section class="assistant-section package-section" id="package-helper" aria-labelledby="packageTitle">
+      <div class="assistant-section-head">
+        <div><p class="kicker">Turn their wording into a clear recommendation</p><h2 id="packageTitle">Package suggestion</h2></div>
+      </div>
+      <div class="package-layout">
+        <form id="packageForm" class="package-form">
+          <label class="wide"><span>What did the client say?</span><textarea id="clientWords" placeholder="We want the ceremony, speeches, two outfit changes and the evening party..."></textarea></label>
+          <label><span>Service</span><select id="suggestionService"><option value="videography">Videography</option><option value="photography">Photography</option></select></label>
+          <label><span>Coverage hours</span><input id="coverageHours" type="number" min="0" max="14" step="0.5" placeholder="8"></label>
+          <label><span>Budget</span><input id="clientBudget" type="number" min="0" step="10" placeholder="Leave blank if unclear"></label>
+          <button class="btn wide" type="submit">Suggest package</button>
+        </form>
+        <div id="packageResult" class="package-result" aria-live="polite">
+          <p>Enter the client’s wording to get a clear recommendation, reasons and the next booking step.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="assistant-bottom-nav" aria-label="Mobile navigation">
+    <a href="dashboard.html">Home</a>
+    <a class="active" href="studio-assistant.html">Assistant</a>
+    <a href="crm.html">CRM</a>
+    <a href="lists.html">Tasks</a>
+    <a href="#calendar">Calendar</a>
+  </nav>
+</div>
+
+<div id="assistantToast" class="assistant-toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="studio-assistant-config.js?v=1"></script>
+<script src="studio-assistant.js?v=2"></script>
+</body>
+</html>

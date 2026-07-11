@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Content &amp; Portfolio | NC Studio</title>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-2">
+<link rel="stylesheet" href="content.css?v=1">
+<meta name="theme-color" content="#050504">
+</head>
+<body class="content-page">
+<div class="app-shell content-shell">
+  <header class="topbar content-topbar">
+    <a class="brand-row" href="dashboard.html" aria-label="NC Studio dashboard">
+      <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
+      <div class="brand-text"><p class="kicker">Portfolio planning</p><h2>Content</h2></div>
+    </a>
+    <nav class="nav-pill"><a class="pill" href="studio-assistant.html">Assistant</a><a class="pill" href="dashboard.html">Home</a></nav>
+  </header>
+
+  <nav class="ops-nav content-nav" aria-label="Studio tools">
+    <a href="dashboard.html">Home</a><a href="studio-assistant.html">Assistant</a><a href="crm.html">CRM</a><a href="delivery.html">Delivery</a><a class="active" href="content.html">Content</a><a href="templates.html">Templates</a>
+  </nav>
+
+  <main>
+    <section class="content-hero">
+      <div><p class="kicker">Permission, ideas and posting</p><h1>Content &amp; Portfolio</h1><p>Know what can be shared, where the best material is and what should be posted next.</p></div>
+      <div class="content-actions"><button class="btn" id="focusContent" type="button">Add content plan</button><button class="ghost-btn" id="importDelivered" type="button">Add delivered projects</button></div>
+    </section>
+
+    <section id="contentStats" class="content-stats" aria-label="Content summary"></section>
+
+    <section class="content-layout">
+      <aside class="content-form-panel">
+        <div class="content-heading"><p class="kicker">Add or update</p><h2>Content plan</h2></div>
+        <form id="contentForm" class="content-form">
+          <input id="contentId" type="hidden">
+          <label class="wide"><span>Client or wedding</span><input id="clientName" type="text" placeholder="Simi and Kiefah" required></label>
+          <label><span>Wedding date</span><input id="weddingDate" type="date"></label>
+          <label><span>Can post?</span><select id="permission"><option value="waiting">Waiting</option><option value="yes">Yes</option><option value="no">No</option></select></label>
+          <label><span>Posting status</span><select id="status"><option value="idea">Idea</option><option value="selecting">Selecting</option><option value="ready">Ready</option><option value="scheduled">Scheduled</option><option value="posted">Posted</option><option value="skip">Do not post</option></select></label>
+          <label><span>Post date</span><input id="postDate" type="date"></label>
+          <label class="wide"><span>Best images</span><textarea id="bestImages" placeholder="Folder, filenames or notes on the strongest images"></textarea></label>
+          <label class="wide"><span>Best clips</span><textarea id="bestClips" placeholder="Clip names, moments or timecodes"></textarea></label>
+          <label class="wide"><span>Instagram reel idea</span><textarea id="reelIdea" placeholder="Hook, sequence, audio or story angle"></textarea></label>
+          <label class="wide"><span>Caption idea</span><textarea id="captionIdea" placeholder="Warm, confident caption draft"></textarea></label>
+          <label class="wide"><span>Notes</span><textarea id="notes" placeholder="Permission details, tags, suppliers or restrictions"></textarea></label>
+          <div class="content-form-actions wide"><button class="btn" type="submit">Save content plan</button><button class="ghost-btn" id="clearContentForm" type="button">Clear</button></div>
+        </form>
+      </aside>
+
+      <section class="content-list-panel">
+        <div class="content-list-head">
+          <div><p class="kicker">Portfolio queue</p><h2>What can I post?</h2></div>
+          <button class="danger-btn" id="clearContentList" type="button">Clear all</button>
+        </div>
+        <div class="content-filters"><input id="contentSearch" type="search" placeholder="Search client, idea or notes"><select id="permissionFilter"><option value="all">All permissions</option><option value="yes">Can post</option><option value="waiting">Waiting</option><option value="no">Cannot post</option></select><select id="statusFilter"><option value="active">Active plans</option><option value="all">All statuses</option><option value="ready">Ready</option><option value="scheduled">Scheduled</option><option value="posted">Posted</option></select></div>
+        <div id="contentList" class="content-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <nav class="content-bottom-nav" aria-label="Mobile navigation"><a href="dashboard.html">Home</a><a href="studio-assistant.html">Assistant</a><a href="delivery.html">Delivery</a><a class="active" href="content.html">Content</a></nav>
+</div>
+
+<div id="contentToast" class="content-toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="content.js?v=1"></script>
+</body>
+</html>
