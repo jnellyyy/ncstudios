@@ -1136,7 +1136,12 @@ function roadmapRentalSaved(roadmapRows){
   );
 
   const saved = (roadmap.allocations || [])
-    .filter(item => item.protected && allocatedPayments.has(item.paymentId) && !["skipped","moved-later"].includes(item.status))
+    .filter(item => {
+      const category = String(item.category || "").toLowerCase();
+      const name = String(item.name || "").toLowerCase();
+      const isRental = item.rental || category.includes("rental") || name.includes("rental");
+      return isRental && allocatedPayments.has(item.paymentId) && !["skipped","moved-later"].includes(item.status);
+    })
     .reduce((sum,item) => sum + Number(item.estimatedCost || 0),0);
 
   return {saved,target:Number(roadmap.rentalTarget || 300)};

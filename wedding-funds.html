@@ -9,7 +9,7 @@
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
-<link rel="stylesheet" href="wedding-funds.css?v=4">
+<link rel="stylesheet" href="wedding-funds.css?v=5">
 <meta name="theme-color" content="#050504">
 </head>
 <body class="funds-page">
@@ -50,7 +50,7 @@
         <span>Current priority</span>
         <strong id="heroPriority">Protect rental money first</strong>
         <div class="progress-track" aria-hidden="true"><span id="heroRentalBar"></span></div>
-        <small id="heroRentalCopy">£0 of £90 rental total protected</small>
+        <small id="heroRentalCopy">£0 of £300 wedding buffer protected</small>
       </div>
     </section>
 
@@ -70,6 +70,14 @@
         <p>Targets update as payments and allocations change.</p>
       </div>
       <div id="overviewCards" class="overview-grid"></div>
+    </section>
+
+    <section id="finance-notes" class="roadmap-section" aria-labelledby="financeNotesTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Important movements</p><h2 id="financeNotesTitle">Finance notes</h2></div>
+        <p>Quick reminders for money that has already moved or needs protecting.</p>
+      </div>
+      <div id="financeNotes" class="finance-notes-grid"></div>
     </section>
 
     <section id="warningSection" class="roadmap-section warning-section" aria-labelledby="warningTitle">
@@ -121,7 +129,7 @@
         <div><p class="kicker">Simi and Kiefah · 22 August</p><h2 id="rentalsTitle">Rental checklist</h2></div>
         <div class="target-label"><span>Total</span><strong>£90 flat</strong></div>
       </div>
-      <div class="protect-note"><strong>Keep £90 protected.</strong> Rental total confirmed at £90 flat.</div>
+      <div class="protect-note"><strong>Rentals are paid.</strong> Keep the separate £300 wedding buffer untouched until after 22 August.</div>
       <div id="rentalList" class="rental-list"></div>
     </section>
 
@@ -198,7 +206,7 @@
 <script src="supabase-config.js?v=nc-fixed-1"></script>
 <script src="nc-supabase-sync.js?v=nc-secure-1"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="wedding-funds-config.js?v=4"></script>
-<script src="wedding-funds.js?v=4"></script>
+<script src="wedding-funds-config.js?v=5"></script>
+<script src="wedding-funds.js?v=5"></script>
 </body>
 </html>
