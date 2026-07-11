@@ -166,6 +166,24 @@
         return data;
       }
 
+      async function vaultBlob(action, options = {}) {
+        state.session = await getSession();
+        if (!state.session) {
+          login.hidden = false;
+          throw new Error("Sign in to open the client vault.");
+        }
+        const response = await fetch(`/api/client-vault?action=${encodeURIComponent(action)}${options.query || ""}`, {
+          method: options.method || "GET",
+          headers: { authorization: `Bearer ${state.session.access_token}`, ...(options.headers || {}) },
+          body: options.body
+        });
+        if (!response.ok) {
+          const text = await response.text().catch(() => "");
+          throw new Error(text || "The stored file could not be opened for sorting.");
+        }
+        return response.blob();
+      }
+
       async function loadDeliveries() {
         list.innerHTML = '<div class="empty">Loading client deliveries...</div>';
         try {
@@ -200,7 +218,7 @@
               <div class="delivery-top"><div class="delivery-title"><h3>${escapeHtml(delivery.coupleName)}</h3><p>${escapeHtml(delivery.projectTitle || "NC Studio delivery")}</p></div><div class="delivery-badges"><span class="badge ${delivery.status}">${escapeHtml(delivery.status)}</span>${delivery.hasPin ? '<span class="badge">PIN</span>' : ""}</div></div>
               <div class="delivery-data"><div class="data-cell"><span>Event</span><strong>${formatDate(delivery.eventDate)}</strong></div><div class="data-cell"><span>Expires</span><strong>${formatDate(delivery.expiresAt)}</strong></div><div class="data-cell"><span>Opened</span><strong>${Number(delivery.opens || 0)} times</strong></div><div class="data-cell"><span>Files</span><strong>${delivery.files?.length || 0}</strong></div></div>
               <div class="link-row"><span class="link-value">${escapeHtml(link)}</span><button class="button" type="button" data-copy="${escapeHtml(link)}">Copy link</button></div>
-              <div class="card-actions"><button class="button secondary" type="button" data-edit="${delivery.id}">Edit</button><button class="button secondary" type="button" data-status="${delivery.id}" data-next-status="${delivery.status === "live" ? "disabled" : "live"}">${delivery.status === "live" ? "Disable" : "Publish"}</button><button class="button danger" type="button" data-delete="${delivery.id}">Delete</button></div>
+              <div class="card-actions"><button class="button secondary" type="button" data-edit="${delivery.id}">Edit</button><button class="button secondary" type="button" data-auto-sort="${delivery.id}">Auto-sort files</button><button class="button secondary" type="button" data-status="${delivery.id}" data-next-status="${delivery.status === "live" ? "disabled" : "live"}">${delivery.status === "live" ? "Disable" : "Publish"}</button><button class="button danger" type="button" data-delete="${delivery.id}">Delete</button></div>
               <div class="upload-zone">
                 <div class="upload-drop" data-drop="${delivery.id}"><div><strong>Drop one complete folder here</strong><p>Photos will be sorted into event sections for review.</p></div><div class="upload-actions"><label class="upload-choice">Choose folder<input type="file" multiple webkitdirectory directory data-folder-upload="${delivery.id}"></label><label class="upload-choice">Choose files<input type="file" multiple data-upload="${delivery.id}"></label></div></div>
                 <div class="upload-progress"><span data-progress="${delivery.id}"></span></div><p class="upload-state" data-upload-state="${delivery.id}"></p>
@@ -298,6 +316,55 @@
           alert(error.message);
           await loadDeliveries();
         }
+      }
+
+      async function autoSortExistingFiles(id) {
+        const delivery = state.deliveries.find(item => item.id === id);
+        const output = document.querySelector(`[data-upload-state="${id}"]`);
+        const progress = document.querySelector(`[data-progress="${id}"]`);
+        const images = (delivery?.files || []).filter(file => String(file.type || "").startsWith("image/"));
+        if (!delivery) return;
+        if (!images.length) {
+          alert("No image files found to auto-sort.");
+          return;
+        }
+        if (!confirm(`Auto-sort ${images.length} existing image ${images.length === 1 ? "file" : "files"} for ${delivery.coupleName}?`)) return;
+
+        let sorted = 0;
+        let reviewed = 0;
+        output.textContent = `Auto-sorting ${images.length} existing images...`;
+        progress.style.width = "0";
+
+        for (const file of images) {
+          try {
+            output.textContent = `Auto-sorting ${file.name}...`;
+            const blob = await vaultBlob("admin-file", { query: `&id=${encodeURIComponent(id)}&file=${encodeURIComponent(file.id)}` });
+            const source = new File([blob], file.name, { type: file.type || blob.type || "image/jpeg" });
+            let category = suggestedCategory(source);
+            try {
+              const preview = await createAiPreview(source);
+              const result = await vaultFetch("classify-image", { method: "POST", body: preview, headers: { "content-type": "image/jpeg" } });
+              category = normaliseCategory(result.category, source);
+            } catch (error) {
+              if (category === "Unsorted") reviewed += 1;
+            }
+            const updated = await vaultFetch("update-file", { method: "POST", body: { id, fileId: file.id, category } });
+            const replacement = updated.delivery;
+            const index = state.deliveries.findIndex(item => item.id === id);
+            if (replacement && index >= 0) state.deliveries[index] = replacement;
+            sorted += 1;
+            progress.style.width = `${Math.min(100, (sorted / images.length) * 100)}%`;
+          } catch (error) {
+            console.warn("Auto-sort failed for stored file", file.name, error);
+            reviewed += 1;
+          }
+        }
+
+        output.textContent = reviewed
+          ? `${sorted} files auto-sorted. ${reviewed} may still need manual review.`
+          : `${sorted} files auto-sorted.`;
+        await loadDeliveries();
+        setTimeout(() => { progress.style.width = "0"; }, 1600);
       }
 
       function openUploadReview(id, fileList) {
@@ -621,6 +688,8 @@
         }
         const edit = event.target.closest("[data-edit]");
         if (edit) return editDelivery(edit.dataset.edit);
+        const autoSort = event.target.closest("[data-auto-sort]");
+        if (autoSort) return autoSortExistingFiles(autoSort.dataset.autoSort);
         const statusButton = event.target.closest("[data-status]");
         if (statusButton) return updateStatus(statusButton.dataset.status, statusButton.dataset.nextStatus);
         const remove = event.target.closest("[data-delete]");

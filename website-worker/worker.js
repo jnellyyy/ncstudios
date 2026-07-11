@@ -265,6 +265,16 @@ async function handleAdminRequest(request, env, url) {
     return json({ file: publicFile(file), delivery: publicAdminDelivery(delivery) });
   }
 
+  if (request.method === "GET" && action === "admin-file") {
+    const delivery = await getDelivery(env.CLIENT_DELIVERIES, url.searchParams.get("id"));
+    if (!delivery) return json({ error: "Delivery not found." }, 404);
+    const file = (delivery.files || []).find(item => item.id === url.searchParams.get("file"));
+    if (!file || !validDeliveryFileKey(delivery.id, file.key)) {
+      return new Response("File not found.", { status: 404 });
+    }
+    return streamFile(request, env.CLIENT_DELIVERIES, file, false);
+  }
+
   return json({ error: "Unknown client vault action." }, 404);
 }
 
