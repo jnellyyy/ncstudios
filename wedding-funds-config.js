@@ -7,7 +7,7 @@
   roadmap data.
 */
 window.NC_WEDDING_FUNDS_DEFAULTS = {
-  dataVersion:5,
+  dataVersion:6,
   currency:"GBP",
   rentalTarget:90,
   rentalWarningAt:90,
@@ -57,11 +57,11 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {
       id:"marvin-blessing-july",
       client:"Marvin and Blessing",
-      amount:690,
+      amount:695,
       expectedDate:"2026-07-04",
       weddingDate:"",
       weddingStatus:"completed",
-      purpose:"Final payment plus late fee: £595 balance + £95 late fee.",
+      purpose:"Final payment plus late fee: £595 balance + £100 late fee.",
       status:"pending",
       notes:"Wedding complete. Allocate this money to the protected wedding fund first, then the exact kit plan. The earlier £250 received was used for council tax."
     },
@@ -163,7 +163,7 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
       name:"CFexpress fund",
       category:"CFexpress fund",
       priority:"hold",
-      estimatedCost:210,
+      estimatedCost:215,
       status:"planned",
       notes:"Hold this. Do not buy yet. If the £300 wedding fund is untouched after 22 August, move that into CFexpress too.",
       buyListId:"cfexpress-card"
@@ -182,7 +182,7 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {id:"tascam-dr05xp",rank:1,name:"Tascam DR-05XP",category:"Audio",priority:"urgent",status:"needed",estimate:95,notes:"DJ feed, room ambience and emergency recorder."},
     {id:"ssd-1tb",rank:2,name:"1TB SSD",category:"Storage + backup",priority:"urgent",status:"needed",estimate:70,notes:"Buy before the next wedding; never rely on a single drive."},
     {id:"np-f550-second",rank:3,name:"Second NP-F550 battery",category:"Camera + filming",priority:"urgent",status:"needed",estimate:15,notes:"For a full day on the Portkeys monitor."},
-    {id:"cfexpress-card",rank:4,name:"CFexpress Type A card",category:"Storage + backup",priority:"future",status:"later",estimate:210,notes:"Hold the £210 fund. Buy after the wedding buffer is safe or released."},
+    {id:"cfexpress-card",rank:4,name:"CFexpress Type A card",category:"Storage + backup",priority:"future",status:"later",estimate:215,notes:"Hold the £215 fund. Buy after the wedding buffer is safe or released."},
     {id:"cfexpress-reader",rank:5,name:"CFexpress Type A reader",category:"Storage + backup",priority:"future",status:"later",estimate:0,notes:"Buy with the CFexpress card."},
     {id:"nisi-nd",rank:6,name:"NiSi True Color 82mm ND filter",category:"Camera + filming",priority:"future",status:"later",estimate:0,notes:"Upgrade after current wedding needs are covered."},
     {id:"smallrig-4469",rank:7,name:"SmallRig 4469 battery",category:"Camera + filming",priority:"future",status:"later",estimate:0,notes:"Future power upgrade."},

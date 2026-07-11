@@ -158,7 +158,33 @@
       changed = true;
     }
 
-    migrated.dataVersion = Number(defaults.dataVersion || 5);
+    if(version < 6){
+      const marvinPayment = (migrated.payments || []).find(item => item.id === "marvin-blessing-july");
+      const defaultMarvinPayment = defaults.payments.find(item => item.id === "marvin-blessing-july");
+      if(marvinPayment && defaultMarvinPayment){
+        marvinPayment.amount = defaultMarvinPayment.amount;
+        marvinPayment.purpose = defaultMarvinPayment.purpose;
+        marvinPayment.notes = defaultMarvinPayment.notes;
+      }
+
+      const cfexpressAllocation = (migrated.allocations || []).find(item => item.id === "marvin-cfexpress-fund");
+      const defaultCfexpressAllocation = defaults.allocations.find(item => item.id === "marvin-cfexpress-fund");
+      if(cfexpressAllocation && defaultCfexpressAllocation){
+        cfexpressAllocation.estimatedCost = defaultCfexpressAllocation.estimatedCost;
+        cfexpressAllocation.notes = defaultCfexpressAllocation.notes;
+      }
+
+      const cfexpressBuy = (migrated.buyList || []).find(item => item.id === "cfexpress-card");
+      const defaultCfexpressBuy = defaults.buyList.find(item => item.id === "cfexpress-card");
+      if(cfexpressBuy && defaultCfexpressBuy){
+        cfexpressBuy.estimate = defaultCfexpressBuy.estimate;
+        cfexpressBuy.notes = defaultCfexpressBuy.notes;
+      }
+
+      changed = true;
+    }
+
+    migrated.dataVersion = Number(defaults.dataVersion || 6);
     if(changed) localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
 
     return migrated;
