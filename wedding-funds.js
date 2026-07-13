@@ -19,6 +19,7 @@
   ];
   const ALLOCATION_STATUSES = [
     ["planned","Planned"],
+    ["reserve","Reserve"],
     ["bought","Bought / paid"],
     ["skipped","Skipped"],
     ["moved-later","Moved later"]
@@ -159,32 +160,38 @@
     }
 
     if(version < 6){
-      const marvinPayment = (migrated.payments || []).find(item => item.id === "marvin-blessing-july");
-      const defaultMarvinPayment = defaults.payments.find(item => item.id === "marvin-blessing-july");
-      if(marvinPayment && defaultMarvinPayment){
-        marvinPayment.amount = defaultMarvinPayment.amount;
-        marvinPayment.purpose = defaultMarvinPayment.purpose;
-        marvinPayment.notes = defaultMarvinPayment.notes;
-      }
-
-      const cfexpressAllocation = (migrated.allocations || []).find(item => item.id === "marvin-cfexpress-fund");
-      const defaultCfexpressAllocation = defaults.allocations.find(item => item.id === "marvin-cfexpress-fund");
-      if(cfexpressAllocation && defaultCfexpressAllocation){
-        cfexpressAllocation.estimatedCost = defaultCfexpressAllocation.estimatedCost;
-        cfexpressAllocation.notes = defaultCfexpressAllocation.notes;
-      }
-
-      const cfexpressBuy = (migrated.buyList || []).find(item => item.id === "cfexpress-card");
-      const defaultCfexpressBuy = defaults.buyList.find(item => item.id === "cfexpress-card");
-      if(cfexpressBuy && defaultCfexpressBuy){
-        cfexpressBuy.estimate = defaultCfexpressBuy.estimate;
-        cfexpressBuy.notes = defaultCfexpressBuy.notes;
-      }
-
       changed = true;
     }
 
-    migrated.dataVersion = Number(defaults.dataVersion || 6);
+    if(version < 7){
+      migrated.rentalTarget = defaults.rentalTarget;
+      migrated.rentalWarningAt = defaults.rentalWarningAt;
+      migrated.emergencyTarget = defaults.emergencyTarget;
+      migrated.emergencyWarningAt = defaults.emergencyWarningAt;
+      migrated.flexibleHoldTarget = defaults.flexibleHoldTarget;
+      migrated.currentPriority = defaults.currentPriority;
+      migrated.nextWedding = clone(defaults.nextWedding);
+      migrated.financeNotes = clone(defaults.financeNotes || []);
+      migrated.deletedItems = normaliseDeletedItems(migrated.deletedItems);
+
+      Object.keys(migrated.deletedItems).forEach(key => {
+        const defaultIds = new Set((defaults[key] || []).map(item => item.id));
+        migrated.deletedItems[key] = migrated.deletedItems[key].filter(id => !defaultIds.has(id));
+      });
+
+      migrated.ownedKit = replaceConfiguredCollection(migrated.ownedKit,defaults.ownedKit);
+      migrated.payments = replaceConfiguredCollection(migrated.payments,defaults.payments);
+      migrated.allocations = replaceConfiguredCollection(
+        (migrated.allocations || []).filter(item => !["marvin-blessing-july","simi-kiefah-august"].includes(item.paymentId)),
+        defaults.allocations
+      );
+      migrated.rentals = clone(defaults.rentals);
+      migrated.buyList = replaceConfiguredCollection(migrated.buyList,defaults.buyList);
+      migrated.weddingWeek = replaceConfiguredCollection(migrated.weddingWeek,defaults.weddingWeek);
+      changed = true;
+    }
+
+    migrated.dataVersion = Number(defaults.dataVersion || 7);
     if(changed) localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
 
     return migrated;
@@ -316,15 +323,17 @@
   }
 
   function calculateTotals(){
-    const totalIncoming = sum(state.payments,item => item.amount);
-    const received = sum(state.payments,item => item.status === "pending" ? 0 : item.amount);
+    const roadmapPaymentIds = new Set(state.payments.filter(isRoadmapPayment).map(item => item.id));
+    const totalIncoming = sum(state.payments.filter(isRoadmapPayment),item => item.amount);
+    const received = sum(state.payments.filter(isRoadmapPayment),item => item.status === "pending" ? 0 : item.amount);
     const allocatedPaymentIds = new Set(state.payments.filter(item => item.status === "allocated").map(item => item.id));
     const activeAllocations = state.allocations.filter(item => !["skipped","moved-later"].includes(effectiveAllocationStatus(item)));
-    const allocated = sum(activeAllocations,item => allocatedPaymentIds.has(item.paymentId) ? item.estimatedCost : 0);
-    const planned = sum(activeAllocations,item => item.estimatedCost);
-    const spent = sum(state.allocations,item => effectiveAllocationStatus(item) === "bought" ? item.estimatedCost : 0);
+    const roadmapAllocations = activeAllocations.filter(item => roadmapPaymentIds.has(item.paymentId));
+    const allocated = sum(roadmapAllocations,item => allocatedPaymentIds.has(item.paymentId) ? item.estimatedCost : 0);
+    const planned = sum(roadmapAllocations,item => item.estimatedCost);
+    const spent = sum(roadmapAllocations,item => effectiveAllocationStatus(item) === "bought" ? item.estimatedCost : 0);
     const rentalSaved = sum(activeAllocations,item => isRentalAllocation(item) && allocatedPaymentIds.has(item.paymentId) ? item.estimatedCost : 0);
-    const emergencySaved = sum(activeAllocations,item => isBufferAllocation(item) && allocatedPaymentIds.has(item.paymentId) ? item.estimatedCost : 0);
+    const emergencySaved = sum(roadmapAllocations,item => isProtectedReserveAllocation(item) && allocatedPaymentIds.has(item.paymentId) ? item.estimatedCost : 0);
     const flexible = Math.max(0,received - allocated);
 
     return {totalIncoming,received,allocated,planned,spent,rentalSaved,emergencySaved,flexible};
@@ -338,11 +347,11 @@
 
   function renderOverview(totals){
     const cards = [
-      {label:"Total incoming funds",value:money(totals.totalIncoming),note:`${state.payments.length} client payments`},
+      {label:"Money arriving 24 July",value:money(totals.totalIncoming),note:"Marvin balance + late fee"},
       {label:"Rentals paid",value:money(totals.rentalSaved),note:`${money(state.rentalTarget)} flat rental total`},
-      {label:"Wedding buffer target",value:money(state.emergencyTarget),note:"Keep untouched until 23 August"},
+      {label:"Protected reserve",value:money(state.emergencyTarget),note:`Plus ${money(state.flexibleHoldTarget || 0)} untouched flexible buffer`},
       {label:"Next wedding",value:state.nextWedding.client,note:niceDate(state.nextWedding.date),priority:true},
-      {label:"Current priority",value:state.currentPriority,note:"Buffer before upgrades",priority:true}
+      {label:"Current priority",value:state.currentPriority,note:"No CFexpress before 22 August",priority:true}
     ];
     document.getElementById("overviewCards").innerHTML = cards.map(card => `
       <article class="overview-card${card.priority ? " priority" : ""}">
@@ -358,7 +367,7 @@
     document.getElementById("financeNotes").innerHTML = notes.length ? notes.map(note => `
       <article class="finance-note-card">
         <div><span>${escapeHTML(note.category || "Note")}</span><h3>${escapeHTML(note.title || "Finance note")}</h3></div>
-        <strong>${Number(note.amount || 0) ? money(note.amount) : escapeHTML(note.status || "")}</strong>
+        <strong>${note.amount !== undefined ? money(note.amount) : escapeHTML(note.status || "")}</strong>
         <p>${escapeHTML(note.notes || "")}</p>
       </article>
     `).join("") : `<div class="roadmap-empty">No finance notes added.</div>`;
@@ -416,8 +425,10 @@
   function renderMoneyMap(totals){
     const groups = new Map();
     const active = state.allocations.filter(item => !["skipped","moved-later"].includes(effectiveAllocationStatus(item)));
+    const roadmapPaymentIds = new Set(state.payments.filter(isRoadmapPayment).map(item => item.id));
+    const roadmapActive = active.filter(item => roadmapPaymentIds.has(item.paymentId));
 
-    active.forEach(item => {
+    roadmapActive.forEach(item => {
       const group = allocationGroup(item);
       const current = groups.get(group.key) || {...group,amount:0};
       current.amount += Number(item.estimatedCost || 0);
@@ -428,12 +439,12 @@
     const unallocated = Math.max(0,totals.totalIncoming - planned);
     const over = Math.max(0,planned - totals.totalIncoming);
     const chartTotal = Math.max(totals.totalIncoming,planned,1);
-    const order = ["personal","rentals","travel","buffer","audio","storage","battery","cfexpress","purchase","other"];
+    const order = ["personal","rentals","travel","buffer","flexible","audio","storage","battery","cfexpress","purchase","other"];
     const segments = order.map(key => groups.get(key)).filter(item => item && item.amount > 0);
     if(unallocated > 0) segments.push({key:"unallocated",label:"Unallocated",amount:unallocated});
 
     document.getElementById("moneyMapSummary").innerHTML = `
-      <div><strong>${money(totals.totalIncoming)}</strong><span>Full expected amount</span></div>
+      <div><strong>${money(totals.totalIncoming)}</strong><span>Active wedding-prep amount</span></div>
       <b>${money(planned)} planned · ${money(unallocated)} unallocated${over ? ` · ${money(over)} over plan` : ""}</b>
     `;
 
@@ -471,7 +482,8 @@
     const name = String(item.name || "").toLowerCase();
     if(category.includes("personal") || name.includes("council tax")) return {key:"personal",label:"Personal"};
     if(isRentalAllocation(item)) return {key:"rentals",label:"Rentals"};
-    if(category.includes("travel") || name.includes("travel") || name.includes("parking")) return {key:"travel",label:"Travel + parking"};
+    if(category.includes("travel") || category.includes("food") || name.includes("travel") || name.includes("parking") || name.includes("food")) return {key:"travel",label:"Travel, parking + food"};
+    if(category.includes("flexible") || name.includes("additional untouched")) return {key:"flexible",label:"Untouched flexible buffer"};
     if(isBufferAllocation(item)) return {key:"buffer",label:"Wedding buffer"};
     if(category.includes("audio") || name.includes("tascam")) return {key:"audio",label:"Audio"};
     if(category.includes("storage") || name.includes("ssd")) return {key:"storage",label:"Storage"};
@@ -496,7 +508,18 @@
   function isBufferAllocation(item){
     const category = String(item.category || "").toLowerCase();
     const name = String(item.name || "").toLowerCase();
-    return Boolean(item.buffer || category.includes("buffer") || category.includes("wedding fund") || name.includes("wedding fund") || name.includes("emergency"));
+    return Boolean(item.buffer || category.includes("buffer") || category.includes("reserve") || category.includes("wedding fund") || name.includes("wedding fund") || name.includes("emergency") || name.includes("untouched"));
+  }
+
+  function isProtectedReserveAllocation(item){
+    const category = String(item.category || "").toLowerCase();
+    const name = String(item.name || "").toLowerCase();
+    if(category.includes("flexible") || name.includes("additional untouched")) return false;
+    return isBufferAllocation(item);
+  }
+
+  function isRoadmapPayment(payment){
+    return payment && payment.countsForRoadmap !== false;
   }
 
   function renderPayments(){

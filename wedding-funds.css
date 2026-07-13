@@ -205,6 +205,7 @@
 .money-map-segment.rentals,.money-swatch.rentals{background:#d8b76e}
 .money-map-segment.travel,.money-swatch.travel{background:#7aa7ff}
 .money-map-segment.buffer,.money-swatch.buffer{background:#7fd69b}
+.money-map-segment.flexible,.money-swatch.flexible{background:#f0dca8}
 .money-map-segment.audio,.money-swatch.audio{background:#75c7c0}
 .money-map-segment.storage,.money-swatch.storage{background:#90b7ff}
 .money-map-segment.battery,.money-swatch.battery{background:#f2c36d}
@@ -233,6 +234,7 @@
 .allocation-pill.personal{border-color:rgba(143,133,120,.5);background:rgba(143,133,120,.12)}
 .allocation-pill.rentals{border-color:rgba(216,183,110,.48);background:rgba(216,183,110,.11)}
 .allocation-pill.buffer{border-color:rgba(127,214,155,.48);background:rgba(127,214,155,.1)}
+.allocation-pill.flexible{border-color:rgba(240,220,168,.52);background:rgba(240,220,168,.1)}
 .allocation-pill.audio{border-color:rgba(117,199,192,.5);background:rgba(117,199,192,.1)}
 .allocation-pill.storage{border-color:rgba(144,183,255,.5);background:rgba(144,183,255,.1)}
 .allocation-pill.battery{border-color:rgba(242,195,109,.5);background:rgba(242,195,109,.1)}
@@ -273,6 +275,7 @@
 .priority-badge.essential{color:var(--funds-gold-light);border-color:rgba(240,220,168,.45)}
 .priority-badge.protect{color:var(--funds-green);border-color:rgba(127,214,155,.45);background:rgba(127,214,155,.07)}
 .priority-badge.done{color:var(--funds-muted)}
+.priority-badge.high{color:var(--funds-gold-light);border-color:rgba(240,220,168,.38)}
 .priority-badge.hold{color:#c5a7e8;border-color:rgba(197,167,232,.45);background:rgba(197,167,232,.07)}
 .priority-badge.later{color:var(--funds-muted)}
 .allocation-summary{display:flex;justify-content:space-between;gap:12px;margin-top:10px;padding:12px;border:1px solid var(--funds-line);background:#080704}

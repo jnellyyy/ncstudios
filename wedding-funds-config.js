@@ -7,13 +7,14 @@
   roadmap data.
 */
 window.NC_WEDDING_FUNDS_DEFAULTS = {
-  dataVersion:6,
+  dataVersion:7,
   currency:"GBP",
-  rentalTarget:90,
-  rentalWarningAt:90,
-  emergencyTarget:300,
-  emergencyWarningAt:300,
-  currentPriority:"Keep £300 wedding buffer untouched until 23 August",
+  rentalTarget:85,
+  rentalWarningAt:85,
+  emergencyTarget:150,
+  emergencyWarningAt:150,
+  flexibleHoldTarget:75,
+  currentPriority:"Use Marvin's £445 for wedding prep only",
   nextWedding:{
     client:"Simi and Kiefah",
     date:"2026-08-22"
@@ -21,20 +22,28 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
 
   financeNotes:[
     {
-      id:"marvin-250-council-tax",
-      title:"Marvin already paid £250",
-      amount:250,
-      category:"Personal / council tax",
-      status:"used",
-      notes:"This earlier £250 was used for council tax, so the active Marvin plan below focuses on the final balance plus late fee."
+      id:"marvin-money-position",
+      title:"Marvin and Blessing money position",
+      amount:445,
+      category:"Due 24 July",
+      status:"pending",
+      notes:"Total balance £595. Already paid £250. Remaining balance £345 plus £100 late fee means £445 is due on 24 July."
     },
     {
-      id:"rentals-already-paid",
-      title:"Rentals are paid",
-      amount:90,
-      category:"Rentals",
+      id:"simi-money-position",
+      title:"Simi and Kiefah paid in full",
+      amount:0,
+      category:"Usable balance",
       status:"done",
-      notes:"Simi and Kiefah rentals are confirmed at £90 flat. Keep the wedding buffer protected for travel, food, parking and emergencies."
+      notes:"They paid £375 in full. £207 went to a personal issue, £85 booked rentals and £83 is no longer available for wedding prep. Current usable balance is £0."
+    },
+    {
+      id:"wedding-prep-source",
+      title:"Wedding preparation source",
+      amount:445,
+      category:"Marvin only",
+      status:"planned",
+      notes:"The full Simi and Kiefah wedding preparation plan now comes from Marvin's £445 payment due on 24 July."
     }
   ],
 
@@ -45,11 +54,9 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {id:"samyang-35",name:"Samyang 35mm lens",quantity:1,status:"owned"},
     {id:"portkeys-pt5",name:"Portkeys PT5 II monitor",quantity:1,status:"owned"},
     {id:"dji-mic-3",name:"DJI Mic 3",quantity:1,status:"owned"},
-    {id:"tascam-dr10l",name:"Tascam DR-10L",quantity:1,status:"owned",notes:"Backup lav for ceremony and speeches."},
     {id:"np-f550",name:"NP F550 monitor battery",quantity:1,status:"owned"},
     {id:"kf-nd",name:"K&F ND filter",quantity:1,status:"owned",notes:"Use for now."},
-    {id:"sd-cards",name:"SD cards",quantity:2,status:"owned",notes:"Two cards for now."},
-    {id:"dji-mic-1",name:"DJI Mic 1",quantity:1,status:"sell-later",notes:"Sell after testing DJI Mic 3."}
+    {id:"sd-cards",name:"SD cards",quantity:2,status:"owned",notes:"Use for now."}
   ],
 
   // EDIT PAYMENT AMOUNTS, EXPECTED DATES, WEDDING DATES AND STARTING STATUSES HERE.
@@ -57,23 +64,24 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {
       id:"marvin-blessing-july",
       client:"Marvin and Blessing",
-      amount:695,
-      expectedDate:"2026-07-04",
+      amount:445,
+      expectedDate:"2026-07-24",
       weddingDate:"",
       weddingStatus:"completed",
-      purpose:"Final payment plus late fee: £595 balance + £100 late fee.",
+      purpose:"Remaining balance £345 plus £100 late fee. This is the usable wedding-prep money.",
       status:"pending",
-      notes:"Wedding complete. Allocate this money to the protected wedding fund first, then the exact kit plan. The earlier £250 received was used for council tax."
+      notes:"Total balance was £595. £250 has already been paid and used for council tax. The £445 due on 24 July funds the wedding reserve, purchases and untouched buffer."
     },
     {
       id:"simi-kiefah-august",
       client:"Simi and Kiefah",
       amount:375,
-      expectedDate:"2026-08-15",
+      expectedDate:"2026-07-13",
       weddingDate:"2026-08-22",
-      purpose:"Paid in full. Rentals are done; £200 went personal and the rest is wedding buffer.",
+      purpose:"Paid in full. £207 personal issue, £85 rentals booked and £83 no longer usable.",
       status:"allocated",
-      notes:"Simi and Kiefah have paid in full. Allocation: £200 personal, £90 rentals paid, £85 held for wedding-day buffer."
+      notes:"Current usable balance from Simi and Kiefah is £0, so the wedding preparation plan uses Marvin's £445 instead.",
+      countsForRoadmap:false
     }
   ],
 
@@ -82,57 +90,66 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {
       id:"simi-personal",
       paymentId:"simi-kiefah-august",
-      name:"Personal transfer",
+      name:"Personal issue",
       category:"Personal",
       priority:"done",
-      estimatedCost:200,
+      estimatedCost:207,
       status:"bought",
-      notes:"£200 from the Simi and Kiefah payment went to personal money."
+      notes:"£207 from the Simi and Kiefah payment was used for a personal issue."
     },
     {
       id:"simi-rentals-paid",
       paymentId:"simi-kiefah-august",
-      name:"Rentals paid",
+      name:"Rentals booked",
       category:"Rentals",
       priority:"essential",
-      estimatedCost:90,
-      estimatedMax:90,
+      estimatedCost:85,
+      estimatedMax:85,
       status:"bought",
-      notes:"All rentals are booked/paid. Rental total confirmed at £90 flat.",
+      notes:"Camera and lens rentals are booked for £85.",
       rental:true
     },
     {
-      id:"simi-wedding-buffer-left",
+      id:"simi-remaining-unusable",
       paymentId:"simi-kiefah-august",
-      name:"Wedding buffer left from Simi payment",
-      category:"Wedding buffer",
-      priority:"essential",
-      estimatedCost:85,
-      status:"planned",
-      notes:"Keep this available for travel, parking, food or wedding-day emergencies.",
+      name:"Remaining money no longer usable",
+      category:"Used / closed",
+      priority:"done",
+      estimatedCost:83,
+      status:"bought",
+      notes:"The remaining £83 is no longer available for wedding prep. Current usable balance from this payment is £0."
+    },
+    {
+      id:"marvin-travel-food",
+      paymentId:"marvin-blessing-july",
+      name:"Wedding travel, parking and food",
+      category:"Travel + food reserve",
+      priority:"protect",
+      estimatedCost:70,
+      status:"reserve",
+      notes:"Sheffield to Birmingham plus movement between venues. Keep untouched until after 22 August.",
       buffer:true
     },
     {
-      id:"marvin-wedding-fund",
+      id:"marvin-emergency-buffer",
       paymentId:"marvin-blessing-july",
-      name:"Wedding Fund",
-      category:"Wedding fund",
+      name:"Emergency wedding buffer",
+      category:"Emergency reserve",
       priority:"protect",
-      estimatedCost:300,
-      status:"planned",
-      notes:"Do not touch this before 23 August. Covers any last rental issue, travel, parking, food and emergency purchases. If nothing happens, move it into CFexpress after the wedding.",
-      buffer:true,
-      protected:true
+      estimatedCost:80,
+      status:"reserve",
+      notes:"For batteries, cables, replacement item, taxi or unexpected expense. Do not spend before the wedding.",
+      buffer:true
     },
     {
       id:"marvin-tascam-dr05xp",
       paymentId:"marvin-blessing-july",
-      name:"Tascam DR-05XP",
+      name:"Tascam DR 05XP",
       category:"Audio",
-      priority:"essential",
-      estimatedCost:95,
+      priority:"urgent",
+      estimatedCost:93,
       status:"planned",
-      notes:"Finishes the dedicated audio setup: DJI Mic 3, Tascam DR-10L, and DR-05XP for DJ feed, room ambience or emergency recording.",
+      notes:"Separate recorder for the mixer, speeches and backup audio.",
       buyListId:"tascam-dr05xp"
     },
     {
@@ -142,52 +159,94 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
       category:"Storage + backup",
       priority:"urgent",
       estimatedCost:70,
+      estimatedMax:75,
       status:"planned",
-      notes:"Needed before the next wedding. Wedding footage should never rely on a single drive.",
+      notes:"Dedicated working storage for the wedding. Expected range £60-£75.",
       buyListId:"ssd-1tb"
+    },
+    {
+      id:"marvin-microsd-card",
+      paymentId:"marvin-blessing-july",
+      name:"microSD card for recorder",
+      category:"Audio storage",
+      priority:"urgent",
+      estimatedCost:12,
+      estimatedMax:15,
+      status:"planned",
+      notes:"Needed because the recorder does not include useful recording storage.",
+      buyListId:"microsd-recorder"
+    },
+    {
+      id:"marvin-rca-cable",
+      paymentId:"marvin-blessing-july",
+      name:"RCA to 3.5mm cable",
+      category:"Audio cable",
+      priority:"urgent",
+      estimatedCost:10,
+      estimatedMax:12,
+      status:"planned",
+      notes:"Connects a common mixer record output to the Tascam.",
+      buyListId:"rca-35-cable"
     },
     {
       id:"marvin-np-f550-second",
       paymentId:"marvin-blessing-july",
       name:"Second NP-F550 battery",
       category:"Camera + filming",
-      priority:"urgent",
+      priority:"high",
       estimatedCost:15,
+      estimatedMax:15,
       status:"planned",
-      notes:"Lets the Portkeys monitor comfortably last the wedding day.",
+      notes:"Backup power for the Portkeys monitor. Expected range £10-£15.",
       buyListId:"np-f550-second"
     },
     {
-      id:"marvin-cfexpress-fund",
+      id:"marvin-cable-adapter-allowance",
       paymentId:"marvin-blessing-july",
-      name:"CFexpress fund",
-      category:"CFexpress fund",
-      priority:"hold",
-      estimatedCost:215,
+      name:"Small cable and adapter allowance",
+      category:"Cable + adapter allowance",
+      priority:"high",
+      estimatedCost:20,
+      estimatedMax:25,
       status:"planned",
-      notes:"Hold this. Do not buy yet. If the £300 wedding fund is untouched after 22 August, move that into CFexpress too.",
-      buyListId:"cfexpress-card"
+      notes:"Spare HDMI, audio adapter or cable replacement. Expected range £15-£25.",
+      buyListId:"small-cable-adapter"
+    },
+    {
+      id:"marvin-additional-buffer",
+      paymentId:"marvin-blessing-july",
+      name:"Additional untouched buffer",
+      category:"Flexible reserve",
+      priority:"protect",
+      estimatedCost:75,
+      status:"reserve",
+      notes:"Keep untouched until the wedding. Can cover rental deposit issues, delivery fees, extra transport, another monitor battery or anything that fails during testing.",
+      buffer:true
     }
   ],
 
   // EDIT RENTAL ITEMS AND THEIR STARTING STATUSES HERE.
   rentals:[
-    {id:"rental-a7iv",name:"Second Sony A7 IV body",status:"reserved",notes:"Booked/paid as part of the £90 flat rental total. Test all recording modes when collected."},
-    {id:"rental-24-70",name:"Sony 24-70mm f2.8 GM II",status:"reserved",notes:"Booked/paid. Primary flexible coverage lens."},
-    {id:"rental-70-200",name:"Sony 70-200mm f2.8 GM II",status:"reserved",notes:"Booked/paid. Ceremony and candid reach."}
+    {id:"rental-a7iv",name:"Second Sony A7 IV body",status:"reserved",notes:"Booked as part of the £85 camera and lens rental total. Test all recording modes when collected."},
+    {id:"rental-24-70",name:"Sony 24-70mm f2.8 GM II",status:"reserved",notes:"Booked. Primary flexible coverage lens."},
+    {id:"rental-70-200",name:"Sony 70-200mm f2.8 GM II",status:"reserved",notes:"Booked. Ceremony and candid reach."}
   ],
 
   // EDIT THE AFTER-RENTALS BUYING ORDER AND ESTIMATES HERE.
   buyList:[
-    {id:"tascam-dr05xp",rank:1,name:"Tascam DR-05XP",category:"Audio",priority:"urgent",status:"needed",estimate:95,notes:"DJ feed, room ambience and emergency recorder."},
-    {id:"ssd-1tb",rank:2,name:"1TB SSD",category:"Storage + backup",priority:"urgent",status:"needed",estimate:70,notes:"Buy before the next wedding; never rely on a single drive."},
-    {id:"np-f550-second",rank:3,name:"Second NP-F550 battery",category:"Camera + filming",priority:"urgent",status:"needed",estimate:15,notes:"For a full day on the Portkeys monitor."},
-    {id:"cfexpress-card",rank:4,name:"CFexpress Type A card",category:"Storage + backup",priority:"future",status:"later",estimate:215,notes:"Hold the £215 fund. Buy after the wedding buffer is safe or released."},
-    {id:"cfexpress-reader",rank:5,name:"CFexpress Type A reader",category:"Storage + backup",priority:"future",status:"later",estimate:0,notes:"Buy with the CFexpress card."},
-    {id:"nisi-nd",rank:6,name:"NiSi True Color 82mm ND filter",category:"Camera + filming",priority:"future",status:"later",estimate:0,notes:"Upgrade after current wedding needs are covered."},
-    {id:"smallrig-4469",rank:7,name:"SmallRig 4469 battery",category:"Camera + filming",priority:"future",status:"later",estimate:0,notes:"Future power upgrade."},
-    {id:"samyang-24-70",rank:8,name:"Samyang 24-70mm f2.8",category:"Future weddings",priority:"future",status:"later",estimate:0,notes:"Longer-term owned lens option."},
-    {id:"samyang-35-150",rank:9,name:"Samyang 35-150mm f2-2.8",category:"Future weddings",priority:"future",status:"later",estimate:0,notes:"Longer-term owned lens option."}
+    {id:"ssd-1tb",rank:1,name:"1TB SSD",category:"Storage + backup",priority:"urgent",status:"needed",estimate:70,estimateMax:75,notes:"Dedicated working storage for the wedding."},
+    {id:"tascam-dr05xp",rank:2,name:"Tascam DR 05XP",category:"Audio",priority:"urgent",status:"needed",estimate:93,notes:"Separate recorder for mixer, speeches and backup audio."},
+    {id:"microsd-recorder",rank:3,name:"microSD card for recorder",category:"Audio storage",priority:"urgent",status:"needed",estimate:12,estimateMax:15,notes:"Recorder storage; expected range £10-£15."},
+    {id:"rca-35-cable",rank:4,name:"RCA to 3.5mm cable",category:"Audio cable",priority:"urgent",status:"needed",estimate:10,estimateMax:12,notes:"Connect common mixer record output to the Tascam."},
+    {id:"np-f550-second",rank:5,name:"Second NP-F550 battery",category:"Camera + filming",priority:"high",status:"needed",estimate:15,estimateMax:15,notes:"Backup power for the Portkeys monitor."},
+    {id:"small-cable-adapter",rank:6,name:"Small cable and adapter allowance",category:"Camera + audio support",priority:"high",status:"needed",estimate:20,estimateMax:25,notes:"Spare HDMI, audio adapter or cable replacement."},
+    {id:"cfexpress-card",rank:7,name:"CFexpress Type A card",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Current SD cards have already covered two weddings."},
+    {id:"cfexpress-reader",rank:8,name:"CFexpress Type A reader",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Only needed when the CFexpress card is bought."},
+    {id:"nisi-nd",rank:9,name:"NiSi True Color 82mm ND filter",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"K&F version can cover this wedding."},
+    {id:"smallrig-4469",rank:10,name:"SmallRig 4469 battery",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Upgrade later; current NP-F550 setup works."},
+    {id:"samyang-24-70",rank:11,name:"Samyang 24-70mm f2.8",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Rentals are already booked."},
+    {id:"samyang-35-150",rank:12,name:"Samyang 35-150mm f2-2.8",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Rentals are already booked."},
+    {id:"3d-printer",rank:13,name:"3D printer",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Not part of wedding preparation."}
   ],
 
   // EDIT WEDDING-WEEK TASKS AND DUE DATES HERE.
