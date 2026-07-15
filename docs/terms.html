@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>terms and conditions | nc studio</title>
+<meta name="description" content="NC Studio wedding photography, videography and content package terms and conditions.">
+
+<link rel="manifest" href="website.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png?v=brand-20260612">
+<link rel="icon" href="icon-32.png?v=brand-20260612">
+<meta name="theme-color" content="#050504">
+
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf?v=brand-20260612b") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+@font-face{
+  font-family:"NC Studio Brand Lighter";
+  src:url("assets/fonts/NC_Font_Lighter.ttf?v=brand-20260612b") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+:root{
+  --bg:#050504;
+  --bg2:#11100c;
+  --ink:#f7efe3;
+  --paper:#efe1cc;
+  --muted:#b8ac9a;
+  --line:rgba(216,183,110,0.26);
+  --panel:rgba(5,5,4,0.74);
+  --gold:#d8b76e;
+  --gold2:#f0dca8;
+  --brand:"NC Studio Brand",Impact,sans-serif;
+  --brand-light:"NC Studio Brand Lighter","NC Studio Brand",Impact,sans-serif;
+  --mono:"SFMono-Regular","Menlo","Monaco","Courier New",monospace;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html{
+  background:var(--bg);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  background:
+    linear-gradient(rgba(216,183,110,0.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(216,183,110,0.045) 1px,transparent 1px),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  background-size:48px 48px,48px 48px,100% 100%;
+  font-family:var(--body);
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:clamp(10px,2vw,28px);
+  pointer-events:none;
+  border:1px solid var(--line);
+  opacity:0.86;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.siteHeader{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:clamp(18px,3vw,34px) clamp(20px,5vw,72px);
+  border-bottom:1px solid rgba(216,183,110,0.24);
+  background:rgba(5,5,4,0.82);
+}
+
+.brand img{
+  width:clamp(156px,18vw,240px);
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 8px 20px rgba(216,183,110,0.18));
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-family:var(--mono);
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+.nav a{
+  padding:12px 14px;
+  border:1px solid transparent;
+}
+
+.nav .navCta{
+  border-color:rgba(216,183,110,0.42);
+  color:var(--gold2);
+}
+
+.termsPage{
+  width:min(1180px,calc(100% - 40px));
+  margin:0 auto;
+  padding:clamp(44px,8vw,92px) 0 clamp(48px,8vw,90px);
+}
+
+.termsHero{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(260px,0.85fr);
+  gap:28px;
+  align-items:end;
+  padding-bottom:34px;
+  border-bottom:1px solid rgba(216,183,110,0.30);
+}
+
+.eyebrow,
+.pageNote,
+.clauseNumber,
+.footer{
+  font-family:var(--mono);
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+
+.eyebrow{
+  margin:0 0 18px;
+  color:var(--gold);
+  font-size:13px;
+}
+
+h1,
+h2,
+h3{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  letter-spacing:0;
+}
+
+h1{
+  max-width:820px;
+  color:var(--gold2);
+  font-size:clamp(58px,10vw,128px);
+  line-height:0.88;
+}
+
+.pageNote{
+  margin:0;
+  color:var(--paper);
+  font-size:14px;
+  line-height:1.7;
+}
+
+.paymentNotice{
+  margin-top:24px;
+  padding:clamp(18px,3vw,28px);
+  border:1px solid rgba(216,183,110,0.42);
+  background:
+    linear-gradient(180deg,rgba(216,183,110,0.12),rgba(216,183,110,0.035)),
+    var(--panel);
+}
+
+.paymentNotice h2{
+  color:var(--gold2);
+  font-size:clamp(30px,4vw,48px);
+  line-height:0.95;
+}
+
+.paymentNotice p,
+.termsIntro p{
+  max-width:880px;
+  color:var(--paper);
+  line-height:1.72;
+}
+
+.termsIntro{
+  margin-top:24px;
+  padding:clamp(18px,3vw,30px);
+  border:1px solid var(--line);
+  background:rgba(5,5,4,0.58);
+}
+
+.termsGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-top:18px;
+}
+
+.termClause{
+  min-height:205px;
+  padding:clamp(18px,3vw,26px);
+  border:1px solid var(--line);
+  background:
+    linear-gradient(180deg,rgba(216,183,110,0.075),rgba(216,183,110,0.02)),
+    var(--panel);
+}
+
+.clauseNumber{
+  display:block;
+  margin-bottom:22px;
+  color:var(--gold);
+  font-size:12px;
+}
+
+.termClause h2{
+  margin-bottom:12px;
+  color:var(--gold2);
+  font-size:clamp(28px,3.6vw,42px);
+  line-height:0.95;
+}
+
+.termClause p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.65;
+}
+
+.footer{
+  width:min(1180px,calc(100% - 40px));
+  margin:0 auto;
+  padding:20px 0 36px;
+  border-top:1px solid rgba(216,183,110,0.24);
+  color:var(--muted);
+  font-size:11px;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+}
+
+@media(max-width:860px){
+  .termsHero,
+  .termsGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:640px){
+  .siteHeader{
+    padding:14px 16px;
+  }
+
+  .brand img{
+    width:132px;
+  }
+
+  .nav a:not(.navCta){
+    display:none;
+  }
+
+  .termsPage{
+    width:calc(100% - 32px);
+    padding-top:40px;
+  }
+
+  h1{
+    font-size:54px;
+  }
+
+  .footer{
+    width:calc(100% - 32px);
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+<header class="siteHeader">
+  <a class="brand" href="index.html" aria-label="nc studio home">
+    <img src="ncstudios-logo-transparent.png?v=brand-20260612" alt="nc studio logo">
+  </a>
+
+  <nav class="nav" aria-label="site navigation">
+    <a href="index.html#about">about</a>
+    <a href="index.html#films">work</a>
+    <a href="availability.html">availability</a>
+    <a class="navCta" href="terms.html">terms</a>
+  </nav>
+</header>
+
+<main class="termsPage">
+  <section class="termsHero" aria-labelledby="terms-title">
+    <div>
+      <p class="eyebrow">effective from May 2026</p>
+      <h1 id="terms-title">terms.</h1>
+    </div>
+    <p class="pageNote">for NC Studio wedding photography, videography, content and creative packages.</p>
+  </section>
+
+  <section class="paymentNotice" aria-labelledby="payment-terms-title">
+    <p class="eyebrow">payment dates and late fees</p>
+    <h2 id="payment-terms-title">written payment dates matter.</h2>
+    <p>If an invoice, email, WhatsApp message or other written communication from NC Studio confirms a payment date, that date forms the agreed payment date. If the date is missed, the payment is overdue from the next day and late fees may apply. NC Studio may pause delivery, withhold final galleries, films, USBs, add-ons or further work until the outstanding balance and any applicable late fees are paid.</p>
+    <p>For business or commercial clients, statutory late-payment interest and recovery costs may also apply where permitted by law.</p>
+  </section>
+
+  <section class="termsIntro" aria-label="terms overview">
+    <p>These terms apply to bookings and written payment communications dated from May 2026 onward. A final contract, invoice, proposal, package agreement or written message may add specific details for an individual booking.</p>
+  </section>
+
+  <section class="termsGrid" aria-label="terms and conditions">
+    <article class="termClause">
+      <span class="clauseNumber">01</span>
+      <h2>booking confirmation.</h2>
+      <p>A date is only secured once NC Studio confirms the booking in writing and the required booking fee, retainer or deposit has cleared. Enquiries, calls and provisional conversations do not hold a date unless confirmed in writing.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">02</span>
+      <h2>deposits and retainers.</h2>
+      <p>Booking fees, deposits and retainers cover planning time, administration and holding the date. They are normally non-refundable unless NC Studio is unable to provide the agreed service.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">03</span>
+      <h2>balance payments.</h2>
+      <p>Final balances must be paid by the due date on the invoice or by the date agreed in writing. Missed payment dates may delay editing, delivery, extra coverage, travel arrangements or add-ons.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">04</span>
+      <h2>late fees.</h2>
+      <p>Where a payment date has been agreed by invoice, email, WhatsApp or written message and the date is missed, late fees may apply. This may include reasonable admin fees, recovery costs and any statutory interest available by law.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">05</span>
+      <h2>postponements.</h2>
+      <p>Postponed dates are subject to NC Studio availability. If the new date is unavailable, the booking may be treated as a cancellation. Extra costs may apply if the location, schedule, package or coverage changes.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">06</span>
+      <h2>cancellations.</h2>
+      <p>Cancellation terms depend on the package, wedding date, work already completed and notice given. Any unpaid amounts for completed planning, shooting, editing, travel, rental, outsourced or delivery costs remain payable.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">07</span>
+      <h2>coverage limits.</h2>
+      <p>NC Studio works with care and professionalism, but specific images, moments or video shots cannot be guaranteed where timings, access, weather, lighting, venue rules, guest behaviour or schedule changes affect coverage.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">08</span>
+      <h2>client responsibilities.</h2>
+      <p>Clients must provide accurate timings, addresses, venue rules, permissions, supplier details, key people and shot priorities in good time. Delays or missing information may affect the final gallery or film.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">09</span>
+      <h2>creative style.</h2>
+      <p>By booking NC Studio, the client accepts the studio's existing creative style, including shooting approach, colour, edit pacing, image selection, sound, music direction and final presentation.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">10</span>
+      <h2>raw files.</h2>
+      <p>Raw photographs, unedited video files, project files and full camera rolls are not included unless agreed in writing before booking. Delivered work is selected and edited by NC Studio.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">11</span>
+      <h2>delivery.</h2>
+      <p>Delivery timings are estimates unless a fixed date is agreed in writing. Preview galleries, final galleries, films, USBs and add-ons may be held until all balances and applicable fees are paid.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">12</span>
+      <h2>revisions.</h2>
+      <p>Reasonable correction requests can be reviewed, but full re-edits, style changes, music changes, extra exports or additional versions may be chargeable unless already included in the package.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">13</span>
+      <h2>permissions.</h2>
+      <p>The client is responsible for confirming that photography, filming, drone use, audio recording, venue access and supplier restrictions are allowed. Venue or legal restrictions may limit coverage.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">14</span>
+      <h2>music and licensing.</h2>
+      <p>Wedding films use music selected or licensed for the intended delivery where possible. Requested songs may not be available for online use, social media or public sharing unless properly licensed.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">15</span>
+      <h2>portfolio use.</h2>
+      <p>NC Studio may use selected work for portfolio, website, social media, sample galleries, printed materials and marketing unless privacy is agreed in writing before delivery.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">16</span>
+      <h2>privacy.</h2>
+      <p>Private galleries and delivery links are provided for the client and invited viewers. Clients should not share private links publicly unless they are comfortable with others viewing or downloading the content.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">17</span>
+      <h2>storage.</h2>
+      <p>NC Studio takes reasonable care to back up files, but clients should download and safely store their delivered files once received. Long-term hosting, re-delivery or archive recovery is not guaranteed.</p>
+    </article>
+
+    <article class="termClause">
+      <span class="clauseNumber">18</span>
+      <h2>liability.</h2>
+      <p>If illness, emergency, equipment failure, supplier issues or circumstances outside reasonable control affect the service, NC Studio will act fairly and professionally. Liability is limited to the amount paid for the affected service, except where the law says otherwise.</p>
+    </article>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>&copy; ncstudiouk</span>
+  <span>terms and conditions</span>
+</footer>
+</body>
+</html>

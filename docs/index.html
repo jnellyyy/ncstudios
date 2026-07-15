@@ -349,6 +349,7 @@
     .desktop-icon:nth-child(2n) .icon-art { background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(113,86,35,.88)); }
     .desktop-icon:hover .icon-art { transform: translateY(-4px) scale(1.04); border-color: var(--gold-light); }
     .desktop-icon small { display: block; font-size: 11px; line-height: 1.15; }
+    .desktop-icon .icon-art.is-wide { font-size: 14px; }
 
     .window {
       --x: 12vw;
@@ -474,6 +475,15 @@
     .principles-grid div { min-height: 130px; padding: 17px; border: 1px solid var(--line); border-radius: 8px; background: rgba(215,182,108,.04); }
     .principles-grid span { color: #a4823e; font: 10px var(--mono); }
     .principles-grid strong { display: block; margin-top: 30px; font-size: 14px; }
+
+    .terms-window .window-body { background: #0c0b08; }
+    .terms-intro { border-bottom: 1px solid var(--line); background: radial-gradient(circle at 74% 0, rgba(215,182,108,.14), transparent 44%); }
+    .terms-note { margin-top: 24px; padding: 16px; border: 1px solid rgba(215,182,108,.3); border-radius: 8px; color: var(--gold-light) !important; background: rgba(215,182,108,.07); }
+    .terms-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 0 clamp(24px,5vw,58px) clamp(28px,5vw,58px); }
+    .terms-clause { min-height: 174px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035); }
+    .terms-clause span { display: block; margin-bottom: 18px; color: #a4823e; font: 700 16px var(--mono); }
+    .terms-clause strong { display: block; margin-bottom: 8px; color: var(--cream); font-size: 15px; }
+    .terms-clause p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
 
     .media-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
     .media-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #111; }
@@ -662,6 +672,7 @@
       .finder-main { padding: 24px 18px 34px; }
       .finder-grid { grid-template-columns: 1fr; }
       .case-gallery .pair, .media-grid, .poster-grid, .principles-grid { grid-template-columns: 1fr; }
+      .terms-list { grid-template-columns: 1fr; padding-inline: 18px; }
       .photo-wall { grid-template-columns: 1fr; }
       .photo-wall figure, .photo-wall figure.wide, .photo-wall figure.narrow, .photo-wall figure.full { grid-column: 1; min-height: 330px; }
       .media-card:first-child, .media-card.is-featured { grid-column: auto; }
@@ -724,6 +735,7 @@
         <button class="menu-command" type="button" data-open="weddings">Weddings</button>
         <button class="menu-command" type="button" data-open="engagements">Engagements</button>
         <button class="menu-command" type="button" data-open="films">Films</button>
+        <button class="menu-command" type="button" data-open="terms">Terms</button>
       </div>
       <div class="menu-right"><span>UK · weddings · photo + film</span><time data-clock>09:41</time></div>
     </header>
@@ -743,6 +755,9 @@
       </button>
       <button class="desktop-icon" type="button" data-open="about" aria-label="Open about Janelle">
         <span class="icon-art" aria-hidden="true">NC</span><small>About</small>
+      </button>
+      <button class="desktop-icon" type="button" data-open="terms" aria-label="Open terms and conditions">
+        <span class="icon-art is-wide" aria-hidden="true">T&C</span><small>Terms</small>
       </button>
       <button class="desktop-icon" type="button" data-open="contact" aria-label="Open work together window">
         <span class="icon-art" aria-hidden="true">↗</span><small>Work together</small>
@@ -766,6 +781,7 @@
           <button type="button" data-open="films"><span>▶</span> Wedding films</button>
           <button type="button" data-open="experience"><span>●</span> The experience</button>
           <button type="button" data-open="about"><span>●</span> About NC Studio</button>
+          <button type="button" data-open="terms"><span>●</span> Terms</button>
         </aside>
         <div class="finder-main">
           <p class="eyebrow">NC Studio · Wedding photo + film</p>
@@ -945,6 +961,39 @@
       </div>
     </section>
 
+    <section class="window terms-window" style="--x:15vw;--y:6vh;--w:940px;--h:760px" data-window="terms" role="dialog" aria-label="NC Studio terms and conditions" aria-hidden="true" hidden>
+      <header class="window-bar" data-drag-handle>
+        <div class="window-controls">
+          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
+          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
+          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
+        </div>
+        <div class="window-title">Terms <span>— bookings, payments &amp; delivery</span></div><span></span>
+      </header>
+      <div class="window-body">
+        <div class="content terms-intro">
+          <p class="eyebrow" style="color:#886820">Effective from May 2026</p>
+          <h2>Terms &amp; conditions.</h2>
+          <p class="lead">These terms apply to NC Studio wedding photography, videography, content and related creative packages.</p>
+          <p class="terms-note">Where an invoice, email, WhatsApp message or other written communication confirms a payment date, that date forms the agreed payment date. If the date is missed, the payment is overdue and late fees may apply.</p>
+        </div>
+        <div class="terms-list">
+          <article class="terms-clause"><span>01</span><strong>Booking confirmation</strong><p>A date is not secured until NC Studio confirms the booking in writing and the required booking fee, retainer or deposit has cleared.</p></article>
+          <article class="terms-clause"><span>02</span><strong>Payments and late fees</strong><p>Balances must be paid by the date shown on the invoice or agreed in writing by email, WhatsApp or message. Missed dates may pause delivery, release unpaid add-ons and lead to late fees, admin charges or statutory recovery costs where permitted by law.</p></article>
+          <article class="terms-clause"><span>03</span><strong>Retainers and deposits</strong><p>Booking fees and retainers cover planning time and holding the date. They are normally non-refundable unless NC Studio is unable to provide the agreed service.</p></article>
+          <article class="terms-clause"><span>04</span><strong>Postponements</strong><p>Postponed dates are subject to availability. If the new date is unavailable, the booking may be treated as a cancellation. Extra costs may apply where plans, travel or coverage change.</p></article>
+          <article class="terms-clause"><span>05</span><strong>Cancellations</strong><p>Cancellation terms depend on the package, date, work already completed and notice given. Any money owed for completed planning, shooting, editing, travel or outsourced costs remains payable.</p></article>
+          <article class="terms-clause"><span>06</span><strong>Coverage limits</strong><p>NC Studio will work carefully and professionally, but specific shots cannot be guaranteed where timings, access, weather, venue rules, guests, lighting or schedule changes affect what can be captured.</p></article>
+          <article class="terms-clause"><span>07</span><strong>Client responsibilities</strong><p>Clients must provide accurate timings, locations, permissions, supplier details and key shot priorities in good time. Delays or missing information may affect the final coverage.</p></article>
+          <article class="terms-clause"><span>08</span><strong>Editing and creative style</strong><p>NC Studio keeps creative control over shooting, selection, colour, pacing, music choice and final edit style. Raw files are not included unless agreed in writing before booking.</p></article>
+          <article class="terms-clause"><span>09</span><strong>Delivery</strong><p>Delivery timings are estimates unless a fixed deadline is agreed in writing. Final galleries, films, previews and add-ons may be held until all outstanding balances are paid.</p></article>
+          <article class="terms-clause"><span>10</span><strong>Image use and privacy</strong><p>NC Studio may use selected work for portfolio, website, social media and marketing unless privacy is agreed in writing. Client galleries and delivery links should not be shared publicly unless intended for that purpose.</p></article>
+          <article class="terms-clause"><span>11</span><strong>Storage and backups</strong><p>Files are backed up with reasonable care, but clients should download and safely store delivered files once received. Long-term hosting or re-delivery may not always be available.</p></article>
+          <article class="terms-clause"><span>12</span><strong>Liability</strong><p>If something outside NC Studio’s reasonable control prevents full service delivery, liability is limited to the amount paid for the affected service, except where the law says otherwise.</p></article>
+        </div>
+      </div>
+    </section>
+
     <section class="window contact-window" style="--x:20vw;--y:8vh;--w:760px;--h:680px" data-window="contact" role="dialog" aria-label="Contact NC Studio" aria-hidden="true" hidden>
       <header class="window-bar" data-drag-handle>
         <div class="window-controls">
@@ -1011,6 +1060,7 @@
         <button class="dock-button" type="button" data-open="films" aria-label="Wedding films"><span aria-hidden="true">▶</span><span class="dock-tip">Wedding films</span></button>
         <button class="dock-button" type="button" data-open="experience" aria-label="The experience"><span aria-hidden="true">01</span><span class="dock-tip">The experience</span></button>
         <button class="dock-button" type="button" data-open="about" aria-label="About"><span aria-hidden="true">NC</span><span class="dock-tip">About</span></button>
+        <button class="dock-button" type="button" data-open="terms" aria-label="Terms"><span aria-hidden="true">T&C</span><span class="dock-tip">Terms</span></button>
         <span class="dock-divider" aria-hidden="true"></span>
         <button class="dock-button" type="button" data-open="contact" aria-label="Check your date"><span aria-hidden="true">↗</span><span class="dock-tip">Check your date</span></button>
       </nav>
@@ -1084,6 +1134,22 @@
       }
 
       window.ncOpenWindow = openWindow;
+
+      const hashRoutes = {
+        '#home':'finder',
+        '#weddings':'weddings',
+        '#engagements':'engagements',
+        '#films':'films',
+        '#experience':'experience',
+        '#about':'about',
+        '#terms':'terms',
+        '#contact':'contact'
+      };
+
+      function openHashWindow() {
+        const route = hashRoutes[location.hash];
+        if (route) openWindow(route);
+      }
 
       function closeWindow(win) {
         const name = win.dataset.window;
@@ -1159,6 +1225,8 @@
       updateClock();
       setInterval(updateClock, 30000);
       focusWindow(windowFor('finder'));
+      openHashWindow();
+      window.addEventListener('hashchange', openHashWindow);
     })();
   </script>
   <script src="supabase-js.js?v=2.107.0"></script>
@@ -1311,7 +1379,8 @@
           '#home':'finder',
           '#about':'about',
           '#films':'films',
-          '#motion-title':'films'
+          '#motion-title':'films',
+          '#terms':'terms'
         }[event.data.scrollTo];
         if (previewWindow) window.ncOpenWindow?.(previewWindow);
       });
