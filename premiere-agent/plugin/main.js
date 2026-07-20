@@ -7,6 +7,8 @@ const HELPER_TOKEN_KEY = "nc-edit-agent-helper-folder";
 const INSPO_TOKEN_KEY = "nc-edit-agent-inspo-folder";
 const INSPO_SOURCE_KEY = "nc-edit-agent-inspo-source";
 const STYLE_PROFILE_KEY = "nc-edit-agent-style-profile";
+const CODEX_REQUEST_FILE = "codex-request.json";
+const CODEX_PLAN_FILE = "codex-plan.json";
 
 let initialized = false;
 let busy = false;
@@ -36,6 +38,8 @@ function updateButtons() {
   byId("choose-inspo").disabled = busy;
   byId("analyse-inspo").disabled = busy || !helperFolder || !inspoSource;
   byId("create-plan").disabled = busy || !helperFolder || !styleProfile;
+  byId("export-codex-request").disabled = busy || !helperFolder;
+  byId("load-codex-plan").disabled = busy || !helperFolder;
   byId("apply-plan").disabled = busy || !currentPlan || currentPlan.changes.length === 0;
 }
 
@@ -142,6 +146,19 @@ async function bridgeRequest(type, payload, timeoutMs) {
     await delay(650);
   }
   throw new Error("The helper took too long to respond.");
+}
+
+async function writeHelperJsonFile(name, data) {
+  if (!helperFolder) throw new Error("Connect the helper runtime folder first.");
+  const file = await helperFolder.createFile(name, { overwrite: true });
+  await file.write(`${JSON.stringify(data, null, 2)}\n`);
+}
+
+async function readHelperJsonFile(name) {
+  if (!helperFolder) throw new Error("Connect the helper runtime folder first.");
+  const file = await findEntry(helperFolder, name);
+  if (!file) throw new Error(`${name} was not found in the connected runtime folder.`);
+  return JSON.parse(await file.read());
 }
 
 function renderStyleProfile(profile, mode) {
@@ -422,6 +439,146 @@ async function createPlan() {
   });
 }
 
+async function exportCodexRequest() {
+  const instruction = byId("edit-request").value.trim();
+  if (!instruction) throw new Error("Describe what you want changed first.");
+
+  await runBusy("Exporting this timeline request for Codex…", async () => {
+    const project = await ppro.Project.getActiveProject();
+    if (!project) throw new Error("Open a Premiere project first.");
+    const sequence = await project.getActiveSequence();
+    if (!sequence) throw new Error("Open a sequence in the Timeline first.");
+
+    timelineSnapshot = await readTimeline(sequence, false);
+    const requestId = makeRequestId();
+    const codexRequest = {
+      id: requestId,
+      createdAt: new Date().toISOString(),
+      outputFile: CODEX_PLAN_FILE,
+      instruction,
+      styleProfile,
+      timeline: stripReferences(timelineSnapshot),
+      instructionsForCodex: [
+        `Read this ${CODEX_REQUEST_FILE} file and create ${CODEX_PLAN_FILE} in the same folder.`,
+        "Return a conservative Premiere edit plan using only the supplied clipId values.",
+        "Supported change types are trim_clip, remove_clip, move_clip, set_clip_disabled, and rename_clip.",
+        "Keep dialogue/music sync in mind: mirror changes across matching audio/video clips when they clearly share timing and name.",
+        "Never reduce a clip below 0.25 seconds, create negative start times, or propose overlapping moves.",
+        "Use this JSON shape: { sourceRequestId, sequenceGuid, title, summary, confidence, warnings, changes }.",
+      ],
+      planShape: {
+        sourceRequestId: requestId,
+        sequenceGuid: timelineSnapshot.sequenceGuid,
+        title: "Short plan title",
+        summary: "What the plan is doing",
+        confidence: 0.0,
+        warnings: ["Optional safety notes"],
+        changes: [
+          {
+            type: "trim_clip",
+            clipId: "Use an exact clip id from the timeline",
+            reason: "Why this is safe/useful",
+            trimStartSeconds: 0,
+            trimEndSeconds: 0,
+          },
+        ],
+      },
+    };
+
+    await writeHelperJsonFile(CODEX_REQUEST_FILE, codexRequest);
+    setStatus(`Saved ${CODEX_REQUEST_FILE}. Ask Codex to make ${CODEX_PLAN_FILE}, then click Load Codex plan.`);
+  });
+}
+
+function boundedNumber(value, min, max, fieldName) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < min || number > max) {
+    throw new Error(`Codex plan has an invalid ${fieldName}.`);
+  }
+  return number;
+}
+
+function requiredText(value, fieldName, maxLength) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`Codex plan is missing ${fieldName}.`);
+  }
+  return value.trim().slice(0, maxLength);
+}
+
+function requiredBoolean(value, fieldName) {
+  if (typeof value !== "boolean") throw new Error(`Codex plan has an invalid ${fieldName}.`);
+  return value;
+}
+
+function normalizeCodexChange(change) {
+  if (!change || typeof change !== "object") throw new Error("Codex plan contains an invalid change.");
+  const base = {
+    type: requiredText(change.type, "change.type", 80),
+    clipId: requiredText(change.clipId, "change.clipId", 500),
+    reason: requiredText(change.reason, "change.reason", 300),
+  };
+
+  if (base.type === "trim_clip") {
+    return {
+      ...base,
+      trimStartSeconds: boundedNumber(change.trimStartSeconds, 0, 30, "trimStartSeconds"),
+      trimEndSeconds: boundedNumber(change.trimEndSeconds, 0, 30, "trimEndSeconds"),
+    };
+  }
+  if (base.type === "remove_clip") {
+    return { ...base, rippleDelete: requiredBoolean(change.rippleDelete, "rippleDelete") };
+  }
+  if (base.type === "move_clip") {
+    return { ...base, deltaSeconds: boundedNumber(change.deltaSeconds, -30, 30, "deltaSeconds") };
+  }
+  if (base.type === "set_clip_disabled") {
+    return { ...base, disabled: requiredBoolean(change.disabled, "disabled") };
+  }
+  if (base.type === "rename_clip") {
+    return { ...base, name: requiredText(change.name, "change.name", 80) };
+  }
+
+  throw new Error(`Codex plan uses unsupported change type: ${base.type}`);
+}
+
+function normalizeCodexPlan(raw) {
+  const source = raw && raw.plan && typeof raw.plan === "object" ? raw.plan : raw;
+  if (!source || typeof source !== "object") throw new Error("Codex plan file is not a valid JSON object.");
+  const changes = Array.isArray(source.changes) ? source.changes.map(normalizeCodexChange) : [];
+  return {
+    sourceRequestId: typeof source.sourceRequestId === "string" ? source.sourceRequestId : "",
+    sequenceGuid: typeof source.sequenceGuid === "string" ? source.sequenceGuid : "",
+    title: typeof source.title === "string" && source.title.trim() ? source.title.trim().slice(0, 100) : "Codex edit plan",
+    summary: typeof source.summary === "string" && source.summary.trim()
+      ? source.summary.trim().slice(0, 700)
+      : "Codex plan loaded from the local no-API file.",
+    confidence: Number.isFinite(Number(source.confidence)) ? Math.max(0, Math.min(1, Number(source.confidence))) : 0.5,
+    warnings: Array.isArray(source.warnings) ? source.warnings.map((item) => String(item).slice(0, 240)).slice(0, 12) : [],
+    changes,
+  };
+}
+
+async function loadCodexPlan() {
+  await runBusy("Loading Codex plan from the local runtime folder…", async () => {
+    const raw = await readHelperJsonFile(CODEX_PLAN_FILE);
+    const plan = normalizeCodexPlan(raw);
+
+    const project = await ppro.Project.getActiveProject();
+    if (!project) throw new Error("Open a Premiere project first.");
+    const sequence = await project.getActiveSequence();
+    if (!sequence) throw new Error("Open the matching sequence in the Timeline first.");
+    timelineSnapshot = await readTimeline(sequence, false);
+
+    if (plan.sequenceGuid && plan.sequenceGuid !== timelineSnapshot.sequenceGuid) {
+      throw new Error("That Codex plan was made for a different sequence. Open the matching sequence or export a fresh request.");
+    }
+
+    currentPlan = plan;
+    renderPlan(currentPlan);
+    setStatus(`Loaded ${currentPlan.changes.length} Codex change(s). Review before applying.`);
+  });
+}
+
 function changeLabel(change, clipName) {
   const target = clipName || "clip";
   if (change.type === "trim_clip") {
@@ -661,6 +818,8 @@ async function initialize() {
   byId("choose-inspo").addEventListener("click", () => chooseInspo().catch(() => {}));
   byId("analyse-inspo").addEventListener("click", () => analyseInspo().catch(() => {}));
   byId("create-plan").addEventListener("click", () => createPlan().catch(() => {}));
+  byId("export-codex-request").addEventListener("click", () => exportCodexRequest().catch(() => {}));
+  byId("load-codex-plan").addEventListener("click", () => loadCodexPlan().catch(() => {}));
   byId("apply-plan").addEventListener("click", () => applyCheckedPlan().catch(() => {}));
 
   helperFolder = await restoreFolder(HELPER_TOKEN_KEY);

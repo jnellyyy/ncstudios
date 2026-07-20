@@ -12,6 +12,8 @@ applies approved changes to a cloned sequence.
 - Read video/audio tracks and clips from the active Premiere sequence.
 - Plan trims, ripple removals, timeline moves, disable/enable actions and clip
   renames using only real clip IDs from the active timeline.
+- Work without OpenAI API billing by exporting a local `codex-request.json`
+  timeline snapshot for Codex/VS Code/ChatGPT to turn into `codex-plan.json`.
 - Let the editor uncheck individual proposed changes.
 - Clone the sequence before applying any timeline edits.
 - Apply the approved changes through Premiere's undoable transaction API.
@@ -25,6 +27,10 @@ Double-click `start-agent.command`. A secure macOS pop-up will appear; paste a
 new OpenAI API key with Command-V and choose **Start Agent**. Leave the Terminal
 window open while editing. The key is held only in that Terminal process; the
 script does not save it.
+
+If you cannot use API billing, leave the key blank when starting the helper.
+The helper will still support offline reference pacing analysis, and the panel's
+**No API mode** can hand the timeline snapshot to Codex through local files.
 
 Never share an API key in chat, email, screenshots, source files or project
 folders. Revoke and replace a key immediately if it has been exposed.
@@ -51,8 +57,27 @@ restriction on plain local HTTP connections.
    **Analyse selected source**. A Finder folder remains available as an
    alternative. Offline clips are skipped; attached proxies are accepted.
 3. Open the sequence you want to edit and describe the change.
-4. Review every proposed action and uncheck anything you do not want.
-5. Choose **Apply checked changes to a copy**.
+4. Choose **Create edit plan with helper** if the helper is running with API
+   access.
+5. Review every proposed action and uncheck anything you do not want.
+6. Choose **Apply checked changes to a copy**.
+
+## No API mode
+
+Use this when you want Codex/VS Code/ChatGPT to be the brain instead of using
+OpenAI API billing in the helper.
+
+1. Connect the panel to this project's `runtime` folder.
+2. Open the sequence you want to edit and describe the change in the edit box.
+3. Choose **Export for Codex**. The panel writes
+   `runtime/codex-request.json` with your timeline, style profile and request.
+4. In Codex, ask it to read `runtime/codex-request.json` and write
+   `runtime/codex-plan.json`.
+5. Back in Premiere, choose **Load Codex plan**.
+6. Review the checkboxes, then choose **Apply checked changes to a copy**.
+
+The no-API plan file must use only the clip IDs from the exported request. The
+panel still validates every change before applying it to the cloned sequence.
 
 ## Notes
 
@@ -64,5 +89,6 @@ restriction on plain local HTTP connections.
 - With an API key, sampled reference frames and the compact timeline/style data
   are sent to OpenAI for analysis and planning. Full reference videos and
   Premiere project files are not uploaded by this MVP.
-- Without an API key, the helper starts in offline demo mode and can calculate
-  basic pacing metrics, but it cannot create a real AI edit plan.
+- Without an API key, the helper starts in offline mode and can calculate basic
+  pacing metrics. Use **No API mode** when you want Codex to create the edit
+  plan from the exported local request file.

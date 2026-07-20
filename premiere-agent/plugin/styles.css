@@ -123,6 +123,12 @@ h2 { margin-bottom: 3px; font-size: 14px; }
   white-space: nowrap;
 }
 
+.path-label.wrap {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
 .source-divider {
   display: flex;
   align-items: center;

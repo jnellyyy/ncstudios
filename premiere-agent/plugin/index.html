@@ -56,7 +56,13 @@
         </div>
         <label for="edit-request">Editing request</label>
         <textarea id="edit-request" rows="5" placeholder="Tighten the pacing using my Inspo style. Remove weak pauses, keep the emotional moments, and avoid flashy transitions."></textarea>
-        <button id="create-plan" class="button full" disabled>Create edit plan</button>
+        <button id="create-plan" class="button full" disabled>Create edit plan with helper</button>
+        <div class="source-divider"><span>No API mode</span></div>
+        <div class="button-row">
+          <button id="export-codex-request" class="button secondary" disabled>Export for Codex</button>
+          <button id="load-codex-plan" class="button secondary" disabled>Load Codex plan</button>
+        </div>
+        <p class="path-label wrap">No API mode saves your timeline request locally. Ask Codex to write the plan, then load it here.</p>
       </section>
 
       <section id="plan-card" class="card hidden">
