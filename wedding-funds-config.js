@@ -7,9 +7,10 @@
   roadmap data.
 */
 window.NC_WEDDING_FUNDS_DEFAULTS = {
-  dataVersion:7,
+  dataVersion:8,
   currency:"GBP",
   rentalTarget:85,
+  rentalFlatBudget:90,
   rentalWarningAt:85,
   emergencyTarget:150,
   emergencyWarningAt:150,
@@ -51,12 +52,14 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
   deletedItems:{payments:[],allocations:[],rentals:[],buyList:[]},
 
   ownedKit:[
+    {id:"sony-a7iv-main",name:"Sony A7 IV main body",quantity:1,status:"owned",notes:"Main camera body for weddings."},
     {id:"samyang-35",name:"Samyang 35mm lens",quantity:1,status:"owned"},
     {id:"portkeys-pt5",name:"Portkeys PT5 II monitor",quantity:1,status:"owned"},
     {id:"dji-mic-3",name:"DJI Mic 3",quantity:1,status:"owned"},
     {id:"np-f550",name:"NP F550 monitor battery",quantity:1,status:"owned"},
     {id:"kf-nd",name:"K&F ND filter",quantity:1,status:"owned",notes:"Use for now."},
-    {id:"sd-cards",name:"SD cards",quantity:2,status:"owned",notes:"Use for now."}
+    {id:"sd-cards",name:"SD cards",quantity:2,status:"owned",notes:"Use for now."},
+    {id:"dji-mic-1",name:"DJI Mic 1",quantity:1,status:"sell-later",notes:"Sell after testing DJI Mic 3 properly."}
   ],
 
   // EDIT PAYMENT AMOUNTS, EXPECTED DATES, WEDDING DATES AND STARTING STATUSES HERE.
@@ -227,9 +230,9 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
 
   // EDIT RENTAL ITEMS AND THEIR STARTING STATUSES HERE.
   rentals:[
-    {id:"rental-a7iv",name:"Second Sony A7 IV body",status:"reserved",notes:"Booked as part of the £85 camera and lens rental total. Test all recording modes when collected."},
-    {id:"rental-24-70",name:"Sony 24-70mm f2.8 GM II",status:"reserved",notes:"Booked. Primary flexible coverage lens."},
-    {id:"rental-70-200",name:"Sony 70-200mm f2.8 GM II",status:"reserved",notes:"Booked. Ceremony and candid reach."}
+    {id:"rental-a7iv",name:"Second Sony A7 IV body",status:"reserved",weddingClient:"Simi and Kiefah",weddingDate:"2026-08-22",cost:85,notes:"Booked as part of the £85 camera and lens rental total. Test all recording modes when collected."},
+    {id:"rental-24-70",name:"Sony 24-70mm f2.8 GM II",status:"reserved",weddingClient:"Simi and Kiefah",weddingDate:"2026-08-22",cost:0,notes:"Booked. Primary flexible coverage lens."},
+    {id:"rental-70-200",name:"Sony 70-200mm f2.8 GM II",status:"reserved",weddingClient:"Simi and Kiefah",weddingDate:"2026-08-22",cost:0,notes:"Booked. Ceremony and candid reach."}
   ],
 
   // EDIT THE AFTER-RENTALS BUYING ORDER AND ESTIMATES HERE.
@@ -240,13 +243,13 @@ window.NC_WEDDING_FUNDS_DEFAULTS = {
     {id:"rca-35-cable",rank:4,name:"RCA to 3.5mm cable",category:"Audio cable",priority:"urgent",status:"needed",estimate:10,estimateMax:12,notes:"Connect common mixer record output to the Tascam."},
     {id:"np-f550-second",rank:5,name:"Second NP-F550 battery",category:"Camera + filming",priority:"high",status:"needed",estimate:15,estimateMax:15,notes:"Backup power for the Portkeys monitor."},
     {id:"small-cable-adapter",rank:6,name:"Small cable and adapter allowance",category:"Camera + audio support",priority:"high",status:"needed",estimate:20,estimateMax:25,notes:"Spare HDMI, audio adapter or cable replacement."},
-    {id:"cfexpress-card",rank:7,name:"CFexpress Type A card",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Current SD cards have already covered two weddings."},
-    {id:"cfexpress-reader",rank:8,name:"CFexpress Type A reader",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Only needed when the CFexpress card is bought."},
-    {id:"nisi-nd",rank:9,name:"NiSi True Color 82mm ND filter",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"K&F version can cover this wedding."},
-    {id:"smallrig-4469",rank:10,name:"SmallRig 4469 battery",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Upgrade later; current NP-F550 setup works."},
-    {id:"samyang-24-70",rank:11,name:"Samyang 24-70mm f2.8",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Rentals are already booked."},
-    {id:"samyang-35-150",rank:12,name:"Samyang 35-150mm f2-2.8",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Rentals are already booked."},
-    {id:"3d-printer",rank:13,name:"3D printer",category:"Do not buy before 22 August",priority:"future",status:"later",estimate:0,notes:"Not part of wedding preparation."}
+    {id:"cfexpress-card",rank:7,name:"CFexpress Type A card",category:"Wish list after 22 August",priority:"future",status:"later",estimate:170,estimateMax:260,notes:"Rough estimate only. Current SD cards have already covered two weddings, so buy after wedding funds are safe."},
+    {id:"cfexpress-reader",rank:8,name:"CFexpress Type A reader",category:"Wish list after 22 August",priority:"future",status:"later",estimate:80,estimateMax:120,notes:"Rough estimate only. Only needed when the CFexpress card is bought."},
+    {id:"nisi-nd",rank:9,name:"NiSi True Color 82mm ND filter",category:"Wish list after 22 August",priority:"future",status:"later",estimate:110,estimateMax:160,notes:"Rough estimate only. K&F version can cover this wedding."},
+    {id:"smallrig-4469",rank:10,name:"SmallRig 4469 battery",category:"Wish list after 22 August",priority:"future",status:"later",estimate:70,estimateMax:100,notes:"Rough estimate only. Upgrade later; current NP-F550 setup works."},
+    {id:"samyang-24-70",rank:11,name:"Samyang 24-70mm f2.8",category:"Wish list after 22 August",priority:"future",status:"later",estimate:700,estimateMax:850,notes:"Rough estimate only. Rentals are already booked for this wedding."},
+    {id:"samyang-35-150",rank:12,name:"Samyang 35-150mm f2-2.8",category:"Wish list after 22 August",priority:"future",status:"later",estimate:1000,estimateMax:1200,notes:"Rough estimate only. Rentals are already booked for this wedding."},
+    {id:"3d-printer",rank:13,name:"3D printer",category:"Wish list / not wedding prep",priority:"future",status:"later",estimate:180,estimateMax:400,notes:"Rough estimate only. Not part of wedding preparation."}
   ],
 
   // EDIT WEDDING-WEEK TASKS AND DUE DATES HERE.

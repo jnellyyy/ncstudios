@@ -907,6 +907,146 @@ input:focus,select:focus,textarea:focus{
   line-height:1.45;
 }
 
+[hidden]{
+  display:none !important;
+}
+
+.consult-stage-tabs{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.stage-tab{
+  min-height:44px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,0.18);
+  border-radius:16px;
+  padding:10px 12px;
+  color:var(--soft);
+  font:inherit;
+  font-size:13px;
+  font-weight:850;
+  text-align:left;
+  cursor:pointer;
+}
+
+.stage-tab.active{
+  border-color:rgba(216,183,110,0.48);
+  background:linear-gradient(135deg, rgba(216,183,110,0.24), rgba(255,255,255,0.08));
+  color:var(--text);
+}
+
+.consult-stage-summary,
+.consult-stage-checklist{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.045);
+  border-radius:18px;
+  padding:12px;
+  margin-top:12px;
+}
+
+.consult-stage-summary span{
+  display:block;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.consult-stage-summary p{
+  color:var(--soft);
+  font-size:13px;
+  line-height:1.45;
+  margin-top:6px;
+}
+
+.consult-stage-checklist h3{
+  color:var(--gold);
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+.consult-mini-list{
+  display:grid;
+  gap:8px;
+}
+
+.consult-mini-list div{
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(0,0,0,0.16);
+  border-radius:14px;
+  color:var(--soft);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.3;
+  padding:9px 10px;
+}
+
+.badge-stack{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:6px;
+}
+
+.consult-progress-row{
+  display:grid;
+  grid-template-columns:minmax(140px,0.42fr) minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  margin:12px 0;
+}
+
+.consult-progress-row > div:first-child{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+.consult-progress-row b{
+  color:var(--text);
+}
+
+.stage-progress{
+  height:8px;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(0,0,0,0.28);
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.stage-progress span{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg, rgba(216,183,110,0.92), rgba(255,255,255,0.64));
+}
+
+.quick-link-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin:12px 0 2px;
+}
+
+.quick-link-grid a{
+  border:1px solid var(--line);
+  background:rgba(0,0,0,0.18);
+  border-radius:14px;
+  color:var(--soft);
+  font-size:12px;
+  font-weight:900;
+  min-height:38px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+}
+
 .settingItem{
   border:1px solid var(--line);
   background:rgba(255,255,255,0.06);
@@ -1063,6 +1203,9 @@ input:focus,select:focus,textarea:focus{
   .form-grid{
     grid-template-columns:1fr 1fr;
   }
+  .consult-progress-row{
+    grid-template-columns:1fr;
+  }
   .ops-nav{
     grid-template-columns:repeat(3,1fr);
   }
@@ -1101,6 +1244,15 @@ input:focus,select:focus,textarea:focus{
   }
   .buy-top{
     flex-direction:column;
+  }
+  .badge-stack{
+    justify-content:flex-start;
+  }
+  .quick-link-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .consult-stage-tabs{
+    grid-template-columns:1fr;
   }
   .buy-amount{
     min-width:0;

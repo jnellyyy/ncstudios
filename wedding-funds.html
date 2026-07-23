@@ -9,7 +9,7 @@
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
-<link rel="stylesheet" href="wedding-funds.css?v=6">
+<link rel="stylesheet" href="wedding-funds.css?v=8">
 <meta name="theme-color" content="#050504">
 </head>
 <body class="funds-page">
@@ -42,13 +42,13 @@
   <main>
     <section class="funds-hero" aria-labelledby="pageTitle">
       <div class="hero-copy">
-        <p class="kicker">Money in, purpose clear</p>
+        <p class="kicker">Money in, money out, kit clear</p>
         <h1 id="pageTitle">Wedding Funds Roadmap</h1>
-        <p>See what is coming in, protect wedding costs first, then buy the right kit in the right order.</p>
+        <p>See what money is coming in, what has already gone out, what still needs buying, what is rented for each wedding and what can wait.</p>
       </div>
       <div class="protection-callout">
         <span>Current priority</span>
-        <strong id="heroPriority">Protect rental money first</strong>
+        <strong id="heroPriority">Money in and out first</strong>
         <div class="progress-track" aria-hidden="true"><span id="heroRentalBar"></span></div>
         <small id="heroRentalCopy">£0 of £150 wedding reserve protected</small>
       </div>
@@ -56,11 +56,13 @@
 
     <nav class="section-jumps" aria-label="Roadmap sections">
       <a href="#overview">Overview</a>
+      <a href="#money-flow">In / out</a>
       <a href="#money-map">Money map</a>
       <a href="#payments">Payments</a>
       <a href="#allocations">Allocate</a>
       <a href="#rentals">Rentals</a>
       <a href="#buy-order">Buy order</a>
+      <a href="#kit-document">Kit list</a>
       <a href="#wedding-week">Wedding week</a>
     </nav>
 
@@ -78,6 +80,14 @@
         <p>Quick reminders for money that has already moved or needs protecting.</p>
       </div>
       <div id="financeNotes" class="finance-notes-grid"></div>
+    </section>
+
+    <section id="money-flow" class="roadmap-section" aria-labelledby="moneyFlowTitle">
+      <div class="section-heading">
+        <div><p class="kicker">Plain money view</p><h2 id="moneyFlowTitle">Money in and money out</h2></div>
+        <p>Start here when the roadmap feels confusing: incoming money, already handled money, protected money and buying money are separated.</p>
+      </div>
+      <div id="moneyFlow" class="money-flow-grid"></div>
     </section>
 
     <section id="warningSection" class="roadmap-section warning-section" aria-labelledby="warningTitle">
@@ -127,9 +137,9 @@
     <section id="rentals" class="roadmap-section" aria-labelledby="rentalsTitle">
       <div class="section-heading">
         <div><p class="kicker">Simi and Kiefah · 22 August</p><h2 id="rentalsTitle">Rental checklist</h2></div>
-        <div class="target-label"><span>Total</span><strong>£90 flat</strong></div>
+        <div class="target-label" id="rentalTargetLabel"><span>Booked</span><strong>£85</strong></div>
       </div>
-      <div class="protect-note"><strong>Rentals are booked for £85.</strong> Keep the separate £150 wedding reserve and £75 flexible buffer untouched until after 22 August.</div>
+      <div class="protect-note" id="rentalProtectNote"><strong>Rentals are booked for £85.</strong> Keep the separate £150 wedding reserve and £75 flexible buffer untouched until after 22 August.</div>
       <div id="rentalList" class="rental-list"></div>
     </section>
 
@@ -149,6 +159,17 @@
         <div><p class="kicker">Already covered</p><h2 id="ownedTitle">Owned kit</h2></div>
       </div>
       <div id="ownedKit" class="owned-grid"></div>
+    </section>
+
+    <section id="kit-document" class="roadmap-section" aria-labelledby="kitDocTitle">
+      <div class="section-heading">
+        <div><p class="kicker">22 August prep document</p><h2 id="kitDocTitle">Full kit list</h2></div>
+        <div class="section-actions">
+          <button class="ghost-btn" id="printKitList" type="button">Print / save PDF</button>
+          <button class="ghost-btn" id="exportKitList" type="button">Export kit JSON</button>
+        </div>
+      </div>
+      <div id="kitDocument" class="kit-document"></div>
     </section>
 
     <section id="wedding-week" class="roadmap-section" aria-labelledby="weekTitle">
@@ -206,7 +227,7 @@
 <script src="supabase-config.js?v=nc-fixed-1"></script>
 <script src="nc-supabase-sync.js?v=nc-secure-1"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="wedding-funds-config.js?v=7"></script>
-<script src="wedding-funds.js?v=7"></script>
+<script src="wedding-funds-config.js?v=8"></script>
+<script src="wedding-funds.js?v=8"></script>
 </body>
 </html>

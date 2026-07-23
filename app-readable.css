@@ -760,6 +760,46 @@ td{
   color:var(--nc-gold-2) !important;
 }
 
+.stage-tab{
+  border-radius:10px !important;
+  color:var(--nc-paper) !important;
+  font-family:var(--nc-font-body) !important;
+  font-size:13px !important;
+  font-weight:650 !important;
+  letter-spacing:0 !important;
+}
+
+.stage-tab.active{
+  color:var(--nc-paper) !important;
+}
+
+.consult-stage-summary,
+.consult-stage-checklist{
+  border-radius:10px !important;
+}
+
+.consult-stage-summary span,
+.consult-stage-checklist h3{
+  font-family:var(--nc-font-body) !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  letter-spacing:.04em !important;
+}
+
+.consult-stage-summary p,
+.consult-mini-list div{
+  color:var(--nc-paper) !important;
+  font-family:var(--nc-font-body) !important;
+  font-size:13px !important;
+  font-weight:520 !important;
+}
+
+.quick-link-grid a,
+.consult-progress-row{
+  font-family:var(--nc-font-body) !important;
+  letter-spacing:0 !important;
+}
+
 .form-grid{
   gap:12px !important;
 }

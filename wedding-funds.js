@@ -191,10 +191,44 @@
       changed = true;
     }
 
-    migrated.dataVersion = Number(defaults.dataVersion || 7);
+    if(version < 8){
+      migrated.rentalTarget = defaults.rentalTarget;
+      migrated.rentalFlatBudget = defaults.rentalFlatBudget;
+      migrated.rentalWarningAt = defaults.rentalWarningAt;
+      migrated.emergencyTarget = defaults.emergencyTarget;
+      migrated.emergencyWarningAt = defaults.emergencyWarningAt;
+      migrated.flexibleHoldTarget = defaults.flexibleHoldTarget;
+      migrated.currentPriority = defaults.currentPriority;
+      migrated.nextWedding = clone(defaults.nextWedding);
+      migrated.financeNotes = clone(defaults.financeNotes || []);
+      migrated.deletedItems = normaliseDeletedItems(migrated.deletedItems);
+      migrated.ownedKit = mergeDefaultItemDetails(migrated.ownedKit,defaults.ownedKit,["quantity","status","updatedAt"]);
+      migrated.rentals = mergeDefaultItemDetails(migrated.rentals,defaults.rentals,["status","updatedAt"]);
+      migrated.buyList = mergeDefaultItemDetails(migrated.buyList,defaults.buyList,["status","updatedAt"]);
+      migrated.allocations = mergeDefaultItemDetails(migrated.allocations,defaults.allocations,["status","updatedAt"]);
+      changed = true;
+    }
+
+    migrated.dataVersion = Number(defaults.dataVersion || 8);
     if(changed) localStorage.setItem(STORAGE_KEY,JSON.stringify([migrated]));
 
     return migrated;
+  }
+
+  function mergeDefaultItemDetails(savedItems,defaultItems,preserveFields){
+    const saved = Array.isArray(savedItems) ? savedItems : [];
+    const savedMap = new Map(saved.map(item => [item.id,item]));
+    const defaultIds = new Set((defaultItems || []).map(item => item.id));
+    const mergedDefaults = (defaultItems || []).map(item => {
+      const savedItem = savedMap.get(item.id) || {};
+      const next = {...clone(item),...savedItem};
+      preserveFields.forEach(field => {
+        if(savedItem[field] !== undefined) next[field] = savedItem[field];
+      });
+      return next;
+    });
+    const custom = saved.filter(item => item.id && !defaultIds.has(item.id));
+    return mergedDefaults.concat(custom);
   }
 
   function replaceConfiguredCollection(savedItems,defaultItems){
@@ -291,6 +325,8 @@
     });
 
     document.getElementById("exportRoadmap").addEventListener("click",exportRoadmap);
+    document.getElementById("exportKitList").addEventListener("click",exportKitList);
+    document.getElementById("printKitList").addEventListener("click",() => window.print());
     document.getElementById("resetRoadmap").addEventListener("click",resetRoadmap);
     document.getElementById("editForm").addEventListener("submit",saveEdit);
     document.getElementById("deleteEntry").addEventListener("click",deleteCurrentEntry);
@@ -311,6 +347,7 @@
     renderHero(totals);
     renderOverview(totals);
     renderFinanceNotes();
+    renderMoneyFlow(totals);
     renderWarnings(totals);
     renderProgress(totals);
     renderMoneyMap(totals);
@@ -319,6 +356,7 @@
     renderRentals();
     renderBuyOrder();
     renderOwnedKit();
+    renderKitDocument();
     renderWeddingWeek();
   }
 
@@ -348,7 +386,7 @@
   function renderOverview(totals){
     const cards = [
       {label:"Money arriving 24 July",value:money(totals.totalIncoming),note:"Marvin balance + late fee"},
-      {label:"Rentals paid",value:money(totals.rentalSaved),note:`${money(state.rentalTarget)} flat rental total`},
+      {label:"Rentals booked",value:money(totals.rentalSaved),note:`Flat rental budget ${money(state.rentalFlatBudget || state.rentalTarget)}`},
       {label:"Protected reserve",value:money(state.emergencyTarget),note:`Plus ${money(state.flexibleHoldTarget || 0)} untouched flexible buffer`},
       {label:"Next wedding",value:state.nextWedding.client,note:niceDate(state.nextWedding.date),priority:true},
       {label:"Current priority",value:state.currentPriority,note:"No CFexpress before 22 August",priority:true}
@@ -373,6 +411,73 @@
     `).join("") : `<div class="roadmap-empty">No finance notes added.</div>`;
   }
 
+  function renderMoneyFlow(totals){
+    const roadmapPaymentIds = new Set(state.payments.filter(isRoadmapPayment).map(item => item.id));
+    const closedPaymentIds = new Set(state.payments.filter(item => !isRoadmapPayment(item)).map(item => item.id));
+    const activeAllocations = state.allocations.filter(item => !["skipped","moved-later"].includes(effectiveAllocationStatus(item)));
+    const roadmapAllocations = activeAllocations.filter(item => roadmapPaymentIds.has(item.paymentId));
+    const closedAllocations = activeAllocations.filter(item => closedPaymentIds.has(item.paymentId));
+    const protectedAllocations = roadmapAllocations.filter(item => isBufferAllocation(item));
+    const purchaseAllocations = roadmapAllocations.filter(item => item.buyListId && !isBufferAllocation(item));
+    const plannedProtection = sum(protectedAllocations,item => item.estimatedCost);
+    const plannedPurchases = sum(purchaseAllocations,item => item.estimatedCost);
+    const closedTotal = sum(closedAllocations,item => item.estimatedCost);
+    const unassigned = Math.max(0,totals.totalIncoming - plannedProtection - plannedPurchases);
+
+    const columns = [
+      {
+        title:"Money in",
+        total:sum(state.payments,item => item.amount),
+        note:"All tracked client money. Marvin is the active wedding-prep source; Simi is already handled.",
+        rows:state.payments.map(payment => ({
+          name:payment.client,
+          amount:payment.amount,
+          status:isRoadmapPayment(payment) ? labelFor(PAYMENT_STATUSES,payment.status) : "Paid and already handled",
+          note:payment.purpose || payment.notes || ""
+        }))
+      },
+      {
+        title:"Money out / already handled",
+        total:closedTotal,
+        note:"Money that is already spent, closed or no longer usable.",
+        rows:closedAllocations.map(item => ({
+          name:item.name,
+          amount:item.estimatedCost,
+          status:labelFor(ALLOCATION_STATUSES,effectiveAllocationStatus(item)),
+          note:item.notes || item.category || ""
+        }))
+      },
+      {
+        title:"Marvin allocation",
+        total:plannedProtection + plannedPurchases + unassigned,
+        note:"How the £445 due on 24 July is split.",
+        rows:[
+          {name:"Protected wedding reserve",amount:plannedProtection,status:"Do not spend",note:"Travel, food, emergency and untouched buffer before 22 August."},
+          {name:"Need to buy before wedding",amount:plannedPurchases,status:"Purchase plan",note:"Storage, audio, battery and small cable/adapters."},
+          {name:"Unassigned money",amount:unassigned,status:unassigned ? "Available" : "Fully assigned",note:unassigned ? "No job set yet." : "Every pound has a job."}
+        ]
+      }
+    ];
+
+    document.getElementById("moneyFlow").innerHTML = columns.map(column => `
+      <article class="money-flow-card">
+        <div class="money-flow-head">
+          <div><span>${escapeHTML(column.title)}</span><strong>${money(column.total)}</strong></div>
+          <p>${escapeHTML(column.note)}</p>
+        </div>
+        <div class="money-flow-rows">
+          ${column.rows.map(row => `
+            <div class="money-flow-row">
+              <div><b>${escapeHTML(row.name)}</b><small>${escapeHTML(row.status)}</small></div>
+              <strong>${money(row.amount)}</strong>
+              ${row.note ? `<p>${escapeHTML(row.note)}</p>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </article>
+    `).join("");
+  }
+
   function renderWarnings(totals){
     const warnings = [];
     const rentalConfirmed = state.rentals.length === 0 || state.rentals.every(item => ["reserved","received","returned"].includes(item.status));
@@ -382,13 +487,13 @@
     const ssdBought = ssd && effectiveBuyStatus(ssd) === "bought";
 
     if(totals.rentalSaved < state.rentalWarningAt){
-      warnings.push({title:`Rental money is ${money(state.rentalWarningAt - totals.rentalSaved)} short`,copy:`Keep the ${money(state.rentalWarningAt)} flat rental total protected before optional kit.`});
+      warnings.push({title:`Rental booking money is ${money(state.rentalWarningAt - totals.rentalSaved)} short`,copy:`Keep the ${money(state.rentalWarningAt)} booked rental amount covered before optional kit.`});
     }
     if(totals.emergencySaved < state.emergencyWarningAt){
       warnings.push({title:"Wedding buffer is not fully protected yet",copy:`Keep ${money(state.emergencyWarningAt)} untouched for travel, food, parking and wedding-day surprises.`});
     }
     if(weddingDays >= 0 && weddingDays <= 14 && !rentalConfirmed){
-      warnings.push({title:"Wedding is within 14 days and rentals are not confirmed",copy:"Reserve all three rental items and confirm the £90 booking."});
+      warnings.push({title:"Wedding is within 14 days and rentals are not confirmed",copy:`Reserve all three rental items and confirm the ${money(state.rentalFlatBudget || state.rentalTarget)} flat rental booking.`});
     }
     if(!ssdBought && !state.deletedItems.buyList.includes("ssd-1tb")){
       warnings.push({title:"Wedding storage is not marked bought",copy:"The 1TB SSD is still needed before the August wedding."});
@@ -577,9 +682,13 @@
   }
 
   function renderRentals(){
+    document.getElementById("rentalTargetLabel").innerHTML = `<span>Booked</span><strong>${money(state.rentalTarget)}</strong>`;
+    document.getElementById("rentalProtectNote").innerHTML = `<strong>Rentals are booked for ${money(state.rentalTarget)}.</strong> Flat rental budget is ${money(state.rentalFlatBudget || state.rentalTarget)}. Keep the separate ${money(state.emergencyTarget)} wedding reserve and ${money(state.flexibleHoldTarget || 0)} flexible buffer untouched until after ${shortDate(state.nextWedding.date)}.`;
+
     const html = state.rentals.map(rental => `
       <article class="rental-card">
         <div class="rental-top"><h3>${escapeHTML(rental.name)}</h3><span class="status-badge">${escapeHTML(labelFor(RENTAL_STATUSES,rental.status))}</span></div>
+        <div class="rental-meta"><span>${escapeHTML(rental.weddingClient || state.nextWedding.client)}</span><span>${escapeHTML(shortDate(rental.weddingDate || state.nextWedding.date))}</span>${Number(rental.cost || 0) > 0 ? `<span>${money(rental.cost)}</span>` : ""}</div>
         <p>${escapeHTML(rental.notes || "No notes.")}</p>
         <div class="card-controls">
           <div class="quick-status"><label for="rental-${escapeAttribute(rental.id)}">Rental status</label><select id="rental-${escapeAttribute(rental.id)}" data-rental-status="${escapeAttribute(rental.id)}">${optionsHTML(RENTAL_STATUSES,rental.status)}</select></div>
@@ -591,14 +700,25 @@
   }
 
   function renderBuyOrder(){
-    const html = state.buyList
+    const groups = [
+      {key:"before",title:"Need to buy before 22 August",note:"Use Marvin's purchase allocation only after the wedding reserve is protected."},
+      {key:"might",title:"Might buy / save for later",note:"Wish-list items and upgrades. Do not buy before the next wedding unless the reserve is still safe."},
+      {key:"done",title:"Already bought / not buying",note:"Completed or skipped items stay visible so the plan is easy to audit."}
+    ];
+
+    const sorted = state.buyList
       .slice()
-      .sort((a,b) => Number(a.rank || 999) - Number(b.rank || 999))
-      .map(item => {
+      .sort((a,b) => Number(a.rank || 999) - Number(b.rank || 999));
+
+    const html = groups.map(group => {
+      const items = sorted.filter(item => buyBucket(item) === group.key);
+      return `
+        <section class="buy-status-group">
+          <div class="buy-status-heading"><div><h3>${escapeHTML(group.title)}</h3><p>${escapeHTML(group.note)}</p></div><strong>${money(sum(items,item => Number(item.estimate || 0)))}</strong></div>
+          <div class="buy-status-list">
+            ${items.length ? items.map(item => {
         const status = effectiveBuyStatus(item);
-        const estimate = item.estimateMax && item.estimateMax !== item.estimate
-          ? `${money(item.estimate)}–${money(item.estimateMax)}`
-          : item.estimate > 0 ? money(item.estimate) : "Estimate later";
+        const estimate = estimateText(item);
         return `
           <article class="buy-order-card">
             <span class="buy-rank">${Number(item.rank || 0)}</span>
@@ -606,7 +726,11 @@
             <div class="buy-status-control"><select aria-label="${escapeAttribute(item.name)} status" data-buy-status="${escapeAttribute(item.id)}">${optionsHTML(BUY_STATUSES,status)}</select><button class="ghost-btn edit-link" type="button" data-edit-kind="buy" data-edit-id="${escapeAttribute(item.id)}">Edit</button></div>
           </article>
         `;
-      }).join("");
+            }).join("") : `<div class="roadmap-empty">No items in this group.</div>`}
+          </div>
+        </section>
+      `;
+    }).join("");
     document.getElementById("buyOrder").innerHTML = html || `<div class="roadmap-empty">No equipment or storage purchases are currently planned.</div>`;
   }
 
@@ -614,6 +738,81 @@
     document.getElementById("ownedKit").innerHTML = state.ownedKit.map(item => `
       <article class="owned-card"><strong>${escapeHTML(item.name)}</strong><span>${item.status === "sell-later" ? "Sell after test" : `Owned${Number(item.quantity || 1) > 1 ? ` · ${Number(item.quantity)} total` : ""}`}</span>${item.notes ? `<p>${escapeHTML(item.notes)}</p>` : ""}</article>
     `).join("");
+  }
+
+  function renderKitDocument(){
+    const groups = kitGroups();
+    document.getElementById("kitDocument").innerHTML = `
+      <article class="kit-doc-sheet">
+        <header class="kit-doc-header">
+          <div>
+            <span>NC Studio kit list</span>
+            <h3>${escapeHTML(state.nextWedding.client)} · ${escapeHTML(niceDate(state.nextWedding.date))}</h3>
+          </div>
+          <strong>Next wedding prep</strong>
+        </header>
+
+        ${renderKitSection("Current kit owned",groups.owned,"owned")}
+        ${renderKitSection("Need to buy before 22 August",groups.mustBuy,"must")}
+        ${renderKitSection("Rented for specific weddings",groups.rentals,"rental")}
+        ${renderKitSection("Might buy / wish I had",groups.wishlist,"wish")}
+        ${renderKitSection("Already bought from roadmap",groups.bought,"bought")}
+      </article>
+    `;
+  }
+
+  function renderKitSection(title,items,type){
+    const total = sum(items,item => Number(item.amount || 0));
+    return `
+      <section class="kit-doc-section ${escapeAttribute(type)}">
+        <div class="kit-doc-section-head"><h4>${escapeHTML(title)}</h4>${total > 0 ? `<strong>${money(total)}</strong>` : ""}</div>
+        <div class="kit-doc-list">
+          ${items.length ? items.map(item => `
+            <div class="kit-doc-row">
+              <div><b>${escapeHTML(item.name)}</b><small>${escapeHTML(item.status || "")}</small></div>
+              <strong>${item.amount ? money(item.amount) : escapeHTML(item.price || "")}</strong>
+              ${item.note ? `<p>${escapeHTML(item.note)}</p>` : ""}
+            </div>
+          `).join("") : `<div class="roadmap-empty">No items in this group.</div>`}
+        </div>
+      </section>
+    `;
+  }
+
+  function kitGroups(){
+    const sortedBuy = state.buyList.slice().sort((a,b) => Number(a.rank || 999) - Number(b.rank || 999));
+    return {
+      owned:state.ownedKit.map(item => ({
+        name:item.name,
+        status:item.status === "sell-later" ? "Sell after DJI Mic 3 testing" : `Owned${Number(item.quantity || 1) > 1 ? ` · ${Number(item.quantity)} total` : ""}`,
+        price:"",
+        note:item.notes || ""
+      })),
+      mustBuy:sortedBuy.filter(item => buyBucket(item) === "before").map(item => ({
+        name:item.name,
+        amount:Number(item.estimate || 0),
+        status:labelFor(BUY_STATUSES,effectiveBuyStatus(item)),
+        note:`${estimateText(item)}. ${item.notes || ""}`.trim()
+      })),
+      rentals:state.rentals.map(item => ({
+        name:item.name,
+        amount:Number(item.cost || 0),
+        status:`${labelFor(RENTAL_STATUSES,item.status)} · ${item.weddingClient || state.nextWedding.client} · ${shortDate(item.weddingDate || state.nextWedding.date)}`,
+        note:item.notes || ""
+      })),
+      wishlist:sortedBuy.filter(item => buyBucket(item) === "might").map(item => ({
+        name:item.name,
+        amount:Number(item.estimate || 0),
+        status:labelFor(BUY_STATUSES,effectiveBuyStatus(item)),
+        note:`${estimateText(item)}. ${item.notes || ""}`.trim()
+      })),
+      bought:sortedBuy.filter(item => buyBucket(item) === "done").map(item => ({
+        name:item.name,
+        amount:Number(item.estimate || 0),
+        status:labelFor(BUY_STATUSES,effectiveBuyStatus(item)),
+        note:item.notes || ""
+      }))
+    };
   }
 
   function renderWeddingWeek(){
@@ -902,6 +1101,22 @@
     return item.status;
   }
 
+  function buyBucket(item){
+    const status = effectiveBuyStatus(item);
+    const category = String(item.category || "").toLowerCase();
+    const priority = String(item.priority || "").toLowerCase();
+    if(["bought","skip"].includes(status)) return "done";
+    if(status === "later" || priority === "future" || category.includes("wish") || category.includes("do not buy")) return "might";
+    return "before";
+  }
+
+  function estimateText(item){
+    const estimate = Number(item.estimate || 0);
+    const max = Number(item.estimateMax || 0);
+    if(max > 0 && max !== estimate) return `${money(estimate)}-${money(max)}`;
+    return estimate > 0 ? money(estimate) : "Estimate to add";
+  }
+
   function normaliseBuyPriority(value){
     const map = {essential:"urgent",high:"urgent",medium:"soon",hold:"client",later:"future"};
     return map[value] || (["urgent","soon","client","future","optional"].includes(value) ? value : "soon");
@@ -929,6 +1144,22 @@
     const link = document.createElement("a");
     link.href = url;
     link.download = "nc-studio-wedding-funds-roadmap.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportKitList(){
+    const blob = new Blob([JSON.stringify({
+      app:"NC Studio",
+      type:"kit-list-document",
+      wedding:state.nextWedding,
+      exportedAt:new Date().toISOString(),
+      kit:kitGroups()
+    },null,2)],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "nc-studio-kit-list-22-august.json";
     link.click();
     URL.revokeObjectURL(url);
   }
