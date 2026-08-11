@@ -621,8 +621,20 @@
     };
   }
 
+  function applyLocalSeeds(){
+    try{
+      if(window.NCStudioProjectSeeds && typeof window.NCStudioProjectSeeds.ensureCurrentProjects === "function"){
+        return Boolean(window.NCStudioProjectSeeds.ensureCurrentProjects());
+      }
+    }catch(error){
+      console.warn("NC Sync: local seed refresh failed", error);
+    }
+
+    return false;
+  }
+
   async function pullAllFromSupabase(){
-    const signedIn = await ensureSignedIn(true);
+    const signedIn = await ensureSignedIn(false);
 
     if(!signedIn){
       return;
@@ -650,6 +662,11 @@
     initialPullFinished = true;
     pendingSaves.clear();
 
+    if(applyLocalSeeds()){
+      changed = true;
+      await flushPendingSaves();
+    }
+
     const pageKey = RELOAD_FLAG_PREFIX + location.pathname;
 
     if(changed && !sessionStorage.getItem(pageKey)){
@@ -666,6 +683,8 @@
     }
 
     initialPullFinished = true;
+
+    applyLocalSeeds();
 
     for(const key of SYNC_KEYS){
       await saveKeyToSupabase(key);

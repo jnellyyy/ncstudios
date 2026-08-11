@@ -189,7 +189,7 @@ body::before{
 
 .quick{
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
 }
 
@@ -344,9 +344,42 @@ body::before{
   z-index:1;
 }
 
+.dayFacts{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+  position:relative;
+  z-index:1;
+}
+
+.dayFacts div{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(0,0,0,0.18);
+  border-radius:18px;
+  padding:9px;
+  min-width:0;
+}
+
+.dayFacts span{
+  display:block;
+  color:rgba(255,255,255,0.68);
+  font-size:9px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.dayFacts strong{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  line-height:1.15;
+  overflow-wrap:anywhere;
+}
+
 .liveCTA{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(3,1fr);
   gap:7px;
   position:relative;
   z-index:1;
@@ -396,7 +429,7 @@ body::before{
   min-height:0;
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  grid-template-rows:repeat(4,minmax(0,1fr));
+  grid-template-rows:repeat(3,minmax(0,1fr));
   gap:9px;
   overflow:hidden;
 }
@@ -489,7 +522,7 @@ body::before{
 
 .bottomRow{
   display:none;
-  grid-template-columns:repeat(6,1fr);
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:8px;
 }
 
@@ -555,7 +588,7 @@ body::before{
   }
 
   .quick{
-    display:none;
+    grid-template-columns:repeat(2,1fr);
   }
 
   .stats{
@@ -580,7 +613,7 @@ body::before{
 
   .tiles{
     grid-template-columns:repeat(2,1fr);
-    grid-template-rows:repeat(4,minmax(0,1fr));
+    grid-template-rows:repeat(3,minmax(0,1fr));
     gap:7px;
   }
 
@@ -591,12 +624,10 @@ body::before{
   }
 
   .livePanel{
-    min-height:94px;
+    min-height:auto;
     border-radius:20px;
     padding:10px;
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:2px 9px;
+    display:block;
   }
 
   .liveLabel{
@@ -610,13 +641,31 @@ body::before{
 
   .livePanel p,
   .liveNext{
-    display:none;
+    display:block;
+    font-size:11px;
+    line-height:1.28;
+  }
+
+  .dayFacts{
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;
+    margin-top:10px;
+  }
+
+  .dayFacts div{
+    min-height:52px;
+    border-radius:14px;
+    padding:8px;
+  }
+
+  .dayFacts strong{
+    font-size:11px;
   }
 
   .liveCTA{
-    grid-column:1 / -1;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(2,1fr);
     gap:5px;
+    margin-top:10px;
   }
 
   .liveAction{
@@ -645,11 +694,9 @@ body::before{
   }
 
   .liveStats{
-    grid-column:2;
-    grid-row:1 / span 2;
-    grid-template-columns:repeat(3,46px);
+    grid-template-columns:repeat(3,1fr);
     gap:5px;
-    align-self:center;
+    margin-top:10px;
   }
 
   .liveStat{
@@ -780,7 +827,7 @@ body::before{
   }
 }
 </style>
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-2">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-3">
 </head>
 
 <body>
@@ -800,16 +847,15 @@ body::before{
 
 <section class="hero">
   <div class="kicker">Studio control</div>
-  <h2>NC Studios</h2>
-  <p>Bookings, clients, money, shot lists, tasks and delivery in one clean place.</p>
+  <h2>Today</h2>
+  <p>Open the app, see the current wedding, then jump straight into the thing you need.</p>
 </section>
 
 <section class="quick">
-  <a href="studio-assistant.html">Studio assistant</a>
-  <a href="bookings.html?status=enquiry">New enquiries</a>
+  <a href="projects.html" id="quickProjectLink">Project hub</a>
+  <a href="shot-lists.html" id="quickShotLink">Shot list</a>
+  <a href="quick-capture.html" id="quickCaptureLink">Capture note</a>
   <a href="crm.html">CRM</a>
-  <a href="wedding-funds.html">Funds roadmap</a>
-  <a href="messages.html">Messages</a>
 </section>
 
 <section class="stats">
@@ -837,9 +883,28 @@ body::before{
 <main class="dashboardMain">
   <section class="livePanel">
     <div>
-      <div class="liveLabel">Live shoot</div>
+      <div class="liveLabel">Next wedding</div>
       <h3 id="liveProject">Shot list</h3>
-      <p>Jump straight to the working checklist for the shots still needed.</p>
+      <p id="daySummary">Everything important for the active project lands here first.</p>
+    </div>
+
+    <div class="dayFacts">
+      <div>
+        <span>Date</span>
+        <strong id="dayDate">Not set</strong>
+      </div>
+      <div>
+        <span>Location</span>
+        <strong id="dayLocation">Not set</strong>
+      </div>
+      <div>
+        <span>Money</span>
+        <strong id="dayMoney">Not set</strong>
+      </div>
+      <div>
+        <span>Admin</span>
+        <strong id="dayAdmin">No project selected</strong>
+      </div>
     </div>
 
     <div class="liveStats">
@@ -862,24 +927,14 @@ body::before{
     <div class="liveNext" id="liveNextShot">Load a list or paste one in Shots.</div>
 
     <div class="liveCTA">
-      <a class="liveAction primary" href="quick-capture.html">
-        <span>Capture</span>
-        <strong id="captureWidget">0 open</strong>
-      </a>
-
-      <a class="liveAction" href="projects.html">
-        <span>Projects</span>
+      <a class="liveAction primary" id="dayProjectLink" href="projects.html">
+        <span>Project</span>
         <strong id="projectWidget">0 live</strong>
       </a>
 
-      <a class="liveAction" href="call-sheet.html">
-        <span>Call</span>
+      <a class="liveAction" id="dayCallLink" href="call-sheet.html">
+        <span>Call sheet</span>
         <strong id="callSheetWidget">0 sheets</strong>
-      </a>
-
-      <a class="liveAction" href="consultations.html">
-        <span>Consult</span>
-        <strong id="consultationWidget">0 calls</strong>
       </a>
 
       <a class="liveAction" id="liveShotLink" href="shot-lists.html#liveShots">
@@ -887,123 +942,32 @@ body::before{
         <strong id="liveShotAction">0 left</strong>
       </a>
 
-      <a class="liveAction" href="timeline.html">
+      <a class="liveAction" id="dayTimelineLink" href="timeline.html">
         <span>Timeline</span>
         <strong id="timelineWidget">0 items</strong>
       </a>
 
-      <a class="liveAction" href="gear.html">
+      <a class="liveAction" id="dayGearLink" href="gear.html">
         <span>Gear</span>
         <strong id="gearWidget">0 items</strong>
       </a>
 
-      <a class="liveAction" href="buy-list.html">
-        <span>Buy</span>
-        <strong id="buyWidget">0 active</strong>
-      </a>
-
-      <a class="liveAction" href="wedding-funds.html">
-        <span>Funds</span>
-        <strong id="fundsActionWidget">£0 safe</strong>
-      </a>
-
-      <a class="liveAction" href="studio-assistant.html">
-        <span>Assistant</span>
-        <strong id="assistantActionWidget">0 urgent</strong>
+      <a class="liveAction" id="dayCaptureLink" href="quick-capture.html">
+        <span>Capture</span>
+        <strong id="captureWidget">0 open</strong>
       </a>
     </div>
   </section>
 
   <section class="tiles">
-  <a class="tile" href="bookings.html?status=enquiry">
-    <div>
-      <div class="icon">E</div>
-      <h3>Enquiries</h3>
-      <span class="tileMetric" id="enquiryWidget">0</span>
-      <p>New availability forms from the website.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Review</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="clients.html">
-    <div>
-      <div class="icon">C</div>
-      <h3>Clients</h3>
-      <span class="tileMetric" id="clientWidget">0</span>
-      <p>Client records, notes, dates and links.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
   <a class="tile" href="crm.html">
     <div>
-      <div class="icon">R</div>
+      <div class="icon">C</div>
       <h3>CRM</h3>
       <span class="tileMetric" id="crmWidget">0</span>
-      <p>One-page client view for chase, money, admin and delivery.</p>
+      <p>One card per couple with money, admin, notes and next move.</p>
     </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="finance.html">
-    <div>
-      <div class="icon">£</div>
-      <h3>Finance</h3>
-      <span class="tileMetric" id="financeWidget">£0</span>
-      <p>Payments, balances, expenses and profit.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="delivery.html">
-    <div>
-      <div class="icon">D</div>
-      <h3>Delivery</h3>
-      <span class="tileMetric" id="deliveryWidget">0</span>
-      <p>Editing, review, export and handover.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="shot-lists.html">
-    <div>
-      <div class="icon">S</div>
-      <h3>Shots</h3>
-      <span class="tileMetric" id="shotsWidget">0</span>
-      <p>Shot plans, lenses, movement and priorities.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="lists.html">
-    <div>
-      <div class="icon">L</div>
-      <h3>To Do</h3>
-      <span class="tileMetric" id="listsWidget">0</span>
-      <p>Business tasks, reminders and follow-ups.</p>
-    </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
   </a>
 
   <a class="tile" href="admin.html">
@@ -1011,25 +975,29 @@ body::before{
       <div class="icon">A</div>
       <h3>Admin</h3>
       <span class="tileMetric" id="adminWidget">0</span>
-      <p>Client admin steps, contracts, forms and follow-ups.</p>
+      <p>Contracts, forms, folders, route, parking and final checks.</p>
     </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
+    <div class="tileFooter"><span>Check</span><span>›</span></div>
   </a>
 
-  <a class="tile" href="messages.html">
+  <a class="tile" href="lists.html">
     <div>
-      <div class="icon">M</div>
-      <h3>Messages</h3>
-      <span class="tileMetric" id="messageTileWidget">0</span>
-      <p>Direct website messages and replies.</p>
+      <div class="icon">T</div>
+      <h3>To Do</h3>
+      <span class="tileMetric" id="listsWidget">0</span>
+      <p>Open prep actions for the current wedding and the business.</p>
     </div>
-    <div class="tileFooter">
-      <span>Reply</span>
-      <span>›</span>
+    <div class="tileFooter"><span>Next</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="finance.html">
+    <div>
+      <div class="icon">£</div>
+      <h3>Money</h3>
+      <span class="tileMetric" id="financeWidget">£0</span>
+      <p>Payments, expenses and what has already been covered.</p>
     </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
   </a>
 
   <a class="tile" href="buy-list.html">
@@ -1037,65 +1005,38 @@ body::before{
       <div class="icon">B</div>
       <h3>Buy List</h3>
       <span class="tileMetric" id="buyTileWidget">0</span>
-      <p>Kit, rentals, storage and business purchases.</p>
+      <p>Only the missing kit, audio, storage and cable gaps.</p>
     </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
+    <div class="tileFooter"><span>Prep</span><span>›</span></div>
   </a>
 
   <a class="tile" href="wedding-funds.html">
     <div>
       <div class="icon">F</div>
-      <h3>Funds Roadmap</h3>
+      <h3>Funds</h3>
       <span class="tileMetric" id="fundsWidget">£0 safe</span>
-      <p>Protect rentals, allocate client payments and plan kit spending.</p>
+      <p>Wedding reserve, purchases, rentals and flexible balance.</p>
     </div>
-    <div class="tileFooter">
-      <span>Open</span>
-      <span>›</span>
-    </div>
-  </a>
-
-  <a class="tile" href="studio-assistant.html">
-    <div>
-      <div class="icon">A</div>
-      <h3>Studio Assistant</h3>
-      <span class="tileMetric" id="assistantWidget">0 urgent</span>
-      <p>Your replies, money, contracts, deadlines and next actions in order.</p>
-    </div>
-    <div class="tileFooter"><span>Open</span><span>›</span></div>
-  </a>
-
-  <a class="tile" href="content.html">
-    <div>
-      <div class="icon">P</div>
-      <h3>Content</h3>
-      <span class="tileMetric" id="contentWidget">0 ready</span>
-      <p>Posting permission, portfolio selects, reel ideas and captions.</p>
-    </div>
-    <div class="tileFooter"><span>Open</span><span>›</span></div>
+    <div class="tileFooter"><span>Plan</span><span>›</span></div>
   </a>
   </section>
 </main>
 
 <nav class="bottomRow">
+  <a href="projects.html" id="bottomProjectLink">Project</a>
+  <a href="shot-lists.html" id="bottomShotLink">Shots</a>
+  <a href="quick-capture.html" id="bottomCaptureLink">Capture</a>
   <a href="crm.html">CRM</a>
   <a href="wedding-funds.html">Funds</a>
-  <a href="studio-assistant.html">Assistant</a>
-  <a href="messages.html">Messages</a>
-  <a href="lists.html">Tasks</a>
-  <a href="admin.html">Admin</a>
 </nav>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
-<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="studio-project-seeds.js?v=senses-day-party-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
 
 <script>
 function readData(key){
@@ -1118,6 +1059,18 @@ function money(value){
 function setText(id, value){
   const element = document.getElementById(id);
   if(element) element.textContent = value;
+}
+
+function setHref(id, value){
+  const element = document.getElementById(id);
+  if(element) element.href = value;
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(String(value).includes("T") ? value : value + "T12:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
 }
 
 function activeBuyCount(buyList){
@@ -1267,7 +1220,7 @@ function projectTokenLooksSame(left,right){
   if(left.length < 4 || right.length < 4) return false;
   if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
 
-  const limit = Math.max(left.length, right.length) >= 7 ? 2 : 1;
+  const limit = Math.max(left.length, right.length) >= 6 ? 2 : 1;
   return projectEditDistance(left, right, limit) <= limit;
 }
 
@@ -1295,6 +1248,106 @@ function projectEditDistance(left,right,limit){
   }
 
   return previous[right.length];
+}
+
+function sameProjectName(value,project){
+  const left = normaliseProjectKey(value);
+  const right = normaliseProjectKey(project);
+  return Boolean(left && right && projectKeysMatch(left, right));
+}
+
+function liveProjectName(projectStages,shots){
+  const liveStage = (projectStages || []).find(item => item.stage === "live" && (item.project || item.key));
+  if(liveStage?.project) return liveStage.project;
+
+  const stages = projectStageMap(projectStages);
+  const liveShot = (shots || []).find(item => projectStageFor(stages, item.project) === "live");
+  return liveShot?.project || "";
+}
+
+function projectRows(rows,project,fields){
+  if(!project) return [];
+  return (rows || []).filter(item => fields.some(field => sameProjectName(item[field], project)));
+}
+
+function firstProjectRow(rows,project,fields){
+  return projectRows(rows, project, fields)[0] || null;
+}
+
+function readyGear(status){
+  return ["packed","checked","charged","owned","rented"].includes(String(status || "").toLowerCase());
+}
+
+function moneyPosition(booking,financeRows){
+  if(booking && Number(booking.packagePrice || 0)){
+    const balance = Math.max(Number(booking.packagePrice || 0) - Number(booking.depositPaid || 0), 0);
+    return balance <= 0 ? "Paid in full" : `${money(balance)} due`;
+  }
+
+  const paid = (financeRows || [])
+    .filter(item => item.type === "income" && item.status === "paid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+  return paid ? `${money(paid)} paid` : "Check finance";
+}
+
+function projectUrl(page,project,suffix){
+  const query = project ? `?project=${encodeURIComponent(project)}` : "";
+  return `${page}${query}${suffix || ""}`;
+}
+
+function updateDayFocus(data){
+  const project = liveProjectName(data.projectStages, data.shots);
+
+  setHref("quickProjectLink", projectUrl("projects.html", project));
+  setHref("quickShotLink", projectUrl("shot-lists.html", project, "#liveShots"));
+  setHref("quickCaptureLink", projectUrl("quick-capture.html", project));
+  setHref("bottomProjectLink", projectUrl("projects.html", project));
+  setHref("bottomShotLink", projectUrl("shot-lists.html", project, "#liveShots"));
+  setHref("bottomCaptureLink", projectUrl("quick-capture.html", project));
+  setHref("dayProjectLink", projectUrl("projects.html", project));
+  setHref("dayCallLink", projectUrl("call-sheet.html", project));
+  setHref("dayTimelineLink", projectUrl("timeline.html", project));
+  setHref("dayGearLink", projectUrl("gear.html", project));
+  setHref("dayCaptureLink", projectUrl("quick-capture.html", project));
+
+  if(!project){
+    setText("daySummary", "Mark a project Live in Project Hub to turn this into your day screen.");
+    setText("dayDate", "Not set");
+    setText("dayLocation", "Not set");
+    setText("dayMoney", "Not set");
+    setText("dayAdmin", "No live project");
+    return;
+  }
+
+  const booking = firstProjectRow(data.bookings, project, ["clientName","eventName"]);
+  const client = firstProjectRow(data.clients, project, ["clientName","name"]);
+  const callSheet = firstProjectRow(data.callSheets, project, ["project"]);
+  const consultation = firstProjectRow(data.consultations, project, ["project"]);
+  const financeRows = projectRows(data.finance, project, ["client","project","projectName","title"]);
+  const projectTasks = projectRows(data.lists, project, ["project"]).filter(item => item.status !== "done");
+  const projectGear = projectRows(data.gear, project, ["project"]);
+  const gearLeft = projectGear.filter(item => !readyGear(item.status));
+  const activeTimeline = projectRows(data.timeline, project, ["project"]).filter(item => item.status !== "done");
+
+  const date = booking?.eventDate || client?.eventDate || callSheet?.eventDate || consultation?.weddingDate;
+  const location = booking?.location || client?.location || callSheet?.venue || consultation?.receptionLocation || "Venue TBC";
+  const adminFlags = [];
+
+  if(!callSheet || /tbc|confirm/i.test(`${callSheet.venue || ""} ${callSheet.address || ""}`)) adminFlags.push("venues");
+  if(!callSheet?.bridePhone && !callSheet?.groomPhone) adminFlags.push("contacts");
+  if(projectTasks.length) adminFlags.push(`${projectTasks.length} tasks`);
+  if(gearLeft.length) adminFlags.push(`${gearLeft.length} gear gaps`);
+  if(activeTimeline.length) adminFlags.push(`${activeTimeline.length} timeline`);
+
+  setText("daySummary", `${project} is the current working wedding. Keep this screen as the jump-off point.`);
+  setText("dayDate", niceDate(date));
+  setText("dayLocation", location);
+  setText("dayMoney", moneyPosition(booking, financeRows));
+  setText("dayAdmin", adminFlags.length ? adminFlags.join(" / ") : "Looks clear");
+  setText("callSheetWidget", callSheet ? "open" : "needed");
+  setText("gearWidget", `${gearLeft.length} left`);
+  setText("timelineWidget", `${activeTimeline.length} items`);
 }
 
 function updateShotPanel(shots,projectStages){
@@ -1401,10 +1454,15 @@ function updateDashboardFromLocal(){
   setText("callSheetWidget", `${callSheets.length} sheets`);
   setText("projectWidget", `${liveProjectCount(projectStages)} live`);
   updateShotPanel(shots, projectStages);
+  updateDayFocus({bookings, clients, finance, shots, lists, timeline, gear, projectStages, consultations, callSheets});
 }
 
 async function updateDashboardFromSupabase(){
   updateDashboardFromLocal();
+
+  // Supabase sync writes into localStorage and reloads once if remote data changed.
+  // Rendering the dashboard directly from a remote snapshot can revive stale live-project data.
+  return;
 
   if(!window.ncSupabase){
     return;
@@ -1508,6 +1566,7 @@ async function updateDashboardFromSupabase(){
       setText("callSheetWidget", `${callSheets.length} sheets`);
       setText("projectWidget", `${liveProjectCount(projectStages)} live`);
       updateShotPanel(shots, projectStages);
+      updateDayFocus({bookings, clients:appStorageClients, finance, shots, lists, timeline, gear, projectStages, consultations, callSheets});
     }
 
     const clientsResponse = await window.ncSupabase

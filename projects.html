@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-3">
 <meta name="theme-color" content="#050504">
 </head>
 
@@ -117,9 +117,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
-<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="studio-project-seeds.js?v=senses-day-party-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
 
 <script>
 const STORE_KEYS = {
@@ -194,14 +194,17 @@ function collectProjectName(map,value){
 
   if(!key) return;
 
-  if(!map.has(key)){
-    map.set(key, {
-      key,
+  const savedKey = [...map.keys()].find(existingKey => projectKeysMatch(existingKey, key));
+  const groupKey = savedKey || key;
+
+  if(!map.has(groupKey)){
+    map.set(groupKey, {
+      key:groupKey,
       aliases:[]
     });
   }
 
-  const group = map.get(key);
+  const group = map.get(groupKey);
   const exists = group.aliases.some(alias => normaliseDisplay(alias) === normaliseDisplay(name));
 
   if(!exists){
@@ -287,14 +290,15 @@ function getBuildProjectValues(storeName,item){
 }
 
 function matchesProject(value,key){
-  return normaliseProjectKey(value) === key;
+  const valueKey = normaliseProjectKey(value);
+  return valueKey === key || projectKeysMatch(valueKey, key);
 }
 
 function titleMentionsProject(value,key){
   const projectWords = key.split(" ").filter(Boolean);
-  const titleWords = new Set(normaliseProjectKey(value).split(" ").filter(Boolean));
+  const titleWords = normaliseProjectKey(value).split(" ").filter(Boolean);
 
-  return projectWords.length >= 2 && projectWords.every(word => titleWords.has(word));
+  return projectWords.length >= 2 && projectWords.every(word => titleWords.some(titleWord => projectTokenLooksSame(word, titleWord)));
 }
 
 function normaliseProjectKey(value){
@@ -306,6 +310,57 @@ function normaliseProjectKey(value){
     .split(/\s+/)
     .filter(word => word && !PROJECT_NOISE_WORDS.has(word))
     .join(" ");
+}
+
+function projectKeysMatch(left,right){
+  if(left === right) return true;
+
+  const leftTokens = String(left || "").split(/\s+/).filter(Boolean);
+  const rightTokens = String(right || "").split(/\s+/).filter(Boolean);
+  if(!leftTokens.length || !rightTokens.length) return false;
+
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && projectTokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function projectTokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+  return projectEditDistance(left, right, Math.max(left.length, right.length) >= 6 ? 2 : 1);
+}
+
+function projectEditDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return false;
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(previous[col] + 1, current[col - 1] + 1, previous[col - 1] + cost);
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return false;
+    previous = current;
+  }
+
+  return previous[right.length] <= limit;
 }
 
 function cleanDisplayName(value){
@@ -334,13 +389,13 @@ function renderProjects(){
   const search = document.getElementById("search").value.trim().toLowerCase();
   const searchKey = normaliseProjectKey(search);
   const projects = buildProjects();
-  const visible = projects.filter(item => !search || item.key.includes(searchKey) || JSON.stringify(item).toLowerCase().includes(search));
+  const visible = projects.filter(item => !search || item.key.includes(searchKey) || projectKeysMatch(item.key, searchKey) || JSON.stringify(item).toLowerCase().includes(search));
 
   updateStats(projects);
 
   if(!selectedProjectKey && visible.length){
     const requestedKey = normaliseProjectKey(new URLSearchParams(window.location.search).get("project"));
-    selectedProjectKey = visible.find(item => item.key === requestedKey)?.key || visible[0].key;
+    selectedProjectKey = visible.find(item => item.key === requestedKey || projectKeysMatch(item.key, requestedKey))?.key || visible[0].key;
   }
 
   if(selectedProjectKey && visible.length && !visible.some(item => item.key === selectedProjectKey)){
@@ -427,14 +482,14 @@ function renderDetail(data){
     </div>
 
     <div class="split-actions">
-      <a href="quick-capture.html"><span>Capture</span><strong>Add note</strong></a>
+      <a href="quick-capture.html?project=${encodeURIComponent(data.project)}"><span>Capture</span><strong>Add note</strong></a>
+      <a href="crm.html#client-${encodeURIComponent(data.key)}"><span>CRM</span><strong>One view</strong></a>
       <a href="consultations.html?project=${encodeURIComponent(data.project)}"><span>Consult</span><strong>${data.consultations.length || "Start"}</strong></a>
       <a href="shot-lists.html?project=${encodeURIComponent(data.project)}#liveShots"><span>Shots</span><strong>${neededShots} left</strong></a>
-      <a href="call-sheet.html"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
-      <a href="timeline.html"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
-      <a href="gear.html"><span>Gear</span><strong>${gearLeft} left</strong></a>
-      <a href="shoot-settings.html"><span>Settings</span><strong>${data.settings.length} set</strong></a>
-      <a href="delivery.html"><span>Delivery</span><strong>${delivery.stage || "Open"}</strong></a>
+      <a href="call-sheet.html?project=${encodeURIComponent(data.project)}"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
+      <a href="timeline.html?project=${encodeURIComponent(data.project)}"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
+      <a href="gear.html?project=${encodeURIComponent(data.project)}"><span>Gear</span><strong>${gearLeft} left</strong></a>
+      <a href="admin.html"><span>Admin</span><strong>Checklist</strong></a>
     </div>
 
     <div class="ops-actions">

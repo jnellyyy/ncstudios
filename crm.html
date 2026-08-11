@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-3">
 <meta name="theme-color" content="#050504">
 
 <style>
@@ -407,8 +407,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
-<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
 
 <script>
 const STORE = {
@@ -635,6 +636,7 @@ function renderCrm(){
   const filter = document.getElementById("crmFilter").value;
 
   const visible = crmRecords.filter(record => {
+    const searchKey = recordKey(search);
     const filterMatch =
       filter === "all" ||
       (filter === "action" && needsAction(record)) ||
@@ -645,7 +647,7 @@ function renderCrm(){
       (filter === "admin" && record.adminTotals.open > 0) ||
       (filter === "complete" && record.status.label === "Complete");
 
-    return filterMatch && (!search || record.searchText.includes(search));
+    return filterMatch && (!search || recordKeysMatch(record.key, searchKey) || record.searchText.includes(search));
   });
 
   updateStats();
@@ -754,13 +756,13 @@ function renderRecord(record){
       </div>
 
       <div class="crm-links">
-        <a class="ghost-btn" href="bookings.html">Bookings</a>
-        <a class="ghost-btn" href="clients.html">Clients</a>
-        <a class="ghost-btn" href="consultations.html">Consult</a>
+        <a class="ghost-btn" href="projects.html?project=${encodeURIComponent(record.name)}">Project</a>
+        <a class="ghost-btn" href="shot-lists.html?project=${encodeURIComponent(record.name)}#liveShots">Shots</a>
+        <a class="ghost-btn" href="call-sheet.html?project=${encodeURIComponent(record.name)}">Call Sheet</a>
+        <a class="ghost-btn" href="timeline.html?project=${encodeURIComponent(record.name)}">Timeline</a>
+        <a class="ghost-btn" href="gear.html?project=${encodeURIComponent(record.name)}">Gear</a>
         <a class="ghost-btn" href="admin.html">Admin</a>
         <a class="ghost-btn" href="finance.html">Money</a>
-        <a class="ghost-btn" href="delivery.html">Delivery</a>
-        <a class="ghost-btn" href="messages.html">Messages</a>
         <button class="btn" type="button" onclick="copyClientSummary('${escapeAttribute(record.key)}')">Copy summary</button>
       </div>
     </article>
@@ -876,7 +878,7 @@ function tokenLooksSame(left,right){
   if(left.length < 4 || right.length < 4) return false;
   if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
 
-  const limit = Math.max(left.length, right.length) >= 7 ? 2 : 1;
+  const limit = Math.max(left.length, right.length) >= 6 ? 2 : 1;
   return editDistance(left, right, limit) <= limit;
 }
 

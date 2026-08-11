@@ -996,8 +996,7 @@ hr,
 
   .nav-pill,
   .ops-nav{
-    overflow-x:auto !important;
-    justify-content:flex-start !important;
+    display:none !important;
   }
 
   .nav-pill a,

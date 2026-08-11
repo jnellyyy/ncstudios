@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-1">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-3">
 <meta name="theme-color" content="#050504">
 </head>
 
@@ -197,8 +197,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js?v=nc-fixed-1"></script>
-<script src="nc-supabase-sync.js?v=nc-secure-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
 
 <script>
 const STORAGE_KEY = "ncstudios_callsheets_v1";
@@ -264,10 +265,75 @@ function saveSheets(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(sheets));
 }
 
+function normaliseProjectKey(value){
+  const noiseWords = new Set(["and","the","of","for","wedding","film","films","video","videography","photography","shoot","project","couple","client"]);
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !noiseWords.has(word) && !/^\d{2,4}$/.test(word))
+    .sort()
+    .join(" ");
+}
+
+function projectNamesMatch(left,right){
+  const leftKey = normaliseProjectKey(left);
+  const rightKey = normaliseProjectKey(right);
+  if(!leftKey || !rightKey) return false;
+  if(leftKey === rightKey) return true;
+
+  const leftTokens = leftKey.split(/\s+/);
+  const rightTokens = rightKey.split(/\s+/);
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && projectTokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function projectTokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+  return projectEditDistance(left, right, Math.max(left.length, right.length) >= 6 ? 2 : 1);
+}
+
+function projectEditDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return false;
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(previous[col] + 1, current[col - 1] + 1, previous[col - 1] + cost);
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return false;
+    previous = current;
+  }
+
+  return previous[right.length] <= limit;
+}
+
 function renderSheets(){
   const list = document.getElementById("sheetList");
   const search = document.getElementById("search").value.trim().toLowerCase();
-  const visible = sheets.filter(sheet => !search || JSON.stringify(sheet).toLowerCase().includes(search));
+  const visible = sheets.filter(sheet => !search || projectNamesMatch(sheet.project, search) || JSON.stringify(sheet).toLowerCase().includes(search));
 
   updateStats();
 
@@ -412,6 +478,11 @@ function escapeHTML(value){
 
 function escapeAttribute(value){
   return escapeHTML(value);
+}
+
+const initialProjectSearch = new URLSearchParams(window.location.search).get("project") || "";
+if(initialProjectSearch){
+  document.getElementById("search").value = initialProjectSearch;
 }
 
 renderSheets();
