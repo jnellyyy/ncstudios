@@ -59,6 +59,7 @@ copy_file "wedding-funds.html"
 copy_file "wedding-funds.js"
 
 copy_file "app.js"
+copy_file "app-mobile-nav.js"
 copy_file "nc-supabase-sync.js"
 copy_file "register-sw.js"
 copy_file "site.webmanifest"
