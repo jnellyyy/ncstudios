@@ -1,96 +1,1590 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050504">
 
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
+:root{
+  --bg:#050504;
+  --bg2:#11100c;
+  --glass:rgba(255,255,255,0.075);
+  --glass2:rgba(255,255,255,0.105);
+  --line:rgba(255,255,255,0.13);
+  --text:#f7efe3;
+  --muted:#a5adbb;
+  --red:#d8b76e;
+  --red2:#b99546;
+  --green:#34c759;
+  --shadow:0 22px 60px rgba(0,0,0,0.42);
+}
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
+html,
+body{
+  margin:0;
+  width:100%;
+  height:100%;
+}
 
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+body{
+  min-height:100svh;
+  font-family:"NC Studio Brand",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(216,183,110,0.28), transparent 35%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+  overflow:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.024) 1px, transparent 1px);
+  background-size:42px 42px;
+  pointer-events:none;
+  opacity:0.8;
+}
+
+.app{
+  height:100svh;
+  width:min(1080px,100%);
+  margin:0 auto;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    14px
+    max(14px, env(safe-area-inset-bottom));
+  display:grid;
+  grid-template-rows:auto auto auto 1fr;
+  gap:10px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.logo{
+  width:44px;
+  height:44px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 18%, rgba(216,183,110,0.46), transparent 38%),
+    linear-gradient(145deg,#22242a,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+  letter-spacing:0;
+}
+
+.brand h1{
+  margin:0;
+  font-size:18px;
+  letter-spacing:0;
+}
+
+.brand p{
+  margin:1px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.statusPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.075);
+  padding:9px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:850;
+  backdrop-filter:blur(18px);
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:30px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:190px;
+  height:190px;
+  right:-70px;
+  top:-85px;
+  background:radial-gradient(circle, rgba(216,183,110,0.30), transparent 68%);
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  position:relative;
+  z-index:1;
+}
+
+.hero h2{
+  margin:5px 0 6px;
+  font-size:28px;
+  line-height:0.96;
+  letter-spacing:0;
+  position:relative;
+  z-index:1;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.34;
+  max-width:560px;
+  position:relative;
+  z-index:1;
+}
+
+.quick{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.quick a{
+  min-height:46px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:white;
+  font-size:13px;
+  font-weight:950;
+  border:1px solid rgba(255,255,255,0.12);
+}
+
+.quick a:first-child{
+  background:linear-gradient(145deg,#d8b76e,#b99546);
+  box-shadow:0 14px 28px rgba(216,183,110,0.20);
+}
+
+.quick a:last-child{
+  background:rgba(255,255,255,0.075);
+  backdrop-filter:blur(18px);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.stat{
+  min-height:70px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.075);
+  border-radius:22px;
+  padding:11px;
+  backdrop-filter:blur(18px);
+}
+
+.stat span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.stat strong{
+  display:block;
+  margin-top:7px;
+  font-size:22px;
+  line-height:1;
+  letter-spacing:0;
+}
+
+.dashboardMain{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(260px,0.78fr) minmax(0,1.45fr);
+  gap:9px;
+  overflow:hidden;
+}
+
+.livePanel{
+  min-height:0;
+  border:1px solid rgba(255,255,255,0.15);
+  background:
+    linear-gradient(145deg,rgba(216,183,110,0.25),rgba(255,255,255,0.055)),
+    rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+
+.liveLabel{
+  color:#fecaca;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  position:relative;
+  z-index:1;
+}
+
+.livePanel h3{
+  margin:5px 0 0;
+  font-size:22px;
+  line-height:1;
+  letter-spacing:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  position:relative;
+  z-index:1;
+}
+
+.livePanel p{
+  margin:5px 0 0;
+  color:rgba(255,255,255,0.76);
+  font-size:12px;
+  line-height:1.32;
+  position:relative;
+  z-index:1;
+}
+
+.liveStats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  position:relative;
+  z-index:1;
+}
+
+.liveStat{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(0,0,0,0.18);
+  border-radius:18px;
+  padding:9px;
+}
+
+.liveStat span{
+  display:block;
+  color:rgba(255,255,255,0.68);
+  font-size:9px;
+  font-weight:900;
+}
+
+.liveStat strong{
+  display:block;
+  margin-top:5px;
+  font-size:21px;
+  line-height:1;
+  letter-spacing:0;
+}
+
+.liveNext{
+  color:rgba(255,255,255,0.78);
+  font-size:11px;
+  font-weight:800;
+  line-height:1.3;
+  position:relative;
+  z-index:1;
+}
+
+.dayFacts{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+  position:relative;
+  z-index:1;
+}
+
+.dayFacts div{
+  min-height:58px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(0,0,0,0.18);
+  border-radius:18px;
+  padding:9px;
+  min-width:0;
+}
+
+.dayFacts span{
+  display:block;
+  color:rgba(255,255,255,0.68);
+  font-size:9px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.dayFacts strong{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  line-height:1.15;
+  overflow-wrap:anywhere;
+}
+
+.liveCTA{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  position:relative;
+  z-index:1;
+}
+
+.liveAction{
+  min-height:52px;
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(0,0,0,0.18);
+  border-radius:17px;
+  padding:9px;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:5px;
+  min-width:0;
+  overflow:hidden;
+}
+
+.liveAction:active{
+  transform:scale(0.985);
+}
+
+.liveAction span{
+  color:rgba(255,255,255,0.72);
+  font-size:9px;
+  font-weight:950;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  min-width:0;
+}
+
+.liveAction strong{
+  font-size:12px;
+  line-height:1;
+  min-width:0;
+}
+
+.liveAction.primary{
+  background:linear-gradient(145deg,#d8b76e,#b99546);
+  box-shadow:0 12px 24px rgba(216,183,110,0.20);
+}
+
+.tiles{
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(3,minmax(0,1fr));
+  gap:9px;
+  overflow:hidden;
+}
+
+.tile{
+  min-height:0;
+  border:1px solid rgba(255,255,255,0.13);
+  background:
+    linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
+  border-radius:26px;
+  padding:12px;
+  color:var(--text);
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  box-shadow:0 15px 35px rgba(0,0,0,0.26);
+  position:relative;
+  min-width:0;
+}
+
+.tile:active{
+  transform:scale(0.985);
+}
+
+.tile::after{
+  content:"";
+  position:absolute;
+  right:-32px;
+  top:-35px;
+  width:95px;
+  height:95px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.055);
+}
+
+.icon{
+  width:36px;
+  height:36px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.12);
+  font-size:17px;
+}
+
+.tile h3{
+  margin:8px 0 3px;
+  font-size:15px;
+  letter-spacing:0;
+  position:relative;
+  z-index:1;
+}
+
+.tileMetric{
+  display:block;
+  margin-top:6px;
+  color:var(--text);
+  font-size:20px;
+  font-weight:950;
+  line-height:1;
+  letter-spacing:0;
+  position:relative;
+  z-index:1;
+}
+
+.tile p{
+  margin:0;
+  color:var(--muted);
+  font-size:10.8px;
+  line-height:1.22;
+  position:relative;
+  z-index:1;
+  overflow-wrap:break-word;
+}
+
+.tileFooter{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;
+  font-weight:900;
+  position:relative;
+  z-index:1;
+}
+
+.bottomRow{
+  display:none;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+}
+
+.bottomRow a{
+  min-height:42px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.055);
+  backdrop-filter:blur(18px);
+}
+
+@media(max-width:650px){
+  html,
+  body{
+    height:100%;
+    overflow:hidden;
+  }
+
+  .app{
+    height:100svh;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      12px
+      max(12px, env(safe-area-inset-bottom));
+    grid-template-rows:auto auto auto 1fr;
+    gap:8px;
+    overflow:hidden;
+  }
+
+  .logo{
+    width:38px;
+    height:38px;
+    border-radius:14px;
+  }
+
+  .brand h1{
+    font-size:16px;
+  }
+
+  .brand p{
+    font-size:11px;
+  }
+
+  .hero{
+    padding:12px;
+    border-radius:24px;
+  }
+
+  .hero h2{
+    font-size:22px;
+  }
+
+  .hero p{
+    font-size:11px;
+    line-height:1.25;
+  }
+
+  .quick{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stats{
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+  }
+
+  .stat{
+    min-height:50px;
+    padding:8px;
+    border-radius:17px;
+  }
+
+  .stat span{
+    font-size:8.5px;
+  }
+
+  .stat strong{
+    margin-top:5px;
+    font-size:17px;
+  }
+
+  .tiles{
+    grid-template-columns:repeat(2,1fr);
+    grid-template-rows:repeat(3,minmax(0,1fr));
+    gap:7px;
+  }
+
+  .dashboardMain{
+    grid-template-columns:1fr;
+    grid-template-rows:auto minmax(0,1fr);
+    gap:7px;
+  }
+
+  .livePanel{
+    min-height:auto;
+    border-radius:20px;
+    padding:10px;
+    display:block;
+  }
+
+  .liveLabel{
+    font-size:8.5px;
+  }
+
+  .livePanel h3{
+    font-size:15px;
+    margin-top:1px;
+  }
+
+  .livePanel p,
+  .liveNext{
+    display:block;
+    font-size:11px;
+    line-height:1.28;
+  }
+
+  .dayFacts{
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;
+    margin-top:10px;
+  }
+
+  .dayFacts div{
+    min-height:52px;
+    border-radius:14px;
+    padding:8px;
+  }
+
+  .dayFacts strong{
+    font-size:11px;
+  }
+
+  .liveCTA{
+    grid-template-columns:repeat(2,1fr);
+    gap:5px;
+    margin-top:10px;
+  }
+
+  .liveAction{
+    min-height:27px;
+    border-radius:11px;
+    padding:6px 5px;
+    flex-direction:row;
+    align-items:center;
+    gap:4px;
+    justify-content:flex-start;
+  }
+
+  .liveAction span{
+    font-size:7px;
+    letter-spacing:0.045em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .liveAction strong{
+    font-size:9px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .liveStats{
+    grid-template-columns:repeat(3,1fr);
+    gap:5px;
+    margin-top:10px;
+  }
+
+  .liveStat{
+    min-height:42px;
+    border-radius:14px;
+    padding:6px;
+  }
+
+  .liveStat span{
+    font-size:7.5px;
+  }
+
+  .liveStat strong{
+    margin-top:4px;
+    font-size:15px;
+  }
+
+  .tile{
+    border-radius:20px;
+    padding:10px;
+    justify-content:flex-start;
+  }
+
+  .icon{
+    width:30px;
+    height:30px;
+    border-radius:12px;
+    font-size:13px;
+  }
+
+  .tile h3{
+    font-size:13px;
+    margin:6px 0 2px;
+  }
+
+  .tileMetric{
+    font-size:18px;
+    margin-top:4px;
+  }
+
+  .tile p{
+    font-size:9.5px;
+    line-height:1.15;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .tileFooter{
+    display:none;
+  }
+}
+
+@media(max-height:760px){
+  .hero p{
+    display:none;
+  }
+
+  .hero h2{
+    font-size:23px;
+    margin-bottom:0;
+  }
+
+  .quick a{
+    min-height:40px;
+  }
+
+  .stat{
+    min-height:48px;
+  }
+
+  .stat strong{
+    font-size:16px;
+  }
+
+  .tile p{
+    display:none;
+  }
+
+  .livePanel p,
+  .liveNext{
+    display:none;
+  }
+
+  .tile h3{
+    margin-bottom:0;
+  }
+}
+
+@media(max-height:690px){
+  .hero{
+    padding:11px;
+  }
+
+  .livePanel{
+    min-height:74px;
+  }
+
+  .liveStats{
+    display:none;
+  }
+
+  .liveAction strong{
+    display:none;
+  }
+
+  .liveAction{
+    min-height:26px;
+    justify-content:center;
+  }
+
+  .icon{
+    width:27px;
+    height:27px;
+  }
+
+  .tileMetric{
+    font-size:15px;
+  }
+
+  .tileFooter{
+    display:none;
+  }
+
+  .tiles{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Business dashboard</p>
+    </div>
+  </div>
+
+  <a class="statusPill" href="dashboard.html">Home</a>
+</header>
+
+<section class="hero">
+  <div class="kicker">Studio control</div>
+  <h2>Today</h2>
+  <p>Open the app, see the current wedding, then jump straight into the thing you need.</p>
+</section>
+
+<section class="quick">
+  <a href="projects.html" id="quickProjectLink">Project hub</a>
+  <a href="shot-lists.html" id="quickShotLink">Shot list</a>
+  <a href="quick-capture.html" id="quickCaptureLink">Capture note</a>
+  <a href="crm.html">CRM</a>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <span>Bookings</span>
+    <strong id="bookingsTotal">0</strong>
+  </div>
+
+  <div class="stat">
+    <span>Clients</span>
+    <strong id="clientsTotal">0</strong>
+  </div>
+
+  <div class="stat">
+    <span>Income</span>
+    <strong id="incomeTotal">£0</strong>
+  </div>
+
+  <div class="stat">
+    <span>Delivery</span>
+    <strong id="deliveryTotal">0</strong>
+  </div>
+</section>
+
+<main class="dashboardMain">
+  <section class="livePanel">
+    <div>
+      <div class="liveLabel">Next wedding</div>
+      <h3 id="liveProject">Shot list</h3>
+      <p id="daySummary">Everything important for the active project lands here first.</p>
+    </div>
+
+    <div class="dayFacts">
+      <div>
+        <span>Date</span>
+        <strong id="dayDate">Not set</strong>
+      </div>
+      <div>
+        <span>Location</span>
+        <strong id="dayLocation">Not set</strong>
+      </div>
+      <div>
+        <span>Money</span>
+        <strong id="dayMoney">Not set</strong>
+      </div>
+      <div>
+        <span>Admin</span>
+        <strong id="dayAdmin">No project selected</strong>
+      </div>
+    </div>
+
+    <div class="liveStats">
+      <div class="liveStat">
+        <span>Needed</span>
+        <strong id="liveNeeded">0</strong>
+      </div>
+
+      <div class="liveStat">
+        <span>Done</span>
+        <strong id="liveCaptured">0</strong>
+      </div>
+
+      <div class="liveStat">
+        <span>Total</span>
+        <strong id="liveTotal">0</strong>
+      </div>
+    </div>
+
+    <div class="liveNext" id="liveNextShot">Load a list or paste one in Shots.</div>
+
+    <div class="liveCTA">
+      <a class="liveAction primary" id="dayProjectLink" href="projects.html">
+        <span>Project</span>
+        <strong id="projectWidget">0 live</strong>
+      </a>
+
+      <a class="liveAction" id="dayCallLink" href="call-sheet.html">
+        <span>Call sheet</span>
+        <strong id="callSheetWidget">0 sheets</strong>
+      </a>
+
+      <a class="liveAction" id="liveShotLink" href="shot-lists.html#liveShots">
+        <span>Shots</span>
+        <strong id="liveShotAction">0 left</strong>
+      </a>
+
+      <a class="liveAction" id="dayTimelineLink" href="timeline.html">
+        <span>Timeline</span>
+        <strong id="timelineWidget">0 items</strong>
+      </a>
+
+      <a class="liveAction" id="dayGearLink" href="gear.html">
+        <span>Gear</span>
+        <strong id="gearWidget">0 items</strong>
+      </a>
+
+      <a class="liveAction" id="dayCaptureLink" href="quick-capture.html">
+        <span>Capture</span>
+        <strong id="captureWidget">0 open</strong>
+      </a>
+    </div>
+  </section>
+
+  <section class="tiles">
+  <a class="tile" href="crm.html">
+    <div>
+      <div class="icon">C</div>
+      <h3>CRM</h3>
+      <span class="tileMetric" id="crmWidget">0</span>
+      <p>One card per couple with money, admin, notes and next move.</p>
+    </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="admin.html">
+    <div>
+      <div class="icon">A</div>
+      <h3>Admin</h3>
+      <span class="tileMetric" id="adminWidget">0</span>
+      <p>Contracts, forms, folders, route, parking and final checks.</p>
+    </div>
+    <div class="tileFooter"><span>Check</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="lists.html">
+    <div>
+      <div class="icon">T</div>
+      <h3>To Do</h3>
+      <span class="tileMetric" id="listsWidget">0</span>
+      <p>Open prep actions for the current wedding and the business.</p>
+    </div>
+    <div class="tileFooter"><span>Next</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="finance.html">
+    <div>
+      <div class="icon">£</div>
+      <h3>Money</h3>
+      <span class="tileMetric" id="financeWidget">£0</span>
+      <p>Payments, expenses and what has already been covered.</p>
+    </div>
+    <div class="tileFooter"><span>Open</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="buy-list.html">
+    <div>
+      <div class="icon">B</div>
+      <h3>Buy List</h3>
+      <span class="tileMetric" id="buyTileWidget">0</span>
+      <p>Only the missing kit, audio, storage and cable gaps.</p>
+    </div>
+    <div class="tileFooter"><span>Prep</span><span>›</span></div>
+  </a>
+
+  <a class="tile" href="wedding-funds.html">
+    <div>
+      <div class="icon">F</div>
+      <h3>Funds</h3>
+      <span class="tileMetric" id="fundsWidget">£0 safe</span>
+      <p>Wedding reserve, purchases, rentals and flexible balance.</p>
+    </div>
+    <div class="tileFooter"><span>Plan</span><span>›</span></div>
+  </a>
+  </section>
+</main>
+
+<nav class="bottomRow">
+  <a href="projects.html" id="bottomProjectLink">Project</a>
+  <a href="shot-lists.html" id="bottomShotLink">Shots</a>
+  <a href="buy-list.html">Buy</a>
+  <a href="crm.html">CRM</a>
+  <a href="wedding-funds.html">Funds</a>
+</nav>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
+
+<script>
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function setText(id, value){
+  const element = document.getElementById(id);
+  if(element) element.textContent = value;
+}
+
+function setHref(id, value){
+  const element = document.getElementById(id);
+  if(element) element.href = value;
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(String(value).includes("T") ? value : value + "T12:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function activeBuyCount(buyList){
+  return (Array.isArray(buyList) ? buyList : [])
+    .filter(item => !["bought","skip","later"].includes(item.status))
+    .length;
+}
+
+function roadmapRentalSaved(roadmapRows){
+  const roadmap = Array.isArray(roadmapRows) ? roadmapRows[0] : null;
+  if(!roadmap) return {saved:0,target:300};
+
+  const allocatedPayments = new Set(
+    (roadmap.payments || [])
+      .filter(item => item.status === "allocated")
+      .map(item => item.id)
+  );
+
+  const saved = (roadmap.allocations || [])
+    .filter(item => {
+      const category = String(item.category || "").toLowerCase();
+      const name = String(item.name || "").toLowerCase();
+      const isRental = item.rental || category.includes("rental") || name.includes("rental");
+      return isRental && allocatedPayments.has(item.paymentId) && !["skipped","moved-later"].includes(item.status);
+    })
+    .reduce((sum,item) => sum + Number(item.estimatedCost || 0),0);
+
+  return {saved,target:Number(roadmap.rentalTarget || 300)};
+}
+
+function assistantUrgentCount(tasks,messages,finance,delivery){
+  const today = new Date().toISOString().slice(0,10);
+  const taskCount = (tasks || []).filter(item => item.status !== "done" && (item.priority === "high" || (item.dueDate && item.dueDate <= today))).length;
+  const messageCount = (messages || []).filter(item => !["replied","archived"].includes(item.status)).length;
+  const paymentCount = (finance || []).filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status) && item.date && item.date < today).length;
+  const deliveryCount = (delivery || []).filter(item => !["delivered","completed"].includes(item.stage) && item.dueDate && item.dueDate < today).length;
+  return taskCount + messageCount + paymentCount + deliveryCount;
+}
+
+function sectionLabel(value){
+  const labels = {
+    prep:"Prep",
+    ceremony:"Ceremony",
+    portraits:"Portraits",
+    reception:"Reception",
+    speeches:"Speeches",
+    dancing:"Dancing",
+    details:"Details"
+  };
+
+  return labels[value] || "Shots";
+}
+
+function projectStageMap(projectStages){
+  const map = new Map();
+
+  (Array.isArray(projectStages) ? projectStages : []).forEach(item => {
+    const key = item.key || normaliseProjectKey(item.project);
+    if(key) map.set(key, item.stage || "not-live");
+  });
+
+  return map;
+}
+
+function projectStageFor(map,project){
+  const key = normaliseProjectKey(project);
+  if(map.has(key)) return map.get(key);
+
+  const similarKey = [...map.keys()].find(savedKey => projectKeysMatch(savedKey, key));
+  return similarKey ? map.get(similarKey) : "not-live";
+}
+
+function liveProjectCount(projectStages){
+  return (Array.isArray(projectStages) ? projectStages : [])
+    .filter(item => item.stage === "live" && normaliseProjectKey(item.project || item.key))
+    .length;
+}
+
+function countProjects(dataSets){
+  const names = [];
+
+  (dataSets.bookings || []).forEach(item => addProjectName(names, item.clientName || item.eventName));
+  (dataSets.clients || []).forEach(item => addProjectName(names, item.clientName));
+  (dataSets.messages || []).forEach(item => addProjectName(names, item.project || item.clientName || item.subject));
+  (dataSets.delivery || []).forEach(item => addProjectName(names, item.projectName || item.client));
+  (dataSets.shots || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.timeline || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.gear || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.settings || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.callSheets || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.consultations || []).forEach(item => addProjectName(names, item.project));
+  (dataSets.capture || []).forEach(item => addProjectName(names, item.project));
+
+  return names.length;
+}
+
+function addProjectName(list,value){
+  const name = normaliseProjectKey(value);
+  if(name && !list.some(savedName => projectKeysMatch(savedName, name))){
+    list.push(name);
+  }
+}
+
+function normaliseProjectKey(value){
+  const noiseWords = new Set(["and","the","of","for","wedding","shoot","project","couple","client"]);
+
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !noiseWords.has(word) && !/^\d{2,4}$/.test(word))
+    .sort()
+    .join(" ");
+}
+
+function projectKeysMatch(left,right){
+  if(left === right) return true;
+
+  const leftTokens = String(left || "").split(/\s+/).filter(Boolean);
+  const rightTokens = String(right || "").split(/\s+/).filter(Boolean);
+  if(!leftTokens.length || !rightTokens.length) return false;
+
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && projectTokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  if(shorter.length === 1 && longer.length > 1){
+    return matches === 1 && shorter[0].length >= 4;
+  }
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function projectTokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+
+  const limit = Math.max(left.length, right.length) >= 6 ? 2 : 1;
+  return projectEditDistance(left, right, limit) <= limit;
+}
+
+function projectEditDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return limit + 1;
+
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(
+        previous[col] + 1,
+        current[col - 1] + 1,
+        previous[col - 1] + cost
+      );
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return limit + 1;
+    previous = current;
+  }
+
+  return previous[right.length];
+}
+
+function sameProjectName(value,project){
+  const left = normaliseProjectKey(value);
+  const right = normaliseProjectKey(project);
+  return Boolean(left && right && projectKeysMatch(left, right));
+}
+
+function liveProjectName(projectStages,shots){
+  const liveStage = (projectStages || []).find(item => item.stage === "live" && (item.project || item.key));
+  if(liveStage?.project) return liveStage.project;
+
+  const stages = projectStageMap(projectStages);
+  const liveShot = (shots || []).find(item => projectStageFor(stages, item.project) === "live");
+  return liveShot?.project || "";
+}
+
+function projectRows(rows,project,fields){
+  if(!project) return [];
+  return (rows || []).filter(item => fields.some(field => sameProjectName(item[field], project)));
+}
+
+function firstProjectRow(rows,project,fields){
+  return projectRows(rows, project, fields)[0] || null;
+}
+
+function readyGear(status){
+  return ["packed","checked","charged","owned","rented"].includes(String(status || "").toLowerCase());
+}
+
+function moneyPosition(booking,financeRows){
+  if(booking && Number(booking.packagePrice || 0)){
+    const balance = Math.max(Number(booking.packagePrice || 0) - Number(booking.depositPaid || 0), 0);
+    return balance <= 0 ? "Paid in full" : `${money(balance)} due`;
+  }
+
+  const paid = (financeRows || [])
+    .filter(item => item.type === "income" && item.status === "paid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+  return paid ? `${money(paid)} paid` : "Check finance";
+}
+
+function projectUrl(page,project,suffix){
+  const query = project ? `?project=${encodeURIComponent(project)}` : "";
+  return `${page}${query}${suffix || ""}`;
+}
+
+function updateDayFocus(data){
+  const project = liveProjectName(data.projectStages, data.shots);
+
+  setHref("quickProjectLink", projectUrl("projects.html", project));
+  setHref("quickShotLink", projectUrl("shot-lists.html", project, "#liveShots"));
+  setHref("quickCaptureLink", projectUrl("quick-capture.html", project));
+  setHref("bottomProjectLink", projectUrl("projects.html", project));
+  setHref("bottomShotLink", projectUrl("shot-lists.html", project, "#liveShots"));
+  setHref("bottomCaptureLink", projectUrl("quick-capture.html", project));
+  setHref("dayProjectLink", projectUrl("projects.html", project));
+  setHref("dayCallLink", projectUrl("call-sheet.html", project));
+  setHref("dayTimelineLink", projectUrl("timeline.html", project));
+  setHref("dayGearLink", projectUrl("gear.html", project));
+  setHref("dayCaptureLink", projectUrl("quick-capture.html", project));
+
+  if(!project){
+    setText("daySummary", "Mark a project Live in Project Hub to turn this into your day screen.");
+    setText("dayDate", "Not set");
+    setText("dayLocation", "Not set");
+    setText("dayMoney", "Not set");
+    setText("dayAdmin", "No live project");
+    return;
+  }
+
+  const booking = firstProjectRow(data.bookings, project, ["clientName","eventName"]);
+  const client = firstProjectRow(data.clients, project, ["clientName","name"]);
+  const callSheet = firstProjectRow(data.callSheets, project, ["project"]);
+  const consultation = firstProjectRow(data.consultations, project, ["project"]);
+  const financeRows = projectRows(data.finance, project, ["client","project","projectName","title"]);
+  const projectTasks = projectRows(data.lists, project, ["project"]).filter(item => item.status !== "done");
+  const projectGear = projectRows(data.gear, project, ["project"]);
+  const gearLeft = projectGear.filter(item => !readyGear(item.status));
+  const activeTimeline = projectRows(data.timeline, project, ["project"]).filter(item => item.status !== "done");
+
+  const date = booking?.eventDate || client?.eventDate || callSheet?.eventDate || consultation?.weddingDate;
+  const location = booking?.location || client?.location || callSheet?.venue || consultation?.receptionLocation || "Venue TBC";
+  const adminFlags = [];
+
+  if(!callSheet || /tbc|confirm/i.test(`${callSheet.venue || ""} ${callSheet.address || ""}`)) adminFlags.push("venues");
+  if(!callSheet?.bridePhone && !callSheet?.groomPhone) adminFlags.push("contacts");
+  if(projectTasks.length) adminFlags.push(`${projectTasks.length} tasks`);
+  if(gearLeft.length) adminFlags.push(`${gearLeft.length} gear gaps`);
+  if(activeTimeline.length) adminFlags.push(`${activeTimeline.length} timeline`);
+
+  setText("daySummary", `${project} is the current working wedding. Keep this screen as the jump-off point.`);
+  setText("dayDate", niceDate(date));
+  setText("dayLocation", location);
+  setText("dayMoney", moneyPosition(booking, financeRows));
+  setText("dayAdmin", adminFlags.length ? adminFlags.join(" / ") : "Looks clear");
+  setText("callSheetWidget", callSheet ? "open" : "needed");
+  setText("gearWidget", `${gearLeft.length} left`);
+  setText("timelineWidget", `${activeTimeline.length} items`);
+}
+
+function updateShotPanel(shots,projectStages){
+  const safeShots = Array.isArray(shots) ? shots : [];
+  const stages = projectStageMap(projectStages);
+  const liveShots = safeShots.filter(item => projectStageFor(stages, item.project) === "live");
+  const needed = liveShots.filter(item => !item.captured);
+  const captured = liveShots.filter(item => item.captured);
+  const activePool = needed.length ? needed : liveShots;
+  const activeProject = activePool.find(item => item.project)?.project || "";
+  const nextShot = needed.find(item => item.project === activeProject) || needed[0] || safeShots[0];
+  const link = document.getElementById("liveShotLink");
+
+  setText("liveNeeded", needed.length);
+  setText("liveCaptured", captured.length);
+  setText("liveTotal", liveShots.length);
+  setText("liveShotAction", `${needed.length} left`);
+  setText("liveProject", activeProject || "No live shoot");
+
+  if(nextShot && needed.length && activeProject){
+    setText("liveNextShot", `${sectionLabel(nextShot.section)}: ${nextShot.shotText || "Next shot"}`);
+  } else if(liveShots.length){
+    setText("liveNextShot", "All shots captured. Review or reset in Shots.");
+  } else if(safeShots.length){
+    setText("liveNextShot", "Mark a project Live in Projects when you are actively shooting.");
+  } else {
+    setText("liveNextShot", "Load a list or paste one in Shots.");
+  }
+
+  if(link){
+    link.href = activeProject
+      ? `shot-lists.html?project=${encodeURIComponent(activeProject)}#liveShots`
+      : "shot-lists.html#liveShots";
+  }
+}
+
+function updateDashboardFromLocal(){
+  const bookings = readData("ncstudios_bookings_v1");
+  const clients = readData("ncstudios_clients_v1");
+  const finance = readData("ncstudios_finance_v1");
+  const messages = readData("ncstudios_messages_v1");
+  const shots = readData("ncstudios_shots_v1");
+  const lists = readData("ncstudios_lists_v1");
+  const delivery = readData("ncstudios_delivery_v1");
+  const templates = readData("ncstudios_templates_v1");
+  const timeline = readData("ncstudios_timeline_v1");
+  const gear = readData("ncstudios_gear_v1");
+  const buyList = readData("ncstudios_buylist_v1");
+  const settings = readData("ncstudios_settings_v1");
+  const projectStages = readData("ncstudios_project_status_v1");
+  const consultations = readData("ncstudios_consultations_v1");
+  const capture = readData("ncstudios_capture_v1");
+  const callSheets = readData("ncstudios_callsheets_v1");
+  const adminClients = readData("ncStudiosAdminTrackerV1");
+  const roadmap = readData("ncstudios_wedding_funds_v1");
+  const content = readData("ncstudios_content_v1");
+
+  setText("bookingsTotal", bookings.length);
+  setText("clientsTotal", clients.length);
+  setText("deliveryTotal", delivery.length);
+
+  const income = finance
+    .filter(item => item.type === "income" && item.status !== "unpaid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+  const rentalFunds = roadmapRentalSaved(roadmap);
+  const urgent = assistantUrgentCount(lists,messages,finance,delivery);
+  const crmTotal = countProjects({
+    bookings,
+    clients,
+    messages,
+    delivery,
+    shots,
+    timeline,
+    gear,
+    settings,
+    callSheets,
+    consultations,
+    capture
+  });
+
+  setText("incomeTotal", money(income));
+  setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
+  setText("messageTileWidget", openMessages);
+  setText("clientWidget", clients.length);
+  setText("crmWidget", crmTotal);
+  setText("financeWidget", money(income));
+  setText("deliveryWidget", delivery.length);
+  setText("shotsWidget", shots.length);
+  setText("listsWidget", lists.filter(item => item.status !== "done").length);
+  setText("templatesWidget", templates.length);
+  setText("adminWidget", adminClients.length);
+  setText("buyTileWidget", activeBuyCount(buyList));
+  setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
+  setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+  setText("buyWidget", `${activeBuyCount(buyList)} active`);
+  setText("fundsWidget", `${money(rentalFunds.saved)} safe`);
+  setText("fundsActionWidget", `${money(rentalFunds.saved)} / ${money(rentalFunds.target)}`);
+  setText("assistantWidget", `${urgent} urgent`);
+  setText("assistantActionWidget", `${urgent} urgent`);
+  setText("contentWidget", `${content.filter(item => item.status === "ready").length} ready`);
+  setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
+  setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
+  setText("callSheetWidget", `${callSheets.length} sheets`);
+  setText("projectWidget", `${liveProjectCount(projectStages)} live`);
+  updateShotPanel(shots, projectStages);
+  updateDayFocus({bookings, clients, finance, shots, lists, timeline, gear, projectStages, consultations, callSheets});
+}
+
+async function updateDashboardFromSupabase(){
+  updateDashboardFromLocal();
+
+  // Supabase sync writes into localStorage and reloads once if remote data changed.
+  // Rendering the dashboard directly from a remote snapshot can revive stale live-project data.
+  return;
+
+  if(!window.ncSupabase){
+    return;
+  }
+
+  try{
+    const storageResponse = await window.ncSupabase
+      .from("app_storage")
+      .select("app_key,data")
+      .in("app_key", [
+        "ncstudios_bookings_v1",
+        "ncstudios_finance_v1",
+        "ncstudios_messages_v1",
+        "ncstudios_delivery_v1",
+        "ncstudios_clients_v1",
+        "ncstudios_shots_v1",
+        "ncstudios_lists_v1",
+        "ncstudios_templates_v1",
+        "ncstudios_timeline_v1",
+        "ncstudios_gear_v1",
+        "ncstudios_buylist_v1",
+        "ncstudios_settings_v1",
+        "ncstudios_project_status_v1",
+        "ncstudios_consultations_v1",
+        "ncstudios_capture_v1",
+        "ncstudios_callsheets_v1",
+        "ncstudios_content_v1",
+        "ncstudios_wedding_funds_v1"
+      ]);
+
+    if(!storageResponse.error && Array.isArray(storageResponse.data)){
+      const map = {};
+      storageResponse.data.forEach(row => {
+        map[row.app_key] = Array.isArray(row.data) ? row.data : [];
+      });
+
+      const bookings = map.ncstudios_bookings_v1 || readData("ncstudios_bookings_v1");
+      const finance = map.ncstudios_finance_v1 || readData("ncstudios_finance_v1");
+      const messages = map.ncstudios_messages_v1 || readData("ncstudios_messages_v1");
+      const delivery = map.ncstudios_delivery_v1 || readData("ncstudios_delivery_v1");
+      const appStorageClients = map.ncstudios_clients_v1 || readData("ncstudios_clients_v1");
+      const shots = map.ncstudios_shots_v1 || readData("ncstudios_shots_v1");
+      const lists = map.ncstudios_lists_v1 || readData("ncstudios_lists_v1");
+      const templates = map.ncstudios_templates_v1 || readData("ncstudios_templates_v1");
+      const timeline = map.ncstudios_timeline_v1 || readData("ncstudios_timeline_v1");
+      const gear = map.ncstudios_gear_v1 || readData("ncstudios_gear_v1");
+      const buyList = map.ncstudios_buylist_v1 || readData("ncstudios_buylist_v1");
+      const settings = map.ncstudios_settings_v1 || readData("ncstudios_settings_v1");
+      const projectStages = map.ncstudios_project_status_v1 || readData("ncstudios_project_status_v1");
+      const consultations = map.ncstudios_consultations_v1 || readData("ncstudios_consultations_v1");
+      const capture = map.ncstudios_capture_v1 || readData("ncstudios_capture_v1");
+      const callSheets = map.ncstudios_callsheets_v1 || readData("ncstudios_callsheets_v1");
+      const roadmap = map.ncstudios_wedding_funds_v1 || readData("ncstudios_wedding_funds_v1");
+      const content = map.ncstudios_content_v1 || readData("ncstudios_content_v1");
+
+      setText("bookingsTotal", bookings.length);
+      setText("deliveryTotal", delivery.length);
+
+      const income = finance
+        .filter(item => item.type === "income" && item.status !== "unpaid")
+        .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+      const openMessages = messages.filter(item => !["replied","archived"].includes(item.status)).length;
+      const rentalFunds = roadmapRentalSaved(roadmap);
+      const urgent = assistantUrgentCount(lists,messages,finance,delivery);
+      const crmTotal = countProjects({
+        bookings,
+        clients:appStorageClients,
+        messages,
+        delivery,
+        shots,
+        timeline,
+        gear,
+        settings,
+        callSheets,
+        consultations,
+        capture
+      });
+
+      setText("incomeTotal", money(income));
+      setText("clientsTotal", appStorageClients.length);
+      setText("enquiryWidget", bookings.filter(item => item.status === "enquiry").length);
+      setText("messageTileWidget", openMessages);
+      setText("crmWidget", crmTotal);
+      setText("financeWidget", money(income));
+      setText("deliveryWidget", delivery.length);
+      setText("shotsWidget", shots.length);
+      setText("listsWidget", lists.filter(item => item.status !== "done").length);
+      setText("templatesWidget", templates.length);
+      setText("clientWidget", appStorageClients.length);
+      setText("buyTileWidget", activeBuyCount(buyList));
+      setText("timelineWidget", `${timeline.filter(item => item.status !== "done").length} items`);
+      setText("gearWidget", `${gear.filter(item => item.status !== "packed" && item.status !== "checked").length} left`);
+      setText("buyWidget", `${activeBuyCount(buyList)} active`);
+      setText("fundsWidget", `${money(rentalFunds.saved)} safe`);
+      setText("fundsActionWidget", `${money(rentalFunds.saved)} / ${money(rentalFunds.target)}`);
+      setText("assistantWidget", `${urgent} urgent`);
+      setText("assistantActionWidget", `${urgent} urgent`);
+      setText("contentWidget", `${content.filter(item => item.status === "ready").length} ready`);
+      setText("consultationWidget", `${consultations.filter(item => !["secured","not-booking"].includes(item.status)).length} calls`);
+      setText("captureWidget", `${capture.filter(item => item.status !== "processed").length} open`);
+      setText("callSheetWidget", `${callSheets.length} sheets`);
+      setText("projectWidget", `${liveProjectCount(projectStages)} live`);
+      updateShotPanel(shots, projectStages);
+      updateDayFocus({bookings, clients:appStorageClients, finance, shots, lists, timeline, gear, projectStages, consultations, callSheets});
+    }
+
+    const clientsResponse = await window.ncSupabase
+      .from("clients")
+      .select("id", { count:"exact", head:true });
+
+    if(!clientsResponse.error && typeof clientsResponse.count === "number"){
+      document.getElementById("clientsTotal").textContent = clientsResponse.count;
+      document.getElementById("clientWidget").textContent = clientsResponse.count;
+    }
+  }catch(error){
+    console.warn("Dashboard Supabase totals failed. Local totals shown instead.", error);
+  }
+}
+
+updateDashboardFromSupabase();
+</script>
+
 </body>
 </html>

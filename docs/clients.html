@@ -1,96 +1,1225 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios Clients</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050504">
 
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
+:root{
+  --bg1:#050504;
+  --bg2:#11100c;
+  --panel:rgba(255,255,255,0.07);
+  --panel2:rgba(255,255,255,0.10);
+  --line:rgba(255,255,255,0.12);
+  --text:#f7efe3;
+  --muted:#b8ac9a;
+  --accent:#d8b76e;
+  --accent2:#f0dca8;
+  --green:#22c55e;
+  --yellow:#f59e0b;
+  --blue:#60a5fa;
+  --shadow:0 20px 50px rgba(0,0,0,0.35);
+  --radius:26px;
+}
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"NC Studio Brand",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 32%),
+    linear-gradient(145deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
 
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1f2937,#111827);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  font-weight:900;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:20px;
+  letter-spacing:0;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.home{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  text-decoration:none;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.hero{
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.04));
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+
+.heroTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+
+.hero h2{
+  margin:6px 0;
+  font-size:32px;
+  line-height:1;
+  letter-spacing:0;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.syncStatus{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.06);
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.syncStatus strong{
+  color:var(--text);
+}
+
+.syncStatus.good{
+  border-color:rgba(34,197,94,0.35);
+  background:rgba(34,197,94,0.10);
+}
+
+.syncStatus.warn{
+  border-color:rgba(245,158,11,0.35);
+  background:rgba(245,158,11,0.10);
+}
+
+.syncStatus.bad{
+  border-color:rgba(216,183,110,0.40);
+  background:rgba(216,183,110,0.10);
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+button{
+  border:0;
+  color:#11100c;
+  background:var(--accent);
+  padding:12px 14px;
+  border-radius:16px;
+  font-weight:900;
+  font-size:13px;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:var(--panel2);
+  border:1px solid var(--line);
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+}
+
+button:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+.stat strong{
+  display:block;
+  margin-top:8px;
+  font-size:24px;
+  letter-spacing:0;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin:16px 0;
+}
+
+.nav a{
+  text-decoration:none;
+  color:var(--muted);
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  padding:11px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+}
+
+.nav a.active{
+  color:var(--text);
+  background:rgba(216,183,110,0.30);
+  border-color:rgba(216,183,110,0.40);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.cardHead{
+  padding:16px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.cardHead h3{
+  font-size:17px;
+  letter-spacing:0;
+}
+
+.cardHead p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.cardBody{
+  padding:16px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.08);
+  color:var(--text);
+  border-radius:16px;
+  padding:12px 13px;
+  font:inherit;
+  outline:none;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+select option{
+  color:#111827;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.client{
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:14px;
+}
+
+.clientTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.client h4{
+  font-size:16px;
+  letter-spacing:0;
+}
+
+.client small{
+  color:var(--muted);
+  display:block;
+  margin-top:4px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+
+.badge.lead{
+  background:rgba(96,165,250,0.18);
+  color:#bfdbfe;
+}
+
+.badge.active{
+  background:rgba(34,197,94,0.16);
+  color:#bbf7d0;
+}
+
+.badge.complete{
+  background:rgba(245,158,11,0.16);
+  color:#fde68a;
+}
+
+.meta{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.metaLine{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:8px;
+}
+
+.metaLine strong{
+  color:var(--text);
+  text-align:right;
+  word-break:break-word;
+}
+
+.metaLine a{
+  color:var(--text);
+}
+
+.clientActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.clientActions button{
+  padding:9px 11px;
+  border-radius:13px;
+  font-size:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 16px;
+  border:1px dashed var(--line);
+  border-radius:22px;
+}
+
+.pasteBox{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pasteBox h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.pasteBox p{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+}
+
+@media(max-width:520px){
+  .app{
+    padding:14px;
+  }
+
+  .hero h2{
+    font-size:27px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Clients</p>
+    </div>
+  </div>
+
+  <a class="home" href="dashboard.html">Dashboard</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="heroTop">
+      <div>
+        <div class="kicker">Client records</div>
+        <h2>Clients</h2>
+        <p>Keep client contact details, event notes, wedding links and important reminders together.</p>
+
+        <p class="syncStatus warn" id="syncStatus">
+          <strong>Status:</strong> Checking Supabase connection...
+        </p>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="exportClients()">Export</button>
+        <button type="button" class="secondary" onclick="syncLocalToSupabase()">Sync local backup</button>
+        <button type="button" class="secondary" onclick="reloadFromSupabase()">Reload database</button>
+        <button type="button" class="secondary" onclick="resetForm()">New client</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Total clients</span>
+        <strong id="statTotal">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Leads</span>
+        <strong id="statLead">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Active</span>
+        <strong id="statActive">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Complete</span>
+        <strong id="statComplete">0</strong>
+      </div>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <a href="dashboard.html">Home</a>
+    <a href="bookings.html">Bookings</a>
+    <a class="active" href="clients.html">Clients</a>
+    <a href="finance.html">Finance</a>
+    <a href="shot-lists.html">Shots</a>
+    <a href="lists.html">Lists</a>
+    <a href="delivery.html">Delivery</a>
+    <a href="templates.html">Templates</a>
+  </nav>
+
+  <section class="grid">
+    <aside class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Add or edit client</h3>
+          <p>Store the details you need before shoot day.</p>
+        </div>
+      </div>
+
+      <div class="cardBody">
+        <form class="form" id="clientForm">
+          <input type="hidden" id="clientId">
+
+          <label>
+            Client name
+            <input id="clientName" type="text" placeholder="Marvin and Blessing" required>
+          </label>
+
+          <div class="row">
+            <label>
+              Phone
+              <input id="phone" type="tel" placeholder="07...">
+            </label>
+
+            <label>
+              Email
+              <input id="email" type="email" placeholder="client@email.com">
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              Event date
+              <input id="eventDate" type="date">
+            </label>
+
+            <label>
+              Status
+              <select id="status">
+                <option value="lead">Lead</option>
+                <option value="active">Active</option>
+                <option value="complete">Complete</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Main location
+            <input id="location" type="text" placeholder="Church, hotel, reception venue">
+          </label>
+
+          <label>
+            Key link
+            <input id="link" type="url" placeholder="Planning form, moodboard, Google Drive">
+          </label>
+
+          <label>
+            Important notes
+            <textarea id="notes" placeholder="Timings, family details, restrictions, couple preferences, coordinator details."></textarea>
+          </label>
+
+	          <button type="submit" id="saveButton">Save client</button>
+	          <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+	        </form>
+
+	        <div class="pasteBox">
+	          <h3>Paste clients</h3>
+	          <p>One client per line: name | phone | email | date | status | location | link | notes</p>
+	          <textarea id="clientPaste" placeholder="Marvin and Blessing | 07... | couple@email.com | 2026-08-22 | active | London | https://... | Needs final timeline"></textarea>
+	          <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedClients()">Import pasted clients</button>
+	        </div>
+	      </div>
+	    </aside>
+
+    <section class="card">
+      <div class="cardHead">
+        <div>
+          <h3>Client list</h3>
+          <p>Your saved NC Studios clients.</p>
+        </div>
+
+        <select id="filterStatus" onchange="renderClients()">
+          <option value="all">All</option>
+          <option value="lead">Leads</option>
+          <option value="active">Active</option>
+          <option value="complete">Complete</option>
+        </select>
+      </div>
+
+      <div class="cardBody">
+        <div id="clientList" class="list"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=ncclients3"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_clients_v1";
+
+let clients = [];
+let databaseReady = false;
+let lastDatabaseError = "";
+
+const form = document.getElementById("clientForm");
+const saveButton = document.getElementById("saveButton");
+const syncStatus = document.getElementById("syncStatus");
+
+document.addEventListener("DOMContentLoaded", initClientsPage);
+
+form.addEventListener("submit", async function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("clientId").value || makeId();
+
+  const client = {
+    id:id,
+    clientName:document.getElementById("clientName").value.trim(),
+    phone:document.getElementById("phone").value.trim(),
+    email:document.getElementById("email").value.trim(),
+    eventDate:document.getElementById("eventDate").value,
+    status:document.getElementById("status").value,
+    location:document.getElementById("location").value.trim(),
+    link:document.getElementById("link").value.trim(),
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!client.clientName){
+    alert("Add the client name first.");
+    return;
+  }
+
+  setSaving(true);
+
+  try{
+    saveClientLocal(client);
+
+    if(databaseReady){
+      await saveClientToSupabase(client);
+      setStatus("Saved to Supabase. This should now show on laptop and phone.", "good");
+    }else{
+      setStatus("Saved locally only. Supabase is not connected. " + lastDatabaseError, "bad");
+    }
+
+    resetForm();
+    renderClients();
+  }catch(error){
+    console.error(error);
+    lastDatabaseError = getErrorMessage(error);
+    saveClientLocal(client);
+    setStatus("Saved locally, but Supabase failed. " + lastDatabaseError, "bad");
+    alert("Saved locally, but Supabase did not save. Check the status message.");
+  }finally{
+    setSaving(false);
+  }
+});
+
+async function initClientsPage(){
+  clients = loadClientsLocal();
+  renderClients();
+
+  if(!window.supabase){
+    setStatus("Supabase library did not load. Check internet connection or CDN access.", "bad");
+    return;
+  }
+
+  if(!window.ncSupabase){
+    setStatus("supabase-config.js loaded incorrectly. window.ncSupabase was not created.", "bad");
+    return;
+  }
+
+  if(window.NCSync){
+    const signedIn = await window.NCSync.ensureSignedIn(true);
+
+    if(!signedIn){
+      setStatus("Sign in to sync clients. This page is local-only until then.", "warn");
+      return;
+    }
+  }
+
+  databaseReady = true;
+  setStatus("Supabase config loaded. Reading clients table...", "warn");
+
+  try{
+    await loadClientsFromSupabase();
+    setStatus("Connected to Supabase. Laptop and phone should now match.", "good");
+  }catch(error){
+    console.error(error);
+    databaseReady = false;
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Supabase file loaded, but database read failed. " + lastDatabaseError, "bad");
+  }
+
+  renderClients();
+}
+
+function loadClientsLocal(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(saved) ? saved : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveClientsLocal(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+}
+
+function saveClientLocal(client){
+  const existingIndex = clients.findIndex(item => item.id === client.id);
+
+  if(existingIndex >= 0){
+    clients[existingIndex] = client;
+  }else{
+    clients.unshift(client);
+  }
+
+  saveClientsLocal();
+}
+
+async function loadClientsFromSupabase(){
+  const response = await window.ncSupabase
+    .from("clients")
+    .select("*")
+    .order("created_at", { ascending:false });
+
+  if(response.error){
+    throw response.error;
+  }
+
+  const databaseClients = response.data.map(rowToClient);
+
+  clients = databaseClients;
+  saveClientsLocal();
+}
+
+async function reloadFromSupabase(){
+  if(!window.ncSupabase){
+    setStatus("Cannot reload. Supabase config is not loaded.", "bad");
+    return;
+  }
+
+  databaseReady = true;
+  setStatus("Reloading from Supabase...", "warn");
+
+  try{
+    await loadClientsFromSupabase();
+    renderClients();
+    setStatus("Reloaded from Supabase.", "good");
+  }catch(error){
+    console.error(error);
+    databaseReady = false;
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Reload failed. " + lastDatabaseError, "bad");
+  }
+}
+
+async function saveClientToSupabase(client){
+  const response = await window.ncSupabase
+    .from("clients")
+    .upsert(clientToRow(client), { onConflict:"id" })
+    .select()
+    .single();
+
+  if(response.error){
+    throw response.error;
+  }
+
+  return response.data;
+}
+
+async function deleteClientFromSupabase(id){
+  const response = await window.ncSupabase
+    .from("clients")
+    .delete()
+    .eq("id", id);
+
+  if(response.error){
+    throw response.error;
+  }
+}
+
+function clientToRow(client){
+  return {
+    id:client.id,
+    full_name:client.clientName || "",
+    phone:client.phone || null,
+    email:client.email || null,
+    event_date:client.eventDate || null,
+    status:client.status || "lead",
+    main_location:client.location || null,
+    key_link:client.link || null,
+    notes:client.notes || null,
+    updated_at:new Date().toISOString()
+  };
+}
+
+function rowToClient(row){
+  return {
+    id:row.id,
+    clientName:row.full_name || "",
+    phone:row.phone || "",
+    email:row.email || "",
+    eventDate:row.event_date || "",
+    status:row.status || "lead",
+    location:row.main_location || "",
+    link:row.key_link || "",
+    notes:row.notes || "",
+    updatedAt:row.updated_at || row.created_at || ""
+  };
+}
+
+function renderClients(){
+  const list = document.getElementById("clientList");
+  const filter = document.getElementById("filterStatus").value;
+
+  const visibleClients = clients.filter(client => filter === "all" || client.status === filter);
+
+  updateStats();
+
+  if(visibleClients.length === 0){
+    list.innerHTML = `
+      <div class="empty">
+        No clients here yet.
+        <br><br>
+        Add your first client using the form.
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = visibleClients.map(client => `
+    <article class="client">
+      <div class="clientTop">
+        <div>
+          <h4>${escapeHTML(client.clientName)}</h4>
+          <small>${formatDate(client.eventDate)}</small>
+        </div>
+
+        <span class="badge ${escapeHTML(client.status)}">${statusLabel(client.status)}</span>
+      </div>
+
+      <div class="meta">
+        <div class="metaLine">
+          <span>Phone</span>
+          <strong>${escapeHTML(client.phone || "Not added")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Email</span>
+          <strong>${escapeHTML(client.email || "Not added")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Location</span>
+          <strong>${escapeHTML(client.location || "Not added")}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Link</span>
+          <strong>${client.link ? `<a href="${escapeAttribute(client.link)}" target="_blank" rel="noopener">Open</a>` : "Not added"}</strong>
+        </div>
+      </div>
+
+      ${client.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(client.notes)}</p>` : ""}
+
+      <div class="clientActions">
+        <button type="button" class="secondary" onclick="editClient('${escapeAttribute(client.id)}')">Edit</button>
+        <button type="button" class="ghost" onclick="deleteClient('${escapeAttribute(client.id)}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  document.getElementById("statTotal").textContent = clients.length;
+  document.getElementById("statLead").textContent = clients.filter(item => item.status === "lead").length;
+  document.getElementById("statActive").textContent = clients.filter(item => item.status === "active").length;
+  document.getElementById("statComplete").textContent = clients.filter(item => item.status === "complete").length;
+}
+
+function editClient(id){
+  const client = clients.find(item => item.id === id);
+  if(!client) return;
+
+  document.getElementById("clientId").value = client.id;
+  document.getElementById("clientName").value = client.clientName || "";
+  document.getElementById("phone").value = client.phone || "";
+  document.getElementById("email").value = client.email || "";
+  document.getElementById("eventDate").value = client.eventDate || "";
+  document.getElementById("status").value = client.status || "lead";
+  document.getElementById("location").value = client.location || "";
+  document.getElementById("link").value = client.link || "";
+  document.getElementById("notes").value = client.notes || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteClient(id){
+  const client = clients.find(item => item.id === id);
+  if(!client) return;
+
+  const confirmed = confirm(`Delete ${client.clientName}?`);
+  if(!confirmed) return;
+
+  clients = clients.filter(item => item.id !== id);
+  saveClientsLocal();
+  renderClients();
+
+  if(databaseReady){
+    try{
+      await deleteClientFromSupabase(id);
+      setStatus("Deleted from Supabase and local backup.", "good");
+    }catch(error){
+      console.error(error);
+      lastDatabaseError = getErrorMessage(error);
+      setStatus("Deleted locally, but Supabase delete failed. " + lastDatabaseError, "bad");
+    }
+  }else{
+    setStatus("Deleted locally only. Supabase is not connected.", "warn");
+  }
+}
+
+async function importPastedClients(){
+  const textarea = document.getElementById("clientPaste");
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste at least one client first.");
+    return;
+  }
+
+  const imported = parseClientRows(raw);
+
+  if(imported.length === 0){
+    alert("No clients found. Try one client per line.");
+    return;
+  }
+
+  imported.forEach(saveClientLocal);
+  renderClients();
+  textarea.value = "";
+
+  if(databaseReady){
+    try{
+      await Promise.all(imported.map(saveClientToSupabase));
+      setStatus(`${imported.length} pasted client${imported.length === 1 ? "" : "s"} saved to Supabase.`, "good");
+    }catch(error){
+      console.error(error);
+      lastDatabaseError = getErrorMessage(error);
+      setStatus("Pasted clients saved locally, but Supabase failed. " + lastDatabaseError, "bad");
+    }
+  }else{
+    setStatus(`${imported.length} pasted client${imported.length === 1 ? "" : "s"} saved locally. Supabase is not connected.`, "warn");
+  }
+}
+
+function parseClientRows(text){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const parts = splitImportLine(line);
+      const clientName = parts[0] || "";
+      if(!clientName) return null;
+
+      return {
+        id:makeId(),
+        clientName,
+        phone:parts[1] || "",
+        email:parts[2] || "",
+        eventDate:normaliseDate(parts[3] || ""),
+        status:normaliseClientStatus(parts[4] || "lead"),
+        location:parts[5] || "",
+        link:parts[6] || "",
+        notes:parts.slice(7).join(" | "),
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function splitImportLine(line){
+  if(line.includes("|")) return line.split("|").map(part => part.trim());
+  if(line.includes("\t")) return line.split("\t").map(part => part.trim());
+  return line.split(",").map(part => part.trim());
+}
+
+function normaliseDate(value){
+  const text = String(value || "").trim();
+  if(!text) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0,10);
+}
+
+function normaliseClientStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("complete")) return "complete";
+  if(text.includes("active") || text.includes("book")) return "active";
+  return "lead";
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("clientId").value = "";
+  document.getElementById("status").value = "lead";
+}
+
+function exportClients(){
+  const data = {
+    app:"NC Studios",
+    type:"clients",
+    exportedAt:new Date().toISOString(),
+    clients:clients
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-clients.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+async function syncLocalToSupabase(){
+  if(!window.ncSupabase){
+    alert("Supabase is not connected yet.");
+    setStatus("Cannot sync because supabase-config.js is not loaded.", "bad");
+    return;
+  }
+
+  const localClients = loadClientsLocal();
+
+  if(localClients.length === 0){
+    alert("There are no local clients to sync.");
+    return;
+  }
+
+  const confirmed = confirm("Sync all local clients to Supabase?");
+  if(!confirmed) return;
+
+  databaseReady = true;
+  setStatus("Syncing local clients to Supabase...", "warn");
+
+  try{
+    const rows = localClients.map(clientToRow);
+
+    const response = await window.ncSupabase
+      .from("clients")
+      .upsert(rows, { onConflict:"id" });
+
+    if(response.error){
+      throw response.error;
+    }
+
+    await loadClientsFromSupabase();
+    renderClients();
+    setStatus("Local clients synced to Supabase. Check your phone now.", "good");
+  }catch(error){
+    console.error(error);
+    databaseReady = false;
+    lastDatabaseError = getErrorMessage(error);
+    setStatus("Sync failed. " + lastDatabaseError, "bad");
+  }
+}
+
+function statusLabel(status){
+  const labels = {
+    lead:"Lead",
+    active:"Active",
+    complete:"Complete"
+  };
+
+  return labels[status] || "Lead";
+}
+
+function formatDate(value){
+  if(!value) return "No date added";
+
+  const parts = String(value).split("-");
+
+  if(parts.length === 3){
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+
+  return value;
+}
+
+function setStatus(message,type){
+  syncStatus.classList.remove("good","warn","bad");
+  syncStatus.classList.add(type || "warn");
+  syncStatus.innerHTML = `<strong>Status:</strong> ${escapeHTML(message)}`;
+}
+
+function setSaving(isSaving){
+  saveButton.disabled = isSaving;
+  saveButton.textContent = isSaving ? "Saving..." : "Save client";
+}
+
+function getErrorMessage(error){
+  if(!error) return "Unknown error.";
+  if(error.message) return error.message;
+  if(error.details) return error.details;
+  if(error.hint) return error.hint;
+
+  try{
+    return JSON.stringify(error);
+  }catch(innerError){
+    return "Unknown error.";
+  }
+}
+
+function makeId(){
+  if(window.crypto && typeof window.crypto.randomUUID === "function"){
+    return window.crypto.randomUUID();
+  }
+
+  return "client_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+</script>
 </body>
 </html>

@@ -1,96 +1,1587 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios To Do</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050504">
 
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
+:root{
+  --bg:#050504;
+  --bg2:#11100c;
+  --line:rgba(255,255,255,0.12);
+  --text:#f7efe3;
+  --muted:#b8ac9a;
+  --red:#d8b76e;
+  --green:#34c759;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+}
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"NC Studio Brand",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(216,183,110,0.24), transparent 34%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
 
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:16px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(216,183,110,0.45), transparent 38%),
+    linear-gradient(145deg,#202227,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.topPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  padding:10px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-100px;
+  background:radial-gradient(circle, rgba(216,183,110,0.28), transparent 70%);
+}
+
+.heroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.hero h2{
+  margin:7px 0;
+  font-size:34px;
+  line-height:0.95;
+  letter-spacing:0;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  max-width:520px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+button,.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(145deg,#d8b76e,#b99546);
+  padding:12px 14px;
+  border-radius:17px;
+  font-weight:900;
+  font-size:12px;
+  text-decoration:none;
+  box-shadow:0 12px 28px rgba(216,183,110,0.22);
+  cursor:pointer;
+}
+
+button.secondary,.btn.secondary{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  min-height:92px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+
+.stat strong{
+  display:block;
+  margin-top:10px;
+  font-size:25px;
+  letter-spacing:0;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(9,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.055);
+  border-radius:20px;
+  padding:12px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:850;
+}
+
+.nav a.active{
+  color:white;
+  background:linear-gradient(145deg,rgba(216,183,110,0.32),rgba(255,255,255,0.06));
+  border-color:rgba(216,183,110,0.40);
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:14px;
+  align-items:start;
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,0.13);
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
+  border-radius:30px;
+  box-shadow:0 16px 45px rgba(0,0,0,0.28);
+  overflow:hidden;
+}
+
+.panelHead{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.panelHead h3{
+  font-size:17px;
+}
+
+.panelHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.panelBody{
+  padding:14px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.075);
+  color:var(--text);
+  border-radius:18px;
+  padding:13px;
+  font:inherit;
+  outline:none;
+}
+
+select option{
+  color:#111827;
+}
+
+textarea{
+  min-height:95px;
+  resize:vertical;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  border:1px solid rgba(255,255,255,0.11);
+  background:rgba(255,255,255,0.065);
+  border-radius:24px;
+  padding:14px;
+}
+
+.item.done{
+  opacity:0.62;
+}
+
+.itemTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.item h4{
+  font-size:16px;
+}
+
+.item small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.badge{
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  border:1px solid rgba(255,255,255,0.12);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.badge.high{
+  background:rgba(216,183,110,0.18);
+  color:#fecaca;
+}
+
+.badge.medium{
+  background:rgba(251,191,36,0.16);
+  color:#fde68a;
+}
+
+.badge.low{
+  background:rgba(96,165,250,0.16);
+  color:#bfdbfe;
+}
+
+.badge.waiting{
+  background:rgba(251,191,36,0.16);
+  color:#fde68a;
+}
+
+.item.overdue{
+  border-color:rgba(216,183,110,0.34);
+  background:rgba(216,183,110,0.10);
+}
+
+.item.today{
+  border-color:rgba(251,191,36,0.34);
+  background:rgba(251,191,36,0.09);
+}
+
+.quickTasks{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:14px 0 0;
+}
+
+.quickTasks button{
+  min-height:42px;
+  padding:10px;
+  border-radius:14px;
+  box-shadow:none;
+  background:rgba(255,255,255,0.075);
+  border:1px solid var(--line);
+  text-align:left;
+}
+
+.searchBar{
+  display:grid;
+  grid-template-columns:1fr 150px 150px 150px;
+  gap:8px;
+  min-width:680px;
+}
+
+.projectLane{
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.045);
+  border-radius:26px;
+  overflow:hidden;
+}
+
+.projectHead{
+  min-height:54px;
+  padding:13px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.09);
+  background:rgba(0,0,0,0.15);
+}
+
+.headActions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.projectHead h4{
+  font-size:16px;
+}
+
+.projectHead span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.projectAreas{
+  display:grid;
+  gap:10px;
+  padding:10px;
+}
+
+.areaLane{
+  border:1px solid rgba(255,255,255,0.11);
+  background:rgba(255,255,255,0.045);
+  border-radius:24px;
+  overflow:hidden;
+}
+
+.areaHead{
+  min-height:48px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.miniDanger{
+  min-height:30px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:rgba(216,183,110,0.10);
+  border:1px solid rgba(216,183,110,0.30);
+  color:#fecaca;
+  box-shadow:none;
+  font-size:11px;
+}
+
+.areaHead h4{
+  font-size:15px;
+  letter-spacing:0;
+}
+
+.areaHead span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.areaItems{
+  display:grid;
+  gap:10px;
+  padding:10px;
+}
+
+.areaItems .item{
+  border-radius:20px;
+}
+
+.meta{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+
+.metaLine{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:8px;
+}
+
+.metaLine strong{
+  color:var(--text);
+  text-align:right;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:14px;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  border:1px dashed rgba(255,255,255,0.14);
+  border-radius:22px;
+  padding:24px;
+  font-size:13px;
+}
+
+.pasteBox{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.pasteBox h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.pasteBox p{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
+@media(max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .searchBar{
+    grid-template-columns:1fr 1fr;
+    min-width:0;
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    padding:14px;
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+
+  .actions{
+    justify-content:flex-start;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .searchBar,
+  .quickTasks{
+    grid-template-columns:1fr;
+    min-width:0;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .projectHead,
+  .areaHead{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .headActions{
+    justify-content:flex-start;
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Business to do</p>
+    </div>
+  </div>
+
+  <a class="topPill" href="dashboard.html">Home</a>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="heroTop">
+    <div>
+      <div class="kicker">Business tasks</div>
+      <h2>Business To Do</h2>
+        <p>Split NC Studios work by couple first, then by Overall, C1, C2, Accessories and business areas.</p>
+    </div>
+
+    <div class="actions">
+      <button onclick="exportTasks()">Export</button>
+      <button class="secondary" onclick="resetForm()">New item</button>
+      <button class="ghost" onclick="clearAllTasks()">Clear all</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <span>Today</span>
+      <strong id="todayStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Open</span>
+      <strong id="openStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Couples</span>
+      <strong id="coupleStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Done</span>
+      <strong id="doneStat">0</strong>
+    </div>
+  </div>
+</section>
+
+<nav class="nav">
+  <a href="dashboard.html">Home</a>
+  <a href="bookings.html">Bookings</a>
+  <a href="clients.html">Clients</a>
+  <a href="finance.html">Finance</a>
+  <a href="shot-lists.html">Shots</a>
+  <a class="active" href="lists.html">To Do</a>
+  <a href="buy-list.html">Buy</a>
+  <a href="delivery.html">Delivery</a>
+  <a href="templates.html">Templates</a>
+</nav>
+
+<section class="layout">
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Add to-do</h3>
+        <p>Business-only actions and reminders.</p>
+      </div>
+    </div>
+
+    <div class="panelBody">
+      <form class="form" id="taskForm">
+        <input type="hidden" id="taskId">
+
+        <label>
+          To-do
+          <input id="title" type="text" placeholder="Send invoice, chase deposit, prep delivery email" required>
+        </label>
+
+        <label>
+          Couple / project
+          <input id="project" type="text" list="projectSuggestions" placeholder="Marvin + Blessing, or leave blank for business">
+          <datalist id="projectSuggestions"></datalist>
+        </label>
+
+        <div class="row">
+          <label>
+            Area
+            <select id="category">
+              <option value="overall">Overall</option>
+              <option value="c1">C1</option>
+              <option value="c2">C2</option>
+              <option value="accessories">Accessories</option>
+              <option value="admin">Admin</option>
+              <option value="client">Client</option>
+              <option value="finance">Finance</option>
+              <option value="editing">Editing</option>
+              <option value="content">Content</option>
+              <option value="marketing">Marketing</option>
+              <option value="website">Website</option>
+              <option value="shoot prep">Shoot prep</option>
+              <option value="delivery">Delivery</option>
+              <option value="gear">Gear</option>
+            </select>
+          </label>
+
+          <label>
+            Priority
+            <select id="priority">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Due date
+            <input id="dueDate" type="date">
+          </label>
+
+          <label>
+            Status
+            <select id="status">
+              <option value="open">Open</option>
+              <option value="waiting">Waiting</option>
+              <option value="done">Done</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Notes
+          <textarea id="notes" placeholder="Extra detail, links, context or reminders."></textarea>
+        </label>
+
+        <button type="submit">Save item</button>
+        <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+      </form>
+
+      <div class="quickTasks">
+        <button type="button" onclick="addPresetTask('Check C1 setup','c1','high',0,'Camera, lens, cards, batteries and settings ready.')">C1 check</button>
+        <button type="button" onclick="addPresetTask('Check C2 setup','c2','high',0,'Safety angle, tripod, power and cards ready.')">C2 check</button>
+        <button type="button" onclick="addPresetTask('Pack accessories','accessories','medium',0,'Cables, chargers, clamps, cloths and small extras.')">Accessories</button>
+        <button type="button" onclick="addPresetTask('Chase outstanding payment','finance','high',0,'Follow up on a balance, deposit or overdue payment.')">Chase payment</button>
+      </div>
+
+      <div class="pasteBox">
+        <h3>Paste to-dos</h3>
+        <p>One item per line, or use: title | couple | area | priority | due date | status | notes</p>
+        <textarea id="taskPaste" placeholder="Format C1 cards | Marvin + Blessing | c1 | high | 2026-08-22 | open | Label empty and full sides"></textarea>
+        <button type="button" class="secondary" style="margin-top:10px;width:100%;" onclick="importPastedTasks()">Import pasted list</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Business to-do</h3>
+        <p>Saved NC Studios actions split into working areas.</p>
+      </div>
+
+      <div class="searchBar">
+        <input id="search" type="search" placeholder="Search to-dos" oninput="renderTasks()">
+        <select id="projectFilter" onchange="renderTasks()">
+          <option value="all">All couples</option>
+        </select>
+        <select id="areaFilter" onchange="renderTasks()">
+          <option value="all">All areas</option>
+          <option value="overall">Overall</option>
+          <option value="c1">C1</option>
+          <option value="c2">C2</option>
+          <option value="accessories">Accessories</option>
+          <option value="admin">Admin</option>
+          <option value="client">Client</option>
+          <option value="finance">Finance</option>
+          <option value="editing">Editing</option>
+          <option value="content">Content</option>
+          <option value="marketing">Marketing</option>
+          <option value="website">Website</option>
+          <option value="shoot prep">Shoot prep</option>
+          <option value="delivery">Delivery</option>
+          <option value="gear">Gear</option>
+        </select>
+
+        <select id="filter" onchange="renderTasks()">
+          <option value="next">Next up</option>
+          <option value="today">Today</option>
+          <option value="overdue">Overdue</option>
+          <option value="open">Open</option>
+          <option value="waiting">Waiting</option>
+          <option value="high">High</option>
+          <option value="done">Done</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="panelBody">
+      <div id="taskList" class="list"></div>
+    </div>
+  </section>
+
+</section>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_lists_v1";
+let tasks = loadTasks();
+const form = document.getElementById("taskForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("taskId").value || crypto.randomUUID();
+
+  const task = {
+    id,
+    title:document.getElementById("title").value.trim(),
+    project:document.getElementById("project").value.trim(),
+    category:document.getElementById("category").value,
+    priority:document.getElementById("priority").value,
+    dueDate:document.getElementById("dueDate").value,
+    status:document.getElementById("status").value,
+    notes:document.getElementById("notes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!task.title){
+    alert("Add a title first.");
+    return;
+  }
+
+  const index = tasks.findIndex(item => item.id === id);
+
+  if(index >= 0){
+    tasks[index] = task;
+  }else{
+    tasks.unshift(task);
+  }
+
+  saveTasks();
+  resetForm();
+  renderTasks();
+});
+
+function loadTasks(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveTasks(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function projectOptions(items){
+  const options = new Map();
+
+  items.forEach(item => {
+    const label = projectLabel(item.project);
+    options.set(projectKey(label), label);
+  });
+
+  return [...options.entries()]
+    .map(([key,label]) => ({key,label}))
+    .sort((a,b) => {
+      if(a.key === "business") return -1;
+      if(b.key === "business") return 1;
+      return a.label.localeCompare(b.label);
+    });
+}
+
+function addProjectSuggestion(map,value){
+  const label = String(value || "").trim();
+  const key = projectKey(label);
+  if(label && key !== "business") map.set(key, label);
+}
+
+function projectLabel(value){
+  const label = String(value || "").trim();
+  return label || "Business / no couple";
+}
+
+function projectKey(value){
+  const raw = String(value || "").trim();
+
+  if(!raw) return "business";
+
+  const key = raw
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+
+  return key === "business no couple" ? "business" : key;
+}
+
+function renderTasks(){
+  updateProjectControls();
+
+  const list = document.getElementById("taskList");
+  const filter = document.getElementById("filter").value;
+  const areaFilter = document.getElementById("areaFilter").value;
+  const projectFilter = document.getElementById("projectFilter").value;
+  const search = document.getElementById("search").value.trim().toLowerCase();
+
+  const visible = tasks
+    .filter(item => {
+      const area = normaliseCategory(item.category);
+      const project = projectLabel(item.project);
+      const searchMatch = !search || `${item.title} ${project} ${categoryLabel(area)} ${item.notes}`.toLowerCase().includes(search);
+
+      if(!searchMatch) return false;
+      if(projectFilter !== "all" && projectKey(project) !== projectFilter) return false;
+      if(areaFilter !== "all" && area !== areaFilter) return false;
+      if(filter === "all") return true;
+      if(filter === "next") return item.status !== "done";
+      if(filter === "today") return item.status !== "done" && isToday(item.dueDate);
+      if(filter === "overdue") return item.status !== "done" && isOverdue(item.dueDate);
+      if(filter === "high") return item.status !== "done" && item.priority === "high";
+      return item.status === filter;
+    })
+    .sort(sortTasks);
+
+  updateStats();
+
+  if(visible.length === 0){
+    list.innerHTML = `<div class="empty">No to-dos in this view.<br><br>Add a couple task, business task, or use a quick preset.</div>`;
+    return;
+  }
+
+  list.innerHTML = groupByProject(visible).map(projectGroup => `
+    <section class="projectLane">
+      <div class="projectHead">
+        <h4>${escapeHTML(projectGroup.project)}</h4>
+        <div class="headActions">
+          <span>${projectGroup.items.length} ${projectGroup.items.length === 1 ? "item" : "items"}</span>
+          <button type="button" class="miniDanger" onclick="clearProjectTasks('${escapeAttribute(projectGroup.key)}')">Clear couple</button>
+        </div>
+      </div>
+      <div class="projectAreas">
+        ${groupByArea(projectGroup.items).map(group => `
+          <section class="areaLane">
+            <div class="areaHead">
+              <h4>${categoryLabel(group.area)}</h4>
+              <div class="headActions">
+                <span>${group.items.length} ${group.items.length === 1 ? "item" : "items"}</span>
+                <button type="button" class="miniDanger" onclick="clearSectionTasks('${escapeAttribute(projectGroup.key)}','${escapeAttribute(group.area)}')">Clear section</button>
+              </div>
+            </div>
+            <div class="areaItems">
+              ${group.items.map(renderTaskCard).join("")}
+            </div>
+          </section>
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
+}
+
+function renderTaskCard(item){
+  const area = normaliseCategory(item.category);
+
+  return `
+    <article class="item ${item.status === "done" ? "done" : ""} ${item.status !== "done" && isOverdue(item.dueDate) ? "overdue" : ""} ${item.status !== "done" && isToday(item.dueDate) ? "today" : ""}">
+      <div class="itemTop">
+        <div>
+          <h4>${escapeHTML(item.title)}</h4>
+          <small>${escapeHTML(projectLabel(item.project))} | ${categoryLabel(area)} | ${statusLabel(item.status)} | ${dueLabel(item.dueDate)}</small>
+        </div>
+
+        <span class="badge ${item.status === "waiting" ? "waiting" : item.priority}">${item.status === "waiting" ? "Waiting" : priorityLabel(item.priority)}</span>
+      </div>
+
+      <div class="meta">
+        <div class="metaLine">
+          <span>Couple</span>
+          <strong>${escapeHTML(projectLabel(item.project))}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Area</span>
+          <strong>${categoryLabel(area)}</strong>
+        </div>
+
+        <div class="metaLine">
+          <span>Due date</span>
+          <strong>${formatDate(item.dueDate)}</strong>
+        </div>
+      </div>
+
+      ${item.notes ? `<p style="color:var(--muted);font-size:13px;line-height:1.45;margin:12px 0 0;">${escapeHTML(item.notes)}</p>` : ""}
+
+      <div class="itemActions">
+        <button class="secondary" onclick="toggleDone('${item.id}')">${item.status === "done" ? "Reopen" : "Done"}</button>
+        <button class="ghost" onclick="setTaskStatus('${item.id}','${item.status === "waiting" ? "open" : "waiting"}')">${item.status === "waiting" ? "Open" : "Waiting"}</button>
+        <button class="ghost" onclick="editTask('${item.id}')">Edit</button>
+        <button class="ghost" onclick="deleteTask('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `;
+}
+
+function updateStats(){
+  document.getElementById("todayStat").textContent = tasks.filter(item => item.status !== "done" && isToday(item.dueDate)).length;
+  document.getElementById("openStat").textContent = tasks.filter(item => item.status !== "done").length;
+  document.getElementById("coupleStat").textContent = projectOptions(tasks).filter(item => item.key !== "business").length;
+  document.getElementById("doneStat").textContent = tasks.filter(item => item.status === "done").length;
+}
+
+function updateProjectControls(){
+  const filter = document.getElementById("projectFilter");
+  const current = filter.value || "all";
+  const projects = projectOptions(tasks);
+
+  filter.innerHTML = [
+    `<option value="all">All couples</option>`,
+    ...projects.map(item => `<option value="${escapeAttribute(item.key)}">${escapeHTML(item.label)}</option>`)
+  ].join("");
+  filter.value = current === "all" || projects.some(item => item.key === current) ? current : "all";
+
+  const suggestions = document.getElementById("projectSuggestions");
+  const names = new Map();
+
+  projects.forEach(item => {
+    if(item.key !== "business") names.set(item.key, item.label);
+  });
+
+  readData("ncstudios_bookings_v1").forEach(item => addProjectSuggestion(names, item.clientName || item.eventName));
+  readData("ncstudios_clients_v1").forEach(item => addProjectSuggestion(names, item.clientName));
+  readData("ncstudios_shots_v1").forEach(item => addProjectSuggestion(names, item.project));
+  readData("ncstudios_delivery_v1").forEach(item => addProjectSuggestion(names, item.projectName || item.client));
+
+  suggestions.innerHTML = [...names.values()]
+    .sort((a,b) => a.localeCompare(b))
+    .map(name => `<option value="${escapeAttribute(name)}"></option>`)
+    .join("");
+}
+
+function groupByProject(items){
+  const groups = new Map();
+
+  items.forEach(item => {
+    const label = projectLabel(item.project);
+    const key = projectKey(label);
+
+    if(!groups.has(key)){
+      groups.set(key, {
+        key,
+        project:label,
+        items:[]
+      });
+    }
+
+    groups.get(key).items.push(item);
+  });
+
+  return [...groups.values()]
+    .sort((a,b) => {
+      if(a.key === "business") return -1;
+      if(b.key === "business") return 1;
+      return a.project.localeCompare(b.project);
+    })
+    .map(group => ({
+      ...group,
+      items:group.items.sort(sortTasks)
+    }));
+}
+
+function groupByArea(items){
+  const groups = new Map();
+
+  items.forEach(item => {
+    const area = normaliseCategory(item.category);
+    if(!groups.has(area)) groups.set(area, []);
+    groups.get(area).push(item);
+  });
+
+  return [...groups.entries()]
+    .sort(([areaA],[areaB]) => areaOrder(areaA) - areaOrder(areaB))
+    .map(([area,groupItems]) => ({
+      area,
+      items:groupItems.sort(sortTasks)
+    }));
+}
+
+function areaOrder(area){
+  const order = [
+    "overall",
+    "c1",
+    "c2",
+    "accessories",
+    "shoot prep",
+    "client",
+    "finance",
+    "editing",
+    "delivery",
+    "gear",
+    "content",
+    "marketing",
+    "website",
+    "admin"
+  ];
+
+  const index = order.indexOf(normaliseCategory(area));
+  return index >= 0 ? index : 99;
+}
+
+function addPresetTask(title, category, priority, daysFromNow, notes){
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + Number(daysFromNow || 0));
+
+  tasks.unshift({
+    id:crypto.randomUUID(),
+    title,
+    project:document.getElementById("project").value.trim(),
+    category,
+    priority,
+    dueDate:dueDate.toISOString().slice(0,10),
+    status:"open",
+    notes,
+    updatedAt:new Date().toISOString()
+  });
+
+  saveTasks();
+  document.getElementById("filter").value = "next";
+  renderTasks();
+}
+
+function sortTasks(a,b){
+  const rankA = taskRank(a);
+  const rankB = taskRank(b);
+  if(rankA !== rankB) return rankA - rankB;
+
+  const dateA = a.dueDate || "9999-12-31";
+  const dateB = b.dueDate || "9999-12-31";
+  if(dateA !== dateB) return dateA.localeCompare(dateB);
+
+  return String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+}
+
+function taskRank(task){
+  if(task.status === "done") return 9;
+  if(isOverdue(task.dueDate)) return 0;
+  if(isToday(task.dueDate)) return 1;
+  if(task.priority === "high") return 2;
+  if(task.status === "waiting") return 5;
+  if(task.priority === "medium") return 3;
+  return 4;
+}
+
+function todayISO(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function isToday(value){
+  return Boolean(value) && value === todayISO();
+}
+
+function isOverdue(value){
+  return Boolean(value) && value < todayISO();
+}
+
+function dueLabel(value){
+  if(!value) return "No due date";
+  if(isOverdue(value)) return "Overdue";
+  if(isToday(value)) return "Due today";
+  return `Due ${formatDate(value)}`;
+}
+
+function editTask(id){
+  const task = tasks.find(item => item.id === id);
+  if(!task) return;
+
+  document.getElementById("taskId").value = task.id;
+  document.getElementById("title").value = task.title || "";
+  document.getElementById("project").value = task.project || "";
+  document.getElementById("category").value = normaliseCategory(task.category || "admin");
+  document.getElementById("priority").value = task.priority || "high";
+  document.getElementById("dueDate").value = task.dueDate || "";
+  document.getElementById("status").value = normaliseStatus(task.status || "open");
+  document.getElementById("notes").value = task.notes || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toggleDone(id){
+  tasks = tasks.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      status:item.status === "done" ? "open" : "done",
+      updatedAt:new Date().toISOString()
+    };
+  });
+
+  saveTasks();
+  renderTasks();
+}
+
+function setTaskStatus(id,status){
+  tasks = tasks.map(item => {
+    if(item.id !== id) return item;
+    return {
+      ...item,
+      status,
+      updatedAt:new Date().toISOString()
+    };
+  });
+
+  saveTasks();
+  renderTasks();
+}
+
+function deleteTask(id){
+  const task = tasks.find(item => item.id === id);
+  if(!task) return;
+
+  if(!confirm(`Delete ${task.title}?`)) return;
+
+  tasks = tasks.filter(item => item.id !== id);
+  saveTasks();
+  renderTasks();
+}
+
+function clearAllTasks(){
+  if(tasks.length === 0){
+    alert("There are no to-dos to clear.");
+    return;
+  }
+
+  if(!confirm(`Clear all ${tasks.length} to-dos? This will remove every couple/project and every lane, including Overall, C1, C2 and Accessories.`)){
+    return;
+  }
+
+  if(!confirm("Are you sure? This cannot be undone.")){
+    return;
+  }
+
+  tasks = [];
+  saveTasks();
+  renderTasks();
+}
+
+function clearProjectTasks(targetProjectKey){
+  const matching = tasks.filter(item => projectKey(projectLabel(item.project)) === targetProjectKey);
+
+  if(matching.length === 0){
+    alert("There are no to-dos in this couple/project.");
+    return;
+  }
+
+  const label = projectLabel(matching[0].project);
+  if(!confirm(`Clear all ${matching.length} to-do${matching.length === 1 ? "" : "s"} for ${label}?`)){
+    return;
+  }
+
+  tasks = tasks.filter(item => projectKey(projectLabel(item.project)) !== targetProjectKey);
+  saveTasks();
+  renderTasks();
+}
+
+function clearSectionTasks(targetProjectKey,targetArea){
+  const area = normaliseCategory(targetArea);
+  const matching = tasks.filter(item => (
+    projectKey(projectLabel(item.project)) === targetProjectKey &&
+    normaliseCategory(item.category) === area
+  ));
+
+  if(matching.length === 0){
+    alert("There are no to-dos in this section.");
+    return;
+  }
+
+  const label = projectLabel(matching[0].project);
+  const areaLabel = categoryLabel(area);
+  if(!confirm(`Clear all ${matching.length} ${areaLabel} to-do${matching.length === 1 ? "" : "s"} for ${label}?`)){
+    return;
+  }
+
+  tasks = tasks.filter(item => !(
+    projectKey(projectLabel(item.project)) === targetProjectKey &&
+    normaliseCategory(item.category) === area
+  ));
+  saveTasks();
+  renderTasks();
+}
+
+function importPastedTasks(){
+  const textarea = document.getElementById("taskPaste");
+  const raw = textarea.value.trim();
+
+  if(!raw){
+    alert("Paste at least one list item first.");
+    return;
+  }
+
+  const imported = parseTaskRows(raw);
+
+  if(imported.length === 0){
+    alert("No list items found. Try one item per line.");
+    return;
+  }
+
+  tasks = [...imported, ...tasks];
+  saveTasks();
+  textarea.value = "";
+  renderTasks();
+  alert(`${imported.length} item${imported.length === 1 ? "" : "s"} imported.`);
+}
+
+function parseTaskRows(text){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const parts = splitImportLine(line);
+      const title = parts[0] || "";
+      if(!title) return null;
+
+      return {
+        id:crypto.randomUUID(),
+        title,
+        ...parseTaskParts(parts),
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function splitImportLine(line){
+  if(line.includes("|")) return line.split("|").map(part => part.trim());
+  if(line.includes("\t")) return line.split("\t").map(part => part.trim());
+  return [line.trim()];
+}
+
+function parseTaskParts(parts){
+  const secondIsArea = isKnownCategory(parts[1]);
+  const offset = secondIsArea ? 0 : 1;
+
+  return {
+    project:secondIsArea ? "" : String(parts[1] || "").trim(),
+    category:normaliseCategory(parts[1 + offset] || "admin"),
+    priority:normalisePriority(parts[2 + offset] || "high"),
+    dueDate:normaliseDate(parts[3 + offset] || ""),
+    status:normaliseStatus(parts[4 + offset] || "open"),
+    notes:parts.slice(5 + offset).join(" | ")
+  };
+}
+
+function isKnownCategory(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(!text) return false;
+  if(["admin","overall","c1","c2","accessories","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"].includes(text)) return true;
+  return normaliseCategory(text) !== "admin";
+}
+
+function normaliseCategory(value){
+  const text = String(value || "").toLowerCase().trim();
+  const aliases = {
+    "all":"overall",
+    "general":"overall",
+    "main":"overall",
+    "camera 1":"c1",
+    "cam 1":"c1",
+    "camera one":"c1",
+    "a cam":"c1",
+    "a camera":"c1",
+    "camera 2":"c2",
+    "cam 2":"c2",
+    "camera two":"c2",
+    "b cam":"c2",
+    "b camera":"c2",
+    "accessory":"accessories",
+    "accesseries":"accessories",
+    "access":"accessories",
+    "shoot day":"shoot prep",
+    "shoot prep":"shoot prep",
+    "prep":"shoot prep",
+    "client":"client",
+    "clients":"client",
+    "payment":"finance",
+    "money":"finance",
+    "social":"content"
+  };
+  const allowed = ["overall","c1","c2","accessories","admin","client","finance","editing","content","marketing","website","shoot prep","delivery","gear"];
+  const normalised = aliases[text] || text;
+  return allowed.includes(normalised) ? normalised : "admin";
+}
+
+function normalisePriority(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("low")) return "low";
+  if(text.includes("medium") || text === "med") return "medium";
+  return "high";
+}
+
+function normaliseStatus(value){
+  const text = String(value || "").toLowerCase().trim();
+  if(text.includes("done") || text.includes("complete")) return "done";
+  if(text.includes("wait") || text.includes("hold")) return "waiting";
+  return "open";
+}
+
+function normaliseDate(value){
+  const text = String(value || "").trim();
+  if(!text) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0,10);
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("taskId").value = "";
+  document.getElementById("project").value = "";
+  document.getElementById("category").value = "overall";
+  document.getElementById("priority").value = "high";
+  document.getElementById("status").value = "open";
+}
+
+function exportTasks(){
+  const data = {
+    app:"NC Studios",
+    type:"lists",
+    exportedAt:new Date().toISOString(),
+    tasks
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-lists.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function priorityLabel(value){
+  if(value === "high") return "High";
+  if(value === "medium") return "Medium";
+  return "Low";
+}
+
+function statusLabel(value){
+  if(value === "done") return "Done";
+  if(value === "waiting") return "Waiting";
+  return "Open";
+}
+
+function categoryLabel(value){
+  const key = normaliseCategory(value);
+  const labels = {
+    overall:"Overall",
+    c1:"C1",
+    c2:"C2",
+    accessories:"Accessories",
+    admin:"Admin",
+    client:"Client",
+    finance:"Finance",
+    editing:"Editing",
+    content:"Content",
+    marketing:"Marketing",
+    website:"Website",
+    "shoot prep":"Shoot prep",
+    delivery:"Delivery",
+    gear:"Gear"
+  };
+
+  return labels[key] || "Admin";
+}
+
+function formatDate(value){
+  if(!value) return "No date";
+  return new Intl.DateTimeFormat("en-GB", {
+    day:"2-digit",
+    month:"short",
+    year:"numeric"
+  }).format(new Date(value + "T00:00:00"));
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+renderTasks();
+</script>
+
 </body>
 </html>

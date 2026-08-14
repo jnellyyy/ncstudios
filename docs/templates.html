@@ -1,96 +1,763 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios Templates</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<meta name="theme-color" content="#050504">
 
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
+<style>
+@font-face{
+  font-family:"NC Studio Brand";
+  src:url("assets/fonts/NC_Font_.ttf") format("truetype");
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
 
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
+:root{
+  --bg:#050504;
+  --bg2:#11100c;
+  --line:rgba(255,255,255,0.12);
+  --text:#f7efe3;
+  --muted:#b8ac9a;
+  --red:#d8b76e;
+  --green:#34c759;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --shadow:0 24px 70px rgba(0,0,0,0.45);
+}
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"NC Studio Brand",sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(216,183,110,0.28), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(216,183,110,0.24), transparent 34%),
+    linear-gradient(145deg,var(--bg),var(--bg2));
+  color:var(--text);
+}
 
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:16px;
+  position:relative;
+  z-index:1;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(216,183,110,0.45), transparent 38%),
+    linear-gradient(145deg,#202227,#0d0e12);
+  border:1px solid rgba(255,255,255,0.16);
+  box-shadow:var(--shadow);
+  font-weight:950;
+}
+
+h1,h2,h3,h4,p{
+  margin:0;
+}
+
+.brand h1{
+  font-size:18px;
+}
+
+.brand p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.topPill{
+  color:var(--text);
+  text-decoration:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.07);
+  padding:10px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.hero{
+  border:1px solid rgba(255,255,255,0.14);
+  background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.045));
+  border-radius:34px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  right:-80px;
+  top:-100px;
+  background:radial-gradient(circle, rgba(216,183,110,0.28), transparent 70%);
+}
+
+.heroTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.kicker{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.hero h2{
+  margin:7px 0;
+  font-size:34px;
+  line-height:0.95;
+  letter-spacing:0;
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  max-width:520px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+button,.btn{
+  border:0;
+  color:white;
+  background:linear-gradient(145deg,#d8b76e,#b99546);
+  padding:12px 14px;
+  border-radius:17px;
+  font-weight:900;
+  font-size:12px;
+  text-decoration:none;
+  box-shadow:0 12px 28px rgba(216,183,110,0.22);
+  cursor:pointer;
+}
+
+button.secondary,.btn.secondary{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:16px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  min-height:92px;
+  border:1px solid rgba(255,255,255,0.13);
+  background:rgba(255,255,255,0.07);
+  border-radius:26px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+
+.stat strong{
+  display:block;
+  margin-top:10px;
+  font-size:25px;
+  letter-spacing:0;
+}
+
+.nav{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+  margin:14px 0;
+}
+
+.nav a{
+  color:var(--muted);
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.055);
+  border-radius:20px;
+  padding:12px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:850;
+}
+
+.nav a.active{
+  color:white;
+  background:linear-gradient(145deg,rgba(216,183,110,0.32),rgba(255,255,255,0.06));
+  border-color:rgba(216,183,110,0.40);
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:14px;
+  align-items:start;
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,0.13);
+  background:linear-gradient(145deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
+  border-radius:30px;
+  box-shadow:0 16px 45px rgba(0,0,0,0.28);
+  overflow:hidden;
+}
+
+.panelHead{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,0.10);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.panelHead h3{
+  font-size:17px;
+}
+
+.panelHead p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.panelBody{
+  padding:14px;
+}
+
+.form{
+  display:grid;
+  gap:12px;
+}
+
+label{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.075);
+  color:var(--text);
+  border-radius:18px;
+  padding:13px;
+  font:inherit;
+  outline:none;
+}
+
+select option{
+  color:#111827;
+}
+
+textarea{
+  min-height:170px;
+  resize:vertical;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  border:1px solid rgba(255,255,255,0.11);
+  background:rgba(255,255,255,0.065);
+  border-radius:24px;
+  padding:14px;
+}
+
+.itemTop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.item h4{
+  font-size:16px;
+}
+
+.item small{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.templateText{
+  white-space:pre-wrap;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  margin-top:12px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:12px;
+}
+
+.itemActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.itemActions button{
+  padding:9px 11px;
+  border-radius:14px;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  border:1px dashed rgba(255,255,255,0.14);
+  border-radius:22px;
+  padding:24px;
+  font-size:13px;
+}
+
+@media(max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .nav{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:560px){
+  .app{
+    padding:14px;
+  }
+
+  .heroTop{
+    flex-direction:column;
+  }
+
+  .actions{
+    justify-content:flex-start;
+  }
+
+  .hero h2{
+    font-size:30px;
+  }
+
+  .nav{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><img src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+    <div>
+      <h1>NC Studios</h1>
+      <p>Templates</p>
+    </div>
+  </div>
+
+  <a class="topPill" href="dashboard.html">Home</a>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="heroTop">
+    <div>
+      <div class="kicker">Client messages</div>
+      <h2>Templates</h2>
+      <p>Save WhatsApp messages, email replies, invoice notes and delivery updates.</p>
+    </div>
+
+    <div class="actions">
+      <button onclick="exportTemplates()">Export</button>
+      <button class="secondary" onclick="resetForm()">New template</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <span>Total</span>
+      <strong id="totalStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>WhatsApp</span>
+      <strong id="whatsappStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Email</span>
+      <strong id="emailStat">0</strong>
+    </div>
+
+    <div class="stat">
+      <span>Delivery</span>
+      <strong id="deliveryStat">0</strong>
+    </div>
+  </div>
+</section>
+
+<nav class="nav">
+  <a href="dashboard.html">Home</a>
+  <a href="bookings.html">Bookings</a>
+  <a href="clients.html">Clients</a>
+  <a href="finance.html">Finance</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="lists.html">Lists</a>
+  <a href="delivery.html">Delivery</a>
+  <a class="active" href="templates.html">Templates</a>
+</nav>
+
+<section class="layout">
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Add template</h3>
+        <p>Save anything you reuse often.</p>
+      </div>
+    </div>
+
+    <div class="panelBody">
+      <form class="form" id="templateForm">
+        <input type="hidden" id="templateId">
+
+        <label>
+          Template title
+          <input id="title" type="text" placeholder="Booking confirmation message" required>
+        </label>
+
+        <label>
+          Category
+          <select id="category">
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">Email</option>
+            <option value="invoice">Invoice</option>
+            <option value="client care">Client care</option>
+            <option value="delivery">Delivery</option>
+            <option value="follow up">Follow up</option>
+          </select>
+        </label>
+
+        <label>
+          Message
+          <textarea id="body" placeholder="Write your reusable message here." required></textarea>
+        </label>
+
+        <button type="submit">Save template</button>
+        <button type="button" class="secondary" onclick="resetForm()">Clear form</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead">
+      <div>
+        <h3>Saved templates</h3>
+        <p>Tap copy when you need one.</p>
+      </div>
+
+      <select id="filter" onchange="renderTemplates()">
+        <option value="all">All</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="email">Email</option>
+        <option value="invoice">Invoice</option>
+        <option value="client care">Client care</option>
+        <option value="delivery">Delivery</option>
+        <option value="follow up">Follow up</option>
+      </select>
+    </div>
+
+    <div class="panelBody">
+      <div id="templateList" class="list"></div>
+    </div>
+  </section>
+
+</section>
+
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_templates_v1";
+let templates = loadTemplates();
+const form = document.getElementById("templateForm");
+
+seedTemplates();
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("templateId").value || crypto.randomUUID();
+
+  const template = {
+    id,
+    title:document.getElementById("title").value.trim(),
+    category:document.getElementById("category").value,
+    body:document.getElementById("body").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!template.title || !template.body){
+    alert("Add a title and message first.");
+    return;
+  }
+
+  const index = templates.findIndex(item => item.id === id);
+
+  if(index >= 0){
+    templates[index] = template;
+  }else{
+    templates.unshift(template);
+  }
+
+  saveTemplates();
+  resetForm();
+  renderTemplates();
+});
+
+function loadTemplates(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveTemplates(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
+}
+
+function seedTemplates(){
+  const existingTitles = new Set(templates.map(item => String(item.title || "").toLowerCase().trim()));
+  const missing = defaultTemplates().filter(item => !existingTitles.has(item.title.toLowerCase()));
+  if(!missing.length) return;
+  templates = templates.concat(missing);
+  saveTemplates();
+}
+
+function defaultTemplates(){
+  const now = new Date().toISOString();
+  return [
+    {id:"template-new-enquiry",title:"New enquiry reply",category:"email",body:"Hi [Name], thank you for getting in touch with NC Studio and for sharing a little about your wedding. I’d love to check the date properly for you. Please send over the ceremony location, reception location and the kind of coverage you have in mind, and I’ll guide you toward the best fit.",updatedAt:now},
+    {id:"template-availability",title:"Availability confirmation",category:"email",body:"Hi [Name], I’m pleased to confirm that [Date] is currently available. Based on what you’ve shared, the next step is to choose the coverage that fits your day, then the date can be secured with the signed agreement and deposit.",updatedAt:now},
+    {id:"template-package-options",title:"Package options",category:"email",body:"Hi [Name], thank you for the details. I’ve selected the options that make the most sense for your timings rather than overwhelming you with every possibility. [Package options]. Once you’ve chosen your preferred coverage, I can send the booking form, agreement and deposit details.",updatedAt:now},
+    {id:"template-deposit",title:"Deposit reminder",category:"follow up",body:"Hi [Name], just a quick reminder that the booking deposit is still outstanding. The date is secured once the deposit and agreement are complete. Let me know if you need the payment details sent again.",updatedAt:now},
+    {id:"template-contract",title:"Contract reminder",category:"follow up",body:"Hi [Name], just checking in on the agreement I sent over. Please review and sign it when you can so everything is formally in place for [Date]. I’m happy to clarify anything before you sign.",updatedAt:now},
+    {id:"template-final-consultation",title:"Final consultation reminder",category:"client care",body:"Hi [Name], your wedding is getting close, so it’s time to arrange our final consultation. We’ll lock in the timeline, locations, key people, family photos and any moments that matter most to you. Please send over a few suitable times for the call.",updatedAt:now},
+    {id:"template-balance",title:"Balance reminder",category:"invoice",body:"Hi [Name], a quick reminder that the remaining balance of [Balance] is due on [Due date]. Please let me know once it has been sent, or if you need the invoice or payment details again.",updatedAt:now},
+    {id:"template-late-payment",title:"Late payment reminder",category:"invoice",body:"Hi [Name], the remaining balance of [Balance] is now overdue. Please arrange payment as soon as possible so the booking can continue as planned. If there is an issue I need to know about, please reply today so we can address it clearly.",updatedAt:now},
+    {id:"template-wedding-week",title:"Wedding week message",category:"client care",body:"Hi [Name], it’s wedding week. I have the timeline and locations saved and I’m completing the final kit checks now. If there are any last-minute access, parking or timing changes, please send them over. Otherwise, I’ll see you on [Date] and I’m looking forward to capturing the day.",updatedAt:now},
+    {id:"template-after-wedding",title:"After wedding thank you",category:"client care",body:"Hi [Name], thank you for having NC Studio capture your wedding. It was a pleasure being part of the day. Everything is safely backed up and the editing process is underway. I’ll keep you updated as the work moves toward delivery.",updatedAt:now},
+    {id:"template-gallery-delivery",title:"Gallery delivery",category:"delivery",body:"Hi [Name], your wedding gallery is ready. You can view and download it here: [Gallery link]. I hope the images bring the day back beautifully. Please download a full copy and keep the link somewhere safe.",updatedAt:now},
+    {id:"template-film-delivery",title:"Film delivery",category:"delivery",body:"Hi [Name], your wedding films are ready. You can watch and download them here: [Film link]. I hope they let you relive the emotion, people and atmosphere of the day for years to come.",updatedAt:now},
+    {id:"template-review",title:"Review request",category:"follow up",body:"Hi [Name], I hope you’re enjoying everything. If you have a moment, I’d really appreciate an honest review of your experience with NC Studio. It helps future couples feel confident when choosing who to trust with their day. [Review link]",updatedAt:now},
+    {id:"template-posting-permission",title:"Permission to post",category:"follow up",body:"Hi [Name], I’d love to share a small selection from your wedding in the NC Studio portfolio and on social media. Are you happy for me to post selected images or short clips? There is no pressure at all, and I will respect any people or moments you would prefer to keep private.",updatedAt:now}
+  ];
+}
+
+function renderTemplates(){
+  const list = document.getElementById("templateList");
+  const filter = document.getElementById("filter").value;
+
+  const visible = templates.filter(item => filter === "all" || item.category === filter);
+
+  updateStats();
+
+  if(visible.length === 0){
+    list.innerHTML = `<div class="empty">No templates here yet.<br><br>Add your first reusable message.</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => `
+    <article class="item">
+      <div class="itemTop">
+        <div>
+          <h4>${escapeHTML(item.title)}</h4>
+          <small>${escapeHTML(item.category)}</small>
+        </div>
+      </div>
+
+      <div class="templateText">${escapeHTML(item.body)}</div>
+
+      <div class="itemActions">
+        <button class="secondary" onclick="copyTemplate('${item.id}')">Copy</button>
+        <button class="ghost" onclick="editTemplate('${item.id}')">Edit</button>
+        <button class="ghost" onclick="deleteTemplate('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function updateStats(){
+  document.getElementById("totalStat").textContent = templates.length;
+  document.getElementById("whatsappStat").textContent = templates.filter(item => item.category === "whatsapp").length;
+  document.getElementById("emailStat").textContent = templates.filter(item => item.category === "email").length;
+  document.getElementById("deliveryStat").textContent = templates.filter(item => item.category === "delivery").length;
+}
+
+function editTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  document.getElementById("templateId").value = template.id;
+  document.getElementById("title").value = template.title || "";
+  document.getElementById("category").value = template.category || "whatsapp";
+  document.getElementById("body").value = template.body || "";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function copyTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  navigator.clipboard.writeText(template.body).then(function(){
+    alert("Template copied.");
+  }).catch(function(){
+    alert("Copy did not work. Open the template and copy it manually.");
+  });
+}
+
+function deleteTemplate(id){
+  const template = templates.find(item => item.id === id);
+  if(!template) return;
+
+  if(!confirm(`Delete ${template.title}?`)) return;
+
+  templates = templates.filter(item => item.id !== id);
+  saveTemplates();
+  renderTemplates();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("templateId").value = "";
+  document.getElementById("category").value = "whatsapp";
+}
+
+function exportTemplates(){
+  const data = {
+    app:"NC Studios",
+    type:"templates",
+    exportedAt:new Date().toISOString(),
+    templates
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-templates.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+renderTemplates();
+</script>
+
 </body>
 </html>

@@ -684,6 +684,10 @@ td{
   white-space:nowrap !important;
 }
 
+.ncMobileDock{
+  display:none;
+}
+
 .hero.ops-hero{
   border:0 !important;
   border-radius:0 !important;
@@ -758,6 +762,46 @@ td{
 .consult-section h3{
   margin-top:0 !important;
   color:var(--nc-gold-2) !important;
+}
+
+.stage-tab{
+  border-radius:10px !important;
+  color:var(--nc-paper) !important;
+  font-family:var(--nc-font-body) !important;
+  font-size:13px !important;
+  font-weight:650 !important;
+  letter-spacing:0 !important;
+}
+
+.stage-tab.active{
+  color:var(--nc-paper) !important;
+}
+
+.consult-stage-summary,
+.consult-stage-checklist{
+  border-radius:10px !important;
+}
+
+.consult-stage-summary span,
+.consult-stage-checklist h3{
+  font-family:var(--nc-font-body) !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  letter-spacing:.04em !important;
+}
+
+.consult-stage-summary p,
+.consult-mini-list div{
+  color:var(--nc-paper) !important;
+  font-family:var(--nc-font-body) !important;
+  font-size:13px !important;
+  font-weight:520 !important;
+}
+
+.quick-link-grid a,
+.consult-progress-row{
+  font-family:var(--nc-font-body) !important;
+  letter-spacing:0 !important;
 }
 
 .form-grid{
@@ -954,10 +998,48 @@ hr,
     padding-bottom:max(6px, env(safe-area-inset-bottom)) !important;
   }
 
+  .ncMobileDock{
+    position:fixed !important;
+    left:14px !important;
+    right:14px !important;
+    bottom:0 !important;
+    z-index:40 !important;
+    display:grid !important;
+    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+    gap:6px !important;
+    padding:6px !important;
+    padding-bottom:max(6px, env(safe-area-inset-bottom)) !important;
+    border:1px solid rgba(216,183,110,0.26) !important;
+    background:rgba(5,5,4,0.92) !important;
+  }
+
+  .ncMobileDock a{
+    min-width:0 !important;
+    min-height:42px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border:1px solid rgba(216,183,110,0.42) !important;
+    color:var(--nc-gold-2) !important;
+    background:rgba(5,5,4,0.72) !important;
+    font-family:var(--nc-font-mono) !important;
+    font-size:10px !important;
+    font-weight:600 !important;
+    line-height:1.1 !important;
+    text-align:center !important;
+    text-decoration:none !important;
+    text-transform:uppercase !important;
+  }
+
+  .ncMobileDock a.active{
+    color:#080704 !important;
+    border-color:rgba(240,220,168,0.72) !important;
+    background:linear-gradient(90deg,var(--nc-gold),var(--nc-gold-2)) !important;
+  }
+
   .nav-pill,
   .ops-nav{
-    overflow-x:auto !important;
-    justify-content:flex-start !important;
+    display:none !important;
   }
 
   .nav-pill a,

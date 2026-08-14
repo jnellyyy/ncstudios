@@ -1,96 +1,1229 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios Consultations</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
-
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
-
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
+<meta name="theme-color" content="#050504">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo">
+    <div class="brand-text">
+      <p class="kicker">Call notes</p>
+      <h2>Consultations</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="projects.html">Projects</a>
+    <a class="pill" href="quick-capture.html">Capture</a>
+    <a class="pill" href="call-sheet.html">Call Sheet</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a class="active" href="consultations.html">Consult</a>
+  <a href="projects.html">Projects</a>
+  <a href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a href="finance.html">Finance</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">Consultation flow</p>
+      <h1>Clear call notes, clean next step.</h1>
+      <p class="subtext">Split each client conversation into pre-booking, first call and final wedding call so the right details are collected at the right time.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn" type="button" onclick="focusConsultation()">Start call</button>
+      <button class="ghost-btn" type="button" onclick="exportConsultations()">Export</button>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Pre-booking</span>
+    <strong id="statPreBooking">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>First calls</span>
+    <strong id="statFirstCall">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Final calls</span>
+    <strong id="statFinalCall">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Follow up</span>
+    <strong id="statFollowUp">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout consult-layout">
+  <aside class="ops-panel consult-guide">
+    <div class="ops-header">
+      <div>
+        <h2>Consult type</h2>
+        <p>Choose the call stage and the page will show the right prompts and fields.</p>
+      </div>
+    </div>
+
+    <div class="consult-stage-tabs" role="tablist" aria-label="Consultation stages">
+      <button class="stage-tab active" type="button" data-stage-choice="pre-booking">Pre-booking</button>
+      <button class="stage-tab" type="button" data-stage-choice="first-call">First call</button>
+      <button class="stage-tab" type="button" data-stage-choice="final-call">Final call</button>
+    </div>
+
+    <div class="consult-stage-summary" id="stageSummary"></div>
+
+    <div class="consult-steps" id="stageGuide"></div>
+
+    <div class="consult-stage-checklist">
+      <h3>Data to collect</h3>
+      <div id="stageDataChecklist" class="consult-mini-list"></div>
+    </div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Consultation notes</h2>
+        <p>Link every call to the couple or wedding project.</p>
+      </div>
+    </div>
+
+    <form id="consultationForm" class="consult-form">
+      <input type="hidden" id="consultationId">
+
+      <section class="consult-section">
+        <h3>Project link</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="project">Project / wedding</label>
+            <input id="project" type="text" list="projectSuggestions" placeholder="Marvin + Blessing" required>
+            <datalist id="projectSuggestions"></datalist>
+          </div>
+
+          <div class="field">
+            <label for="contactName">Call contact</label>
+            <input id="contactName" type="text" placeholder="Bride, groom or planner">
+          </div>
+
+          <div class="field">
+            <label for="callDate">Call date</label>
+            <input id="callDate" type="date">
+          </div>
+
+          <div class="field">
+            <label for="callType">Consult type</label>
+            <select id="callType">
+              <option value="pre-booking">Pre-booking</option>
+              <option value="first-call">First call</option>
+              <option value="final-call">Final call before wedding</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="open">Open</option>
+              <option value="follow-up">Follow up</option>
+              <option value="secured">Secured</option>
+              <option value="not-booking">Not booking</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="pre-booking">
+        <h3>Pre-booking qualification</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="enquirySource">Enquiry source</label>
+            <input id="enquirySource" type="text" placeholder="Instagram, referral, website, WhatsApp">
+          </div>
+
+          <div class="field">
+            <label for="serviceInterest">Service interest</label>
+            <select id="serviceInterest">
+              <option value="">Not confirmed</option>
+              <option value="videography">Videography</option>
+              <option value="photography">Photography</option>
+              <option value="photo-video">Photo and video</option>
+              <option value="content">Content / social clips</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="availabilityStatus">Availability</label>
+            <select id="availabilityStatus">
+              <option value="">Not checked</option>
+              <option value="available">Available</option>
+              <option value="checking">Need to check</option>
+              <option value="not-available">Not available</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="quoteStatus">Quote</label>
+            <select id="quoteStatus">
+              <option value="">Not sent</option>
+              <option value="needs-quote">Needs quote</option>
+              <option value="sent">Quote sent</option>
+              <option value="accepted">Quote accepted</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="leadTemperature">Lead warmth</label>
+            <select id="leadTemperature">
+              <option value="">Not sure</option>
+              <option value="hot">Hot - wants to book</option>
+              <option value="warm">Warm - interested</option>
+              <option value="cool">Cool - early enquiry</option>
+              <option value="price-shopping">Price shopping</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="budgetRange">Budget range</label>
+            <input id="budgetRange" type="text" placeholder="£900-£1,200 or not shared">
+          </div>
+
+          <div class="field wide">
+            <label for="decisionMakers">Decision makers</label>
+            <input id="decisionMakers" type="text" placeholder="Bride, groom, parent, planner">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="enquiryNotes">What they asked for</label>
+          <textarea id="enquiryNotes" placeholder="What they want, what they mentioned first, and any early expectations."></textarea>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="bookingBlockers">Booking blockers</label>
+          <textarea id="bookingBlockers" placeholder="Budget concern, date uncertainty, partner needs to confirm, waiting for venue, needs examples."></textarea>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="pre-booking first-call final-call">
+        <h3>Basics</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="weddingDate">Wedding date</label>
+            <input id="weddingDate" type="date">
+          </div>
+
+          <div class="field">
+            <label for="ceremonyLocation">Ceremony location</label>
+            <input id="ceremonyLocation" type="text" placeholder="Church, registry office, venue">
+          </div>
+
+          <div class="field">
+            <label for="receptionLocation">Reception location</label>
+            <input id="receptionLocation" type="text" placeholder="Reception venue">
+          </div>
+
+          <div class="field">
+            <label for="guestCount">Guest count</label>
+            <input id="guestCount" type="number" min="0" placeholder="120">
+          </div>
+
+          <div class="field">
+            <label for="ceremonyTime">Ceremony time</label>
+            <input id="ceremonyTime" type="time">
+          </div>
+
+          <div class="field">
+            <label for="receptionStartTime">Reception start</label>
+            <input id="receptionStartTime" type="time">
+          </div>
+
+          <div class="field wide">
+            <label for="prepNearby">Prep nearby?</label>
+            <select id="prepNearby">
+              <option value="">Not confirmed</option>
+              <option value="yes">Yes, nearby</option>
+              <option value="no">No / separate location</option>
+              <option value="unknown">Need to check</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="first-call final-call">
+        <h3>Understand the day</h3>
+        <div class="field">
+          <label for="dayWalkthrough">Morning to evening walkthrough</label>
+          <textarea id="dayWalkthrough" placeholder="Prep, ceremony, portraits, reception, outfit changes, speeches, first dance and party flow."></textarea>
+        </div>
+
+        <div class="check-grid" style="margin-top:12px;">
+          <label><input type="checkbox" name="moments" value="ceremony"> Ceremony</label>
+          <label><input type="checkbox" name="moments" value="couple portraits"> Couple portraits</label>
+          <label><input type="checkbox" name="moments" value="family photos"> Family photos</label>
+          <label><input type="checkbox" name="moments" value="reception entrance"> Reception entrance</label>
+          <label><input type="checkbox" name="moments" value="speeches"> Speeches</label>
+          <label><input type="checkbox" name="moments" value="outfit change 1"> Outfit change 1</label>
+          <label><input type="checkbox" name="moments" value="outfit change 2"> Outfit change 2</label>
+          <label><input type="checkbox" name="moments" value="first dance"> First dance</label>
+          <label><input type="checkbox" name="moments" value="party moments"> Party moments</label>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="pre-booking first-call final-call">
+        <h3>What matters most</h3>
+        <div class="call-script">Ask: "When you imagine watching your wedding film back, what moments do you really want to see?"</div>
+
+        <div class="check-grid" style="margin-top:12px;">
+          <label><input type="checkbox" name="priorities" value="family"> Family</label>
+          <label><input type="checkbox" name="priorities" value="emotion"> Emotion</label>
+          <label><input type="checkbox" name="priorities" value="vibes"> Vibes</label>
+          <label><input type="checkbox" name="priorities" value="outfits"> Outfits</label>
+          <label><input type="checkbox" name="priorities" value="entrance"> Entrance</label>
+          <label><input type="checkbox" name="priorities" value="speeches"> Speeches</label>
+          <label><input type="checkbox" name="priorities" value="party"> Party</label>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="mattersMost">Emotional notes</label>
+          <textarea id="mattersMost" placeholder="What she lit up about, what feels non-negotiable, and anything sensitive or sentimental."></textarea>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="pre-booking first-call">
+        <h3>Package, deliverables and price</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="recommendedPackage">Best package</label>
+            <select id="recommendedPackage">
+              <option value="full-day">Full day videography</option>
+              <option value="half-day">Half day videography</option>
+              <option value="custom">Custom / needs review</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="packagePrice">Price</label>
+            <input id="packagePrice" type="number" min="0" step="1" value="950">
+          </div>
+
+          <div class="field">
+            <label for="budgetResponse">Budget response</label>
+            <select id="budgetResponse">
+              <option value="">Not asked yet</option>
+              <option value="within-budget">Within budget</option>
+              <option value="needs-thinking">Needs thinking time</option>
+              <option value="above-budget">Above budget</option>
+              <option value="follow-up-needed">Follow-up needed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="check-grid" style="margin-top:12px;">
+          <label><input type="checkbox" name="deliverables" value="up to 10 hours coverage" checked> Up to 10 hours</label>
+          <label><input type="checkbox" name="deliverables" value="cinematic highlight film" checked> Highlight film</label>
+          <label><input type="checkbox" name="deliverables" value="full ceremony film" checked> Full ceremony</label>
+          <label><input type="checkbox" name="deliverables" value="full speeches film" checked> Full speeches</label>
+          <label><input type="checkbox" name="deliverables" value="online delivery" checked> Online delivery</label>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="packageNotes">Package notes</label>
+          <textarea id="packageNotes" placeholder="Full day is the clean fit because... Half day may feel tight because..."></textarea>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="pre-booking first-call">
+        <h3>Booking next step</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="depositAmount">Deposit amount</label>
+            <input id="depositAmount" type="number" min="0" step="1" placeholder="0">
+          </div>
+
+          <div class="field">
+            <label for="balanceDueDate">Balance due</label>
+            <input id="balanceDueDate" type="date">
+          </div>
+
+          <div class="field">
+            <label for="contractStatus">Contract</label>
+            <select id="contractStatus">
+              <option value="not-sent">Not sent</option>
+              <option value="sent">Sent</option>
+              <option value="signed">Signed</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="bookingFormStatus">Booking form</label>
+            <select id="bookingFormStatus">
+              <option value="not-sent">Not sent</option>
+              <option value="sent">Sent</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="field wide">
+            <label for="nextStep">Next step</label>
+            <textarea id="nextStep" placeholder="Send booking details, contract and deposit info to secure the date."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="consult-section" data-stages="final-call">
+        <h3>Final call logistics</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="timelineStatus">Timeline status</label>
+            <select id="timelineStatus">
+              <option value="">Not confirmed</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="needs-update">Needs update</option>
+              <option value="missing">Not received</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="finalPaymentStatus">Final payment</label>
+            <select id="finalPaymentStatus">
+              <option value="">Not checked</option>
+              <option value="paid">Paid</option>
+              <option value="due">Due</option>
+              <option value="overdue">Overdue</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="prepLocation">Prep address</label>
+            <input id="prepLocation" type="text" placeholder="Hotel, home or venue room">
+          </div>
+
+          <div class="field">
+            <label for="groupPhotoOwner">Group photo helper</label>
+            <input id="groupPhotoOwner" type="text" placeholder="Name and phone if possible">
+          </div>
+
+          <div class="field">
+            <label for="parkingMealStatus">Parking and meal</label>
+            <select id="parkingMealStatus">
+              <option value="">Not checked</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="need-to-ask">Need to ask</option>
+              <option value="not-provided">Not provided</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="kitRentalStatus">Kit and rentals</label>
+            <select id="kitRentalStatus">
+              <option value="">Not checked</option>
+              <option value="ready">Ready</option>
+              <option value="booked">Booked / awaiting collection</option>
+              <option value="needs-action">Needs action</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top:12px;">
+          <div class="field wide">
+            <label for="keyContacts">Key contacts</label>
+            <textarea id="keyContacts" placeholder="Bride, groom, planner, venue contact, photo lead, best man, maid of honour."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="finalTimeline">Final timeline notes</label>
+            <textarea id="finalTimeline" placeholder="Prep arrival, ceremony, portraits, reception entrance, speeches, first dance, party, exit and travel gaps."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="familyShotList">Family and group photos</label>
+            <textarea id="familyShotList" placeholder="Exact family groups, sensitive family situations, who will gather people, must-have portraits."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="supplierNotes">Supplier and venue notes</label>
+            <textarea id="supplierNotes" placeholder="Planner, photographer, DJ, decor, venue contact, room turnarounds, access times and restrictions."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="audioPlan">Audio plan</label>
+            <textarea id="audioPlan" placeholder="Groom mic, backup lav, lectern, DJ mixer feed, speeches mic, room ambience and who to speak to."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="restrictionsNotes">Restrictions and risks</label>
+            <textarea id="restrictionsNotes" placeholder="Church rules, registrar limits, no movement, flash limits, tight timings, parking risk, travel risk."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="rainPlan">Weather / backup plan</label>
+            <textarea id="rainPlan" placeholder="Indoor portrait spot, umbrella plan, venue backup rooms, travel buffer."></textarea>
+          </div>
+
+          <div class="field wide">
+            <label for="deliveryExpectations">Delivery expectations</label>
+            <textarea id="deliveryExpectations" placeholder="What they expect after the wedding, teaser needs, highlight priority, ceremony/speeches delivery."></textarea>
+          </div>
+        </div>
+
+        <div class="check-grid" style="margin-top:12px;">
+          <label><input type="checkbox" name="finalChecks" value="final timeline received"> Final timeline received</label>
+          <label><input type="checkbox" name="finalChecks" value="addresses confirmed"> Addresses confirmed</label>
+          <label><input type="checkbox" name="finalChecks" value="audio access confirmed"> Audio access confirmed</label>
+          <label><input type="checkbox" name="finalChecks" value="family list received"> Family list received</label>
+          <label><input type="checkbox" name="finalChecks" value="restrictions checked"> Restrictions checked</label>
+          <label><input type="checkbox" name="finalChecks" value="parking and meal checked"> Parking and meal checked</label>
+          <label><input type="checkbox" name="finalChecks" value="kit checked"> Kit checked</label>
+          <label><input type="checkbox" name="finalChecks" value="emergency contacts saved"> Emergency contacts saved</label>
+          <label><input type="checkbox" name="finalChecks" value="delivery expectations confirmed"> Delivery confirmed</label>
+        </div>
+
+        <div class="field" style="margin-top:12px;">
+          <label for="finalActions">Final actions before wedding</label>
+          <textarea id="finalActions" placeholder="Anything to chase, confirm, buy, rent, charge, pack or send before the wedding."></textarea>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save consultation</button>
+        <button class="ghost-btn" type="button" onclick="createFollowUpTask()">Create follow-up task</button>
+        <button class="ghost-btn" type="button" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+
+    <div class="toolbar" style="margin-top:18px;">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search consultations" oninput="renderConsultations()">
+      </div>
+
+      <select id="statusFilter" onchange="renderConsultations()">
+        <option value="active">Active</option>
+        <option value="all">All</option>
+        <option value="open">Open</option>
+        <option value="follow-up">Follow up</option>
+        <option value="secured">Secured</option>
+        <option value="not-booking">Not booking</option>
+      </select>
+
+      <select id="stageFilter" onchange="renderConsultations()">
+        <option value="all">All consults</option>
+        <option value="pre-booking">Pre-booking</option>
+        <option value="first-call">First call</option>
+        <option value="final-call">Final call</option>
+      </select>
+    </div>
+
+    <div id="consultationList" class="ops-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios consultations</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_consultations_v1";
+const TASKS_KEY = "ncstudios_lists_v1";
+const PROJECT_SOURCE_KEYS = [
+  {key:"ncstudios_bookings_v1", fields:["clientName","eventName"]},
+  {key:"ncstudios_clients_v1", fields:["clientName"]},
+  {key:"ncstudios_delivery_v1", fields:["projectName","client"]},
+  {key:"ncstudios_shots_v1", fields:["project"]},
+  {key:"ncstudios_timeline_v1", fields:["project"]},
+  {key:"ncstudios_gear_v1", fields:["project"]},
+  {key:"ncstudios_consultations_v1", fields:["project"]},
+  {key:"ncstudios_capture_v1", fields:["project"]},
+  {key:"ncstudios_callsheets_v1", fields:["project"]}
+];
+
+// Edit this config to change the prompts and data checklist for each consult type.
+const CONSULT_STAGES = {
+  "pre-booking":{
+    label:"Pre-booking",
+    summary:"Qualify the enquiry, confirm fit, spot blockers and move them toward booking details.",
+    guide:[
+      {title:"Warm reply", body:"Thank them for reaching out, confirm you are happy to help and make the next step feel easy."},
+      {title:"Qualify the basics", items:["Wedding date","Ceremony and reception areas","Service needed","Rough guest count","How they found NC Studios"]},
+      {title:"Check fit", body:"Ask what they are looking for and what matters most before you talk about price."},
+      {title:"Explain the next step", body:"If the date works, move them to a proper call, quote, booking form, contract and deposit."}
+    ],
+    collects:[
+      {label:"Project and contact", fields:["project","contactName"]},
+      {label:"Date and locations", fields:["weddingDate","ceremonyLocation","receptionLocation"]},
+      {label:"Service and budget", fields:["serviceInterest","budgetRange"]},
+      {label:"Availability and quote", fields:["availabilityStatus","quoteStatus"]},
+      {label:"Blocker and next step", fields:["bookingBlockers","nextStep"]}
+    ]
+  },
+  "first-call":{
+    label:"First call",
+    summary:"Understand the whole day, identify what matters emotionally, recommend the right package and move to deposit.",
+    guide:[
+      {title:"Warm start", body:"Thank her for making time and say you are excited to hear more about the day."},
+      {title:"Confirm the basics", items:["Wedding date","Ceremony location","Reception location","Guest count","Ceremony time","Reception start","Prep nearby"]},
+      {title:"Understand the day", body:"Ask her to talk you through the day from morning to evening."},
+      {title:"Ask what matters most", body:"When you imagine watching your wedding film back, what moments do you really want to see?"},
+      {title:"Recommend cleanly", body:"Explain why full day or half day fits, say the price confidently, pause for budget response, then explain deposit and contract."}
+    ],
+    collects:[
+      {label:"Confirmed basics", fields:["weddingDate","ceremonyLocation","receptionLocation","guestCount"]},
+      {label:"Key times", fields:["ceremonyTime","receptionStartTime","prepNearby"]},
+      {label:"Day walkthrough", fields:["dayWalkthrough","moments"]},
+      {label:"Emotional priorities", fields:["priorities","mattersMost"]},
+      {label:"Package and budget", fields:["recommendedPackage","packagePrice","budgetResponse"]},
+      {label:"Booking next step", fields:["depositAmount","balanceDueDate","nextStep"]}
+    ]
+  },
+  "final-call":{
+    label:"Final call",
+    summary:"Lock the timeline, contacts, audio, restrictions, travel and final actions before the wedding day.",
+    guide:[
+      {title:"Confirm nothing has changed", items:["Date","Locations","Times","Guest count","Prep address","Travel between venues"]},
+      {title:"Walk the final timeline", body:"Go through the day in order and mark anything that could affect filming or photography."},
+      {title:"Collect practical contacts", body:"Get planner, venue, photographer, DJ/audio contact, group photo helper and emergency numbers."},
+      {title:"Remove wedding-day risks", items:["Audio access","Venue restrictions","Family photo list","Parking and meal","Weather backup","Kit or rental checks"]},
+      {title:"Close with actions", body:"Repeat what you will chase, what they need to send, and what is now locked in."}
+    ],
+    collects:[
+      {label:"Final timeline", fields:["timelineStatus","finalTimeline"]},
+      {label:"Contacts", fields:["keyContacts","groupPhotoOwner"]},
+      {label:"Audio and suppliers", fields:["audioPlan","supplierNotes"]},
+      {label:"Family groups", fields:["familyShotList"]},
+      {label:"Restrictions and weather", fields:["restrictionsNotes","rainPlan"]},
+      {label:"Parking, meal and kit", fields:["parkingMealStatus","kitRentalStatus"]},
+      {label:"Final actions", fields:["finalActions","finalChecks"]}
+    ]
+  }
+};
+
+let consultations = readData(STORAGE_KEY);
+const form = document.getElementById("consultationForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+  saveCurrentConsultation();
+});
+
+document.getElementById("callType").addEventListener("change", function(event){
+  setCallType(event.target.value);
+});
+
+document.querySelectorAll("[data-stage-choice]").forEach(button => {
+  button.addEventListener("click", function(){
+    setCallType(button.dataset.stageChoice);
+    document.getElementById("project").focus();
+  });
+});
+
+function makeId(prefix){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : prefix + "_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveData(key,data){
+  localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+}
+
+function saveCurrentConsultation(){
+  const consultation = formToConsultation();
+
+  if(!consultation.project){
+    alert("Add the project or wedding name first.");
+    return null;
+  }
+
+  const index = consultations.findIndex(item => item.id === consultation.id);
+
+  if(index >= 0){
+    consultation.createdAt = consultations[index].createdAt || consultation.createdAt;
+    consultations[index] = consultation;
+  } else {
+    consultations.unshift(consultation);
+  }
+
+  saveData(STORAGE_KEY, consultations);
+  resetForm();
+  renderConsultations();
+  return consultation;
+}
+
+function formToConsultation(){
+  const existingId = document.getElementById("consultationId").value;
+  const now = new Date().toISOString();
+
+  return {
+    id:existingId || makeId("consultation"),
+    project:valueOf("project"),
+    contactName:valueOf("contactName"),
+    callDate:valueOf("callDate"),
+    callType:valueOf("callType") || "pre-booking",
+    status:valueOf("status") || "open",
+    enquirySource:valueOf("enquirySource"),
+    serviceInterest:valueOf("serviceInterest"),
+    availabilityStatus:valueOf("availabilityStatus"),
+    quoteStatus:valueOf("quoteStatus"),
+    leadTemperature:valueOf("leadTemperature"),
+    budgetRange:valueOf("budgetRange"),
+    decisionMakers:valueOf("decisionMakers"),
+    enquiryNotes:valueOf("enquiryNotes"),
+    bookingBlockers:valueOf("bookingBlockers"),
+    weddingDate:valueOf("weddingDate"),
+    ceremonyLocation:valueOf("ceremonyLocation"),
+    receptionLocation:valueOf("receptionLocation"),
+    guestCount:Number(valueOf("guestCount") || 0),
+    ceremonyTime:valueOf("ceremonyTime"),
+    receptionStartTime:valueOf("receptionStartTime"),
+    prepNearby:valueOf("prepNearby"),
+    dayWalkthrough:valueOf("dayWalkthrough"),
+    moments:checkedValues("moments"),
+    priorities:checkedValues("priorities"),
+    mattersMost:valueOf("mattersMost"),
+    recommendedPackage:valueOf("recommendedPackage"),
+    packagePrice:Number(valueOf("packagePrice") || 0),
+    budgetResponse:valueOf("budgetResponse"),
+    deliverables:checkedValues("deliverables"),
+    packageNotes:valueOf("packageNotes"),
+    depositAmount:Number(valueOf("depositAmount") || 0),
+    balanceDueDate:valueOf("balanceDueDate"),
+    contractStatus:valueOf("contractStatus"),
+    bookingFormStatus:valueOf("bookingFormStatus"),
+    nextStep:valueOf("nextStep"),
+    timelineStatus:valueOf("timelineStatus"),
+    finalPaymentStatus:valueOf("finalPaymentStatus"),
+    prepLocation:valueOf("prepLocation"),
+    groupPhotoOwner:valueOf("groupPhotoOwner"),
+    parkingMealStatus:valueOf("parkingMealStatus"),
+    kitRentalStatus:valueOf("kitRentalStatus"),
+    keyContacts:valueOf("keyContacts"),
+    finalTimeline:valueOf("finalTimeline"),
+    familyShotList:valueOf("familyShotList"),
+    supplierNotes:valueOf("supplierNotes"),
+    audioPlan:valueOf("audioPlan"),
+    restrictionsNotes:valueOf("restrictionsNotes"),
+    rainPlan:valueOf("rainPlan"),
+    deliveryExpectations:valueOf("deliveryExpectations"),
+    finalChecks:checkedValues("finalChecks"),
+    finalActions:valueOf("finalActions"),
+    createdAt:now,
+    updatedAt:now
+  };
+}
+
+function valueOf(id){
+  const field = document.getElementById(id);
+  return field ? field.value.trim() : "";
+}
+
+function setValue(id,value){
+  const field = document.getElementById(id);
+  if(field) field.value = value || "";
+}
+
+function checkedValues(name){
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(input => input.value);
+}
+
+function setCheckedValues(name,values){
+  const selected = new Set(Array.isArray(values) ? values : []);
+  document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+    input.checked = selected.has(input.value);
+  });
+}
+
+function renderConsultations(){
+  const list = document.getElementById("consultationList");
+  const filter = document.getElementById("statusFilter").value;
+  const stageFilter = document.getElementById("stageFilter").value;
+  const search = document.getElementById("search").value.trim().toLowerCase();
+
+  const visible = consultations.filter(item => {
+    const callType = getCallType(item);
+    const statusMatch =
+      filter === "all" ||
+      item.status === filter ||
+      (filter === "active" && !["secured","not-booking"].includes(item.status));
+    const stageMatch = stageFilter === "all" || callType === stageFilter;
+    const haystack = JSON.stringify(item).toLowerCase();
+    return statusMatch && stageMatch && (!search || haystack.includes(search));
+  });
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `<div class="empty-state">No consultations in this view yet.</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(item => {
+    const callType = getCallType(item);
+    const completion = completionSummary(item);
+    const note = primaryNote(item);
+
+    return `
+    <article class="ops-card ${item.status === "secured" ? "done" : ""}">
+      <div class="ops-card-top">
+        <div>
+          <div class="ops-title">${escapeHTML(item.project)}</div>
+          <div class="ops-sub">${escapeHTML(item.contactName || "No contact")} | ${niceDate(item.weddingDate || item.callDate)} | ${escapeHTML(stageLabel(callType))}</div>
+        </div>
+        <div class="badge-stack">
+          <span class="badge ${stageBadgeClass(callType)}">${escapeHTML(stageLabel(callType))}</span>
+          <span class="badge ${badgeClass(item.status)}">${statusLabel(item.status)}</span>
+        </div>
+      </div>
+
+      <div class="consult-progress-row">
+        <div>
+          <span>Data collected</span>
+          <b>${completion.done}/${completion.total}</b>
+        </div>
+        <div class="stage-progress" aria-label="Consultation data collected">
+          <span style="width:${completion.percent}%"></span>
+        </div>
+      </div>
+
+      <div class="meta-list">
+        <div class="meta-row"><span>Wedding date</span><b>${niceDate(item.weddingDate)}</b></div>
+        <div class="meta-row"><span>Ceremony</span><b>${escapeHTML(timeAndPlace(item.ceremonyTime, item.ceremonyLocation))}</b></div>
+        <div class="meta-row"><span>Reception</span><b>${escapeHTML(timeAndPlace(item.receptionStartTime, item.receptionLocation))}</b></div>
+        ${callType === "final-call" ? `
+          <div class="meta-row"><span>Timeline</span><b>${escapeHTML(statusText(item.timelineStatus) || "Not checked")}</b></div>
+          <div class="meta-row"><span>Audio</span><b>${escapeHTML(shortText(item.audioPlan, "Not planned"))}</b></div>
+        ` : `
+          <div class="meta-row"><span>Package</span><b>${escapeHTML(packageLabel(item.recommendedPackage))}</b></div>
+          <div class="meta-row"><span>Price</span><b>${money(item.packagePrice || 0)}</b></div>
+        `}
+      </div>
+
+      ${note ? `<p class="ops-note">${escapeHTML(note)}</p>` : ""}
+
+      <div class="quick-link-grid" aria-label="Linked app pages">
+        <a href="crm.html?project=${encodeURIComponent(item.project)}">CRM</a>
+        <a href="bookings.html?project=${encodeURIComponent(item.project)}">Booking</a>
+        <a href="call-sheet.html?project=${encodeURIComponent(item.project)}">Call sheet</a>
+        <a href="timeline.html?project=${encodeURIComponent(item.project)}">Timeline</a>
+      </div>
+
+      <div class="ops-actions">
+        <button type="button" class="ghost-btn" onclick="editConsultation('${item.id}')">Edit</button>
+        <a class="ghost-btn" href="projects.html?project=${encodeURIComponent(item.project)}">Project</a>
+        <button type="button" class="ghost-btn" onclick="createFollowUpTask('${item.id}')">Follow-up task</button>
+        <button type="button" class="btn" onclick="markSecured('${item.id}')">Secured</button>
+        <button type="button" class="danger-btn" onclick="deleteConsultation('${item.id}')">Delete</button>
+      </div>
+    </article>
+  `;
+  }).join("");
+}
+
+function updateStats(){
+  document.getElementById("statPreBooking").textContent = consultations.filter(item => getCallType(item) === "pre-booking").length;
+  document.getElementById("statFirstCall").textContent = consultations.filter(item => getCallType(item) === "first-call").length;
+  document.getElementById("statFinalCall").textContent = consultations.filter(item => getCallType(item) === "final-call").length;
+  document.getElementById("statFollowUp").textContent = consultations.filter(item => item.status === "follow-up").length;
+}
+
+function editConsultation(id){
+  const item = consultations.find(consultation => consultation.id === id);
+  if(!item) return;
+
+  setValue("consultationId", item.id);
+  setValue("project", item.project);
+  setValue("contactName", item.contactName);
+  setValue("callDate", item.callDate);
+  setValue("callType", getCallType(item));
+  setValue("status", item.status || "open");
+  setValue("enquirySource", item.enquirySource);
+  setValue("serviceInterest", item.serviceInterest);
+  setValue("availabilityStatus", item.availabilityStatus);
+  setValue("quoteStatus", item.quoteStatus);
+  setValue("leadTemperature", item.leadTemperature);
+  setValue("budgetRange", item.budgetRange);
+  setValue("decisionMakers", item.decisionMakers);
+  setValue("enquiryNotes", item.enquiryNotes);
+  setValue("bookingBlockers", item.bookingBlockers);
+  setValue("weddingDate", item.weddingDate);
+  setValue("ceremonyLocation", item.ceremonyLocation);
+  setValue("receptionLocation", item.receptionLocation);
+  setValue("guestCount", item.guestCount || "");
+  setValue("ceremonyTime", item.ceremonyTime);
+  setValue("receptionStartTime", item.receptionStartTime);
+  setValue("prepNearby", item.prepNearby);
+  setValue("dayWalkthrough", item.dayWalkthrough);
+  setCheckedValues("moments", item.moments);
+  setCheckedValues("priorities", item.priorities);
+  setValue("mattersMost", item.mattersMost);
+  setValue("recommendedPackage", item.recommendedPackage || "full-day");
+  setValue("packagePrice", item.packagePrice || 950);
+  setValue("budgetResponse", item.budgetResponse);
+  setCheckedValues("deliverables", item.deliverables);
+  setValue("packageNotes", item.packageNotes);
+  setValue("depositAmount", item.depositAmount || "");
+  setValue("balanceDueDate", item.balanceDueDate);
+  setValue("contractStatus", item.contractStatus || "not-sent");
+  setValue("bookingFormStatus", item.bookingFormStatus || "not-sent");
+  setValue("nextStep", item.nextStep);
+  setValue("timelineStatus", item.timelineStatus);
+  setValue("finalPaymentStatus", item.finalPaymentStatus);
+  setValue("prepLocation", item.prepLocation);
+  setValue("groupPhotoOwner", item.groupPhotoOwner);
+  setValue("parkingMealStatus", item.parkingMealStatus);
+  setValue("kitRentalStatus", item.kitRentalStatus);
+  setValue("keyContacts", item.keyContacts);
+  setValue("finalTimeline", item.finalTimeline);
+  setValue("familyShotList", item.familyShotList);
+  setValue("supplierNotes", item.supplierNotes);
+  setValue("audioPlan", item.audioPlan);
+  setValue("restrictionsNotes", item.restrictionsNotes);
+  setValue("rainPlan", item.rainPlan);
+  setValue("deliveryExpectations", item.deliveryExpectations);
+  setCheckedValues("finalChecks", item.finalChecks);
+  setValue("finalActions", item.finalActions);
+  setCallType(getCallType(item));
+  document.getElementById("project").focus();
+}
+
+function markSecured(id){
+  consultations = consultations.map(item => item.id === id ? {...item,status:"secured",updatedAt:new Date().toISOString()} : item);
+  saveData(STORAGE_KEY, consultations);
+  renderConsultations();
+}
+
+function createFollowUpTask(id){
+  let consultation = id ? consultations.find(item => item.id === id) : null;
+
+  if(!consultation){
+    consultation = saveCurrentConsultation();
+  }
+
+  if(!consultation) return;
+
+  const tasks = readData(TASKS_KEY);
+  tasks.unshift({
+    id:makeId("task"),
+    title:`${stageLabel(getCallType(consultation))} follow-up for ${consultation.project}`,
+    project:consultation.project,
+    category:"client",
+    priority:"high",
+    dueDate:"",
+    status:"open",
+    notes:followUpNote(consultation),
+    updatedAt:new Date().toISOString()
+  });
+
+  consultations = consultations.map(item => item.id === consultation.id ? {...item,status:"follow-up",updatedAt:new Date().toISOString()} : item);
+  saveData(TASKS_KEY, tasks);
+  saveData(STORAGE_KEY, consultations);
+  renderConsultations();
+}
+
+function deleteConsultation(id){
+  const item = consultations.find(consultation => consultation.id === id);
+  if(!item) return;
+  if(!confirm(`Delete consultation for ${item.project}?`)) return;
+
+  consultations = consultations.filter(consultation => consultation.id !== id);
+  saveData(STORAGE_KEY, consultations);
+  renderConsultations();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("consultationId").value = "";
+  document.getElementById("callType").value = "pre-booking";
+  document.getElementById("status").value = "open";
+  document.getElementById("recommendedPackage").value = "full-day";
+  document.getElementById("packagePrice").value = "950";
+  document.getElementById("contractStatus").value = "not-sent";
+  document.getElementById("bookingFormStatus").value = "not-sent";
+  setCheckedValues("deliverables", [
+    "up to 10 hours coverage",
+    "cinematic highlight film",
+    "full ceremony film",
+    "full speeches film",
+    "online delivery"
+  ]);
+  setCheckedValues("finalChecks", []);
+  setCallType("pre-booking");
+  applyProjectFromUrl();
+}
+
+function setCallType(value){
+  const callType = CONSULT_STAGES[value] ? value : "pre-booking";
+  setValue("callType", callType);
+
+  document.querySelectorAll("[data-stage-choice]").forEach(button => {
+    const active = button.dataset.stageChoice === callType;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-stages]").forEach(section => {
+    const stages = section.dataset.stages.split(" ");
+    section.hidden = !stages.includes(callType);
+  });
+
+  renderStageGuide(callType);
+}
+
+function renderStageGuide(callType){
+  const stage = CONSULT_STAGES[callType] || CONSULT_STAGES["pre-booking"];
+  document.getElementById("stageSummary").innerHTML = `
+    <span>${escapeHTML(stage.label)}</span>
+    <p>${escapeHTML(stage.summary)}</p>
+  `;
+
+  document.getElementById("stageGuide").innerHTML = stage.guide.map((step,index) => `
+    <div class="consult-step">
+      <b>${index + 1}. ${escapeHTML(step.title)}</b>
+      ${step.body ? `<p>${escapeHTML(step.body)}</p>` : ""}
+      ${step.items ? `<ul>${step.items.map(item => `<li>${escapeHTML(item)}</li>`).join("")}</ul>` : ""}
+    </div>
+  `).join("");
+
+  document.getElementById("stageDataChecklist").innerHTML = stage.collects.map(item => `
+    <div>${escapeHTML(item.label)}</div>
+  `).join("");
+}
+
+function focusConsultation(){
+  document.getElementById("project").focus();
+}
+
+function followUpNote(item){
+  return [
+    `Project: ${item.project}`,
+    `Consult type: ${stageLabel(getCallType(item))}`,
+    item.weddingDate ? `Wedding date: ${niceDate(item.weddingDate)}` : "",
+    item.serviceInterest ? `Service: ${statusText(item.serviceInterest)}` : "",
+    getCallType(item) !== "final-call" && item.recommendedPackage ? `Recommended package: ${packageLabel(item.recommendedPackage)} at ${money(item.packagePrice || 0)}` : "",
+    item.depositAmount ? `Deposit: ${money(item.depositAmount)}` : "",
+    item.balanceDueDate ? `Balance due: ${niceDate(item.balanceDueDate)}` : "",
+    item.timelineStatus ? `Timeline status: ${statusText(item.timelineStatus)}` : "",
+    item.finalActions ? `Final actions: ${item.finalActions}` : "",
+    item.bookingBlockers ? `Booking blockers: ${item.bookingBlockers}` : "",
+    item.nextStep || "Send booking details, contract and deposit info so the date can be secured."
+  ].filter(Boolean).join("\n");
+}
+
+function exportConsultations(){
+  const data = {
+    app:"NC Studios",
+    type:"consultations",
+    exportedAt:new Date().toISOString(),
+    consultations
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-consultations.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function populateProjectSuggestions(){
+  const names = new Set();
+
+  PROJECT_SOURCE_KEYS.forEach(source => {
+    readData(source.key).forEach(item => {
+      source.fields.forEach(field => {
+        const value = String(item[field] || "").trim();
+        if(value) names.add(value);
+      });
+    });
+  });
+
+  document.getElementById("projectSuggestions").innerHTML = [...names]
+    .sort((a,b) => a.localeCompare(b))
+    .map(name => `<option value="${escapeAttribute(name)}"></option>`)
+    .join("");
+}
+
+function applyProjectFromUrl(){
+  const params = new URLSearchParams(window.location.search);
+  const project = params.get("project");
+  if(project && !document.getElementById("project").value){
+    document.getElementById("project").value = project;
+  }
+}
+
+function getCallType(item){
+  return CONSULT_STAGES[item.callType] ? item.callType : "pre-booking";
+}
+
+function stageLabel(value){
+  return (CONSULT_STAGES[value] || CONSULT_STAGES["pre-booking"]).label;
+}
+
+function stageBadgeClass(value){
+  if(value === "final-call") return "green";
+  if(value === "first-call") return "gold";
+  return "blue";
+}
+
+function fieldHasValue(item, fields){
+  const emptyValues = new Set(["not-sent","not-checked","not-confirmed","missing"]);
+  return fields.some(field => {
+    const value = item[field];
+    if(Array.isArray(value)) return value.length > 0;
+    if(typeof value === "number") return value > 0;
+    const normalized = String(value || "").trim().toLowerCase();
+    return normalized.length > 0 && !emptyValues.has(normalized);
+  });
+}
+
+function completionSummary(item){
+  const stage = CONSULT_STAGES[getCallType(item)] || CONSULT_STAGES["pre-booking"];
+  const total = stage.collects.length || 1;
+  const done = stage.collects.filter(group => fieldHasValue(item, group.fields)).length;
+  return {
+    done,
+    total,
+    percent:Math.round((done / total) * 100)
+  };
+}
+
+function primaryNote(item){
+  return item.finalActions ||
+    item.nextStep ||
+    item.bookingBlockers ||
+    item.mattersMost ||
+    item.enquiryNotes ||
+    item.finalTimeline ||
+    "";
+}
+
+function shortText(value,fallback){
+  const text = String(value || "").trim();
+  if(!text) return fallback;
+  return text.length > 74 ? text.slice(0,71) + "..." : text;
+}
+
+function statusText(value){
+  if(!value) return "";
+  return String(value)
+    .split("-")
+    .map(word => word ? word[0].toUpperCase() + word.slice(1) : "")
+    .join(" ");
+}
+
+function packageLabel(value){
+  const labels = {
+    "full-day":"Full day",
+    "half-day":"Half day",
+    custom:"Custom"
+  };
+  return labels[value] || "Not set";
+}
+
+function statusLabel(value){
+  const labels = {
+    open:"Open",
+    "follow-up":"Follow up",
+    secured:"Secured",
+    "not-booking":"Not booking"
+  };
+  return labels[value] || "Open";
+}
+
+function badgeClass(value){
+  if(value === "secured") return "green";
+  if(value === "not-booking") return "red";
+  if(value === "follow-up") return "gold";
+  return "blue";
+}
+
+function budgetLabel(value){
+  const labels = {
+    "within-budget":"Within budget",
+    "needs-thinking":"Needs thinking time",
+    "above-budget":"Above budget",
+    "follow-up-needed":"Follow-up needed"
+  };
+  return labels[value] || "Not asked";
+}
+
+function timeAndPlace(time,place){
+  return [time, place].filter(Boolean).join(" at ") || "Not noted";
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(String(value).includes("T") ? value : value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+populateProjectSuggestions();
+resetForm();
+renderConsultations();
+</script>
+
 </body>
 </html>

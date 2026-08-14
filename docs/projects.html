@@ -1,96 +1,746 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios Projects</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
-
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
-
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
+<meta name="theme-color" content="#050504">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo">
+    <div class="brand-text">
+      <p class="kicker">Couple hub</p>
+      <h2>Projects</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="consultations.html">Consult</a>
+    <a class="pill" href="quick-capture.html">Capture</a>
+    <a class="pill" href="call-sheet.html">Call Sheet</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a href="consultations.html">Consult</a>
+  <a class="active" href="projects.html">Projects</a>
+  <a href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a href="delivery.html">Delivery</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">One couple, one view</p>
+      <h1>Project Hub</h1>
+      <p class="subtext">Pull together bookings, client info, payments, shots, timeline, gear, call sheet, delivery and quick notes by couple or project.</p>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn" href="quick-capture.html">Capture note</a>
+      <a class="ghost-btn" href="call-sheet.html">Open call sheet</a>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Projects</span>
+    <strong id="statProjects">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Confirmed</span>
+    <strong id="statConfirmed">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Money waiting</span>
+    <strong id="statWaiting">£0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>Open notes</span>
+    <strong id="statCapture">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Find project</h2>
+        <p>Choose a couple to see the whole operation at once.</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="search">Search</label>
+      <input id="search" type="search" placeholder="Couple, client, venue" oninput="renderProjects()">
+    </div>
+
+    <div class="list-stack" id="projectList"></div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2 id="projectTitle">Project overview</h2>
+        <p id="projectSub">Select a project from the list.</p>
+      </div>
+    </div>
+
+    <div id="projectDetail"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios project hub</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
+
+<script>
+const STORE_KEYS = {
+  bookings:"ncstudios_bookings_v1",
+  clients:"ncstudios_clients_v1",
+  finance:"ncstudios_finance_v1",
+  delivery:"ncstudios_delivery_v1",
+  shots:"ncstudios_shots_v1",
+  timeline:"ncstudios_timeline_v1",
+  gear:"ncstudios_gear_v1",
+  settings:"ncstudios_settings_v1",
+  projectStages:"ncstudios_project_status_v1",
+  consultations:"ncstudios_consultations_v1",
+  callSheets:"ncstudios_callsheets_v1",
+  capture:"ncstudios_capture_v1"
+};
+
+const PROJECT_FIELDS = {
+  bookings:["clientName","eventName"],
+  clients:["clientName"],
+  finance:["client","project","projectName"],
+  delivery:["projectName","client"],
+  shots:["project"],
+  timeline:["project"],
+  gear:["project"],
+  settings:["project"],
+  projectStages:["project"],
+  consultations:["project"],
+  callSheets:["project"],
+  capture:["project"]
+};
+
+const PROJECT_NOISE_WORDS = new Set(["and","the","of","for","wedding","shoot","project","couple","client"]);
+
+const stores = {};
+Object.keys(STORE_KEYS).forEach(name => {
+  stores[name] = readData(STORE_KEYS[name]);
+});
+
+let selectedProjectKey = "";
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function writeData(key,data){
+  localStorage.setItem(key, JSON.stringify(Array.isArray(data) ? data : []));
+}
+
+function buildProjects(){
+  const projects = new Map();
+
+  Object.keys(PROJECT_FIELDS).forEach(storeName => {
+    stores[storeName].forEach(item => {
+      getBuildProjectValues(storeName, item).forEach(value => collectProjectName(projects, value));
+    });
+  });
+
+  return [...projects.values()]
+    .map(group => getProjectData(group))
+    .sort((a,b) => a.project.localeCompare(b.project));
+}
+
+function collectProjectName(map,value){
+  const name = cleanDisplayName(value);
+  const key = normaliseProjectKey(name);
+
+  if(!key) return;
+
+  const savedKey = [...map.keys()].find(existingKey => projectKeysMatch(existingKey, key));
+  const groupKey = savedKey || key;
+
+  if(!map.has(groupKey)){
+    map.set(groupKey, {
+      key:groupKey,
+      aliases:[]
+    });
+  }
+
+  const group = map.get(groupKey);
+  const exists = group.aliases.some(alias => normaliseDisplay(alias) === normaliseDisplay(name));
+
+  if(!exists){
+    group.aliases.push(name);
+  }
+}
+
+function getProjectData(group){
+  const key = group.key;
+  const project = displayProjectName(group.aliases);
+
+  const bookings = filterProjectStore("bookings", key);
+  const clients = filterProjectStore("clients", key);
+  const finance = filterProjectStore("finance", key);
+  const delivery = filterProjectStore("delivery", key);
+  const shots = filterProjectStore("shots", key);
+  const timeline = filterProjectStore("timeline", key);
+  const gear = filterProjectStore("gear", key);
+  const settings = filterProjectStore("settings", key);
+  const projectStages = filterProjectStore("projectStages", key);
+  const consultations = filterProjectStore("consultations", key);
+  const callSheets = filterProjectStore("callSheets", key);
+  const capture = filterProjectStore("capture", key);
+
+  const income = finance
+    .filter(item => item.type === "income" && item.status !== "unpaid")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const waiting = finance
+    .filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const spent = finance
+    .filter(item => item.type === "expense")
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+
+  return {
+    key,
+    project,
+    aliases:group.aliases,
+    bookings,
+    clients,
+    finance,
+    delivery,
+    shots,
+    timeline,
+    gear,
+    settings,
+    projectStages,
+    consultations,
+    callSheets,
+    capture,
+    income,
+    waiting,
+    spent
+  };
+}
+
+function filterProjectStore(storeName,key){
+  return stores[storeName].filter(item => itemMatchesProject(storeName, item, key));
+}
+
+function itemMatchesProject(storeName,item,key){
+  const directMatch = getProjectValues(storeName, item).some(value => matchesProject(value, key));
+
+  if(directMatch){
+    return true;
+  }
+
+  if(storeName === "finance"){
+    return titleMentionsProject(item.title, key);
+  }
+
+  return false;
+}
+
+function getProjectValues(storeName,item){
+  return (PROJECT_FIELDS[storeName] || []).map(field => item[field]).filter(Boolean);
+}
+
+function getBuildProjectValues(storeName,item){
+  if(storeName === "bookings") return [item.clientName || item.eventName].filter(Boolean);
+  if(storeName === "delivery") return [item.projectName || item.client].filter(Boolean);
+  return getProjectValues(storeName, item);
+}
+
+function matchesProject(value,key){
+  const valueKey = normaliseProjectKey(value);
+  return valueKey === key || projectKeysMatch(valueKey, key);
+}
+
+function titleMentionsProject(value,key){
+  const projectWords = key.split(" ").filter(Boolean);
+  const titleWords = normaliseProjectKey(value).split(" ").filter(Boolean);
+
+  return projectWords.length >= 2 && projectWords.every(word => titleWords.some(titleWord => projectTokenLooksSame(word, titleWord)));
+}
+
+function normaliseProjectKey(value){
+  return String(value || "")
+    .toLowerCase()
+    .replace(/&|\+/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(word => word && !PROJECT_NOISE_WORDS.has(word))
+    .join(" ");
+}
+
+function projectKeysMatch(left,right){
+  if(left === right) return true;
+
+  const leftTokens = String(left || "").split(/\s+/).filter(Boolean);
+  const rightTokens = String(right || "").split(/\s+/).filter(Boolean);
+  if(!leftTokens.length || !rightTokens.length) return false;
+
+  const shorter = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+  const longer = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+  const used = new Set();
+  let matches = 0;
+
+  shorter.forEach(token => {
+    const matchIndex = longer.findIndex((candidate,index) => !used.has(index) && projectTokenLooksSame(token, candidate));
+    if(matchIndex >= 0){
+      used.add(matchIndex);
+      matches++;
+    }
+  });
+
+  return matches === shorter.length && longer.length <= shorter.length + 1;
+}
+
+function projectTokenLooksSame(left,right){
+  if(left === right) return true;
+  if(left.length < 4 || right.length < 4) return false;
+  if(left.startsWith(right) || right.startsWith(left)) return Math.abs(left.length - right.length) <= 2;
+  return projectEditDistance(left, right, Math.max(left.length, right.length) >= 6 ? 2 : 1);
+}
+
+function projectEditDistance(left,right,limit){
+  if(Math.abs(left.length - right.length) > limit) return false;
+  let previous = Array.from({length:right.length + 1}, (_,index) => index);
+
+  for(let row = 1; row <= left.length; row++){
+    const current = [row];
+    let rowMin = current[0];
+
+    for(let col = 1; col <= right.length; col++){
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1;
+      current[col] = Math.min(previous[col] + 1, current[col - 1] + 1, previous[col - 1] + cost);
+      rowMin = Math.min(rowMin, current[col]);
+    }
+
+    if(rowMin > limit) return false;
+    previous = current;
+  }
+
+  return previous[right.length] <= limit;
+}
+
+function cleanDisplayName(value){
+  return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function normaliseDisplay(value){
+  return cleanDisplayName(value).toLowerCase();
+}
+
+function displayProjectName(aliases){
+  return aliases
+    .slice()
+    .sort((a,b) => projectNameScore(b) - projectNameScore(a) || a.length - b.length || a.localeCompare(b))[0] || "Project";
+}
+
+function projectNameScore(name){
+  let score = 0;
+  if(/[+&]|\band\b/i.test(name)) score += 5;
+  if(/\bwedding\b/i.test(name)) score -= 3;
+  if(name.length <= 42) score += 2;
+  return score;
+}
+
+function renderProjects(){
+  const search = document.getElementById("search").value.trim().toLowerCase();
+  const searchKey = normaliseProjectKey(search);
+  const projects = buildProjects();
+  const visible = projects.filter(item => !search || item.key.includes(searchKey) || projectKeysMatch(item.key, searchKey) || JSON.stringify(item).toLowerCase().includes(search));
+
+  updateStats(projects);
+
+  if(!selectedProjectKey && visible.length){
+    const requestedKey = normaliseProjectKey(new URLSearchParams(window.location.search).get("project"));
+    selectedProjectKey = visible.find(item => item.key === requestedKey || projectKeysMatch(item.key, requestedKey))?.key || visible[0].key;
+  }
+
+  if(selectedProjectKey && visible.length && !visible.some(item => item.key === selectedProjectKey)){
+    selectedProjectKey = visible[0].key;
+  }
+
+  const list = document.getElementById("projectList");
+  list.innerHTML = visible.map(item => `
+    <button type="button" class="${item.key === selectedProjectKey ? "btn" : "ghost-btn"}" onclick='selectProject(${jsString(item.key)})'>
+      ${escapeHTML(item.project)}
+    </button>
+  `).join("") || `<div class="empty-state">No projects found yet.</div>`;
+
+  renderDetail(projects.find(item => item.key === selectedProjectKey) || visible[0]);
+}
+
+function updateStats(projects){
+  const confirmed = stores.bookings.filter(item => item.status === "confirmed").length;
+  const waiting = stores.finance
+    .filter(item => item.type === "income" && ["waiting","unpaid","hold"].includes(item.status))
+    .reduce((sum,item) => sum + Number(item.amount || 0), 0);
+  const openCapture = stores.capture.filter(item => item.status !== "processed").length;
+
+  document.getElementById("statProjects").textContent = projects.length;
+  document.getElementById("statConfirmed").textContent = confirmed;
+  document.getElementById("statWaiting").textContent = money(waiting);
+  document.getElementById("statCapture").textContent = openCapture;
+}
+
+function selectProject(projectKey){
+  selectedProjectKey = projectKey;
+  renderProjects();
+}
+
+function renderDetail(data){
+  const detail = document.getElementById("projectDetail");
+  if(!data){
+    document.getElementById("projectTitle").textContent = "Project overview";
+    document.getElementById("projectSub").textContent = "No project data yet.";
+    detail.innerHTML = `<div class="empty-state">Add a booking, client, shot list, timeline, gear item or quick capture to start a project.</div>`;
+    return;
+  }
+
+  const booking = data.bookings[0] || {};
+  const client = data.clients[0] || {};
+  const delivery = data.delivery[0] || {};
+  const callSheet = data.callSheets[0] || {};
+  const consultation = data.consultations[0] || {};
+  const neededShots = data.shots.filter(item => !item.captured).length;
+  const gearLeft = data.gear.filter(item => !["packed","checked","charged"].includes(item.status)).length;
+  const openCaptures = data.capture.filter(item => item.status !== "processed").length;
+  const projectStage = getProjectStage(data);
+
+  document.getElementById("projectTitle").textContent = data.project;
+  document.getElementById("projectSub").textContent = [
+    booking.eventDate ? niceDate(booking.eventDate) : client.eventDate ? niceDate(client.eventDate) : "",
+    booking.location || client.location || callSheet.venue || "",
+    booking.status ? statusLabel(booking.status) : ""
+  ].filter(Boolean).join(" | ") || "Project data pulled from the app.";
+
+  detail.innerHTML = `
+    <div class="ops-card">
+      <div class="ops-header" style="margin-bottom:10px;">
+        <div>
+          <div class="ops-title">Shoot stage</div>
+          <p>Controls whether this project appears as the live shoot on the dashboard.</p>
+        </div>
+        <span class="badge">${escapeHTML(projectStageLabel(projectStage))}</span>
+      </div>
+
+      <div class="split-actions">
+        <button type="button" class="${projectStage === "live" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "live")'><span>Stage</span><strong>Live shoot</strong></button>
+        <button type="button" class="${projectStage === "delivery" ? "btn primary" : "ghost-btn"}" onclick='moveProjectToDelivery(${jsString(data.key)}, ${jsString(data.project)})'><span>Stage</span><strong>Delivery</strong></button>
+        <button type="button" class="${projectStage === "not-live" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "not-live")'><span>Stage</span><strong>Not live</strong></button>
+        <button type="button" class="${projectStage === "completed" ? "btn primary" : "ghost-btn"}" onclick='setProjectStage(${jsString(data.key)}, ${jsString(data.project)}, "completed")'><span>Stage</span><strong>Complete</strong></button>
+      </div>
+    </div>
+
+    <div class="project-summary">
+      <div><span>Income</span><strong>${money(data.income)}</strong></div>
+      <div><span>Waiting</span><strong>${money(data.waiting)}</strong></div>
+      <div><span>Spent</span><strong>${money(data.spent)}</strong></div>
+      <div><span>Shots left</span><strong>${neededShots}</strong></div>
+    </div>
+
+    <div class="split-actions">
+      <a href="quick-capture.html?project=${encodeURIComponent(data.project)}"><span>Capture</span><strong>Add note</strong></a>
+      <a href="crm.html#client-${encodeURIComponent(data.key)}"><span>CRM</span><strong>One view</strong></a>
+      <a href="consultations.html?project=${encodeURIComponent(data.project)}"><span>Consult</span><strong>${data.consultations.length || "Start"}</strong></a>
+      <a href="shot-lists.html?project=${encodeURIComponent(data.project)}#liveShots"><span>Shots</span><strong>${neededShots} left</strong></a>
+      <a href="call-sheet.html?project=${encodeURIComponent(data.project)}"><span>Call Sheet</span><strong>${data.callSheets.length || "Open"}</strong></a>
+      <a href="timeline.html?project=${encodeURIComponent(data.project)}"><span>Timeline</span><strong>${data.timeline.filter(item => item.status !== "done").length} active</strong></a>
+      <a href="gear.html?project=${encodeURIComponent(data.project)}"><span>Gear</span><strong>${gearLeft} left</strong></a>
+      <a href="admin.html"><span>Admin</span><strong>Checklist</strong></a>
+    </div>
+
+    <div class="ops-actions">
+      <button class="danger-btn" type="button" onclick='deleteProject(${jsString(data.key)}, ${jsString(data.project)})'>Delete this project</button>
+    </div>
+
+    <div class="project-grid" style="margin-top:14px;">
+      <article class="ops-card">
+        <div class="ops-title">Client</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Name</span><b>${escapeHTML(client.clientName || booking.clientName || data.project)}</b></div>
+          <div class="meta-row"><span>Email</span><b>${escapeHTML(client.email || "Not added")}</b></div>
+          <div class="meta-row"><span>Phone</span><b>${escapeHTML(client.phone || "Not added")}</b></div>
+          <div class="meta-row"><span>Location</span><b>${escapeHTML(client.location || booking.location || callSheet.venue || "Not added")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Booking</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Status</span><b>${escapeHTML(statusLabel(booking.status || client.status || "Not set"))}</b></div>
+          <div class="meta-row"><span>Date</span><b>${escapeHTML(niceDate(booking.eventDate || client.eventDate || callSheet.eventDate))}</b></div>
+          <div class="meta-row"><span>Package</span><b>${money(booking.packagePrice || 0)}</b></div>
+          <div class="meta-row"><span>Deposit</span><b>${money(booking.depositPaid || 0)}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Live work</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Timeline active</span><b>${data.timeline.filter(item => item.status !== "done").length}</b></div>
+          <div class="meta-row"><span>Gear left</span><b>${gearLeft}</b></div>
+          <div class="meta-row"><span>Consultations</span><b>${data.consultations.length}</b></div>
+          <div class="meta-row"><span>Settings</span><b>${data.settings.length}</b></div>
+          <div class="meta-row"><span>Open captures</span><b>${openCaptures}</b></div>
+          <div class="meta-row"><span>Delivery</span><b>${escapeHTML(delivery.stage || "Not started")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Consultation</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Status</span><b>${escapeHTML(statusLabel(consultation.status || "Not started"))}</b></div>
+          <div class="meta-row"><span>Package</span><b>${escapeHTML(packageLabel(consultation.recommendedPackage))}</b></div>
+          <div class="meta-row"><span>Price</span><b>${money(consultation.packagePrice || 0)}</b></div>
+          <div class="meta-row"><span>Next step</span><b>${escapeHTML(consultation.nextStep || "Not added")}</b></div>
+        </div>
+      </article>
+
+      <article class="ops-card">
+        <div class="ops-title">Call sheet</div>
+        <div class="meta-list">
+          <div class="meta-row"><span>Venue</span><b>${escapeHTML(callSheet.venue || "Not added")}</b></div>
+          <div class="meta-row"><span>Planner</span><b>${escapeHTML(callSheet.plannerName || "Not added")}</b></div>
+          <div class="meta-row"><span>Second shooter</span><b>${escapeHTML(callSheet.secondShooter || "Not added")}</b></div>
+          <div class="meta-row"><span>Emergency</span><b>${escapeHTML(callSheet.emergency || "Not added")}</b></div>
+        </div>
+      </article>
+    </div>
+
+    ${renderRecent(data)}
+  `;
+}
+
+function getProjectStage(data){
+  const saved = data.projectStages[0];
+  if(saved && saved.stage) return saved.stage;
+  return "not-live";
+}
+
+function projectStageLabel(value){
+  const labels = {
+    live:"Live shoot",
+    delivery:"Delivery",
+    "not-live":"Not live",
+    completed:"Complete"
+  };
+
+  return labels[value] || "Not live";
+}
+
+function setProjectStage(projectKey,projectName,stage){
+  const now = new Date().toISOString();
+  const existingIndex = stores.projectStages.findIndex(item => normaliseProjectKey(item.project) === projectKey || item.key === projectKey);
+  const stageItem = {
+    id:existingIndex >= 0 ? stores.projectStages[existingIndex].id : crypto.randomUUID(),
+    key:projectKey,
+    project:projectName,
+    stage,
+    updatedAt:now
+  };
+
+  if(existingIndex >= 0){
+    stores.projectStages[existingIndex] = stageItem;
+  }else{
+    stores.projectStages.unshift(stageItem);
+  }
+
+  writeData(STORE_KEYS.projectStages, stores.projectStages);
+  selectedProjectKey = projectKey;
+  renderProjects();
+}
+
+function moveProjectToDelivery(projectKey,projectName){
+  ensureDeliveryJob(projectKey, projectName);
+  setProjectStage(projectKey, projectName, "delivery");
+  alert(`${projectName} moved to delivery. It will no longer show as the live shoot.`);
+}
+
+function ensureDeliveryJob(projectKey,projectName){
+  const existing = stores.delivery.find(item => normaliseProjectKey(item.projectName || item.client) === projectKey);
+
+  if(existing){
+    return;
+  }
+
+  stores.delivery.unshift({
+    id:crypto.randomUUID(),
+    projectName,
+    client:projectName,
+    packageType:"Wedding Film",
+    dueDate:"",
+    stage:"not-started",
+    progress:0,
+    nextAction:"Start edit / delivery workflow",
+    notes:"Moved from Project Hub.",
+    updatedAt:new Date().toISOString()
+  });
+
+  writeData(STORE_KEYS.delivery, stores.delivery);
+}
+
+function deleteProject(projectKey,projectName){
+  const data = buildProjects().find(item => item.key === projectKey);
+  const displayName = projectName || (data && data.project) || "this project";
+
+  if(!data){
+    alert("This project could not be found.");
+    return;
+  }
+
+  const firstConfirm = confirm(`Delete ${displayName} from Project Hub?\n\nThis removes matching bookings, clients, payments, delivery, shots, timeline, gear, settings, consultations, call sheets and capture notes.`);
+  if(!firstConfirm) return;
+
+  const finalConfirm = confirm(`Delete ${displayName} now?\n\nThis cannot be undone inside the app.`);
+  if(!finalConfirm) return;
+
+  const removedTotal = Object.keys(STORE_KEYS).reduce((total,storeName) => {
+    const original = stores[storeName];
+    const filtered = original.filter(item => !itemMatchesProject(storeName, item, projectKey));
+    const removed = original.length - filtered.length;
+
+    if(removed > 0){
+      stores[storeName] = filtered;
+      writeData(STORE_KEYS[storeName], filtered);
+    }
+
+    return total + removed;
+  }, 0);
+
+  selectedProjectKey = "";
+  renderProjects();
+  alert(removedTotal ? `${displayName} deleted. Removed ${removedTotal} connected item${removedTotal === 1 ? "" : "s"}.` : "No connected items were removed.");
+}
+
+function renderRecent(data){
+  const rows = [
+    ...data.capture.slice(0,3).map(item => ({label:"Capture", title:item.title, meta:item.status || "open"})),
+    ...data.consultations.slice(0,3).map(item => ({label:"Consult", title:item.project, meta:statusLabel(item.status || "open")})),
+    ...data.timeline.slice(0,3).map(item => ({label:"Timeline", title:item.title, meta:`${item.time || "--"} ${item.status || ""}`})),
+    ...data.finance.slice(0,3).map(item => ({label:"Finance", title:item.title, meta:money(item.amount || 0)}))
+  ].slice(0,6);
+
+  if(!rows.length) return "";
+
+  return `
+    <div class="ops-card" style="margin-top:14px;">
+      <div class="ops-title">Recent project notes</div>
+      <div class="list-stack">
+        ${rows.map(row => `
+          <div class="small-row">
+            <div><b>${escapeHTML(row.title || "Item")}</b><br><span>${escapeHTML(row.label)}</span></div>
+            <span>${escapeHTML(row.meta || "")}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function statusLabel(value){
+  const labels = {
+    enquiry:"Enquiry",
+    consultation:"Consultation",
+    open:"Open",
+    "follow-up":"Follow up",
+    secured:"Secured",
+    "not-booking":"Not booking",
+    confirmed:"Confirmed",
+    postponed:"Postponed",
+    completed:"Completed",
+    cancelled:"Cancelled"
+  };
+
+  return labels[value] || value || "Not set";
+}
+
+function packageLabel(value){
+  const labels = {
+    "full-day":"Full day",
+    "half-day":"Half day",
+    custom:"Custom"
+  };
+
+  return labels[value] || "Not set";
+}
+
+function money(value){
+  return new Intl.NumberFormat("en-GB", {
+    style:"currency",
+    currency:"GBP",
+    maximumFractionDigits:0
+  }).format(Number(value || 0));
+}
+
+function niceDate(value){
+  if(!value) return "Not set";
+  const date = new Date(value + "T00:00:00");
+  if(Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value).replaceAll("`","&#096;");
+}
+
+function jsString(value){
+  return JSON.stringify(String(value || "")).replaceAll("<","\\u003c");
+}
+
+renderProjects();
+</script>
 </body>
 </html>

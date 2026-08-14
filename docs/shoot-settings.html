@@ -1,96 +1,604 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#080806">
-  <title>Opening NC Studio app</title>
-  <style>
-    :root {
-      --black: #080806;
-      --cream: #f1e7d7;
-      --gold: #d7b66c;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --panel: rgba(18, 16, 12, .92);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
+<title>NC Studios Shoot Settings</title>
 
-    body {
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #080806, #15110d 58%, #080806);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    main {
-      width: min(100%, 520px);
-      padding: 28px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--panel);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, .32);
-    }
-
-    img {
-      width: 58px;
-      height: 58px;
-      display: block;
-      margin-bottom: 22px;
-      object-fit: contain;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 8vw, 44px);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.55;
-    }
-
-    a {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(215, 182, 108, .55);
-      border-radius: 8px;
-      padding: 0 16px;
-      color: #17120a;
-      background: linear-gradient(135deg, #f1dda9, #d7b66c);
-      text-decoration: none;
-      font-weight: 800;
-    }
-  </style>
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
+<meta name="theme-color" content="#050504">
 </head>
-<body>
-  <main>
-    <img src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-    <h1>Opening the app.</h1>
-    <p>This page belongs in the private NC Studio app, so it is moving you there now.</p>
-    <a id="appLink" href="https://ncstudios.pages.dev/studio-assistant">Open app</a>
-  </main>
 
-  <script>
-    const appOrigin = "https://ncstudios.pages.dev";
-    const page = (location.pathname.split("/").pop() || "dashboard.html").replace(/\.html$/i, "");
-    const target = `${appOrigin}/${page}${location.search}${location.hash}`;
-    document.getElementById("appLink").href = target;
-    window.location.replace(target);
-  </script>
+<body>
+<div class="app-shell">
+
+<header class="topbar">
+  <a class="brand-row" href="dashboard.html">
+    <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studios logo">
+    <div class="brand-text">
+      <p class="kicker">Camera setup</p>
+      <h2>Shoot Settings</h2>
+    </div>
+  </a>
+
+  <nav class="nav-pill">
+    <a class="pill" href="dashboard.html">Dashboard</a>
+    <a class="pill" href="consultations.html">Consult</a>
+    <a class="pill" href="shot-lists.html">Shots</a>
+    <a class="pill" href="gear.html">Gear</a>
+  </nav>
+</header>
+
+<nav class="ops-nav">
+  <a href="dashboard.html">Home</a>
+  <a href="quick-capture.html">Capture</a>
+  <a href="consultations.html">Consult</a>
+  <a href="projects.html">Projects</a>
+  <a href="call-sheet.html">Call Sheet</a>
+  <a href="shot-lists.html">Shots</a>
+  <a href="timeline.html">Timeline</a>
+  <a href="gear.html">Gear</a>
+  <a class="active" href="shoot-settings.html">Settings</a>
+</nav>
+
+<section class="hero ops-hero">
+  <div class="panel hero-main">
+    <div>
+      <p class="kicker">C1, C2, C3 ready</p>
+      <h1>Shoot Settings</h1>
+      <p class="subtext">Save camera settings for each shoot so every camera is matched before the day starts.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn" type="button" onclick="exportSettings()">Export</button>
+      <button class="ghost-btn" type="button" onclick="resetForm()">New setting</button>
+    </div>
+  </div>
+</section>
+
+<section class="ops-stats">
+  <article class="stat-card">
+    <span>Settings</span>
+    <strong id="statTotal">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>C1</span>
+    <strong id="statC1">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>C2</span>
+    <strong id="statC2">0</strong>
+  </article>
+
+  <article class="stat-card">
+    <span>C3</span>
+    <strong id="statC3">0</strong>
+  </article>
+</section>
+
+<main class="ops-layout">
+  <aside class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Add settings</h2>
+        <p>Save camera settings per project and camera.</p>
+      </div>
+    </div>
+
+    <form id="settingsForm">
+      <input type="hidden" id="settingId">
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="project">Project / shoot</label>
+          <input id="project" type="text" placeholder="Marvin + Blessing" required>
+        </div>
+
+        <div class="field">
+          <label for="camera">Camera</label>
+          <select id="camera">
+            <option value="C1 + C2">C1 + C2</option>
+            <option value="C1 + C2 + C3">C1 + C2 + C3</option>
+            <option value="All Cameras">All Cameras</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+            <option value="C3">C3</option>
+            <option value="Audio">Audio</option>
+            <option value="Drone">Drone</option>
+            <option value="Lighting">Lighting</option>
+            <option value="Overall">Overall</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="settingName">Setting</label>
+          <input id="settingName" type="text" placeholder="Frame rate, ISO, white balance" required>
+        </div>
+
+        <div class="field wide">
+          <label for="settingValue">Value</label>
+          <input id="settingValue" type="text" placeholder="25fps, 1/50, 5600K, S-Cinetone" required>
+        </div>
+
+        <div class="field wide">
+          <label for="note">Note</label>
+          <textarea id="note" placeholder="Why this matters, what to check, or when to change it."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" type="submit">Save setting</button>
+        <button class="ghost-btn" type="button" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+
+    <div class="import-box active">
+      <h3>Paste settings</h3>
+      <p class="subtext">Use: camera | setting | value | note. Shared rows like C1 and C2 will appear when filtering either camera.</p>
+      <textarea id="bulkImport" placeholder="C1 and C2 | Shoot mode | Movie | Build all wedding settings in movie mode&#10;C1 and C2 | Exposure mode | Manual Exposure | Keeps footage consistent"></textarea>
+      <button class="ghost-btn" type="button" style="margin-top:10px;width:100%;" onclick="importSettings()">Import pasted settings</button>
+      <button class="ghost-btn" type="button" style="margin-top:10px;width:100%;" onclick="loadBaseSettings()">Load base camera settings</button>
+    </div>
+  </aside>
+
+  <section class="ops-panel">
+    <div class="ops-header">
+      <div>
+        <h2>Saved settings</h2>
+        <p>Filter by shoot and camera when setting up.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search settings" oninput="renderSettings()">
+      </div>
+
+      <div class="form-actions">
+        <select id="filterProject" onchange="renderSettings()">
+          <option value="all">All shoots</option>
+        </select>
+
+        <select id="filterCamera" onchange="renderSettings()">
+          <option value="all">All cameras</option>
+          <option value="shared">Shared</option>
+          <option value="C1 + C2">C1 + C2</option>
+          <option value="C1 + C2 + C3">C1 + C2 + C3</option>
+          <option value="C1">C1</option>
+          <option value="C2">C2</option>
+          <option value="C3">C3</option>
+          <option value="Audio">Audio</option>
+          <option value="Drone">Drone</option>
+          <option value="Lighting">Lighting</option>
+          <option value="Overall">Overall</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="settingsList" class="ops-list"></div>
+  </section>
+</main>
+
+<p class="footer-note">NC Studios shoot settings</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js?v=nc-fixed-1"></script>
+<script src="nc-supabase-sync.js?v=nc-secure-3"></script>
+<script src="register-sw.js?v=nc-off-1"></script>
+<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+
+<script>
+const STORAGE_KEY = "ncstudios_settings_v1";
+let settings = readData(STORAGE_KEY);
+const form = document.getElementById("settingsForm");
+
+form.addEventListener("submit", function(event){
+  event.preventDefault();
+
+  const id = document.getElementById("settingId").value || makeId();
+  const item = {
+    id,
+    project:document.getElementById("project").value.trim(),
+    camera:document.getElementById("camera").value,
+    setting:document.getElementById("settingName").value.trim(),
+    value:document.getElementById("settingValue").value.trim(),
+    note:document.getElementById("note").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+
+  if(!item.project || !item.setting || !item.value){
+    alert("Add the project, setting and value first.");
+    return;
+  }
+
+  const index = settings.findIndex(saved => saved.id === id);
+  if(index >= 0){
+    settings[index] = item;
+  } else {
+    settings.unshift(item);
+  }
+
+  saveSettings();
+  resetForm();
+  showProject(item.project);
+});
+
+function makeId(){
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : "setting_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+function readData(key){
+  try{
+    const data = JSON.parse(localStorage.getItem(key)) || [];
+    return Array.isArray(data) ? data : [];
+  }catch(error){
+    return [];
+  }
+}
+
+function saveSettings(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+}
+
+function renderSettings(){
+  updateProjectFilter();
+
+  const list = document.getElementById("settingsList");
+  const projectFilter = document.getElementById("filterProject").value;
+  const cameraFilter = document.getElementById("filterCamera").value;
+  const search = document.getElementById("search").value.trim().toLowerCase();
+
+  const visible = settings
+    .filter(item => {
+      const projectMatch = projectFilter === "all" || item.project === projectFilter;
+      const cameraMatch = cameraFilter === "all" || cameraMatches(item.camera, cameraFilter);
+      const searchMatch = !search || `${item.project} ${item.camera} ${item.setting} ${item.value} ${item.note}`.toLowerCase().includes(search);
+      return projectMatch && cameraMatch && searchMatch;
+    })
+    .sort((a,b) => `${a.project} ${cameraOrder(cameraLabel(a.camera))} ${a.setting}`.localeCompare(`${b.project} ${cameraOrder(cameraLabel(b.camera))} ${b.setting}`));
+
+  updateStats();
+
+  if(!visible.length){
+    list.innerHTML = `<div class="empty-state">No settings in this view yet. Add one manually or paste a settings list.</div>`;
+    return;
+  }
+
+  list.innerHTML = groupByCamera(visible).map(group => `
+    <section class="ops-card">
+      <div class="ops-card-top">
+        <div>
+          <div class="ops-title">${escapeHTML(group.camera)}</div>
+          <div class="ops-sub">${group.items.length} saved ${group.items.length === 1 ? "setting" : "settings"}</div>
+        </div>
+        <span class="badge blue">${escapeHTML(group.camera)}</span>
+      </div>
+
+      <div class="list-stack">
+        ${group.items.map(item => `
+          <article class="settingItem">
+            <div class="settingItemTop">
+              <div>
+                <div class="ops-title">${escapeHTML(item.setting)}</div>
+                <div class="ops-sub">${escapeHTML(item.project)}</div>
+                <div class="settingMeta">
+                  <span class="badge blue">${escapeHTML(cameraLabel(item.camera))}</span>
+                </div>
+              </div>
+              <strong class="settingValue">${escapeHTML(item.value)}</strong>
+            </div>
+
+            ${item.note ? `<p class="settingNote">${escapeHTML(item.note)}</p>` : ""}
+
+            <div class="ops-actions">
+              <button type="button" class="ghost-btn" onclick="editSetting('${item.id}')">Edit</button>
+              <button type="button" class="danger-btn" onclick="deleteSetting('${item.id}')">Delete</button>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `).join("");
+}
+
+function groupByCamera(items){
+  const groups = new Map();
+  items.forEach(item => {
+    const camera = cameraLabel(item.camera || "Overall");
+    if(!groups.has(camera)) groups.set(camera, []);
+    groups.get(camera).push(item);
+  });
+
+  return [...groups.entries()]
+    .sort(([cameraA],[cameraB]) => cameraOrder(cameraA) - cameraOrder(cameraB))
+    .map(([camera,items]) => ({camera,items}));
+}
+
+function cameraOrder(camera){
+  const label = cameraLabel(camera);
+  const order = ["Overall","All Cameras","C1 + C2 + C3","C1 + C2","C1","C2","C3","Audio","Drone","Lighting"];
+  const index = order.indexOf(label);
+  return index >= 0 ? index : 99;
+}
+
+function updateProjectFilter(){
+  const select = document.getElementById("filterProject");
+  const current = select.value || "all";
+  const projects = [...new Set(settings.map(item => item.project).filter(Boolean))].sort();
+
+  select.innerHTML = [
+    `<option value="all">All shoots</option>`,
+    ...projects.map(project => `<option value="${escapeAttribute(project)}">${escapeHTML(project)}</option>`)
+  ].join("");
+
+  select.value = projects.includes(current) ? current : "all";
+}
+
+function updateStats(){
+  document.getElementById("statTotal").textContent = settings.length;
+  document.getElementById("statC1").textContent = settings.filter(item => cameraMatches(item.camera, "C1")).length;
+  document.getElementById("statC2").textContent = settings.filter(item => cameraMatches(item.camera, "C2")).length;
+  document.getElementById("statC3").textContent = settings.filter(item => cameraMatches(item.camera, "C3")).length;
+}
+
+function showProject(project){
+  updateProjectFilter();
+  const select = document.getElementById("filterProject");
+  if(project && [...select.options].some(option => option.value === project)){
+    select.value = project;
+  }
+  renderSettings();
+}
+
+function editSetting(id){
+  const item = settings.find(saved => saved.id === id);
+  if(!item) return;
+
+  document.getElementById("settingId").value = item.id;
+  document.getElementById("project").value = item.project || "";
+  document.getElementById("camera").value = item.camera || "C1";
+  document.getElementById("settingName").value = item.setting || "";
+  document.getElementById("settingValue").value = item.value || "";
+  document.getElementById("note").value = item.note || "";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteSetting(id){
+  const item = settings.find(saved => saved.id === id);
+  if(!item) return;
+  if(!confirm(`Delete ${item.camera} ${item.setting}?`)) return;
+
+  settings = settings.filter(saved => saved.id !== id);
+  saveSettings();
+  renderSettings();
+}
+
+function resetForm(){
+  form.reset();
+  document.getElementById("settingId").value = "";
+  document.getElementById("camera").value = "C1";
+}
+
+function importSettings(){
+  const raw = document.getElementById("bulkImport").value.trim();
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+  const camera = document.getElementById("camera").value;
+
+  if(!raw){
+    alert("Paste settings first.");
+    return;
+  }
+
+  if(!project){
+    alert("Add the project/shoot name first.");
+    return;
+  }
+
+  const imported = parseSettingRows(raw, project, camera);
+  if(!imported.length){
+    alert("No valid settings found. Use: camera | setting | value | note");
+    return;
+  }
+
+  settings = [...imported, ...settings];
+  saveSettings();
+  document.getElementById("bulkImport").value = "";
+  showProject(project);
+  alert(`${imported.length} settings imported.`);
+}
+
+function parseSettingRows(text, project, fallbackCamera){
+  return text
+    .split("\n")
+    .map(line => line.trim())
+    .filter(line => line.includes("|"))
+    .map(line => line.split("|").map(part => part.trim()))
+    .map(parts => {
+      if(isHeaderRow(parts)) return null;
+
+      const firstCamera = normaliseCamera(parts[0]);
+      const hasCamera = Boolean(firstCamera);
+      const camera = hasCamera ? firstCamera : fallbackCamera;
+      const setting = hasCamera ? parts[1] : parts[0];
+      const value = hasCamera ? parts[2] : parts[1];
+      const note = hasCamera ? parts.slice(3).join(" | ") : parts.slice(2).join(" | ");
+
+      if(!setting || !value) return null;
+
+      return {
+        id:makeId(),
+        project,
+        camera,
+        setting,
+        value,
+        note,
+        updatedAt:new Date().toISOString()
+      };
+    })
+    .filter(Boolean);
+}
+
+function isHeaderRow(parts){
+  return String(parts[0] || "").toLowerCase().trim() === "camera" &&
+    String(parts[1] || "").toLowerCase().trim() === "setting";
+}
+
+function loadBaseSettings(){
+  const selectedProject = document.getElementById("filterProject").value;
+  const project = document.getElementById("project").value.trim() || (selectedProject !== "all" ? selectedProject : "");
+
+  if(!project){
+    alert("Add the project/shoot name first, then load the base settings.");
+    return;
+  }
+
+  const rows = [
+    "C1 and C2 | Shoot mode | Movie | Build all wedding settings in movie mode",
+    "C1 and C2 | Exposure mode | Manual Exposure | Keeps footage consistent",
+    "C1 and C2 | File format | XAVC S 4K | Safe and reliable wedding workflow",
+    "C1 and C2 | Proxy recording | Off | Keeps card workflow cleaner",
+    "C1 and C2 | Audio recording | On | Keep scratch audio on both cameras",
+    "C1 and C2 | Subject detection | Human | Best for weddings",
+    "C1 and C2 | Face Eye priority | On | Helps hold bride and groom focus",
+    "C1 and C2 | White balance | Manual Kelvin | Do not use auto white balance",
+    "C1 and C2 | Picture profile | Match on both cameras | Keeps colour consistent",
+    "C1 and C2 | File number | Continue | Cleaner file organisation",
+    "C1 and C2 | Auto power off temp | High | Safer for long recording",
+    "C1 and C2 | Date and time | Matched | Helps syncing later",
+    "C1 and C2 | Zebra | On if you use it | Helpful for quick exposure checks",
+    "C1 and C2 | Wind noise reduction | Off | Not needed for this setup",
+    "C1 and C2 | Audio level display | On | Helpful when checking levels",
+    "C1 and C2 | Subject recognition | Human | Keep face tracking stable",
+    "C1 and C2 | Focus mode | AF C | Best for wedding movement",
+    "C1 and C2 | Face memory | Off | Not needed for this job",
+    "C1 and C2 | Touch tracking | On | Useful if you need quick subject lock",
+    "C3 | Role | Extra angle | Use when available for reactions or room safety",
+    "C3 | Frame rate | Match C1 and C2 | Avoid mismatched timelines"
+  ];
+
+  settings = [...parseSettingRows(rows.join("\n"), project, "Overall"), ...settings];
+  saveSettings();
+  showProject(project);
+  alert(`Base settings loaded for ${project}.`);
+}
+
+function normaliseCamera(value){
+  const text = String(value || "").toLowerCase().trim();
+  const compact = text.replace(/\s+/g,"");
+
+  if(compact === "allcameras") return "All Cameras";
+
+  if([
+    "c1andc2",
+    "c1+c2",
+    "c1,c2",
+    "c1/c2",
+    "c1&c2",
+    "c1c2",
+    "both"
+  ].includes(compact)) return "C1 + C2";
+
+  if([
+    "c1andc2andc3",
+    "c1+c2+c3",
+    "c1,c2,c3",
+    "c1/c2/c3",
+    "c1&c2&c3",
+    "c1c2c3"
+  ].includes(compact)) return "C1 + C2 + C3";
+
+  const cameras = {
+    c1:"C1",
+    "camera 1":"C1",
+    "cam 1":"C1",
+    "a camera":"C1",
+    "a cam":"C1",
+    c2:"C2",
+    "camera 2":"C2",
+    "cam 2":"C2",
+    "b camera":"C2",
+    "b cam":"C2",
+    c3:"C3",
+    "camera 3":"C3",
+    "cam 3":"C3",
+    audio:"Audio",
+    sound:"Audio",
+    drone:"Drone",
+    lighting:"Lighting",
+    light:"Lighting",
+    overall:"Overall",
+    all:"All Cameras"
+  };
+
+  return cameras[text] || "";
+}
+
+function cameraLabel(value){
+  return normaliseCamera(value) || value || "Overall";
+}
+
+function cameraTargets(value){
+  const camera = cameraLabel(value);
+
+  if(camera === "C1 + C2") return ["C1","C2"];
+  if(camera === "C1 + C2 + C3" || camera === "All Cameras" || camera === "Overall") return ["C1","C2","C3"];
+  if(["C1","C2","C3"].includes(camera)) return [camera];
+
+  return [camera];
+}
+
+function cameraMatches(value, filter){
+  const camera = cameraLabel(value);
+
+  if(filter === "all") return true;
+  if(filter === "shared") return cameraTargets(camera).filter(item => ["C1","C2","C3"].includes(item)).length > 1 || camera === "Overall" || camera === "All Cameras";
+  if(["C1","C2","C3"].includes(filter)) return cameraTargets(camera).includes(filter);
+
+  return camera === filter;
+}
+
+function exportSettings(){
+  const data = {
+    app:"NC Studios",
+    type:"shoot-settings",
+    exportedAt:new Date().toISOString(),
+    settings
+  };
+
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "nc-studios-shoot-settings.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function escapeHTML(value){
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function escapeAttribute(value){
+  return escapeHTML(value);
+}
+
+renderSettings();
+</script>
 </body>
 </html>
