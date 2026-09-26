@@ -3,10 +3,10 @@
 
   const LINKS = [
     { label:"Home", path:"dashboard.html", route:"dashboard" },
-    { label:"Shots", path:"shot-lists.html", route:"shot-lists" },
-    { label:"Buy", path:"buy-list.html", route:"buy-list" },
+    { label:"PA", path:"studio-assistant.html", route:"studio-assistant" },
     { label:"CRM", path:"crm.html", route:"crm" },
-    { label:"Funds", path:"wedding-funds.html", route:"wedding-funds" }
+    { label:"Calls", path:"consultations.html", route:"consultations" },
+    { label:"Tasks", path:"lists.html", route:"lists" }
   ];
 
   function pageRoute(){

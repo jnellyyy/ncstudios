@@ -8,8 +8,8 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-32.png">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="app-readable.css?v=mobile-scroll-4">
-<link rel="stylesheet" href="studio-assistant.css?v=2">
+<link rel="stylesheet" href="app-readable.css?v=app-bw-1">
+<link rel="stylesheet" href="studio-assistant.css?v=pa-1">
 <meta name="theme-color" content="#050504">
 </head>
 <body class="assistant-page">
@@ -17,7 +17,7 @@
   <header class="topbar assistant-topbar">
     <a class="brand-row" href="dashboard.html" aria-label="NC Studio dashboard">
       <img class="logo-mark" src="ncstudios-logo-mark-transparent.png" alt="NC Studio logo">
-      <div class="brand-text"><p class="kicker">Business control</p><h2>Studio Assistant</h2></div>
+      <div class="brand-text"><p class="kicker">Private app</p><h2>PA Handover</h2></div>
     </a>
     <nav class="nav-pill" aria-label="Primary">
       <a class="pill" href="dashboard.html">Home</a>
@@ -28,7 +28,7 @@
 
   <nav class="ops-nav assistant-nav" aria-label="Studio tools">
     <a href="dashboard.html">Home</a>
-    <a class="active" href="studio-assistant.html">Assistant</a>
+    <a class="active" href="studio-assistant.html">PA</a>
     <a href="crm.html">CRM</a>
     <a href="bookings.html">Bookings</a>
     <a href="finance.html">Finance</a>
@@ -40,13 +40,14 @@
   <main>
     <section class="assistant-hero" aria-labelledby="assistantTitle">
       <div class="assistant-intro">
-        <p class="kicker">What needs my attention?</p>
-        <h1 id="assistantTitle">Your next moves, in order.</h1>
-        <p id="assistantBrief">Checking your bookings, replies, money and deadlines.</p>
+        <p class="kicker">What needs handling?</p>
+        <h1 id="assistantTitle">A clean desk for whoever is helping.</h1>
+        <p id="assistantBrief">Checking enquiries, replies, calls, money and deadlines.</p>
       </div>
       <div class="assistant-actions" aria-label="Quick actions">
-        <a class="btn" href="bookings.html">Add enquiry</a>
-        <a class="ghost-btn" href="clients.html">Add client</a>
+        <button class="btn" id="syncWebsiteEnquiries" type="button">Check website enquiries</button>
+        <a class="ghost-btn" href="messages.html">Open replies</a>
+        <a class="ghost-btn" href="consultations.html">Prep calls</a>
         <a class="ghost-btn" href="lists.html">Create task</a>
         <button class="ghost-btn" id="runAutomations" type="button">Refresh smart tasks</button>
       </div>
@@ -54,9 +55,34 @@
 
     <section id="assistantStats" class="assistant-stats" aria-label="Business summary"></section>
 
+    <section class="assistant-section pa-section" aria-labelledby="paTitle">
+      <div class="assistant-section-head">
+        <div><p class="kicker">PA view</p><h2 id="paTitle">Today’s handover</h2></div>
+        <a class="ghost-btn" href="quick-capture.html">Add quick note</a>
+      </div>
+      <div class="pa-grid">
+        <article class="pa-panel pa-brief">
+          <div class="pa-panel-head"><span>Brief</span><strong>What to tell Janelle</strong></div>
+          <div id="paBriefList" class="pa-list"></div>
+        </article>
+        <article class="pa-panel">
+          <div class="pa-panel-head"><span>Website</span><strong>New enquiries</strong></div>
+          <div id="enquiryInbox" class="pa-list"></div>
+        </article>
+        <article class="pa-panel">
+          <div class="pa-panel-head"><span>Replies</span><strong>Needs response</strong></div>
+          <div id="replyQueue" class="pa-list"></div>
+        </article>
+        <article class="pa-panel">
+          <div class="pa-panel-head"><span>Calls</span><strong>Prep and follow-up</strong></div>
+          <div id="callQueue" class="pa-list"></div>
+        </article>
+      </div>
+    </section>
+
     <section class="assistant-section attention-section" aria-labelledby="attentionTitle">
       <div class="assistant-section-head">
-        <div><p class="kicker">Calm priority list</p><h2 id="attentionTitle">Needs attention</h2></div>
+      <div><p class="kicker">Chase list</p><h2 id="attentionTitle">Needs attention</h2></div>
         <a class="ghost-btn" href="lists.html">Open all tasks</a>
       </div>
       <div id="attentionFilters" class="attention-filters" aria-label="Attention filters"></div>
@@ -114,10 +140,10 @@
 
   <nav class="assistant-bottom-nav" aria-label="Mobile navigation">
     <a href="dashboard.html">Home</a>
-    <a class="active" href="studio-assistant.html">Assistant</a>
+    <a class="active" href="studio-assistant.html">PA</a>
     <a href="crm.html">CRM</a>
+    <a href="consultations.html">Calls</a>
     <a href="lists.html">Tasks</a>
-    <a href="#calendar">Calendar</a>
   </nav>
 </div>
 
@@ -129,7 +155,7 @@
 <script src="register-sw.js?v=nc-off-1"></script>
 <script src="app-mobile-nav.js?v=buy-nav-1"></script>
 <script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
-<script src="studio-assistant-config.js?v=1"></script>
-<script src="studio-assistant.js?v=2"></script>
+<script src="studio-assistant-config.js?v=pa-1"></script>
+<script src="studio-assistant.js?v=pa-1"></script>
 </body>
 </html>

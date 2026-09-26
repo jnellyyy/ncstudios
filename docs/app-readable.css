@@ -1055,3 +1055,358 @@ hr,
     order:2 !important;
   }
 }
+
+/* Private app refresh: clean black and white UI, separate from the public website. */
+:root{
+  --nc-bg:#f4f4f1;
+  --nc-bg-2:#ffffff;
+  --nc-ink:#090909;
+  --nc-paper:#1f1f1f;
+  --nc-muted:#686868;
+  --nc-soft:#8b8b8b;
+  --nc-gold:#090909;
+  --nc-gold-2:#090909;
+  --nc-line:rgba(0,0,0,0.13);
+  --nc-line-soft:rgba(0,0,0,0.08);
+  --nc-panel:#ffffff;
+  --nc-panel-2:#f0f0ec;
+  --nc-danger:#9f1d1d;
+  --nc-success:#146c3f;
+}
+
+html,
+body{
+  background:#f4f4f1 !important;
+}
+
+body{
+  color:#090909 !important;
+  background:
+    linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,0.025) 1px, transparent 1px),
+    #f4f4f1 !important;
+  background-size:40px 40px,40px 40px,100% 100% !important;
+}
+
+body::after{
+  inset:18px !important;
+  border-color:rgba(0,0,0,0.10) !important;
+  background:none !important;
+  opacity:1 !important;
+}
+
+.topbar{
+  border-bottom-color:rgba(0,0,0,0.12) !important;
+  background:rgba(244,244,241,0.92) !important;
+}
+
+.logo img,
+img.logo-mark{
+  filter:none !important;
+}
+
+.panel,
+.form-card,
+.record-card,
+.ops-card,
+.ops-panel,
+.buy-card,
+.call-box,
+.settingItem,
+.stat,
+.stat-card,
+.tile,
+.booking,
+.client,
+.template-card,
+.message,
+.message-card,
+.entry-card,
+.list,
+.shot-card,
+.timeline-card,
+.gear-card,
+.finance-card,
+.delivery-card,
+.project-card,
+.card,
+.quick-card,
+.hero,
+.livePanel,
+.liveAction,
+.consult-step,
+.consult-section,
+.assistant-stat,
+.assistant-section,
+.attention-item,
+.pipeline-card,
+.pipeline-lane,
+.calendar-day,
+.agenda-item,
+.package-result{
+  border-color:rgba(0,0,0,0.13) !important;
+  color:#090909 !important;
+  background:#ffffff !important;
+  box-shadow:none !important;
+}
+
+.hero,
+.hero-main,
+.livePanel{
+  background:#ffffff !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+.entry-title,
+.ops-title,
+.record-title,
+.itemTitle,
+.cardTitle,
+.hero h1,
+.hero h2,
+.heroTitle,
+.sectionTitle,
+strong,
+b,
+.stat strong,
+.stat-card strong,
+.tileMetric,
+.settingValue,
+.buy-amount,
+.liveStat strong,
+.liveAction strong,
+.project-summary strong{
+  color:#090909 !important;
+}
+
+p,
+li,
+.subtext,
+.ops-sub,
+.ops-note,
+.note-box,
+.settingNote,
+.field,
+.meta-row,
+.call-line,
+.small-row,
+.empty-state,
+.tile p,
+.brand p,
+.hero p,
+.entry-copy,
+.introCopy,
+.messageBody{
+  color:#333333 !important;
+}
+
+.brand p,
+.hero p,
+.subtext,
+.ops-header p,
+.tileFooter,
+.empty-state{
+  color:#686868 !important;
+}
+
+.brand h1,
+.brand-text h2,
+.nc-brand,
+.lockupText,
+.kicker,
+label,
+.badge,
+.chip,
+.pill,
+.btn,
+.ghost-btn,
+.danger-btn,
+button,
+.home,
+.topPill,
+.statusPill,
+.nav a,
+.nav-pill a,
+.ops-nav a,
+.stat span,
+.stat-card span,
+.liveLabel,
+.liveStat span,
+.liveAction span,
+.tileFooter,
+.split-actions span,
+.project-summary span,
+.buy-tags span,
+.metaLabel,
+.miniLabel,
+.table th{
+  color:#090909 !important;
+}
+
+.stat strong,
+.stat-card strong,
+.tileMetric,
+.tile strong{
+  color:#090909 !important;
+  font-family:var(--nc-font-body) !important;
+  font-weight:750 !important;
+}
+
+.icon,
+.tileIcon,
+.tile-icon,
+.quickIcon,
+.avatar,
+.initial,
+.liveStat,
+.liveAction,
+.consult-step,
+.empty-state,
+.note-box,
+.notice,
+.toast{
+  border-color:rgba(0,0,0,0.13) !important;
+  color:#090909 !important;
+  background:#f7f7f4 !important;
+}
+
+.bottomRow,
+.nav,
+.ops-nav,
+.nav-pill,
+.ncMobileDock{
+  border-color:rgba(0,0,0,0.13) !important;
+  background:rgba(255,255,255,0.95) !important;
+}
+
+.quick a,
+.btn,
+.ghost-btn,
+.danger-btn,
+button,
+.home,
+.topPill,
+.statusPill,
+.nav a,
+.ops-nav a,
+.nav-pill a,
+.action,
+.submitButton,
+.primary,
+.secondary,
+.bottomRow a,
+.ncMobileDock a{
+  border-color:rgba(0,0,0,0.16) !important;
+  color:#090909 !important;
+  background:#ffffff !important;
+}
+
+.liveAction.primary,
+.btn.primary,
+.submitButton,
+button[type="submit"],
+.primary,
+.active,
+.nav a.active,
+.ops-nav a.active,
+.nav-pill a.active,
+.selected,
+.status-active,
+.quick a:first-child,
+.attention-filter.selected,
+.assistant-bottom-nav a.active,
+.ncMobileDock a.active{
+  border-color:#090909 !important;
+  color:#ffffff !important;
+  background:#090909 !important;
+}
+
+.quick a:last-child,
+.ghost-btn,
+.secondary{
+  color:#090909 !important;
+  background:#ffffff !important;
+}
+
+.danger-btn,
+.danger,
+button[data-clear],
+button[data-delete],
+.deleteBtn{
+  color:#9f1d1d !important;
+  border-color:rgba(159,29,29,0.34) !important;
+  background:#fff5f5 !important;
+}
+
+input,
+select,
+textarea{
+  color:#090909 !important;
+  caret-color:#090909 !important;
+  border-color:rgba(0,0,0,0.16) !important;
+  background:#ffffff !important;
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:rgba(0,0,0,0.42) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible,
+a:focus-visible{
+  outline-color:rgba(0,0,0,0.42) !important;
+}
+
+.progress,
+.progressTrack,
+.bar,
+.meter{
+  border-color:rgba(0,0,0,0.13) !important;
+  background:#e9e9e4 !important;
+}
+
+.progress span,
+.progressFill,
+.bar span,
+.meter span{
+  background:#090909 !important;
+}
+
+.tile:hover,
+.tile:focus-within,
+.record-card:hover,
+.message-card:hover,
+.entry-card:hover,
+.ops-card:hover{
+  border-color:rgba(0,0,0,0.28) !important;
+  background:#ffffff !important;
+  transform:translateY(-1px) !important;
+}
+
+@media(max-width:760px){
+  body::after{
+    inset:8px !important;
+  }
+
+  .ncMobileDock{
+    border-color:rgba(0,0,0,0.13) !important;
+    background:rgba(255,255,255,0.97) !important;
+  }
+
+  .ncMobileDock a{
+    border-color:rgba(0,0,0,0.16) !important;
+    color:#090909 !important;
+    background:#ffffff !important;
+  }
+
+  .ncMobileDock a.active{
+    color:#ffffff !important;
+    background:#090909 !important;
+  }
+}
