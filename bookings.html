@@ -746,7 +746,7 @@ select option{
 <script src="supabase-config.js?v=nc-fixed-1"></script>
 <script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="app-mobile-nav.js?v=app-2"></script>
 <script src="studio-project-seeds.js?v=simi-kiefah-3"></script>
 
 <script>
@@ -836,7 +836,7 @@ function renderBookings(){
   }
 
   list.innerHTML = visibleBookings.map(booking => {
-    const balance = Math.max((booking.packagePrice || 0) - (booking.depositPaid || 0), 0);
+    const balance = Math.max((booking.packagePrice || 0) - Math.max(booking.depositPaid || 0, booking.totalPaid || 0), 0);
 
     return `
       <article class="booking">

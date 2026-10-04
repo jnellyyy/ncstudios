@@ -2,8 +2,7 @@ const NC = (() => {
   const prefix = "nc_";
 
   const modules = [
-    { href:"studio-assistant.html", title:"Studio Assistant", copy:"Priorities, automations, pipeline, calendar and package guidance." },
-    { href:"crm.html", title:"CRM", copy:"One complete record for every couple, booking and follow-up." },
+    { href:"crm.html", title:"Client Pipeline", copy:"Enquiries, booking progress and one workspace for every client." },
     { href:"bookings.html", title:"Bookings", copy:"Enquiries, dates, deposits and balances." },
     { href:"clients.html", title:"Clients", copy:"Couple details, contacts and notes." },
     { href:"consultations.html", title:"Consultations", copy:"Call structure, notes, actions and booking follow-up." },

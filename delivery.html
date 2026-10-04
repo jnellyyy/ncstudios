@@ -701,7 +701,7 @@ textarea{
 <script src="supabase-config.js?v=nc-fixed-1"></script>
 <script src="nc-supabase-sync.js?v=nc-secure-3"></script>
 <script src="register-sw.js?v=nc-off-1"></script>
-<script src="app-mobile-nav.js?v=buy-nav-1"></script>
+<script src="app-mobile-nav.js?v=app-2"></script>
 
 <script>
 const STORAGE_KEY = "ncstudios_delivery_v1";
@@ -718,6 +718,7 @@ form.addEventListener("submit", function(event){
   if(progress > 100) progress = 100;
 
   const item = {
+    ...(delivery.find(project => project.id === id) || {}),
     id,
     projectName:document.getElementById("projectName").value.trim(),
     client:document.getElementById("client").value.trim(),

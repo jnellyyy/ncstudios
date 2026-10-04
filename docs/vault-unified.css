@@ -1,0 +1,17 @@
+:root{--bg:#101010!important;--panel:#191919!important;--panel2:#202020!important;--line:#343432!important;--gold:#d8b76e!important;--gold2:#ead39b!important;--cream:#f4f3ef!important;--muted:#b0b0ac!important}
+html,body{background:#101010!important;color:var(--cream);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important}
+body{background-image:none!important}
+.app,.shell{background:#101010!important;border-color:var(--line)!important}
+.topbar{background:#141414!important;border-color:var(--line)!important}
+.hero,.delivery-head{background:transparent!important;border-color:var(--line)!important}
+.workspace{border-color:var(--line)!important}
+.composer,.library,.files,.delivery-intro,.delivery-meta{background:#101010!important}
+.delivery-card,.file-card,.finder-window,.login-box,.review-panel,.gate-box{background:var(--panel)!important;border-color:var(--line)!important;border-radius:8px!important;box-shadow:none!important}
+.button,.download-all{border-radius:6px!important;background:var(--gold)!important;color:#151410!important;border-color:var(--gold)!important;box-shadow:none!important}
+.button.secondary{background:var(--panel)!important;color:var(--cream)!important;border-color:var(--line)!important}
+input,select,textarea{border-radius:6px!important;background:var(--panel)!important;color:var(--cream)!important;border-color:var(--line)!important}
+.delivery-data,.data-cell,.link-row,.upload-zone,.stored-file,.review-head,.review-summary,.review-footer,.meta-line,.footer{border-color:var(--line)!important}
+.upload-zone,.link-row,.review-footer,.finder-titlebar,.folder-sidebar{background:#141414!important}
+.hero h1,.delivery-intro h1,.gate-box h1,.composer h2,.library-head h2,.review-head h2,.files h2{font-family:"NC Brand Light",Georgia,serif!important;font-weight:400!important}
+.brand strong{color:var(--gold)!important}
+@media(max-width:620px){.app,.shell{border:0!important}.topbar{padding-inline:16px!important}.hero{padding-inline:18px!important}}

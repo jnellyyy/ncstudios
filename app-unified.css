@@ -1,0 +1,88 @@
+@font-face{font-family:NC Brand;src:url("assets/fonts/NC_Font_Lighter.ttf") format("truetype");font-display:swap}
+:root{--nc-bg:#101010;--nc-side:#141414;--nc-panel:#191919;--nc-panel-2:#202020;--nc-line:#343432;--nc-text:#f4f3ef;--nc-muted:#b0b0ac;--nc-gold:#d8b76e;--nc-gold-soft:#ead39b;--nc-danger:#d89489;--nc-green:#91bcab;--nc-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+
+body.nc-unified-app{margin:0!important;padding-left:210px!important;min-height:100svh!important;background:var(--nc-bg)!important;background-image:none!important;color:var(--nc-text)!important;font:14px/1.45 var(--nc-font)!important}
+body.nc-unified-app::before,body.nc-unified-app::after{display:none!important}
+body.nc-unified-app *{box-sizing:border-box;letter-spacing:0}
+body.nc-unified-app a{color:inherit}
+body.nc-unified-app h1,body.nc-unified-app h2,body.nc-unified-app h3,body.nc-unified-app h4{font-family:var(--nc-font)!important;letter-spacing:0!important;text-transform:none;color:var(--nc-text)!important}
+body.nc-unified-app strong{color:var(--nc-text)!important}
+body.nc-unified-app p{color:var(--nc-muted)!important}
+body.nc-unified-app button *,body.nc-unified-app .button *,body.nc-unified-app .btn *{color:inherit!important}
+body.nc-unified-app button,body.nc-unified-app input,body.nc-unified-app select,body.nc-unified-app textarea{font-family:var(--nc-font)!important}
+body.nc-unified-app :focus-visible{outline:2px solid var(--nc-gold)!important;outline-offset:3px}
+
+.flow-legacy-sidebar{position:fixed;inset:0 auto 0 0;z-index:60;width:210px;padding:26px 16px;border-right:1px solid var(--nc-line);display:flex;flex-direction:column;gap:26px;background:var(--nc-side);color:var(--nc-text);font:14px/1.45 var(--nc-font)}
+.flow-legacy-sidebar .flow-brand{display:flex;align-items:center;gap:9px;color:var(--nc-text);text-decoration:none;font-family:NC Brand,var(--nc-font);font-size:18px}
+.flow-legacy-sidebar .flow-brand img{width:48px;height:35px;object-fit:contain}
+.flow-legacy-sidebar .flow-nav{display:grid;gap:6px}
+.flow-legacy-sidebar .flow-nav a,.flow-legacy-sidebar .flow-nav button{display:flex!important;align-items:center!important;gap:12px!important;min-height:44px!important;padding:12px!important;border:0!important;border-radius:6px!important;background:transparent!important;color:var(--nc-muted)!important;text-decoration:none!important;text-align:left!important;font:inherit!important;cursor:pointer}
+.flow-legacy-sidebar .flow-nav .active{background:#282622!important;color:var(--nc-gold)!important}
+.flow-legacy-sidebar svg{width:19px;height:19px;stroke-width:1.6;flex:none}
+.flow-legacy-sidebar .flow-sidebar-foot{margin-top:auto;display:grid;gap:13px;color:var(--nc-muted);font-size:12px}
+.flow-legacy-sidebar .flow-sidebar-foot a{display:flex;align-items:center;gap:10px;text-decoration:none}
+
+body.nc-unified-app>.app,body.nc-unified-app>.app-shell{width:100%!important;max-width:1500px!important;min-height:100svh;margin:0 auto!important;padding:26px 32px 92px!important;position:relative!important;z-index:1}
+body.nc-unified-app .topbar{min-height:0!important;margin:0 0 8px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;justify-content:flex-end!important}
+body.nc-unified-app .topbar>.brand,body.nc-unified-app .topbar>.brand-row,body.nc-unified-app .topbar>.home,body.nc-unified-app .topbar>.topPill,body.nc-unified-app .topbar>.nav-pill{display:none!important}
+body.nc-unified-app .topbar .topActions .topPill{display:none!important}
+body.nc-unified-app .ops-header{min-height:54px!important;margin:0 0 22px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex;align-items:center;justify-content:space-between;gap:14px}
+body.nc-unified-app .brand,body.nc-unified-app .brand-row{display:flex;align-items:center;gap:10px;min-width:0}
+body.nc-unified-app .logo,body.nc-unified-app .logo-mark{width:48px!important;height:35px!important;min-width:48px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--nc-gold)!important;object-fit:contain}
+body.nc-unified-app .brand h1,body.nc-unified-app .brand-text strong{font-size:22px!important;line-height:1.1!important;font-weight:600!important;color:var(--nc-text)!important}
+body.nc-unified-app .brand p,body.nc-unified-app .brand-text span{margin-top:4px!important;color:var(--nc-muted)!important;font-size:11px!important;text-transform:uppercase!important}
+body.nc-unified-app .topPill,body.nc-unified-app .home,body.nc-unified-app .nav-pill{min-height:42px!important;padding:9px 12px!important;border:1px solid var(--nc-line)!important;border-radius:6px!important;background:var(--nc-panel)!important;color:var(--nc-text)!important;box-shadow:none!important;text-decoration:none!important}
+body.nc-unified-app .flow-legacy-nav{display:none!important}
+
+body.nc-unified-app .hero,body.nc-unified-app .ops-hero,body.nc-unified-app .content-hero,body.nc-unified-app .funds-hero{margin:0 0 18px!important;padding:0 0 20px!important;border:0!important;border-bottom:1px solid var(--nc-line)!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important}
+body.nc-unified-app .hero::before,body.nc-unified-app .hero::after,body.nc-unified-app .ops-hero::before,body.nc-unified-app .ops-hero::after{display:none!important}
+body.nc-unified-app .heroTop,body.nc-unified-app .hero-top{margin-bottom:16px!important}
+body.nc-unified-app .kicker{color:var(--nc-muted)!important;font-size:11px!important;line-height:1.3!important;font-weight:500!important;text-transform:uppercase!important}
+body.nc-unified-app .hero h2,body.nc-unified-app .ops-title,body.nc-unified-app .content-heading h1,body.nc-unified-app .hero-copy h1{margin:5px 0!important;color:var(--nc-text)!important;font-size:clamp(24px,3vw,34px)!important;line-height:1.05!important;font-weight:600!important}
+body.nc-unified-app .hero p,body.nc-unified-app .ops-sub,body.nc-unified-app .subtext{color:var(--nc-muted)!important}
+
+body.nc-unified-app .stats,body.nc-unified-app .ops-stats,body.nc-unified-app .content-stats,body.nc-unified-app .overview-grid,body.nc-unified-app .progress-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(130px,1fr))!important;gap:10px!important}
+body.nc-unified-app .stat,body.nc-unified-app .stat-card,body.nc-unified-app .summaryCard{min-height:92px!important;padding:14px!important;border:1px solid var(--nc-line)!important;border-radius:8px!important;background:var(--nc-panel)!important;background-image:none!important;box-shadow:none!important}
+body.nc-unified-app .stat span,body.nc-unified-app .stat-card span{color:var(--nc-muted)!important;font-size:11px!important}
+body.nc-unified-app .stat strong,body.nc-unified-app .stat-card strong{color:var(--nc-text)!important;font-size:24px!important;font-weight:600!important}
+
+body.nc-unified-app .grid,body.nc-unified-app .layout,body.nc-unified-app .ops-layout,body.nc-unified-app .content-layout{gap:14px!important}
+body.nc-unified-app .card,body.nc-unified-app .panel,body.nc-unified-app .ops-panel,body.nc-unified-app .ops-card,body.nc-unified-app .content-form-panel,body.nc-unified-app .content-list-panel,body.nc-unified-app .roadmap-section,body.nc-unified-app .money-map-card,body.nc-unified-app .protection-callout{border:1px solid var(--nc-line)!important;border-radius:8px!important;background:var(--nc-panel)!important;background-image:none!important;box-shadow:none!important;color:var(--nc-text)!important}
+body.nc-unified-app .cardHead,body.nc-unified-app .panelHead,body.nc-unified-app .ops-card-top,body.nc-unified-app .content-list-head,body.nc-unified-app .section-heading{border-color:var(--nc-line)!important;background:transparent!important}
+body.nc-unified-app .cardBody,body.nc-unified-app .panelBody{background:transparent!important}
+body.nc-unified-app .item,body.nc-unified-app .booking,body.nc-unified-app .client,body.nc-unified-app .message,body.nc-unified-app .gearItem,body.nc-unified-app .timelineItem,body.nc-unified-app .shot,body.nc-unified-app .settingItem,body.nc-unified-app .buy-card,body.nc-unified-app .projectLane,body.nc-unified-app .areaLane{border:1px solid var(--nc-line)!important;border-radius:7px!important;background:var(--nc-panel-2)!important;background-image:none!important;box-shadow:none!important;color:var(--nc-text)!important}
+body.nc-unified-app .meta,body.nc-unified-app .metaLine,body.nc-unified-app .meta-row,body.nc-unified-app .note,body.nc-unified-app .notes,body.nc-unified-app .footer-note,body.nc-unified-app small{color:var(--nc-muted)!important}
+body.nc-unified-app .meta strong,body.nc-unified-app .metaLine strong,body.nc-unified-app .meta-row strong,body.nc-unified-app .item strong,body.nc-unified-app .booking strong,body.nc-unified-app .client strong{color:var(--nc-text)!important}
+
+body.nc-unified-app button,body.nc-unified-app .button,body.nc-unified-app .btn,body.nc-unified-app .uploadButton{min-height:42px;padding:9px 12px;border:1px solid var(--nc-gold)!important;border-radius:6px!important;background:var(--nc-gold)!important;background-image:none!important;color:#151410!important;font-size:13px;font-weight:600!important;box-shadow:none!important;cursor:pointer}
+body.nc-unified-app button.secondary,body.nc-unified-app button.ghost,body.nc-unified-app .button.secondary,body.nc-unified-app .btn:not(.primary),body.nc-unified-app .ghost-btn,body.nc-unified-app .topPill:not(.primary){border-color:var(--nc-line)!important;background:var(--nc-panel)!important;color:var(--nc-text)!important}
+body.nc-unified-app button:hover,body.nc-unified-app .button:hover,body.nc-unified-app .btn:hover{border-color:var(--nc-gold-soft)!important}
+body.nc-unified-app .danger-btn,body.nc-unified-app button.danger,body.nc-unified-app .miniDanger{border-color:rgba(216,148,137,.5)!important;background:transparent!important;color:var(--nc-danger)!important}
+body.nc-unified-app input,body.nc-unified-app select,body.nc-unified-app textarea{min-height:42px!important;padding:9px 11px!important;border:1px solid var(--nc-line)!important;border-radius:6px!important;background:var(--nc-panel)!important;background-image:none!important;color:var(--nc-text)!important;box-shadow:none!important}
+body.nc-unified-app textarea{min-height:88px!important}
+body.nc-unified-app input::placeholder,body.nc-unified-app textarea::placeholder{color:#7f7f7b!important}
+body.nc-unified-app label,body.nc-unified-app .field{color:var(--nc-muted)!important}
+body.nc-unified-app input[type=checkbox]{width:20px!important;height:20px!important;min-height:20px!important;accent-color:var(--nc-gold);padding:0!important}
+
+body.nc-unified-app .badge,body.nc-unified-app .chip,body.nc-unified-app .pill,body.nc-unified-app .sourcePill,body.nc-unified-app .qtyBadge,body.nc-unified-app .timeBadge{border:1px solid var(--nc-line)!important;border-radius:999px!important;background:transparent!important;color:var(--nc-muted)!important;box-shadow:none!important}
+body.nc-unified-app .active,body.nc-unified-app .badge.active,body.nc-unified-app .chip.active{color:var(--nc-gold)!important;border-color:var(--nc-gold)!important}
+body.nc-unified-app .progress,body.nc-unified-app .progress-track,body.nc-unified-app .money-map-bar{background:#292927!important;border-radius:3px!important;overflow:hidden}
+body.nc-unified-app .fill,body.nc-unified-app .progressFill,body.nc-unified-app .progress-track>span,body.nc-unified-app .money-map-bar>span{background:var(--nc-gold)!important}
+body.nc-unified-app dialog,body.nc-unified-app .edit-dialog{border:1px solid var(--nc-line)!important;border-radius:8px!important;background:var(--nc-side)!important;color:var(--nc-text)!important;box-shadow:0 24px 80px rgba(0,0,0,.55)!important}
+body.nc-unified-app .empty,body.nc-unified-app .empty-state{border-color:var(--nc-line)!important;color:var(--nc-muted)!important;background:transparent!important}
+
+@media(max-width:700px){
+  body.nc-unified-app{padding-left:0!important;padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+  .flow-legacy-sidebar{display:none}
+  body.nc-unified-app>.app,body.nc-unified-app>.app-shell{padding:16px 14px calc(84px + env(safe-area-inset-bottom))!important}
+  body.nc-unified-app .topbar{margin-bottom:4px!important}body.nc-unified-app .ops-header{min-height:48px!important;margin-bottom:14px!important}
+  body.nc-unified-app .logo,body.nc-unified-app .logo-mark{width:40px!important;height:30px!important;min-width:40px!important}
+  body.nc-unified-app .brand h1,body.nc-unified-app .brand-text strong{font-size:19px!important}
+  body.nc-unified-app .hero,body.nc-unified-app .ops-hero,body.nc-unified-app .content-hero,body.nc-unified-app .funds-hero{padding-bottom:15px!important;margin-bottom:14px!important}
+  body.nc-unified-app .hero h2,body.nc-unified-app .ops-title,body.nc-unified-app .content-heading h1,body.nc-unified-app .hero-copy h1{font-size:25px!important}
+  body.nc-unified-app .stats,body.nc-unified-app .ops-stats,body.nc-unified-app .content-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.nc-unified-app .stat,body.nc-unified-app .stat-card{min-height:78px!important;padding:11px!important}
+  body.nc-unified-app .stat strong,body.nc-unified-app .stat-card strong{font-size:20px!important}
+  body.nc-unified-app .grid,body.nc-unified-app .layout,body.nc-unified-app .ops-layout,body.nc-unified-app .content-layout{grid-template-columns:1fr!important}
+  body.nc-unified-app .flow-mobile-nav{display:grid!important}
+}

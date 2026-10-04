@@ -38,6 +38,48 @@
 
   let initialPullFinished = false;
   let saveTimer = null;
+  let syncFailed = false;
+  let flushing = false;
+  const DIRTY_KEY = "ncstudio_unsynced_changes_v1";
+  let dirtyChanges = {};
+  try{
+    dirtyChanges = JSON.parse(localStorage.getItem(DIRTY_KEY)) || {};
+    Object.keys(dirtyChanges).filter(isSyncKey).forEach(key => pendingSaves.add(key));
+  }catch(error){
+    dirtyChanges = {};
+  }
+
+  function syncStatus(message){
+    window.dispatchEvent(new CustomEvent("nc:sync-status", {detail:{message}}));
+  }
+
+  function persistDirty(){
+    originalSetItem.call(localStorage, DIRTY_KEY, JSON.stringify(dirtyChanges));
+  }
+
+  function trackChanges(key, before, after){
+    const dirty = dirtyChanges[key] || {upserts:[],deletes:[]};
+    dirty.revision = (dirty.revision || 0) + 1;
+    if(before.concat(after).some(item => !item || !item.id)){
+      dirty.whole = true;
+    }else{
+      const previous = new Map(before.map(item => [item.id,JSON.stringify(item)]));
+      const current = new Map(after.map(item => [item.id,JSON.stringify(item)]));
+      const upserts = new Set(dirty.upserts);
+      const deletes = new Set(dirty.deletes);
+      current.forEach((value,id) => {
+        if(value !== previous.get(id)){upserts.add(id);deletes.delete(id);}
+      });
+      previous.forEach((value,id) => {
+        if(!current.has(id)){deletes.add(id);upserts.delete(id);}
+      });
+      dirty.upserts = [...upserts];
+      dirty.deletes = [...deletes];
+    }
+    dirtyChanges[key] = dirty;
+    persistDirty();
+    syncStatus("Saved on device · sync pending");
+  }
 
   function wait(ms){
     return new Promise(function(resolve){
@@ -128,7 +170,7 @@
       panel.className = "ncSyncAuth";
       panel.innerHTML = `
         <strong>studio sync is locked</strong>
-        <p>Sign in to sync app data, import website enquiries, and publish website edits. Until then this page still saves locally on this device.</p>
+        <p>Sign in to sync client records and receive website enquiries. Your work is saved on this device until you sign in.</p>
         <form id="ncSyncAuthForm">
           <input id="ncSyncEmail" type="email" autocomplete="email" placeholder="email" required>
           <input id="ncSyncPassword" type="password" autocomplete="current-password" placeholder="password" required>
@@ -228,9 +270,12 @@
   }
 
   async function saveKeyToSupabase(key){
+    const dirtyVersion = JSON.stringify(dirtyChanges[key]);
     const signedIn = await ensureSignedIn(true);
 
     if(!signedIn){
+      syncFailed = true;
+      syncStatus("Device only · sign in to sync");
       console.warn("NC Sync: not signed in. Saved locally only:", key);
       return false;
     }
@@ -238,6 +283,7 @@
     const ready = await waitForSupabase();
 
     if(!ready){
+      syncFailed = true;
       console.warn("NC Sync: Supabase not ready. Saved locally only:", key);
       return false;
     }
@@ -258,22 +304,33 @@
       );
 
     if(response.error){
+      syncFailed = true;
+      syncStatus("Saved on device · sync unavailable");
       console.warn("NC Sync: save failed for " + key, response.error);
       return false;
     }
 
+    if(dirtyVersion === JSON.stringify(dirtyChanges[key])){
+      delete dirtyChanges[key];
+      pendingSaves.delete(key);
+      persistDirty();
+    }
+    syncStatus(pendingSaves.size ? "Saved on device · sync pending" : "Synced");
     console.log("NC Sync: saved", key);
     return true;
   }
 
   async function flushPendingSaves(){
-    if(pendingSaves.size === 0) return;
+    if(pendingSaves.size === 0 || flushing) return;
 
     const keys = Array.from(pendingSaves);
-    pendingSaves.clear();
-
-    for(const key of keys){
-      await saveKeyToSupabase(key);
+    flushing = true;
+    try{
+      for(const key of keys){
+        if(!await saveKeyToSupabase(key)) pendingSaves.add(key);
+      }
+    }finally{
+      flushing = false;
     }
   }
 
@@ -298,6 +355,7 @@
       .maybeSingle();
 
     if(response.error){
+      syncFailed = true;
       console.warn("NC Sync: load failed for " + key, response.error);
       return false;
     }
@@ -311,7 +369,18 @@
       return false;
     }
 
-    const remoteData = response.data.data;
+    let remoteData = response.data.data;
+    const dirty = dirtyChanges[key];
+    if(dirty){
+      if(dirty.whole){
+        remoteData = localData;
+      }else{
+        const edits = new Set(dirty.upserts);
+        const deleted = new Set(dirty.deletes);
+        remoteData = remoteData.filter(item => !deleted.has(item.id) && !edits.has(item.id))
+          .concat(localData.filter(item => edits.has(item.id)));
+      }
+    }
 
     if(JSON.stringify(remoteData) !== JSON.stringify(localData)){
       writeLocal(key, remoteData);
@@ -605,17 +674,21 @@
     window.__ncStoragePatched = true;
 
     Storage.prototype.setItem = function(key, value){
+      const before = this === localStorage && isSyncKey(key) ? readLocal(key) : null;
       originalSetItem.call(this, key, value);
 
       if(this === localStorage && isSyncKey(key)){
+        trackChanges(key, before, readLocal(key));
         queueSave(key);
       }
     };
 
     Storage.prototype.removeItem = function(key){
+      const before = this === localStorage && isSyncKey(key) ? readLocal(key) : null;
       originalRemoveItem.call(this, key);
 
       if(this === localStorage && isSyncKey(key)){
+        trackChanges(key, before, []);
         queueSave(key);
       }
     };
@@ -634,10 +707,13 @@
   }
 
   async function pullAllFromSupabase(){
+    syncFailed = false;
+    syncStatus("Checking client records...");
     const signedIn = await ensureSignedIn(false);
 
     if(!signedIn){
-      return;
+      syncStatus("Device only · sign in to sync");
+      return false;
     }
 
     let changed = false;
@@ -660,7 +736,7 @@
     }
 
     initialPullFinished = true;
-    pendingSaves.clear();
+    await flushPendingSaves();
 
     if(applyLocalSeeds()){
       changed = true;
@@ -668,11 +744,14 @@
     }
 
     const pageKey = RELOAD_FLAG_PREFIX + location.pathname;
+    window.dispatchEvent(new CustomEvent("nc:sync-complete"));
+    syncStatus(syncFailed ? "Saved on device · sync unavailable" : "Synced");
 
-    if(changed && !sessionStorage.getItem(pageKey)){
+    if(changed && !document.body.hasAttribute("data-flow-page") && !sessionStorage.getItem(pageKey)){
       sessionStorage.setItem(pageKey, "yes");
       location.reload();
     }
+    return !syncFailed;
   }
 
   async function pushAllLocalToSupabase(){

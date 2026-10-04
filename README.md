@@ -12,8 +12,9 @@ Domain: `ncstudiouk.co.uk`
 - `dashboard.html` is the private studio app entry point.
 - `bookings.html` is where website enquiries appear as new booking enquiries.
 - `buy-list.html` tracks things to buy, rent, research or leave for later.
-- `studio-assistant.html` is the operational home for priorities, automations, pipeline, calendar and package suggestions.
-- `crm.html` combines every couple and now includes the complete editable client profile.
+- `crm.html` is the client pipeline, with one workspace for details, contracts, payments, tasks and vault links.
+- `projects.html` opens the same pipeline and honours existing project links.
+- `studio-assistant.html` redirects older bookmarks to the pipeline. The PA interface and automation scripts are retired.
 - `content.html` tracks posting permission, portfolio selections, reel ideas, captions and post dates.
 - `wedding-funds.html` protects rental money and assigns incoming wedding payments.
 
