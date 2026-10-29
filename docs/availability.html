@@ -439,6 +439,7 @@ textarea:focus{
   }
 }
 </style>
+<link rel="stylesheet" href="public-pages.css?v=white-gold-1">
 </head>
 
 <body>
@@ -449,7 +450,7 @@ textarea:focus{
 
   <nav class="nav" aria-label="site navigation">
     <a href="index.html#about">about</a>
-    <a href="index.html#films">work</a>
+    <a href="index.html#work">work</a>
     <a href="terms.html">terms</a>
     <a class="navCta" href="availability.html">availability</a>
   </nav>
@@ -461,22 +462,24 @@ textarea:focus{
       <p class="eyebrow">availability</p>
       <h1 id="availability-title">choose the date.</h1>
     </div>
-    <p class="pageNote">pick a date, send the details, then it lands straight inside the studio app.</p>
+    <p class="pageNote">Send the date and a few details. Your enquiry lands directly inside the NC Studio booking pipeline.</p>
   </section>
 
   <section class="availabilityLayout" aria-label="availability enquiry">
-    <div class="calendarPanel">
-      <div class="calendarHead">
-        <span class="calendarLabel">calendar</span>
-        <strong>tap a date</strong>
-      </div>
-      <div class="calendarMonths" data-calendar aria-label="date picker"></div>
-    </div>
+    <aside class="enquiryIntro">
+      <strong>A simple first step.</strong>
+      <p>Share the date and the shape of the day. I will check the details personally and come back with the clearest next step.</p>
+      <dl>
+        <div><dt>Weddings</dt><dd>Photography, cinematic film, or both.</dd></div>
+        <div><dt>Couple sessions</dt><dd>Relaxed engagement and pre-wedding stories.</dd></div>
+        <div><dt>Selected events</dt><dd>Considered coverage by enquiry.</dd></div>
+      </dl>
+    </aside>
 
     <form class="formPanel" id="enquiryForm">
       <div>
         <p class="eyebrow">enquiry</p>
-        <h2>tell me the plan.</h2>
+        <h2>Tell me the plan.</h2>
       </div>
 
       <div class="hiddenField" aria-hidden="true">
@@ -509,10 +512,12 @@ textarea:focus{
           <label for="eventType">shoot type</label>
           <select id="eventType" name="eventType" required>
             <option value="">choose one</option>
-            <option>wedding</option>
-            <option>engagement</option>
-            <option>event</option>
-            <option>content</option>
+            <option>wedding photography</option>
+            <option>wedding film</option>
+            <option>wedding photo + film</option>
+            <option>couple / engagement session</option>
+            <option>selected event</option>
+            <option>existing client</option>
             <option>other</option>
           </select>
         </div>
@@ -555,7 +560,7 @@ textarea:focus{
 
         <div class="field full">
           <label for="message">message</label>
-          <textarea id="message" name="message" required placeholder="what are we making?"></textarea>
+          <textarea id="message" name="message" required placeholder="Tell me what matters most about the day."></textarea>
         </div>
       </div>
 

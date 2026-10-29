@@ -1,7 +1,7 @@
 {
-  "siteVersion": "wedding-v2",
+  "siteVersion": "wedding-v4",
   "fields": {
-    "heroLead": "weddings · engagements · cinematic films",
+    "heroLead": "weddings · engagements · selected events",
     "aboutCaptionTitle": "the creative behind nc studio",
     "aboutCaptionMeta": "",
     "aboutHeadline": "hi, i'm janelle.",
@@ -14,21 +14,21 @@
     "principleTwoText": "gentle guidance when needed, with space for natural moments to unfold.",
     "principleThreeTitle": "cinematic finish",
     "principleThreeText": "clean colours, soft movement and a timeless edit that feels true to the day.",
-    "workLead": "wedding photography, cinematic films and story led content.",
-    "filmOneTitle": "Marvin + Blessing · Film I",
-    "filmOneBody": "wedding morning · groom preparations.",
-    "filmTwoTitle": "Marvin + Blessing · Film II",
-    "filmTwoBody": "wedding morning · bridal details.",
-    "filmThreeTitle": "wedding day stories",
-    "filmThreeBody": "additional wedding film previews."
+    "workLead": "wedding photography, cinematic films and selected event stories.",
+    "filmOneTitle": "Simi + Kiefah",
+    "filmOneBody": "wedding film · Birmingham.",
+    "filmTwoTitle": "Marvin + Blessing",
+    "filmTwoBody": "wedding film · London.",
+    "filmThreeTitle": "Senses",
+    "filmThreeBody": "selected event film."
   },
   "media": {
-    "hero": "assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
+    "hero": "assets/weddings/simi-kiefah-wedding-thumbnail.jpg?v=simi-kiefah-20260831",
     "portrait": "assets/nc-about-portrait.jpg",
-    "feature": "assets/weddings/marvin-blessing-wedding-film-02.mp4",
-    "filmOne": "assets/weddings/marvin-blessing-wedding-film-01.mp4",
-    "filmTwo": "assets/weddings/marvin-blessing-wedding-film-02.mp4",
-    "filmThree": ""
+    "feature": "assets/weddings/marvin-blessing-wedding-trailer.m4v",
+    "filmOne": "assets/weddings/simi-kiefah-wedding-trailer.m4v",
+    "filmTwo": "assets/weddings/marvin-blessing-wedding-trailer.m4v",
+    "filmThree": "assets/portfolio/senses-event-film.m4v"
   },
   "mediaTypes": {
     "hero": "image/jpeg",
@@ -36,6 +36,6 @@
     "feature": "video/mp4",
     "filmOne": "video/mp4",
     "filmTwo": "video/mp4",
-    "filmThree": ""
+    "filmThree": "video/mp4"
   }
 }

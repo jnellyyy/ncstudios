@@ -902,9 +902,9 @@ textarea{
             <span>Updates here before you publish.</span>
           </div>
           <div class="previewToolbarActions">
-            <button class="btn small" type="button" data-preview-scroll="#home">top</button>
+            <button class="btn small" type="button" data-preview-scroll="#top">top</button>
             <button class="btn small" type="button" data-preview-scroll="#about">about</button>
-            <button class="btn small" type="button" data-preview-scroll="#films">work</button>
+            <button class="btn small" type="button" data-preview-scroll="#work">work</button>
           </div>
         </div>
         <iframe class="sitePreviewFrame" id="websitePreviewFrame" title="nc studio website preview" src="index.html?adminPreview=1"></iframe>
@@ -923,9 +923,9 @@ textarea{
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
                 <strong>Hero background</strong>
-                <span>The first thing people see on the homepage.</span>
+                <span>The fallback image shown while the hero film loads.</span>
               </div>
-              <button class="btn small" type="button" data-preview-scroll="#home">view</button>
+              <button class="btn small" type="button" data-preview-scroll="#top">view</button>
             </div>
             <div class="mediaSlotPreview" data-media-preview="hero">no media set</div>
             <div class="mediaSlotControls">
@@ -954,10 +954,10 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Motion feature</strong>
-                <span>The wide film panel between about and work.</span>
+                <strong>Hero motion</strong>
+                <span>The main wedding film behind the opening headline.</span>
               </div>
-              <button class="btn small" type="button" data-preview-scroll="#motion-title">view</button>
+              <button class="btn small" type="button" data-preview-scroll="#top">view</button>
             </div>
             <div class="mediaSlotPreview" data-media-preview="feature">no media set</div>
             <div class="mediaSlotControls">
@@ -970,10 +970,10 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Work card 1</strong>
-                <span>Couple sessions / engagement work.</span>
+                <strong>Wedding film 1</strong>
+                <span>The large featured wedding story.</span>
               </div>
-              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+              <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
             <div class="mediaSlotPreview" data-media-preview="filmOne">no media set</div>
             <div class="mediaSlotControls">
@@ -986,10 +986,10 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Work card 2</strong>
-                <span>Wedding coverage.</span>
+                <strong>Wedding film 2</strong>
+                <span>The second wedding story beside the engagement image.</span>
               </div>
-              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+              <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
             <div class="mediaSlotPreview" data-media-preview="filmTwo">no media set</div>
             <div class="mediaSlotControls">
@@ -1002,10 +1002,10 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Work card 3</strong>
-                <span>Short edits, events and content.</span>
+                <strong>Selected event</strong>
+                <span>The single event film shown near the bottom of the page.</span>
               </div>
-              <button class="btn small" type="button" data-preview-scroll="#films">view</button>
+              <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
             <div class="mediaSlotPreview" data-media-preview="filmThree">no media set</div>
             <div class="mediaSlotControls">
@@ -1097,7 +1097,7 @@ const WEBSITE_STORAGE_TABLE = "app_storage";
 const WEBSITE_CONTENT_KEY = "website_content_live";
 const WEBSITE_DRAFT_KEY = "ncStudiosWebsiteContentDraftV1";
 const WEBSITE_MEDIA_BUCKET = "site-media";
-const WEBSITE_SITE_VERSION = "wedding-v2";
+const WEBSITE_SITE_VERSION = "wedding-v4";
 
 const defaultWebsiteContent = {
   siteVersion:WEBSITE_SITE_VERSION,
@@ -1123,20 +1123,20 @@ const defaultWebsiteContent = {
     featureBody:"vows, speeches, reactions, atmosphere.",
     workTitle:"work.",
     workLead:"wedding photography, cinematic films and story led content.",
-    filmOneTitle:"Marvin + Blessing · Film I",
-    filmOneBody:"wedding morning · groom preparations.",
-    filmTwoTitle:"Marvin + Blessing · Film II",
-    filmTwoBody:"wedding morning · bridal details.",
-    filmThreeTitle:"wedding day stories",
-    filmThreeBody:"additional wedding film previews."
+    filmOneTitle:"Simi + Kiefah",
+    filmOneBody:"wedding film · Birmingham.",
+    filmTwoTitle:"Marvin + Blessing",
+    filmTwoBody:"wedding film · London.",
+    filmThreeTitle:"Senses",
+    filmThreeBody:"selected event film."
   },
   media:{
-    hero:"assets/jason-roisin-engagement-card.jpg?v=engagement-20260614",
+    hero:"assets/weddings/simi-kiefah-wedding-thumbnail.jpg?v=simi-kiefah-20260831",
     portrait:"assets/nc-about-portrait.jpg",
-    feature:"assets/weddings/marvin-blessing-wedding-film-02.mp4",
-    filmOne:"assets/weddings/marvin-blessing-wedding-film-01.mp4",
-    filmTwo:"assets/weddings/marvin-blessing-wedding-film-02.mp4",
-    filmThree:""
+    feature:"assets/weddings/marvin-blessing-wedding-trailer.m4v",
+    filmOne:"assets/weddings/simi-kiefah-wedding-trailer.m4v",
+    filmTwo:"assets/weddings/marvin-blessing-wedding-trailer.m4v",
+    filmThree:"assets/portfolio/senses-event-film.m4v"
   },
   mediaTypes:{
     hero:"image/jpeg",
@@ -1144,7 +1144,7 @@ const defaultWebsiteContent = {
     feature:"video/mp4",
     filmOne:"video/mp4",
     filmTwo:"video/mp4",
-    filmThree:""
+    filmThree:"video/mp4"
   }
 };
 

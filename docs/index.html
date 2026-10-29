@@ -2,1249 +2,207 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#080806">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fbfaf6">
   <meta name="description" content="NC Studio creates honest, cinematic wedding photography and films across the UK.">
-  <title>NC Studio | Photography + Film</title>
+  <title>NC Studio | Wedding Photography + Film</title>
   <link rel="manifest" href="website.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" href="icon-32.png">
-  <style>
-    @font-face {
-      font-family: "NC Brand";
-      src: url("assets/fonts/NC_Font_Lighter.ttf") format("truetype");
-      font-display: swap;
-    }
-
-    :root {
-      --black: #080806;
-      --black-2: #12110e;
-      --cream: #f1e7d7;
-      --paper: #12100c;
-      --gold: #d7b66c;
-      --gold-light: #f1dda9;
-      --ink: #f5ecdf;
-      --muted: #b9afa1;
-      --line: rgba(215, 182, 108, .24);
-      --glass: rgba(12, 11, 8, .91);
-      --shadow: 0 34px 90px rgba(0, 0, 0, .38), 0 3px 14px rgba(0, 0, 0, .16);
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
-      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body { width: 100%; min-height: 100%; }
-
-    html { background: var(--black); }
-
-    body {
-      margin: 0;
-      overflow: hidden;
-      color: var(--ink);
-      background: var(--black);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    button, a { font: inherit; }
-    button { color: inherit; }
-    img, video { display: block; max-width: 100%; }
-    a { color: inherit; }
-    :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-
-    .boot {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      color: var(--cream);
-      background: #080806;
-      transition: opacity .65s ease, visibility .65s ease;
-    }
-
-    .boot::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background: linear-gradient(105deg, transparent 42%, rgba(241, 221, 169, .14), transparent 58%);
-      transform: translateX(-45%);
-      animation: bootSweep 2.1s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    .boot-reel {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: .46;
-      filter: grayscale(.45) contrast(1.25) brightness(.62);
-    }
-
-    .boot-shade {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background:
-        linear-gradient(180deg, rgba(8,8,6,.16), rgba(8,8,6,.82)),
-        repeating-linear-gradient(90deg, transparent 0 9.8vw, rgba(255,255,255,.04) 9.8vw 10vw);
-    }
-
-    .boot-words {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .boot-words span {
-      position: absolute;
-      left: 50%;
-      top: 45%;
-      width: 100%;
-      opacity: 0;
-      color: #fff;
-      font-size: clamp(64px, 18vw, 240px);
-      font-weight: 800;
-      line-height: .78;
-      letter-spacing: 0;
-      text-align: center;
-      text-transform: uppercase;
-      transform: translate(-50%,-50%) scale(1.14);
-      animation: wordFlash 560ms steps(1,end) both;
-    }
-
-    .boot-words span:nth-child(2) { animation-delay: .42s; color: var(--gold-light); transform: translate(-54%,-68%) scale(.92); }
-    .boot-words span:nth-child(3) { animation-delay: .84s; transform: translate(-47%,-34%) scale(1.04); }
-    .boot-words span:nth-child(4) { animation-delay: 1.26s; color: var(--gold); transform: translate(-50%,-58%) scale(.88); }
-    .boot-words span:nth-child(5) { animation-delay: 1.68s; transform: translate(-52%,-42%) scale(1.08); }
-    .boot-words span:nth-child(6) { animation-delay: 2.10s; color: var(--gold-light); transform: translate(-50%,-50%) scale(.84); }
-
-    .desktop-ready .boot { opacity: 0; visibility: hidden; pointer-events: none; }
-
-    .boot-inner {
-      position: relative;
-      z-index: 4;
-      width: min(620px, calc(100vw - 40px));
-      margin-top: min(48vh, 420px);
-      text-align: center;
-    }
-
-    .boot-mark {
-      width: clamp(66px, 10vw, 92px);
-      margin: 0 auto 12px;
-      filter: drop-shadow(0 12px 30px rgba(215, 182, 108, .18));
-      animation: markIn .9s cubic-bezier(.2,.85,.2,1) both;
-    }
-
-    .boot-kicker,
-    .boot-status,
-    .menu-left,
-    .menu-right,
-    .eyebrow,
-    .meta,
-    .tag,
-    .dock-tip {
-      font-family: var(--mono);
-      letter-spacing: .11em;
-      text-transform: uppercase;
-    }
-
-    .boot-kicker { margin: 0 0 6px; color: var(--gold-light); font-size: 9px; }
-
-    .boot h1 {
-      max-width: 560px;
-      margin: 0 auto;
-      font-size: clamp(26px, 4vw, 44px);
-      font-weight: 520;
-      line-height: .95;
-      letter-spacing: 0;
-    }
-
-    .boot h1 em { color: var(--gold); font-family: Georgia, serif; font-weight: 400; }
-
-    .boot-progress {
-      width: min(360px, 80vw);
-      height: 3px;
-      margin: 16px auto 10px;
-      overflow: hidden;
-      background: rgba(255,255,255,.12);
-    }
-
-    .boot-progress span {
-      display: block;
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light));
-      box-shadow: 0 0 22px var(--gold);
-      transition: width .16s ease;
-    }
-
-    .boot-status { min-height: 18px; margin: 0; color: #a8a093; font-size: 9px; }
-
-    .enter-button {
-      min-width: 210px;
-      margin-top: 14px;
-      padding: 14px 20px;
-      border: 1px solid rgba(241, 221, 169, .55);
-      border-radius: 999px;
-      opacity: 0;
-      color: var(--black);
-      background: var(--gold-light);
-      font-weight: 700;
-      cursor: pointer;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity .4s ease, transform .4s ease, background .2s ease;
-    }
-
-    .boot.is-ready .enter-button { opacity: 1; transform: none; pointer-events: auto; }
-    .enter-button:hover { background: #fff2cf; }
-
-    .desktop {
-      position: fixed;
-      inset: 0;
-      isolation: isolate;
-      overflow: hidden;
-      opacity: 0;
-      transform: scale(1.025);
-      transition: opacity .8s ease .15s, transform .9s cubic-bezier(.2,.8,.2,1) .1s;
-    }
-
-    .desktop-ready .desktop { opacity: 1; transform: none; }
-
-    .wallpaper {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      color: var(--cream);
-      background:
-        linear-gradient(100deg, rgba(8,8,6,.98) 0 37%, rgba(8,8,6,.74) 55%, rgba(8,8,6,.16) 100%),
-        radial-gradient(circle at 78% 45%, rgba(215,182,108,.28), transparent 30%),
-        #15120e;
-    }
-
-    .wallpaper::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      opacity: .19;
-      mix-blend-mode: overlay;
-      background-image: url("exports/nc-watermark-animation/nc-watermark-animation-preview.png");
-      background-size: 300px;
-    }
-
-    .wallpaper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none;
-      background: linear-gradient(90deg, transparent 0 63%, rgba(215,182,108,.45) 63% calc(63% + 1px), transparent calc(63% + 1px));
-    }
-
-    .wallpaper-portrait {
-      position: absolute;
-      inset: -9% -2% -7% auto;
-      z-index: 1;
-      width: min(62vw, 920px);
-      height: 116%;
-      object-fit: cover;
-      object-position: 50% 42%;
-      filter: sepia(.08) contrast(1.07);
-    }
-
-    .wallpaper-copy {
-      position: absolute;
-      left: clamp(22px, 4vw, 74px);
-      top: 50%;
-      z-index: 4;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-
-    .wallpaper-copy p { margin: 0 0 14px; color: var(--gold-light); font: 10px/1.2 var(--mono); letter-spacing: .22em; text-transform: uppercase; }
-
-    .wallpaper-copy strong {
-      display: block;
-      max-width: 680px;
-      color: var(--cream);
-      font-size: clamp(50px, 9.5vw, 144px);
-      font-weight: 650;
-      line-height: .76;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .wallpaper-copy strong span { display: block; margin-left: .45em; color: transparent; -webkit-text-stroke: 1px rgba(241,231,215,.72); }
-
-    .menu-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 9000;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
-      color: #f7efe3;
-      border-bottom: 1px solid rgba(255,255,255,.09);
-      background: rgba(10,9,7,.72);
-      backdrop-filter: blur(24px) saturate(1.3);
-      -webkit-backdrop-filter: blur(24px) saturate(1.3);
-      font-size: 10px;
-    }
-
-    .menu-left, .menu-right { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
-    .menu-left strong { color: var(--gold-light); }
-    .menu-mark { width: 22px; height: 22px; object-fit: contain; }
-
-    .desktop-icons {
-      position: absolute;
-      top: 58px;
-      right: 26px;
-      z-index: 20;
-      display: grid;
-      grid-template-columns: repeat(2, 94px);
-      gap: 20px 14px;
-    }
-
-    .desktop-icon {
-      width: 94px;
-      min-height: 94px;
-      padding: 0;
-      border: 0;
-      color: #fff;
-      background: transparent;
-      text-align: center;
-      cursor: pointer;
-      text-shadow: 0 2px 8px rgba(0,0,0,.8);
-    }
-
-    .desktop-icon .icon-art {
-      position: relative;
-      width: 62px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 7px;
-      border: 1px solid rgba(255,255,255,.5);
-      border-radius: 8px;
-      color: var(--cream);
-      background: linear-gradient(150deg, rgba(241,221,169,.26), rgba(8,8,6,.9));
-      box-shadow: 0 10px 24px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.3);
-      font: 700 22px/1 var(--mono);
-      transition: transform .18s ease, border-color .18s ease;
-    }
-
-    .desktop-icon:nth-child(2n) .icon-art { background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(113,86,35,.88)); }
-    .desktop-icon:hover .icon-art { transform: translateY(-4px) scale(1.04); border-color: var(--gold-light); }
-    .desktop-icon small { display: block; font-size: 11px; line-height: 1.15; }
-    .desktop-icon .icon-art.is-wide { font-size: 14px; }
-
-    .window {
-      --x: 12vw;
-      --y: 10vh;
-      --w: 680px;
-      --h: 620px;
-      position: absolute;
-      left: var(--x);
-      top: var(--y);
-      z-index: 100;
-      width: min(var(--w), calc(100vw - 34px));
-      height: min(var(--h), calc(100vh - 110px));
-      min-width: 340px;
-      min-height: 250px;
-      overflow: hidden;
-      border: 1px solid rgba(215,182,108,.42);
-      border-radius: 8px;
-      background: var(--glass);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(28px) saturate(1.08);
-      -webkit-backdrop-filter: blur(28px) saturate(1.08);
-      animation: windowOpen .34s cubic-bezier(.2,.85,.25,1) both;
-      resize: both;
-    }
-
-    .window[hidden], .window.is-minimized { display: none; }
-    .window.is-maximized { inset: 40px 12px 76px !important; width: auto !important; height: auto !important; resize: none; }
-
-    .window-bar {
-      height: 42px;
-      display: grid;
-      grid-template-columns: 82px 1fr 82px;
-      align-items: center;
-      padding: 0 12px;
-      color: var(--cream);
-      border-bottom: 1px solid rgba(215,182,108,.18);
-      background: rgba(18,16,12,.94);
-      user-select: none;
-      cursor: grab;
-      touch-action: none;
-    }
-
-    .window-bar:active { cursor: grabbing; }
-    .window-controls { display: flex; gap: 8px; }
-    .window-control { width: 13px; height: 13px; padding: 0; border: 1px solid rgba(241,221,169,.45); border-radius: 50%; cursor: pointer; }
-    .window-control.close { background: rgba(215,182,108,.92); }
-    .window-control.minimize { background: rgba(241,221,169,.55); }
-    .window-control.maximize { background: rgba(255,255,255,.22); }
-    .window-title { overflow: hidden; font-size: 12px; font-weight: 650; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-    .window-title span { color: #867d6e; font-weight: 450; }
-    .window-title:focus { outline: none; }
-
-    .window-body {
-      height: calc(100% - 42px);
-      overflow: auto;
-      overscroll-behavior: contain;
-      color: var(--cream);
-      background: rgba(10,9,7,.94);
-      scrollbar-color: #8f733c transparent;
-    }
-
-    .window-hero {
-      position: relative;
-      min-height: 280px;
-      display: flex;
-      flex-direction: column;
-      justify-content: end;
-      padding: clamp(26px, 5vw, 58px);
-      overflow: hidden;
-      color: var(--cream);
-      background: #11100d;
-    }
-
-    .window-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,8,6,.9), transparent 70%); }
-    .window-hero > * { position: relative; z-index: 2; }
-    .eyebrow { margin: 0 0 10px; color: var(--gold-light); font-size: 9px; }
-    .window-hero h2 { max-width: 760px; margin: 0; font-size: clamp(36px, 5vw, 64px); line-height: .96; letter-spacing: 0; }
-    .window-hero p:not(.eyebrow) { max-width: 620px; margin: 18px 0 0; color: #d6ccbd; line-height: 1.6; }
-
-    .content { padding: clamp(24px, 5vw, 58px); }
-    .content h2, .content h3, .content p { margin-top: 0; }
-    .content h2 { font-size: clamp(30px, 5vw, 56px); line-height: .98; letter-spacing: 0; }
-    .content h3 { margin-bottom: 10px; font-size: 20px; letter-spacing: 0; }
-    .content p { color: var(--muted); font-size: 15px; line-height: 1.7; }
-    .content p.lead { max-width: 760px; color: var(--cream); font-size: clamp(18px, 2.4vw, 25px); line-height: 1.45; }
-    .meta { color: var(--gold); font-size: 9px; line-height: 1.6; }
-
-    .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; }
-    .tag { padding: 7px 9px; border: 1px solid rgba(215,182,108,.32); border-radius: 999px; color: var(--gold-light); background: rgba(215,182,108,.08); font-size: 8px; }
-
-    .finder-layout { display: grid; grid-template-columns: 170px 1fr; min-height: 100%; }
-    .finder-sidebar { padding: 24px 14px; border-right: 1px solid var(--line); background: rgba(25,21,15,.72); }
-    .finder-sidebar strong { display: block; margin: 0 8px 12px; color: var(--gold); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-    .finder-sidebar button { width: 100%; display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 0; border-radius: 7px; color: var(--cream); background: transparent; text-align: left; cursor: pointer; }
-    .finder-sidebar button:hover { background: rgba(215,182,108,.12); }
-    .finder-main { padding: 30px; }
-    .finder-main h2 { margin: 0; font-size: clamp(34px, 5vw, 58px); line-height: .94; letter-spacing: 0; }
-    .finder-main .intro { max-width: 620px; margin: 18px 0 28px; color: var(--muted); font-size: 15px; line-height: 1.65; }
-    .finder-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .finder-card { min-height: 144px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; color: var(--cream); background: rgba(255,255,255,.035); cursor: pointer; text-align: left; }
-    .finder-card:hover { border-color: var(--gold); background: rgba(215,182,108,.1); }
-    .finder-card span { display: block; margin-bottom: 24px; color: #ad8a3f; font: 700 18px var(--mono); }
-    .finder-card strong { display: block; font-size: 15px; }
-    .finder-card small { display: block; margin-top: 5px; color: var(--muted); line-height: 1.3; }
-
-    .case-summary { display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(20px, 5vw, 70px); align-items: start; }
-    .case-facts { display: grid; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.04); }
-    .case-facts div { display: grid; gap: 5px; }
-    .case-facts span { color: #8a8174; font: 8px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
-    .case-facts strong { font-size: 13px; line-height: 1.4; }
-    .case-gallery { display: grid; gap: 20px; padding: 0 clamp(18px, 4vw, 44px) 50px; }
-    .case-gallery figure { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #11100d; }
-    .case-gallery img { width: 100%; height: auto; }
-    .case-gallery figcaption { display: flex; justify-content: space-between; gap: 20px; padding: 13px 15px; color: var(--muted); font-size: 11px; }
-    .case-gallery .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-    .studio-hero { min-height: 380px; background-image: linear-gradient(90deg, rgba(7,7,5,.9), rgba(7,7,5,.2)), url("assets/jason-roisin-engagement-card.jpg"); background-size: cover; background-position: center 36%; }
-    .studio-hero .studio-logo { width: min(330px, 65vw); margin-bottom: 14px; }
-    .split { display: grid; grid-template-columns: .78fr 1.22fr; gap: 28px; align-items: stretch; }
-    .split img { width: 100%; height: 100%; min-height: 390px; object-fit: cover; border-radius: 8px; }
-    .split-copy { padding: clamp(8px, 3vw, 30px) 0; }
-    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 24px; }
-    .principles-grid div { min-height: 130px; padding: 17px; border: 1px solid var(--line); border-radius: 8px; background: rgba(215,182,108,.04); }
-    .principles-grid span { color: #a4823e; font: 10px var(--mono); }
-    .principles-grid strong { display: block; margin-top: 30px; font-size: 14px; }
-
-    .terms-window .window-body { background: #0c0b08; }
-    .terms-intro { border-bottom: 1px solid var(--line); background: radial-gradient(circle at 74% 0, rgba(215,182,108,.14), transparent 44%); }
-    .terms-note { margin-top: 24px; padding: 16px; border: 1px solid rgba(215,182,108,.3); border-radius: 8px; color: var(--gold-light) !important; background: rgba(215,182,108,.07); }
-    .terms-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 0 clamp(24px,5vw,58px) clamp(28px,5vw,58px); }
-    .terms-clause { min-height: 174px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.035); }
-    .terms-clause span { display: block; margin-bottom: 18px; color: #a4823e; font: 700 16px var(--mono); }
-    .terms-clause strong { display: block; margin-bottom: 8px; color: var(--cream); font-size: 15px; }
-    .terms-clause p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
-
-    .media-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
-    .media-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #111; }
-    .media-card:first-child,
-    .media-card.is-featured { grid-column: 1 / -1; }
-    .media-card video, .media-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
-    .media-card-copy { padding: 15px; color: #f2e9dc; }
-    .media-card-copy strong { display: block; margin-bottom: 5px; }
-    .media-card-copy small { color: #b7ad9e; line-height: 1.4; }
-
-    .poster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .poster-grid figure { margin: 0; }
-    .poster-grid img { width: 100%; border-radius: 8px; box-shadow: 0 12px 34px rgba(0,0,0,.16); }
-    .poster-grid figcaption { padding: 11px 2px; color: var(--muted); font-size: 11px; }
-
-    .weddings-hero {
-      min-height: 360px;
-      background-color: #090806;
-      background-image:
-        linear-gradient(rgba(215,182,108,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(215,182,108,.08) 1px, transparent 1px);
-      background-size: 54px 54px;
-    }
-
-    .engagements-hero {
-      min-height: 400px;
-      background-image: linear-gradient(90deg, rgba(7,7,5,.9), rgba(7,7,5,.12)), url("assets/jason-roisin-engagement-card.jpg");
-      background-size: cover;
-      background-position: center 43%;
-    }
-
-    .photo-wall {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(0,1fr));
-      grid-auto-flow: dense;
-      gap: 12px;
-      padding: 0 clamp(18px, 4vw, 44px) 48px;
-    }
-
-    .photo-wall figure {
-      position: relative;
-      grid-column: span 6;
-      min-height: 300px;
-      margin: 0;
-      overflow: hidden;
-      border-radius: 8px;
-      background: #171510;
-    }
-
-    .photo-wall figure.wide { grid-column: span 8; }
-    .photo-wall figure.narrow { grid-column: span 4; }
-    .photo-wall figure.full { grid-column: 1 / -1; min-height: 420px; }
-    .photo-wall img { width: 100%; height: 100%; min-height: inherit; object-fit: cover; transition: transform .6s ease; }
-    .photo-wall figure:hover img { transform: scale(1.025); }
-    .photo-wall figcaption { position: absolute; inset: auto 0 0; padding: 34px 14px 13px; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.72)); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
-
-    .about-layout { display: grid; grid-template-columns: minmax(220px,.8fr) 1.2fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
-    .about-layout img { width: 100%; max-height: 570px; object-fit: cover; border-radius: 8px; }
-    .skills { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px 20px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
-    .skills span { color: var(--muted); font-size: 12px; }
-
-    .contact-window .window-body { color: var(--cream); background: #0d0c09; }
-    .contact-panel { min-height: 100%; display: grid; place-items: center; padding: clamp(30px, 7vw, 82px); text-align: center; background: radial-gradient(circle at 50% 0, rgba(215,182,108,.18), transparent 45%); }
-    .contact-panel h2 { max-width: 720px; margin: 0; font-size: clamp(42px, 7vw, 82px); line-height: .9; letter-spacing: 0; }
-    .contact-panel p { max-width: 560px; margin: 25px auto; color: #bdb3a5; line-height: 1.65; }
-    .button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 18px; border: 1px solid var(--gold); border-radius: 999px; color: #100f0c; background: var(--gold-light); font-weight: 700; text-decoration: none; }
-    .button.secondary { color: var(--cream); background: transparent; }
-    .button:hover { filter: brightness(1.08); }
-
-    .menu-command {
-      padding: 0;
-      border: 0;
-      color: inherit;
-      background: transparent;
-      font: inherit;
-      letter-spacing: inherit;
-      text-transform: inherit;
-      cursor: pointer;
-    }
-
-    .menu-command:hover,
-    .menu-command:focus-visible { color: var(--gold-light); }
-
-    .contact-panel > div { width: min(760px,100%); }
-    .contact-panel .button-row { margin-bottom: 26px; }
-    .direct-message-form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; text-align: left; }
-    .direct-message-form .full { grid-column: 1 / -1; }
-    .direct-message-form label { display: block; margin-bottom: 6px; color: var(--gold); font: 9px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
-    .direct-message-form input,
-    .direct-message-form select,
-    .direct-message-form textarea {
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid rgba(215,182,108,.28);
-      border-radius: 7px;
-      padding: 11px 12px;
-      color: var(--cream);
-      background: rgba(255,255,255,.05);
-      font: 14px var(--sans);
-    }
-    .direct-message-form textarea { min-height: 110px; resize: vertical; }
-    .direct-message-form .submit-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .direct-message-form button { min-height: 46px; border: 1px solid var(--gold); border-radius: 999px; padding: 0 18px; color: #100f0c; background: var(--gold-light); font-weight: 750; cursor: pointer; }
-    .form-status { margin: 0 !important; color: var(--muted) !important; font-size: 12px !important; }
-    .form-status.success { color: #9fdfb6 !important; }
-    .form-status.error { color: #efb0a6 !important; }
-
-    .dynamic-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .wallpaper > .dynamic-media { z-index: 1; }
-    .media-card-visual { position: relative; min-height: 260px; overflow: hidden; background: #111; }
-    .media-card-visual > video,
-    .media-card-visual > img { width: 100%; height: 100%; min-height: 260px; aspect-ratio: 16/9; object-fit: cover; }
-
-    .dock-wrap {
-      position: absolute;
-      left: 50%;
-      bottom: max(12px, env(safe-area-inset-bottom));
-      z-index: 9500;
-      transform: translateX(-50%);
-    }
-
-    .dock {
-      display: flex;
-      align-items: end;
-      gap: 8px;
-      padding: 8px;
-      border: 1px solid rgba(255,255,255,.24);
-      border-radius: 8px;
-      background: rgba(24,22,18,.62);
-      box-shadow: 0 15px 50px rgba(0,0,0,.3);
-      backdrop-filter: blur(24px) saturate(1.3);
-      -webkit-backdrop-filter: blur(24px) saturate(1.3);
-    }
-
-    .dock-button {
-      position: relative;
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 1px solid rgba(255,255,255,.25);
-      border-radius: 8px;
-      color: var(--cream);
-      background: linear-gradient(145deg, #4b402a, #12110e);
-      box-shadow: inset 0 1px rgba(255,255,255,.2);
-      font: 700 14px var(--mono);
-      cursor: pointer;
-      transition: transform .18s ease;
-    }
-
-    .dock-button:hover { transform: translateY(-8px) scale(1.13); }
-    .dock-button.is-open::after { content: ""; position: absolute; bottom: -6px; width: 4px; height: 4px; border-radius: 50%; background: #fff; }
-    .dock-tip { position: absolute; left: 50%; bottom: calc(100% + 8px); padding: 6px 7px; border-radius: 5px; opacity: 0; color: #eee5d8; background: rgba(8,8,6,.9); font-size: 7px; white-space: nowrap; transform: translate(-50%,5px); pointer-events: none; transition: .15s ease; }
-    .dock-button:hover .dock-tip { opacity: 1; transform: translate(-50%,0); }
-    .dock-divider { width: 1px; height: 43px; margin: 0 2px; background: rgba(255,255,255,.22); }
-
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-    @keyframes bootSweep { 0% { transform: translateX(-45%); } 100% { transform: translateX(45%); } }
-    @keyframes wordFlash { 0%, 82% { opacity: 1; filter: blur(0); } 83%, 100% { opacity: 0; filter: blur(8px); } }
-    @keyframes markIn { from { opacity: 0; transform: scale(.78); filter: blur(9px); } to { opacity: 1; transform: none; filter: none; } }
-    @keyframes windowOpen { from { opacity: 0; transform: translateY(22px) scale(.94); } to { opacity: 1; transform: none; } }
-
-    @media (max-width: 900px) {
-      .desktop-icons { grid-template-columns: 88px; }
-      .case-summary, .split, .about-layout { grid-template-columns: 1fr; }
-      .split img { max-height: 520px; }
-    }
-
-    @media (max-width: 700px) {
-      .menu-left span, .menu-right span:first-child { display: none; }
-      .menu-right { display: none; }
-      .wallpaper-portrait { right: -36%; width: 118vw; opacity: .74; }
-      .wallpaper-copy { top: 43%; }
-      .wallpaper-copy strong { font-size: clamp(54px, 20vw, 94px); }
-      .desktop-icons { top: 54px; right: 10px; left: 10px; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px 4px; }
-      .desktop-icon { width: 100%; min-height: 84px; }
-      .desktop-icon .icon-art { width: 54px; height: 50px; }
-      .window { position: fixed; inset: 32px 0 74px !important; width: auto !important; height: auto !important; min-width: 0; min-height: 0; border: 0; border-radius: 0; resize: none; }
-      .window.is-maximized { inset: 32px 0 74px !important; }
-      .window-bar { grid-template-columns: 75px 1fr 75px; }
-      .finder-layout { grid-template-columns: 1fr; }
-      .finder-sidebar { display: none; }
-      .finder-main { padding: 24px 18px 34px; }
-      .finder-grid { grid-template-columns: 1fr; }
-      .case-gallery .pair, .media-grid, .poster-grid, .principles-grid { grid-template-columns: 1fr; }
-      .terms-list { grid-template-columns: 1fr; padding-inline: 18px; }
-      .photo-wall { grid-template-columns: 1fr; }
-      .photo-wall figure, .photo-wall figure.wide, .photo-wall figure.narrow, .photo-wall figure.full { grid-column: 1; min-height: 330px; }
-      .media-card:first-child, .media-card.is-featured { grid-column: auto; }
-      .poster-grid { gap: 28px; }
-      .about-layout { display: block; }
-      .about-layout img { max-height: 410px; margin-bottom: 25px; object-position: 50% 35%; }
-      .dock-wrap { width: calc(100vw - 12px); }
-      .dock { justify-content: start; gap: 6px; overflow-x: auto; border-radius: 8px; }
-      .dock-button { flex: 0 0 43px; width: 43px; height: 43px; }
-      .dock-tip { display: none; }
-      .window-hero { min-height: 250px; }
-    }
-
-    @media (max-width: 390px) {
-      .skills { grid-template-columns: 1fr; }
-      .content { padding-inline: 18px; }
-      .contact-panel { padding-inline: 20px; }
-      .direct-message-form { grid-template-columns: 1fr; }
-      .direct-message-form .full { grid-column: auto; }
-      .direct-message-form .submit-row { grid-column: auto; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-    }
-  </style>
+  <link rel="stylesheet" href="site.css?v=wedding-white-1">
 </head>
 <body>
-  <section class="boot" aria-labelledby="boot-title">
-    <video class="boot-reel" data-media-element="feature" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-      <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
-    </video>
-    <div class="boot-shade" aria-hidden="true"></div>
-    <div class="boot-words" aria-hidden="true">
-      <span>Vows</span><span>Feeling</span><span>Forever</span><span>Motion</span><span>Memory</span><span>NC Studio</span>
-    </div>
-    <div class="boot-inner">
-      <img class="boot-mark" src="ncstudios-logo-mark-transparent.png" alt="NC mark">
-      <p class="boot-kicker">NC Studio · photography + film</p>
-      <h1 id="boot-title">Real. cinematic. <em>yours.</em></h1>
-      <div class="boot-progress" aria-hidden="true"><span data-progress-bar></span></div>
-      <p class="boot-status" aria-live="polite" data-boot-status>loading the archive...</p>
-      <button class="enter-button" type="button" data-enter>enter nc studio <span aria-hidden="true">↗</span></button>
-    </div>
-  </section>
+  <div class="preloader" data-preloader aria-hidden="true">
+    <div class="preloader-word"><span>[nc</span><span class="studio"> studio</span><span>]</span></div>
+  </div>
 
-  <main class="desktop" aria-label="NC Studio photography and film website" data-desktop>
-    <div class="wallpaper" aria-hidden="true">
-      <img class="wallpaper-portrait" data-media-image="hero" src="assets/jason-roisin-engagement-card.jpg" alt="">
-      <div class="wallpaper-copy">
-        <p>Wedding photography · cinematic films</p>
-        <strong>NC <span>Studio</span></strong>
-      </div>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="NC Studio home">
+      <img src="ncstudios-logo-mark-transparent.png" alt="">
+      <strong>NC Studio</strong>
+      <span>Wedding photography + film</span>
+    </a>
 
-    <header class="menu-bar">
-      <div class="menu-left">
-        <img class="menu-mark" src="ncstudios-logo-mark-transparent.png" alt="">
-        <strong>NC Studio</strong>
-        <button class="menu-command" type="button" data-open="weddings">Weddings</button>
-        <button class="menu-command" type="button" data-open="engagements">Engagements</button>
-        <button class="menu-command" type="button" data-open="films">Films</button>
-        <button class="menu-command" type="button" data-open="terms">Terms</button>
-      </div>
-      <div class="menu-right"><span>UK · weddings · photo + film</span><time data-clock>09:41</time></div>
-    </header>
-
-    <nav class="desktop-icons" aria-label="NC Studio sections">
-      <button class="desktop-icon" type="button" data-open="weddings" aria-label="Open wedding photography">
-        <span class="icon-art" aria-hidden="true">W</span><small>Weddings</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="engagements" aria-label="Open engagement photography">
-        <span class="icon-art" aria-hidden="true">♡</span><small>Engagements</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="films" aria-label="Open films">
-        <span class="icon-art" aria-hidden="true">▶</span><small>Films</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="experience" aria-label="Open the wedding experience">
-        <span class="icon-art" aria-hidden="true">01</span><small>The experience</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="about" aria-label="Open about Janelle">
-        <span class="icon-art" aria-hidden="true">NC</span><small>About</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="terms" aria-label="Open terms and conditions">
-        <span class="icon-art is-wide" aria-hidden="true">T&C</span><small>Terms</small>
-      </button>
-      <button class="desktop-icon" type="button" data-open="contact" aria-label="Open work together window">
-        <span class="icon-art" aria-hidden="true">↗</span><small>Work together</small>
-      </button>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu>☰</button>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#work">Work</a>
+      <a href="#approach">Approach</a>
+      <a href="#about">About</a>
+      <a href="terms.html">Terms</a>
+      <a class="nav-cta" href="availability.html">Check your date</a>
     </nav>
+  </header>
 
-    <section class="window" style="--x:10vw;--y:9vh;--w:720px;--h:650px" data-window="finder" role="dialog" aria-label="Welcome to NC Studio" aria-hidden="false">
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">NC Studio <span>— selected work</span></div><span></span>
-      </header>
-      <div class="window-body finder-layout">
-        <aside class="finder-sidebar">
-          <strong>Favourites</strong>
-          <button type="button" data-open="weddings"><span>●</span> Weddings</button>
-          <button type="button" data-open="engagements"><span>♡</span> Engagements</button>
-          <button type="button" data-open="films"><span>▶</span> Wedding films</button>
-          <button type="button" data-open="experience"><span>●</span> The experience</button>
-          <button type="button" data-open="about"><span>●</span> About NC Studio</button>
-          <button type="button" data-open="terms"><span>●</span> Terms</button>
-        </aside>
-        <div class="finder-main">
-          <p class="eyebrow">NC Studio · Wedding photo + film</p>
-          <h2>Your day, held like a film.</h2>
-          <p class="intro">I’m Janelle, the creative behind NC Studio. I document weddings with calm direction, honest feeling and a timeless, cinematic finish.</p>
-          <div class="finder-grid">
-            <button class="finder-card" type="button" data-open="weddings"><span>01</span><strong>Weddings</strong><small>Story-led coverage from morning preparations to the dance floor.</small></button>
-            <button class="finder-card" type="button" data-open="engagements"><span>02</span><strong>Engagements</strong><small>A relaxed session before the wedding, built around your connection.</small></button>
-            <button class="finder-card" type="button" data-open="films"><span>03</span><strong>Wedding films</strong><small>Movement, vows and atmosphere shaped into a cinematic memory.</small></button>
-            <button class="finder-card" type="button" data-open="experience"><span>04</span><strong>The experience</strong><small>Calm planning, clear communication and gentle direction.</small></button>
-          </div>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <video class="hero-media" data-media-element="feature" autoplay muted loop playsinline preload="metadata" poster="assets/weddings/simi-kiefah-wedding-thumbnail.jpg">
+        <source src="assets/weddings/marvin-blessing-wedding-trailer.m4v" type="video/mp4">
+      </video>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-grid">
+        <p class="eyebrow">NC Studio · UK wedding photography + film</p>
+        <h1 id="hero-title">Your day, held like a film.</h1>
+        <p class="hero-copy">Honest feeling, calm direction and a cinematic finish that still feels like you.</p>
+        <div class="hero-actions">
+          <a class="button" href="#work">View the work</a>
+          <a class="button secondary" href="availability.html">Check your date</a>
         </div>
       </div>
     </section>
 
-    <section class="window" style="--x:7vw;--y:6vh;--w:980px;--h:760px" data-window="weddings" role="dialog" aria-label="Wedding photography and films" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">Weddings <span>— photography + film</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="window-hero weddings-hero">
-          <p class="eyebrow">Wedding photography · Cinematic films</p>
-          <h2>The feeling of the whole day.</h2>
-          <p>From the quiet preparation to the full dance floor, your wedding is documented as one connected story.</p>
-        </div>
-        <div class="content">
-          <div class="case-summary">
-            <div>
-              <p class="meta">NC Studio · UK wedding coverage</p>
-              <h2>Present, calm and never over-produced.</h2>
-              <p class="lead">I step in when guidance helps and disappear into the background when the real moment is already unfolding.</p>
-            </div>
-            <div class="case-facts">
-              <div><span>Coverage</span><strong>Photography, film or both</strong></div>
-              <div><span>Style</span><strong>Honest, cinematic, timeless</strong></div>
-              <div><span>Approach</span><strong>Gentle direction, natural moments</strong></div>
-            </div>
-          </div>
-          <div class="tag-row"><span class="tag">Morning prep</span><span class="tag">Ceremony</span><span class="tag">Portraits</span><span class="tag">Speeches</span><span class="tag">Reception</span></div>
-          <div class="media-grid" style="margin-top:28px">
-            <article class="media-card">
-              <video controls muted loop playsinline preload="metadata">
-                <source src="assets/weddings/marvin-blessing-wedding-film-01.mp4" type="video/mp4">
-              </video>
-              <div class="media-card-copy"><strong>Marvin + Blessing</strong><small>Wedding morning · groom preparations.</small></div>
-            </article>
-            <article class="media-card is-featured">
-              <video controls muted loop playsinline preload="metadata">
-                <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
-              </video>
-              <div class="media-card-copy"><strong>Marvin + Blessing</strong><small>Wedding morning · bridal details.</small></div>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="window" style="--x:12vw;--y:7vh;--w:940px;--h:730px" data-window="engagements" role="dialog" aria-label="Engagement photography" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">Engagements <span>— story-led photography</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="window-hero engagements-hero">
-          <p class="eyebrow">Engagements · Pre-wedding sessions</p>
-          <h2>Connection over performance.</h2>
-          <p>Gentle direction, natural movement and photographs that keep the personality of the people inside them.</p>
-        </div>
-        <div class="content">
-          <p class="meta">The approach</p>
-          <h2>Warm, observant and true to you.</h2>
-          <p class="lead">The best images usually happen once you stop thinking about the camera. I give enough direction to make you feel comfortable, then leave room for the real expressions, movement and laughter.</p>
-          <div class="principles-grid">
-            <div><span>01</span><strong>Story led</strong></div>
-            <div><span>02</span><strong>Calm direction</strong></div>
-            <div><span>03</span><strong>Cinematic finish</strong></div>
-          </div>
-        </div>
-        <div class="case-gallery">
-          <figure><img src="assets/jason-roisin-engagement-card.jpg" alt="Jason and Roisin laughing beneath blossom trees" loading="lazy"><figcaption><span>Jason + Roisin</span><span>Engagement session</span></figcaption></figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="window" style="--x:13vw;--y:10vh;--w:880px;--h:700px" data-window="films" role="dialog" aria-label="Wedding films" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">Wedding Films <span>— movement, voices &amp; atmosphere</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="content">
-          <p class="eyebrow" style="color:#886820">Wedding film · Edit · Sound · Feeling</p>
-          <h2>The parts of the day a photograph cannot hold.</h2>
-          <p class="lead">The vows, the pause before a reaction, the room during the speeches and the movement of the dance floor. Each film is paced around the feeling of your wedding.</p>
-          <div class="tag-row" style="margin-bottom:28px"><span class="tag">Wedding films</span><span class="tag">Ceremony</span><span class="tag">Speeches</span><span class="tag">Sound design</span><span class="tag">Cinematic edit</span></div>
-          <div class="media-grid">
-            <article class="media-card">
-              <div class="media-card-visual" data-media-panel="filmOne">
-                <video controls muted loop playsinline preload="metadata">
-                  <source src="assets/weddings/marvin-blessing-wedding-film-01.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="media-card-copy"><strong>Marvin + Blessing · Film I</strong><small>Preparation, detail and anticipation before the ceremony.</small></div>
-            </article>
-            <article class="media-card is-featured">
-              <div class="media-card-visual" data-media-panel="filmTwo">
-                <video controls muted loop playsinline preload="metadata">
-                  <source src="assets/weddings/marvin-blessing-wedding-film-02.mp4" type="video/mp4">
-                </video>
-              </div>
-              <div class="media-card-copy"><strong>Marvin + Blessing · Film II</strong><small>Bridal details and the quiet moments that begin the story.</small></div>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="window" style="--x:18vw;--y:7vh;--w:900px;--h:730px" data-window="experience" role="dialog" aria-label="The NC Studio wedding experience" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">The Experience <span>— from enquiry to delivery</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="content">
-          <p class="eyebrow" style="color:#886820">A calm, clear wedding process</p>
-          <h2>You enjoy the day. I keep the story together.</h2>
-          <p class="lead">Good wedding coverage starts before the cameras come out. We plan the important people, timings and priorities so the day itself can feel natural.</p>
-          <div class="finder-grid" style="margin-top:30px">
-            <div class="finder-card"><span>01</span><strong>Enquire</strong><small>Share your date, venue and the kind of coverage you need.</small></div>
-            <div class="finder-card"><span>02</span><strong>Plan</strong><small>We shape the timeline, priorities and moments that matter to you.</small></div>
-            <div class="finder-card"><span>03</span><strong>Your wedding</strong><small>Calm direction when needed, quiet observation when it is not.</small></div>
-            <div class="finder-card"><span>04</span><strong>Delivery</strong><small>Your finished photographs and films, edited with care.</small></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="window" style="--x:16vw;--y:8vh;--w:820px;--h:690px" data-window="about" role="dialog" aria-label="About Janelle Lamptey" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">About Janelle <span>— read me</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="content about-layout">
-          <img data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Janelle Lamptey with a camera" loading="lazy">
+    <section class="section" id="work">
+      <div class="section-inner">
+        <header class="section-head">
           <div>
-            <p class="eyebrow" style="color:#886820">Janelle Lamptey · UK</p>
-            <h2>The creative behind NC Studio.</h2>
-            <p class="lead">Hi, I’m Janelle. Inspired by film and drawn to genuine moments, I document weddings with a timeless and cinematic approach.</p>
-            <p>My goal is simple: to preserve your day in a way that feels honest, beautiful and true to you. Long after the flowers fade and the music stops, the memories remain.</p>
-            <div class="skills" aria-label="Services">
-              <span>Wedding photography</span><span>Wedding films</span><span>Engagement sessions</span><span>Story-led coverage</span><span>Cinematic editing</span><span>Calm direction</span>
+            <p class="section-kicker">Selected wedding stories</p>
+            <h2>Real moments, shaped with intention.</h2>
+          </div>
+          <p class="section-intro">A small collection of wedding films and couple stories, from the quiet parts to the full dance floor.</p>
+        </header>
+
+        <div class="work-grid">
+          <figure class="work-item featured">
+            <div class="media-frame" data-media-panel="filmOne">
+              <video controls playsinline preload="metadata" poster="assets/weddings/simi-kiefah-wedding-thumbnail.jpg">
+                <source src="assets/weddings/simi-kiefah-wedding-trailer.m4v" type="video/mp4">
+              </video>
             </div>
-          </div>
+            <figcaption class="work-caption"><strong>Simi + Kiefah</strong><span>Wedding film · Birmingham</span></figcaption>
+          </figure>
+
+          <figure class="work-item">
+            <div class="media-frame" data-media-panel="filmTwo">
+              <video controls playsinline preload="metadata">
+                <source src="assets/weddings/marvin-blessing-wedding-trailer.m4v" type="video/mp4">
+              </video>
+            </div>
+            <figcaption class="work-caption"><strong>Marvin + Blessing</strong><span>Wedding film · London</span></figcaption>
+          </figure>
+
+          <figure class="work-item">
+            <div class="media-frame">
+              <img src="assets/jason-roisin-engagement-card.jpg" alt="Jason and Roisin laughing together during their engagement session" loading="lazy">
+            </div>
+            <figcaption class="work-caption"><strong>Jason + Roisin</strong><span>Engagement session</span></figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
-    <section class="window terms-window" style="--x:15vw;--y:6vh;--w:940px;--h:760px" data-window="terms" role="dialog" aria-label="NC Studio terms and conditions" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">Terms <span>— bookings, payments &amp; delivery</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="content terms-intro">
-          <p class="eyebrow" style="color:#886820">Effective from May 2026</p>
-          <h2>Terms &amp; conditions.</h2>
-          <p class="lead">These terms apply to NC Studio wedding photography, videography, content and related creative packages.</p>
-          <p class="terms-note">Where an invoice, email, WhatsApp message or other written communication confirms a payment date, that date forms the agreed payment date. If the date is missed, the payment is overdue and late fees may apply.</p>
-        </div>
-        <div class="terms-list">
-          <article class="terms-clause"><span>01</span><strong>Booking confirmation</strong><p>A date is not secured until NC Studio confirms the booking in writing and the required booking fee, retainer or deposit has cleared.</p></article>
-          <article class="terms-clause"><span>02</span><strong>Payments and late fees</strong><p>Balances must be paid by the date shown on the invoice or agreed in writing by email, WhatsApp or message. Missed dates may pause delivery, release unpaid add-ons and lead to late fees, admin charges or statutory recovery costs where permitted by law.</p></article>
-          <article class="terms-clause"><span>03</span><strong>Retainers and deposits</strong><p>Booking fees and retainers cover planning time and holding the date. They are normally non-refundable unless NC Studio is unable to provide the agreed service.</p></article>
-          <article class="terms-clause"><span>04</span><strong>Postponements</strong><p>Postponed dates are subject to availability. If the new date is unavailable, the booking may be treated as a cancellation. Extra costs may apply where plans, travel or coverage change.</p></article>
-          <article class="terms-clause"><span>05</span><strong>Cancellations</strong><p>Cancellation terms depend on the package, date, work already completed and notice given. Any money owed for completed planning, shooting, editing, travel or outsourced costs remains payable.</p></article>
-          <article class="terms-clause"><span>06</span><strong>Coverage limits</strong><p>NC Studio will work carefully and professionally, but specific shots cannot be guaranteed where timings, access, weather, venue rules, guests, lighting or schedule changes affect what can be captured.</p></article>
-          <article class="terms-clause"><span>07</span><strong>Client responsibilities</strong><p>Clients must provide accurate timings, locations, permissions, supplier details and key shot priorities in good time. Delays or missing information may affect the final coverage.</p></article>
-          <article class="terms-clause"><span>08</span><strong>Editing and creative style</strong><p>NC Studio keeps creative control over shooting, selection, colour, pacing, music choice and final edit style. Raw files are not included unless agreed in writing before booking.</p></article>
-          <article class="terms-clause"><span>09</span><strong>Delivery</strong><p>Delivery timings are estimates unless a fixed deadline is agreed in writing. Final galleries, films, previews and add-ons may be held until all outstanding balances are paid.</p></article>
-          <article class="terms-clause"><span>10</span><strong>Image use and privacy</strong><p>NC Studio may use selected work for portfolio, website, social media and marketing unless privacy is agreed in writing. Client galleries and delivery links should not be shared publicly unless intended for that purpose.</p></article>
-          <article class="terms-clause"><span>11</span><strong>Storage and backups</strong><p>Files are backed up with reasonable care, but clients should download and safely store delivered files once received. Long-term hosting or re-delivery may not always be available.</p></article>
-          <article class="terms-clause"><span>12</span><strong>Liability</strong><p>If something outside NC Studio’s reasonable control prevents full service delivery, liability is limited to the amount paid for the affected service, except where the law says otherwise.</p></article>
-        </div>
+    <section class="story-band" aria-labelledby="couple-title">
+      <img src="assets/jason-roisin-engagement-card.jpg" alt="A couple sharing a natural moment beneath spring blossom" loading="lazy">
+      <div class="story-copy">
+        <p class="section-kicker">Couple sessions</p>
+        <h2 id="couple-title">Connection over performance.</h2>
+        <p>Relaxed sessions with enough direction to feel confident and enough space for you to be yourselves.</p>
+        <a class="text-link" href="availability.html">Enquire about a session <span aria-hidden="true">→</span></a>
       </div>
     </section>
 
-    <section class="window contact-window" style="--x:20vw;--y:8vh;--w:760px;--h:680px" data-window="contact" role="dialog" aria-label="Contact NC Studio" aria-hidden="true" hidden>
-      <header class="window-bar" data-drag-handle>
-        <div class="window-controls">
-          <button class="window-control close" type="button" data-close aria-label="Close window"></button>
-          <button class="window-control minimize" type="button" data-minimize aria-label="Minimise window"></button>
-          <button class="window-control maximize" type="button" data-maximize aria-label="Maximise window"></button>
-        </div>
-        <div class="window-title">Check Your Date <span>— wedding enquiry</span></div><span></span>
-      </header>
-      <div class="window-body">
-        <div class="contact-panel">
+    <section class="section approach" id="approach">
+      <div class="section-inner">
+        <header class="section-head">
           <div>
-            <p class="eyebrow">Planning your wedding?</p>
-            <h2>Tell me about your day.</h2>
-            <p>Send your wedding date, venue and the kind of coverage you need. I’ll come back with availability and the right option.</p>
-            <div class="button-row"><a class="button" href="availability.html">check your date ↗</a></div>
-
-            <form class="direct-message-form" id="directMessageForm">
-              <div>
-                <label for="directName">name</label>
-                <input id="directName" name="directName" type="text" autocomplete="name" required>
-              </div>
-              <div>
-                <label for="directEmail">email</label>
-                <input id="directEmail" name="directEmail" type="email" autocomplete="email" required>
-              </div>
-              <div>
-                <label for="directPhone">phone</label>
-                <input id="directPhone" name="directPhone" type="tel" autocomplete="tel">
-              </div>
-              <div>
-                <label for="directSubject">how can I help?</label>
-                <select id="directSubject" name="directSubject">
-                  <option>wedding booking</option>
-                  <option>availability check</option>
-                  <option>engagement session</option>
-                  <option>wedding film</option>
-                  <option>existing client</option>
-                </select>
-              </div>
-              <div class="full">
-                <label for="directMessage">message</label>
-                <textarea id="directMessage" name="directMessage" required></textarea>
-              </div>
-              <div class="sr-only" aria-hidden="true">
-                <label for="messageWebsite">website</label>
-                <input id="messageWebsite" name="messageWebsite" type="text" tabindex="-1" autocomplete="off">
-              </div>
-              <div class="submit-row">
-                <button type="submit">send message</button>
-                <p class="form-status" data-message-status aria-live="polite"></p>
-              </div>
-            </form>
+            <p class="section-kicker">The approach</p>
+            <h2>Calm on the day. Clear before it.</h2>
           </div>
+          <p class="section-intro">The experience stays simple so you can stay present.</p>
+        </header>
+
+        <div class="approach-grid">
+          <article class="approach-item"><span>01</span><h3>Story led</h3><p>Your day is captured with feeling, not treated as a checklist of moments.</p></article>
+          <article class="approach-item"><span>02</span><h3>Calm direction</h3><p>Gentle guidance when needed, with room for natural moments to unfold.</p></article>
+          <article class="approach-item"><span>03</span><h3>Cinematic finish</h3><p>Clean colour, thoughtful sound and movement that feels timeless rather than staged.</p></article>
         </div>
       </div>
     </section>
 
-    <div class="dock-wrap">
-      <nav class="dock" aria-label="NC Studio navigation">
-        <button class="dock-button is-open" type="button" data-open="finder" aria-label="Start here"><span aria-hidden="true">⌂</span><span class="dock-tip">Start here</span></button>
-        <button class="dock-button" type="button" data-open="weddings" aria-label="Weddings"><span aria-hidden="true">W</span><span class="dock-tip">Weddings</span></button>
-        <button class="dock-button" type="button" data-open="engagements" aria-label="Engagements"><span aria-hidden="true">♡</span><span class="dock-tip">Engagements</span></button>
-        <button class="dock-button" type="button" data-open="films" aria-label="Wedding films"><span aria-hidden="true">▶</span><span class="dock-tip">Wedding films</span></button>
-        <button class="dock-button" type="button" data-open="experience" aria-label="The experience"><span aria-hidden="true">01</span><span class="dock-tip">The experience</span></button>
-        <button class="dock-button" type="button" data-open="about" aria-label="About"><span aria-hidden="true">NC</span><span class="dock-tip">About</span></button>
-        <button class="dock-button" type="button" data-open="terms" aria-label="Terms"><span aria-hidden="true">T&C</span><span class="dock-tip">Terms</span></button>
-        <span class="dock-divider" aria-hidden="true"></span>
-        <button class="dock-button" type="button" data-open="contact" aria-label="Check your date"><span aria-hidden="true">↗</span><span class="dock-tip">Check your date</span></button>
-      </nav>
-    </div>
+    <section class="section" id="about">
+      <div class="section-inner about-grid">
+        <figure class="about-portrait">
+          <img data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Janelle, the creative behind NC Studio, holding a camera" loading="lazy">
+        </figure>
+        <div class="about-copy">
+          <p class="section-kicker">The creative behind NC Studio</p>
+          <h2>Hi, I'm Janelle.</h2>
+          <p class="lead">Inspired by film and drawn to genuine moments, I document weddings with a timeless and cinematic approach.</p>
+          <p>My goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.</p>
+          <p>Long after the flowers fade and the music stops, the memories remain. They deserve to be remembered well.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="event-strip" aria-labelledby="events-title">
+      <div class="media-frame" data-media-panel="filmThree">
+        <video controls playsinline preload="metadata">
+          <source src="assets/portfolio/senses-event-film.m4v" type="video/mp4">
+        </video>
+      </div>
+      <div class="event-copy">
+        <p class="section-kicker">Selected events</p>
+        <h3 id="events-title">Senses.</h3>
+        <p>One considered event story, included to show how NC Studio handles movement, atmosphere and live energy.</p>
+      </div>
+    </section>
+
+    <section class="section enquire">
+      <div class="enquire-inner">
+        <p class="section-kicker">Tell me the date</p>
+        <h2>Let's make something that still feels like you.</h2>
+        <p>Share the date, place and kind of coverage you need. Your enquiry lands directly in the NC Studio booking pipeline.</p>
+        <a class="button" href="availability.html">Start your enquiry</a>
+      </div>
+    </section>
   </main>
 
-  <script>
-    (() => {
-      const body = document.body;
-      const boot = document.querySelector('.boot');
-      const progressBar = document.querySelector('[data-progress-bar]');
-      const status = document.querySelector('[data-boot-status]');
-      const enter = document.querySelector('[data-enter]');
-      const desktop = document.querySelector('[data-desktop]');
-      const windows = [...document.querySelectorAll('[data-window]')];
-      let topZ = 200;
-      let progress = 0;
-      const statusCopy = ['loading nc studio...', 'finding the feeling...', 'threading vows + stills...', 'studio ready.'];
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© <span data-year></span> ncstudiouk</span>
+      <div class="footer-links">
+        <a href="#work">Work</a>
+        <a href="availability.html">Enquire</a>
+        <a href="terms.html">Terms</a>
+        <a href="client-delivery.html">Client delivery</a>
+      </div>
+    </div>
+  </footer>
 
-      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const isAdminPreview = new URLSearchParams(location.search).has('adminPreview');
-      let tick = null;
-
-      if (reducedMotion || isAdminPreview) {
-        progressBar.style.width = '100%';
-        status.textContent = statusCopy[3];
-        boot.classList.add('is-ready');
-        if (isAdminPreview) body.classList.add('desktop-ready');
-      } else {
-        tick = setInterval(() => {
-          progress = Math.min(100, progress + (progress < 72 ? 9 : 4));
-          progressBar.style.width = progress + '%';
-          status.textContent = statusCopy[Math.min(3, Math.floor(progress / 27))];
-          if (progress >= 100) {
-            clearInterval(tick);
-            boot.classList.add('is-ready');
-            enter.focus({ preventScroll: true });
-          }
-        }, 180);
-      }
-
-      enter.addEventListener('click', () => {
-        body.classList.add('desktop-ready');
-        setTimeout(() => desktop.focus?.(), 500);
-      });
-
-      const windowFor = (name) => document.querySelector(`[data-window="${name}"]`);
-
-      function syncDock(name, open) {
-        document.querySelectorAll(`[data-open="${name}"].dock-button`).forEach(button => button.classList.toggle('is-open', open));
-      }
-
-      function focusWindow(win) {
-        topZ += 1;
-        win.style.zIndex = topZ;
-        windows.forEach(item => item.classList.toggle('is-active', item === win));
-      }
-
-      function openWindow(name) {
-        const win = windowFor(name);
-        if (!win) return;
-        win.hidden = false;
-        win.classList.remove('is-minimized');
-        win.setAttribute('aria-hidden', 'false');
-        focusWindow(win);
-        syncDock(name, true);
-        const title = win.querySelector('.window-title');
-        if (title) title.setAttribute('tabindex', '-1');
-        title?.focus({ preventScroll: true });
-        win.querySelectorAll('video').forEach(video => video.play().catch(() => {}));
-      }
-
-      window.ncOpenWindow = openWindow;
-
-      const hashRoutes = {
-        '#home':'finder',
-        '#weddings':'weddings',
-        '#engagements':'engagements',
-        '#films':'films',
-        '#experience':'experience',
-        '#about':'about',
-        '#terms':'terms',
-        '#contact':'contact'
-      };
-
-      function openHashWindow() {
-        const route = hashRoutes[location.hash];
-        if (route) openWindow(route);
-      }
-
-      function closeWindow(win) {
-        const name = win.dataset.window;
-        win.hidden = true;
-        win.classList.remove('is-minimized', 'is-maximized');
-        win.setAttribute('aria-hidden', 'true');
-        syncDock(name, false);
-        win.querySelectorAll('video').forEach(video => video.pause());
-      }
-
-      document.addEventListener('click', event => {
-        const opener = event.target.closest('[data-open]');
-        if (opener) {
-          openWindow(opener.dataset.open);
-          return;
-        }
-
-        const win = event.target.closest('[data-window]');
-        if (!win) return;
-        focusWindow(win);
-        if (event.target.closest('[data-close]')) closeWindow(win);
-        if (event.target.closest('[data-minimize]')) {
-          win.classList.add('is-minimized');
-          win.setAttribute('aria-hidden', 'true');
-        }
-        if (event.target.closest('[data-maximize]')) win.classList.toggle('is-maximized');
-      });
-
-      document.addEventListener('keydown', event => {
-        if (event.key !== 'Escape') return;
-        const active = windows.filter(win => !win.hidden && !win.classList.contains('is-minimized')).sort((a,b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
-        if (active) closeWindow(active);
-      });
-
-      document.querySelectorAll('[data-drag-handle]').forEach(handle => {
-        handle.addEventListener('pointerdown', event => {
-          if (event.target.closest('button') || innerWidth <= 700) return;
-          const win = handle.closest('[data-window]');
-          if (win.classList.contains('is-maximized')) return;
-          focusWindow(win);
-          const rect = win.getBoundingClientRect();
-          const offsetX = event.clientX - rect.left;
-          const offsetY = event.clientY - rect.top;
-          handle.setPointerCapture(event.pointerId);
-
-          const move = moveEvent => {
-            const maxLeft = innerWidth - Math.min(120, rect.width);
-            const maxTop = innerHeight - 110;
-            win.style.left = Math.max(-rect.width + 120, Math.min(maxLeft, moveEvent.clientX - offsetX)) + 'px';
-            win.style.top = Math.max(32, Math.min(maxTop, moveEvent.clientY - offsetY)) + 'px';
-          };
-
-          const stop = () => {
-            handle.removeEventListener('pointermove', move);
-            handle.removeEventListener('pointerup', stop);
-            handle.removeEventListener('pointercancel', stop);
-          };
-
-          handle.addEventListener('pointermove', move);
-          handle.addEventListener('pointerup', stop);
-          handle.addEventListener('pointercancel', stop);
-        });
-      });
-
-      function updateClock() {
-        const clock = document.querySelector('[data-clock]');
-        if (!clock) return;
-        const now = new Date();
-        clock.dateTime = now.toISOString();
-        clock.textContent = new Intl.DateTimeFormat('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(now);
-      }
-
-      updateClock();
-      setInterval(updateClock, 30000);
-      focusWindow(windowFor('finder'));
-      openHashWindow();
-      window.addEventListener('hashchange', openHashWindow);
-    })();
-  </script>
   <script src="supabase-js.js?v=2.107.0"></script>
   <script src="supabase-config.js?v=public-site-2"></script>
   <script>
     (() => {
+      const body = document.body;
+      const menu = document.querySelector('[data-menu]');
+      const preloader = document.querySelector('[data-preloader]');
       const storageTable = 'app_storage';
       const contentKey = 'website_content_live';
-      const expectedSiteVersion = 'wedding-v2';
+      const expectedSiteVersion = 'wedding-v4';
+
+      document.querySelector('[data-year]').textContent = new Date().getFullYear();
+
+      menu.addEventListener('click',() => {
+        const open = body.classList.toggle('menu-open');
+        menu.setAttribute('aria-expanded',String(open));
+        menu.textContent = open ? '×' : '☰';
+      });
+
+      document.querySelectorAll('.site-nav a').forEach(link => link.addEventListener('click',() => {
+        body.classList.remove('menu-open');
+        menu.setAttribute('aria-expanded','false');
+        menu.textContent = '☰';
+      }));
+
+      window.setTimeout(() => preloader.classList.add('is-closing'),350);
+      window.setTimeout(() => preloader.classList.add('is-done'),1120);
 
       const isVideo = (value,type) => String(type || '').startsWith('video/') || /\.(mp4|m4v|webm|mov)(\?|#|$)/i.test(String(value || ''));
 
-      function makeVideo(value,target) {
+      function makeVideo(value,target){
         const video = document.createElement('video');
         video.className = 'dynamic-media';
         video.src = value;
-        video.autoplay = target !== 'filmOne' && target !== 'filmTwo' && target !== 'filmThree';
-        video.controls = target === 'filmOne' || target === 'filmTwo' || target === 'filmThree';
+        video.controls = target !== 'feature';
+        video.autoplay = target === 'feature';
         video.loop = true;
         video.muted = true;
         video.playsInline = true;
@@ -1253,41 +211,31 @@
         return video;
       }
 
-      function clearGenerated(target) {
+      function clearGenerated(target){
         document.querySelectorAll(`[data-generated-media="${target}"]`).forEach(node => node.remove());
       }
 
-      function setPanelMedia(target,value,type) {
+      function setPanelMedia(target,value,type){
         const panel = document.querySelector(`[data-media-panel="${target}"]`);
-        if (!panel || !value) return;
-
+        if(!panel || !value) return;
         clearGenerated(target);
         const requestedUrl = new URL(value,document.baseURI).href;
-
-        if (isVideo(value,type)) {
-          const existingVideo = panel.querySelector('video:not([data-generated-media])');
-          const existingUrl = existingVideo?.currentSrc || existingVideo?.querySelector('source')?.src || existingVideo?.src || '';
-          if (existingVideo && existingUrl === requestedUrl) {
-            Array.from(panel.children).forEach(node => { node.hidden = node !== existingVideo; });
-            return;
-          }
-        } else {
-          const existingImage = panel.querySelector('img:not([data-generated-media])');
-          if (existingImage && existingImage.src === requestedUrl) {
-            Array.from(panel.children).forEach(node => { node.hidden = node !== existingImage; });
-            return;
-          }
+        const existingVideo = panel.querySelector('video:not([data-generated-media])');
+        const existingImage = panel.querySelector('img:not([data-generated-media])');
+        const existingVideoUrl = existingVideo?.currentSrc || existingVideo?.querySelector('source')?.src || existingVideo?.src || '';
+        if(isVideo(value,type) && existingVideo && existingVideoUrl === requestedUrl){
+          Array.from(panel.children).forEach(node => node.hidden = node !== existingVideo);
+          return;
         }
-
-        Array.from(panel.children).forEach(node => {
-          if (!node.dataset.generatedMedia) node.hidden = true;
-        });
-
-        if (isVideo(value,type)) {
+        if(!isVideo(value,type) && existingImage && existingImage.src === requestedUrl){
+          Array.from(panel.children).forEach(node => node.hidden = node !== existingImage);
+          return;
+        }
+        Array.from(panel.children).forEach(node => node.hidden = true);
+        if(isVideo(value,type)){
           panel.appendChild(makeVideo(value,target));
           return;
         }
-
         const image = document.createElement('img');
         image.className = 'dynamic-media';
         image.src = value;
@@ -1296,153 +244,81 @@
         panel.appendChild(image);
       }
 
-      function setImageMedia(target,value,type) {
+      function setImageMedia(target,value,type){
         const image = document.querySelector(`[data-media-image="${target}"]`);
-        if (!image || !value) return;
-
+        if(!image || !value) return;
         clearGenerated(target);
-        if (isVideo(value,type)) {
+        if(isVideo(value,type)){
           image.hidden = true;
-          const video = makeVideo(value,target);
-          image.parentElement.prepend(video);
+          image.parentElement.prepend(makeVideo(value,target));
           return;
         }
-
         image.hidden = false;
         image.src = value;
       }
 
-      function setFeatureMedia(value,type) {
-        const reel = document.querySelector('[data-media-element="feature"]');
-        if (!reel || !value) return;
-
-        if (isVideo(value,type)) {
-          reel.src = value;
-          reel.load();
-          reel.play().catch(() => {});
-        } else {
-          reel.pause();
-          reel.removeAttribute('src');
-          reel.querySelectorAll('source').forEach(source => source.remove());
-          reel.poster = value;
-          reel.load();
+      function setFeatureMedia(value,type){
+        const feature = document.querySelector('[data-media-element="feature"]');
+        if(!feature || !value) return;
+        if(isVideo(value,type)){
+          feature.src = value;
+          feature.load();
+          feature.play().catch(() => {});
+          return;
         }
+        feature.pause();
+        feature.removeAttribute('src');
+        feature.querySelectorAll('source').forEach(source => source.remove());
+        feature.poster = value;
+        feature.load();
       }
 
-      function applyMediaConfig(config) {
+      function applyMediaConfig(config){
         const media = config?.media || {};
-        const mediaTypes = config?.mediaTypes || {};
-        if (media.hero) setImageMedia('hero',media.hero,mediaTypes.hero);
-        if (media.portrait) setImageMedia('portrait',media.portrait,mediaTypes.portrait);
-        if (media.feature) setFeatureMedia(media.feature,mediaTypes.feature);
+        const types = config?.mediaTypes || {};
+        const feature = document.querySelector('[data-media-element="feature"]');
+        if(media.hero && feature && !isVideo(media.hero,types.hero)) feature.poster = media.hero;
+        if(media.hero && feature && isVideo(media.hero,types.hero)) setFeatureMedia(media.hero,types.hero);
+        if(media.portrait) setImageMedia('portrait',media.portrait,types.portrait);
+        if(media.feature) setFeatureMedia(media.feature,types.feature);
         ['filmOne','filmTwo','filmThree'].forEach(target => {
-          if (media[target]) setPanelMedia(target,media[target],mediaTypes[target]);
+          if(media[target]) setPanelMedia(target,media[target],types[target]);
         });
       }
 
-      async function waitForSupabase() {
-        for (let attempt = 0; attempt < 50; attempt += 1) {
-          if (window.ncSupabase) return true;
+      async function waitForSupabase(){
+        for(let attempt = 0; attempt < 40; attempt += 1){
+          if(window.ncSupabase) return true;
           await new Promise(resolve => setTimeout(resolve,120));
         }
         return false;
       }
 
-      async function loadSiteContent() {
+      async function loadSiteContent(){
         let fallbackConfig = null;
         let liveConfig = null;
-
-        try {
+        try{
           const response = await fetch('site-content.json',{cache:'no-store'});
-          if (response.ok) fallbackConfig = await response.json();
-        } catch (error) {
-          console.warn('Could not load fallback site media',error);
-        }
-
-        try {
-          if (await waitForSupabase()) {
+          if(response.ok) fallbackConfig = await response.json();
+        }catch(error){console.warn('Could not load fallback site media',error);}
+        try{
+          if(await waitForSupabase()){
             const response = await window.ncSupabase.from(storageTable).select('data').eq('app_key',contentKey).maybeSingle();
-            if (!response.error) liveConfig = response.data?.data || null;
+            if(!response.error) liveConfig = response.data?.data || null;
           }
-        } catch (error) {
-          console.warn('Could not load live site media',error);
-        }
-
+        }catch(error){console.warn('Could not load live site media',error);}
         const config = liveConfig?.siteVersion === expectedSiteVersion ? liveConfig : fallbackConfig;
-        if (config) applyMediaConfig(config);
+        if(config) applyMediaConfig(config);
       }
 
       window.addEventListener('message',event => {
-        if (event.data?.type !== 'nc-site-preview') return;
+        if(event.data?.type !== 'nc-site-preview') return;
         applyMediaConfig(event.data.config || {});
-        const previewWindow = {
-          '#home':'finder',
-          '#about':'about',
-          '#films':'films',
-          '#motion-title':'films',
-          '#terms':'terms'
-        }[event.data.scrollTo];
-        if (previewWindow) window.ncOpenWindow?.(previewWindow);
+        const target = document.querySelector(event.data.scrollTo || '#work');
+        target?.scrollIntoView({behavior:'smooth',block:'start'});
       });
 
       loadSiteContent();
-    })();
-  </script>
-  <script>
-    (() => {
-      const form = document.getElementById('directMessageForm');
-      const status = document.querySelector('[data-message-status]');
-      if (!form || !status) return;
-
-      const setStatus = (message,type) => {
-        status.textContent = message;
-        status.className = `form-status${type ? ` ${type}` : ''}`;
-      };
-
-      const uid = () => window.crypto?.randomUUID ? window.crypto.randomUUID() : `message_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-
-      async function waitForSupabase() {
-        for (let attempt = 0; attempt < 50; attempt += 1) {
-          if (window.ncSupabase) return true;
-          await new Promise(resolve => setTimeout(resolve,120));
-        }
-        return false;
-      }
-
-      form.addEventListener('submit',async event => {
-        event.preventDefault();
-        const data = new FormData(form);
-
-        if (String(data.get('messageWebsite') || '').trim()) {
-          form.reset();
-          setStatus('Thank you. Your message has been received.','success');
-          return;
-        }
-
-        const createdAt = new Date().toISOString();
-        const message = {
-          id:uid(),
-          name:String(data.get('directName') || '').trim(),
-          email:String(data.get('directEmail') || '').trim(),
-          phone:String(data.get('directPhone') || '').trim(),
-          subject:String(data.get('directSubject') || '').trim(),
-          message:String(data.get('directMessage') || '').trim(),
-          source:'website',
-          createdAt
-        };
-
-        try {
-          setStatus('Sending...');
-          if (!(await waitForSupabase())) throw new Error('Message service unavailable');
-          const response = await window.ncSupabase.from('website_messages').insert({id:message.id,data:message,status:'new',created_at:createdAt,updated_at:createdAt});
-          if (response.error) throw response.error;
-          form.reset();
-          setStatus('Message sent. I’ll come back to you soon.','success');
-        } catch (error) {
-          console.warn('Could not send website message',error);
-          setStatus('Message could not send. Please use the availability form.','error');
-        }
-      });
     })();
   </script>
 </body>

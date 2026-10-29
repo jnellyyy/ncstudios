@@ -1,0 +1,54 @@
+:root{
+  color-scheme:light!important;
+  --bg:#fbfaf6!important;
+  --bg2:#f2eee5!important;
+  --ink:#171714!important;
+  --paper:#171714!important;
+  --muted:#706c64!important;
+  --line:#d9cfbd!important;
+  --panel:#fff!important;
+  --gold:#b48a38!important;
+  --gold2:#86631f!important;
+  --error:#a33b31!important;
+  --success:#30704d!important;
+}
+
+html,body{background:#fbfaf6!important;color:#171714!important}
+body{background-image:none!important}
+body::after{display:none!important}
+.siteHeader{min-height:72px;padding:0 clamp(18px,4vw,58px)!important;border-color:var(--line)!important;background:rgba(251,250,246,.96)!important;backdrop-filter:blur(18px)}
+.brand img{width:clamp(145px,16vw,214px)!important;filter:none!important}
+.nav{font-family:var(--body)!important;text-transform:none!important}
+.nav a{color:var(--muted)!important}
+.nav .navCta{border:1px solid var(--gold)!important;border-radius:6px;color:var(--ink)!important;background:#fff!important}
+.availabilityPage,.termsPage{width:min(1120px,calc(100% - 40px))!important;padding-top:clamp(54px,8vw,96px)!important}
+.availabilityHero,.termsHero{border-color:var(--line)!important}
+.eyebrow,.clauseNumber{color:var(--gold2)!important}
+h1{color:var(--ink)!important}
+.pageNote{color:var(--muted)!important;text-transform:none!important}
+.availabilityLayout{grid-template-columns:minmax(250px,.68fr) minmax(0,1.32fr)!important;gap:32px!important}
+.enquiryIntro{padding:26px 0;border-top:1px solid var(--line)}
+.enquiryIntro strong{display:block;margin-bottom:13px;font:400 34px/1 var(--body)}
+.enquiryIntro p{margin:0;color:var(--muted);line-height:1.7}
+.enquiryIntro dl{margin:34px 0 0}
+.enquiryIntro div{padding:13px 0;border-bottom:1px solid var(--line)}
+.enquiryIntro dt{color:var(--gold2);font:10px var(--mono);text-transform:uppercase}
+.enquiryIntro dd{margin:5px 0 0;color:var(--muted);font-size:13px}
+.formPanel,.paymentNotice,.termsIntro,.termClause{border-color:var(--line)!important;background:#fff!important;box-shadow:none!important}
+.formPanel h2,.paymentNotice h2,.termClause h3{color:var(--ink)!important}
+.field label,.formPanel label{color:var(--gold2)!important}
+input,select,textarea{border-color:var(--line)!important;border-radius:6px!important;color:var(--ink)!important;background:#fbfaf6!important}
+.submitButton{border-radius:6px!important;background:var(--gold)!important;color:#17130b!important;text-transform:none!important}
+.termsIntro p,.paymentNotice p,.termClause p{color:var(--muted)!important}
+.footer{border-color:var(--line)!important;color:var(--muted)!important;text-transform:none!important}
+
+@media(max-width:800px){
+  .availabilityLayout{grid-template-columns:1fr!important}
+}
+
+@media(max-width:640px){
+  .siteHeader{min-height:64px!important}
+  .availabilityPage,.termsPage{width:calc(100% - 32px)!important}
+  .availabilityHero,.termsHero{display:block!important}
+  .pageNote{margin-top:20px!important}
+}
