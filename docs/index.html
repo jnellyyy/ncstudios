@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#fbfaf6">
-  <meta name="description" content="NC Studio creates honest, cinematic wedding photography and films across the UK.">
-  <title>NC Studio | Wedding Photography + Film</title>
+  <meta name="theme-color" content="#f8f7f3">
+  <meta name="description" content="NC Studio photographs and films events, weddings, portraits and live stories across the UK.">
+  <title>NC Studio | Event Photography + Film</title>
   <link rel="manifest" href="website.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" href="icon-32.png">
-  <link rel="stylesheet" href="site.css?v=wedding-white-1">
+  <link rel="stylesheet" href="site.css?v=events-minimal-1">
 </head>
 <body>
   <div class="preloader" data-preloader aria-hidden="true">
@@ -20,150 +20,145 @@
     <a class="brand" href="#top" aria-label="NC Studio home">
       <img src="ncstudios-logo-mark-transparent.png" alt="">
       <strong>NC Studio</strong>
-      <span>Wedding photography + film</span>
+      <span>Photography + film</span>
     </a>
 
-    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu>☰</button>
+    <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" data-menu><span></span><span></span></button>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="#work">Work</a>
-      <a href="#approach">Approach</a>
+      <a href="#services">Services</a>
       <a href="#about">About</a>
       <a href="terms.html">Terms</a>
-      <a class="nav-cta" href="availability.html">Check your date</a>
+      <a class="nav-cta" href="availability.html">Make an enquiry</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero" aria-labelledby="hero-title">
-      <video class="hero-media" data-media-element="feature" autoplay muted loop playsinline preload="metadata" poster="assets/weddings/simi-kiefah-wedding-thumbnail.jpg">
-        <source src="assets/weddings/marvin-blessing-wedding-trailer.m4v" type="video/mp4">
+      <video class="hero-media" data-media-element="feature" autoplay muted loop playsinline preload="metadata" poster="assets/portfolio/event-live.jpg">
+        <source src="assets/portfolio/senses-event-film.m4v" type="video/mp4">
       </video>
       <div class="hero-scrim" aria-hidden="true"></div>
-      <div class="hero-grid">
-        <p class="eyebrow">NC Studio · UK wedding photography + film</p>
-        <h1 id="hero-title">Your day, held like a film.</h1>
-        <p class="hero-copy">Honest feeling, calm direction and a cinematic finish that still feels like you.</p>
-        <div class="hero-actions">
-          <a class="button" href="#work">View the work</a>
-          <a class="button secondary" href="availability.html">Check your date</a>
+      <div class="hero-content">
+        <p class="eyebrow">Events · weddings · portraits · stories</p>
+        <h1 id="hero-title">Event photography + film, with feeling.</h1>
+        <div class="hero-bottom">
+          <p>For the atmosphere, the people and the moments you did not see happening.</p>
+          <a class="button light" href="#work">Explore the work <span aria-hidden="true">↓</span></a>
         </div>
       </div>
+      <p class="hero-index" aria-hidden="true">NC / 001</p>
     </section>
 
-    <section class="section" id="work">
-      <div class="section-inner">
-        <header class="section-head">
-          <div>
-            <p class="section-kicker">Selected wedding stories</p>
-            <h2>Real moments, shaped with intention.</h2>
+    <section class="work-section" id="work">
+      <div class="section-label"><span>Selected work</span><span>Photography + film</span></div>
+      <header class="work-heading">
+        <h2>Made to feel alive.</h2>
+        <p>From packed rooms to quiet portraits, every story is covered with a documentary eye and a clean cinematic finish.</p>
+      </header>
+
+      <div class="work-filters" role="tablist" aria-label="Filter selected work">
+        <button class="filter-button is-active" type="button" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-button" type="button" data-filter="events" role="tab" aria-selected="false">Events</button>
+        <button class="filter-button" type="button" data-filter="weddings" role="tab" aria-selected="false">Weddings</button>
+        <button class="filter-button" type="button" data-filter="portraits" role="tab" aria-selected="false">Portraits</button>
+      </div>
+
+      <div class="portfolio-grid">
+        <figure class="project project-wide" data-category="events">
+          <div class="project-media" data-media-panel="filmOne">
+            <video controls playsinline preload="metadata" poster="assets/portfolio/event-live.jpg">
+              <source src="assets/portfolio/senses-event-film.m4v" type="video/mp4">
+            </video>
           </div>
-          <p class="section-intro">A small collection of wedding films and couple stories, from the quiet parts to the full dance floor.</p>
-        </header>
-
-        <div class="work-grid">
-          <figure class="work-item featured">
-            <div class="media-frame" data-media-panel="filmOne">
-              <video controls playsinline preload="metadata" poster="assets/weddings/simi-kiefah-wedding-thumbnail.jpg">
-                <source src="assets/weddings/simi-kiefah-wedding-trailer.m4v" type="video/mp4">
-              </video>
-            </div>
-            <figcaption class="work-caption"><strong>Simi + Kiefah</strong><span>Wedding film · Birmingham</span></figcaption>
-          </figure>
-
-          <figure class="work-item">
-            <div class="media-frame" data-media-panel="filmTwo">
-              <video controls playsinline preload="metadata">
-                <source src="assets/weddings/marvin-blessing-wedding-trailer.m4v" type="video/mp4">
-              </video>
-            </div>
-            <figcaption class="work-caption"><strong>Marvin + Blessing</strong><span>Wedding film · London</span></figcaption>
-          </figure>
-
-          <figure class="work-item">
-            <div class="media-frame">
-              <img src="assets/jason-roisin-engagement-card.jpg" alt="Jason and Roisin laughing together during their engagement session" loading="lazy">
-            </div>
-            <figcaption class="work-caption"><strong>Jason + Roisin</strong><span>Engagement session</span></figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <section class="story-band" aria-labelledby="couple-title">
-      <img src="assets/jason-roisin-engagement-card.jpg" alt="A couple sharing a natural moment beneath spring blossom" loading="lazy">
-      <div class="story-copy">
-        <p class="section-kicker">Couple sessions</p>
-        <h2 id="couple-title">Connection over performance.</h2>
-        <p>Relaxed sessions with enough direction to feel confident and enough space for you to be yourselves.</p>
-        <a class="text-link" href="availability.html">Enquire about a session <span aria-hidden="true">→</span></a>
-      </div>
-    </section>
-
-    <section class="section approach" id="approach">
-      <div class="section-inner">
-        <header class="section-head">
-          <div>
-            <p class="section-kicker">The approach</p>
-            <h2>Calm on the day. Clear before it.</h2>
-          </div>
-          <p class="section-intro">The experience stays simple so you can stay present.</p>
-        </header>
-
-        <div class="approach-grid">
-          <article class="approach-item"><span>01</span><h3>Story led</h3><p>Your day is captured with feeling, not treated as a checklist of moments.</p></article>
-          <article class="approach-item"><span>02</span><h3>Calm direction</h3><p>Gentle guidance when needed, with room for natural moments to unfold.</p></article>
-          <article class="approach-item"><span>03</span><h3>Cinematic finish</h3><p>Clean colour, thoughtful sound and movement that feels timeless rather than staged.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="about">
-      <div class="section-inner about-grid">
-        <figure class="about-portrait">
-          <img data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Janelle, the creative behind NC Studio, holding a camera" loading="lazy">
+          <figcaption><span>Senses</span><small>Live event film</small></figcaption>
         </figure>
-        <div class="about-copy">
-          <p class="section-kicker">The creative behind NC Studio</p>
-          <h2>Hi, I'm Janelle.</h2>
-          <p class="lead">Inspired by film and drawn to genuine moments, I document weddings with a timeless and cinematic approach.</p>
-          <p>My goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.</p>
-          <p>Long after the flowers fade and the music stops, the memories remain. They deserve to be remembered well.</p>
-        </div>
+
+        <figure class="project project-tall" data-category="events">
+          <div class="project-media"><img src="assets/portfolio/baby-shower-reveal.jpg" alt="An emotional moment during a baby shower" loading="lazy"></div>
+          <figcaption><span>Celebrations</span><small>Event photography</small></figcaption>
+        </figure>
+
+        <figure class="project" data-category="events">
+          <div class="project-media"><img src="assets/portfolio/live-worship-crowd.jpg" alt="A full room sharing a live event" loading="lazy"></div>
+          <figcaption><span>Gathered</span><small>Community + live events</small></figcaption>
+        </figure>
+
+        <figure class="project" data-category="weddings">
+          <div class="project-media" data-media-panel="filmTwo">
+            <video controls playsinline preload="metadata" poster="assets/weddings/simi-kiefah-wedding-thumbnail.jpg">
+              <source src="assets/weddings/simi-kiefah-wedding-trailer.m4v" type="video/mp4">
+            </video>
+          </div>
+          <figcaption><span>Simi + Kiefah</span><small>Wedding film</small></figcaption>
+        </figure>
+
+        <figure class="project project-tall" data-category="portraits">
+          <div class="project-media"><img src="assets/portfolio/grad-documentary-bw.jpg" alt="A graduate looking back toward the camera" loading="lazy"></div>
+          <figcaption><span>Milestones</span><small>Portraits + graduation</small></figcaption>
+        </figure>
+
+        <figure class="project project-wide" data-category="weddings">
+          <div class="project-media" data-media-panel="filmThree">
+            <video controls playsinline preload="metadata">
+              <source src="assets/weddings/marvin-blessing-wedding-trailer.m4v" type="video/mp4">
+            </video>
+          </div>
+          <figcaption><span>Marvin + Blessing</span><small>Wedding film</small></figcaption>
+        </figure>
+
+        <figure class="project" data-category="portraits">
+          <div class="project-media"><img src="assets/portfolio/maternity-portrait.jpg" alt="A couple during their maternity portrait session" loading="lazy"></div>
+          <figcaption><span>Growing stories</span><small>Portrait session</small></figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="event-strip" aria-labelledby="events-title">
-      <div class="media-frame" data-media-panel="filmThree">
-        <video controls playsinline preload="metadata">
-          <source src="assets/portfolio/senses-event-film.m4v" type="video/mp4">
-        </video>
-      </div>
-      <div class="event-copy">
-        <p class="section-kicker">Selected events</p>
-        <h3 id="events-title">Senses.</h3>
-        <p>One considered event story, included to show how NC Studio handles movement, atmosphere and live energy.</p>
+    <section class="services-section" id="services" aria-labelledby="services-title">
+      <div class="section-label"><span>What I cover</span><span>UK + travel</span></div>
+      <h2 id="services-title">One studio.<br>Every kind of gathering.</h2>
+      <div class="service-list">
+        <article><span>01</span><h3>Events</h3><p>Celebrations, launches, community gatherings and live experiences.</p></article>
+        <article><span>02</span><h3>Weddings</h3><p>Photography and film shaped around the people and the energy of the day.</p></article>
+        <article><span>03</span><h3>Portraits</h3><p>Couples, maternity, graduations and personal milestones without stiff posing.</p></article>
+        <article><span>04</span><h3>Story-led film</h3><p>Short-form event films and visual stories made for sharing and remembering.</p></article>
       </div>
     </section>
 
-    <section class="section enquire">
-      <div class="enquire-inner">
-        <p class="section-kicker">Tell me the date</p>
-        <h2>Let's make something that still feels like you.</h2>
-        <p>Share the date, place and kind of coverage you need. Your enquiry lands directly in the NC Studio booking pipeline.</p>
-        <a class="button" href="availability.html">Start your enquiry</a>
+    <section class="manifesto" aria-label="NC Studio approach">
+      <p class="manifesto-kicker">The approach</p>
+      <p class="manifesto-line">Present in the room.</p>
+      <p class="manifesto-line muted">Quiet when it matters.</p>
+      <p class="manifesto-line">Ready when it happens.</p>
+    </section>
+
+    <section class="about-section" id="about">
+      <div class="about-image">
+        <img data-media-image="portrait" src="assets/nc-about-portrait.jpg" alt="Janelle, the creative behind NC Studio, holding a camera" loading="lazy">
       </div>
+      <div class="about-copy">
+        <p class="section-kicker">The creative behind NC Studio</p>
+        <h2>Hi, I'm Janelle.</h2>
+        <p class="lead">Inspired by film and drawn to genuine moments, I document people and events with a timeless, cinematic approach.</p>
+        <p>My goal is simple: to preserve how it felt, not just how it looked. The loud moments, the quiet ones and everything that made the room yours.</p>
+        <a class="text-link" href="availability.html">Tell me what you're planning <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="enquire-section">
+      <p class="section-kicker">Bookings + availability</p>
+      <h2>What are we capturing?</h2>
+      <p>Send the date, location and a little about the event. I will come back with the clearest next step.</p>
+      <a class="button dark" href="availability.html">Start an enquiry <span aria-hidden="true">↗</span></a>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
+    <a class="footer-brand" href="#top">NC Studio</a>
+    <div class="footer-meta">
       <span>© <span data-year></span> ncstudiouk</span>
-      <div class="footer-links">
-        <a href="#work">Work</a>
-        <a href="availability.html">Enquire</a>
-        <a href="terms.html">Terms</a>
-        <a href="client-delivery.html">Client delivery</a>
-      </div>
+      <a href="terms.html">Terms</a>
+      <a href="client-delivery.html">Client delivery</a>
     </div>
   </footer>
 
@@ -176,20 +171,30 @@
       const preloader = document.querySelector('[data-preloader]');
       const storageTable = 'app_storage';
       const contentKey = 'website_content_live';
-      const expectedSiteVersion = 'wedding-v4';
+      const expectedSiteVersion = 'events-v5';
 
       document.querySelector('[data-year]').textContent = new Date().getFullYear();
 
       menu.addEventListener('click',() => {
         const open = body.classList.toggle('menu-open');
         menu.setAttribute('aria-expanded',String(open));
-        menu.textContent = open ? '×' : '☰';
       });
 
       document.querySelectorAll('.site-nav a').forEach(link => link.addEventListener('click',() => {
         body.classList.remove('menu-open');
         menu.setAttribute('aria-expanded','false');
-        menu.textContent = '☰';
+      }));
+
+      document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click',() => {
+        const filter = button.dataset.filter;
+        document.querySelectorAll('[data-filter]').forEach(control => {
+          const active = control === button;
+          control.classList.toggle('is-active',active);
+          control.setAttribute('aria-selected',String(active));
+        });
+        document.querySelectorAll('[data-category]').forEach(project => {
+          project.hidden = filter !== 'all' && project.dataset.category !== filter;
+        });
       }));
 
       window.setTimeout(() => preloader.classList.add('is-closing'),350);

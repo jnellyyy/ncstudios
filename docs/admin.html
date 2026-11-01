@@ -955,7 +955,7 @@ textarea{
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
                 <strong>Hero motion</strong>
-                <span>The main wedding film behind the opening headline.</span>
+                <span>The event reel behind the opening headline.</span>
               </div>
               <button class="btn small" type="button" data-preview-scroll="#top">view</button>
             </div>
@@ -970,8 +970,8 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Wedding film 1</strong>
-                <span>The large featured wedding story.</span>
+                <strong>Featured event</strong>
+                <span>The lead event film in selected work.</span>
               </div>
               <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
@@ -986,8 +986,8 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Wedding film 2</strong>
-                <span>The second wedding story beside the engagement image.</span>
+                <strong>Wedding film 1</strong>
+                <span>The first wedding story in selected work.</span>
               </div>
               <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
@@ -1002,8 +1002,8 @@ textarea{
           <section class="mediaSlot">
             <div class="mediaSlotHead">
               <div class="mediaSlotTitle">
-                <strong>Selected event</strong>
-                <span>The single event film shown near the bottom of the page.</span>
+                <strong>Wedding film 2</strong>
+                <span>The second wedding story in selected work.</span>
               </div>
               <button class="btn small" type="button" data-preview-scroll="#work">view</button>
             </div>
@@ -1097,20 +1097,20 @@ const WEBSITE_STORAGE_TABLE = "app_storage";
 const WEBSITE_CONTENT_KEY = "website_content_live";
 const WEBSITE_DRAFT_KEY = "ncStudiosWebsiteContentDraftV1";
 const WEBSITE_MEDIA_BUCKET = "site-media";
-const WEBSITE_SITE_VERSION = "wedding-v4";
+const WEBSITE_SITE_VERSION = "events-v5";
 
 const defaultWebsiteContent = {
   siteVersion:WEBSITE_SITE_VERSION,
   fields:{
-    heroEyebrow:"photo + film",
-    heroTitle:"real. cinematic. yours.",
-    heroLead:"weddings · engagements · cinematic films",
+    heroEyebrow:"events · weddings · portraits · stories",
+    heroTitle:"event photography + film, with feeling.",
+    heroLead:"atmosphere · people · real moments",
     aboutCaptionTitle:"the creative behind nc studio",
     aboutCaptionMeta:"",
     aboutHeadline:"hi, i'm janelle.",
-    aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document weddings with a timeless and cinematic approach.",
-    aboutBodyTwo:"my goal is simple: to preserve your day in a way that feels honest, beautiful and true to you.",
-    aboutBodyThree:"because long after the flowers fade and the music stops, the memories remain. and they deserve to be remembered well.",
+    aboutBodyOne:"founder of nc studio. inspired by film and drawn to genuine moments, i document people and events with a timeless, cinematic approach.",
+    aboutBodyTwo:"my goal is simple: to preserve how it felt, not just how it looked.",
+    aboutBodyThree:"the loud moments, the quiet ones and everything that made the room yours.",
     principlesTitle:"approach.",
     principlesLead:"natural. calm. intentional.",
     principleOneTitle:"story led",
@@ -1122,21 +1122,21 @@ const defaultWebsiteContent = {
     featureTitle:"movement. sound. feeling.",
     featureBody:"vows, speeches, reactions, atmosphere.",
     workTitle:"work.",
-    workLead:"wedding photography, cinematic films and story led content.",
-    filmOneTitle:"Simi + Kiefah",
-    filmOneBody:"wedding film · Birmingham.",
-    filmTwoTitle:"Marvin + Blessing",
-    filmTwoBody:"wedding film · London.",
-    filmThreeTitle:"Senses",
-    filmThreeBody:"selected event film."
+    workLead:"events, weddings, portraits and story-led film.",
+    filmOneTitle:"Senses",
+    filmOneBody:"live event film.",
+    filmTwoTitle:"Simi + Kiefah",
+    filmTwoBody:"wedding film · Birmingham.",
+    filmThreeTitle:"Marvin + Blessing",
+    filmThreeBody:"wedding film · London."
   },
   media:{
-    hero:"assets/weddings/simi-kiefah-wedding-thumbnail.jpg?v=simi-kiefah-20260831",
+    hero:"assets/portfolio/event-live.jpg",
     portrait:"assets/nc-about-portrait.jpg",
-    feature:"assets/weddings/marvin-blessing-wedding-trailer.m4v",
-    filmOne:"assets/weddings/simi-kiefah-wedding-trailer.m4v",
-    filmTwo:"assets/weddings/marvin-blessing-wedding-trailer.m4v",
-    filmThree:"assets/portfolio/senses-event-film.m4v"
+    feature:"assets/portfolio/senses-event-film.m4v",
+    filmOne:"assets/portfolio/senses-event-film.m4v",
+    filmTwo:"assets/weddings/simi-kiefah-wedding-trailer.m4v",
+    filmThree:"assets/weddings/marvin-blessing-wedding-trailer.m4v"
   },
   mediaTypes:{
     hero:"image/jpeg",

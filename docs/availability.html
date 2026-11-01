@@ -460,19 +460,19 @@ textarea:focus{
   <section class="availabilityHero" aria-labelledby="availability-title">
     <div>
       <p class="eyebrow">availability</p>
-      <h1 id="availability-title">choose the date.</h1>
+      <h1 id="availability-title">tell me the plan.</h1>
     </div>
-    <p class="pageNote">Send the date and a few details. Your enquiry lands directly inside the NC Studio booking pipeline.</p>
+    <p class="pageNote">Send the date, location and a few details. Your enquiry lands directly inside the NC Studio booking pipeline.</p>
   </section>
 
   <section class="availabilityLayout" aria-label="availability enquiry">
     <aside class="enquiryIntro">
       <strong>A simple first step.</strong>
-      <p>Share the date and the shape of the day. I will check the details personally and come back with the clearest next step.</p>
+      <p>Share the shape of the event. I will check the details personally and come back with the clearest next step.</p>
       <dl>
+        <div><dt>Events</dt><dd>Celebrations, launches, community and live experiences.</dd></div>
         <div><dt>Weddings</dt><dd>Photography, cinematic film, or both.</dd></div>
-        <div><dt>Couple sessions</dt><dd>Relaxed engagement and pre-wedding stories.</dd></div>
-        <div><dt>Selected events</dt><dd>Considered coverage by enquiry.</dd></div>
+        <div><dt>Portraits</dt><dd>Couples, maternity, graduations and milestones.</dd></div>
       </dl>
     </aside>
 
@@ -512,11 +512,14 @@ textarea:focus{
           <label for="eventType">shoot type</label>
           <select id="eventType" name="eventType" required>
             <option value="">choose one</option>
+            <option>event photography</option>
+            <option>event film</option>
+            <option>event photo + film</option>
             <option>wedding photography</option>
             <option>wedding film</option>
             <option>wedding photo + film</option>
             <option>couple / engagement session</option>
-            <option>selected event</option>
+            <option>portrait session</option>
             <option>existing client</option>
             <option>other</option>
           </select>
@@ -560,7 +563,7 @@ textarea:focus{
 
         <div class="field full">
           <label for="message">message</label>
-          <textarea id="message" name="message" required placeholder="Tell me what matters most about the day."></textarea>
+          <textarea id="message" name="message" required placeholder="Tell me what matters most about the event."></textarea>
         </div>
       </div>
 
